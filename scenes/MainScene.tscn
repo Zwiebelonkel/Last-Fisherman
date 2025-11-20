@@ -44,6 +44,8 @@ fog_light_energy = 0.0
 fog_sun_scatter = 1.0
 fog_sky_affect = 0.0
 volumetric_fog_enabled = true
+volumetric_fog_length = 42.44
+volumetric_fog_ambient_inject = 0.2
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_k24pf"]
 render_priority = -128
