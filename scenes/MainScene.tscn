@@ -1,0 +1,353 @@
+[gd_scene load_steps=31 format=3 uid="uid://cx2sffjjdjuw5"]
+
+[ext_resource type="Shader" uid="uid://b8mxoacu7poqc" path="res://shader/sky.gdshader" id="1_1wiy7"]
+[ext_resource type="PackedScene" uid="uid://b5ew1rfc8ow8g" path="res://scenes/fishingRod.tscn" id="1_echbf"]
+[ext_resource type="Script" uid="uid://bl1xotduehieu" path="res://scripts/camera_sway.gd" id="1_ibiss"]
+[ext_resource type="PackedScene" uid="uid://cdb3sodlv6np7" path="res://scenes/MoneyHUD.tscn" id="1_kp0ql"]
+[ext_resource type="Shader" uid="uid://c37jx2ebwp1a3" path="res://shader/shader_water.gdshader" id="2_611at"]
+[ext_resource type="PackedScene" uid="uid://cqtn78ty1fa7" path="res://scenes/CatchResultUI.tscn" id="2_o3jky"]
+[ext_resource type="Texture2D" uid="uid://e7t33pnr13bp" path="res://textures/These-images-of-clouds-are-created-exclusively-using-Perlin-noise-It-simulates-the_Q320.jpg" id="2_u1u68"]
+[ext_resource type="Texture2D" uid="uid://5bjxsmrb0phj" path="res://textures/NEURA_Logo.jpeg" id="3_c6dvc"]
+[ext_resource type="Shader" uid="uid://dmg556n5nwodi" path="res://shader/pixelate.gdshader" id="5_ygjfp"]
+[ext_resource type="Texture2D" uid="uid://cvllk03mhtybp" path="res://textures/723-normal.jpg" id="6_x537r"]
+[ext_resource type="Texture2D" uid="uid://d31603nl8y0gd" path="res://textures/Water_preview.jpgC878A51E-2B84-45CA-85CB-75E5BC88EEC8Large.jpg" id="7_cfq0f"]
+[ext_resource type="Script" uid="uid://bymrcyid32xsp" path="res://scripts/line.gd" id="10_pjux3"]
+[ext_resource type="PackedScene" uid="uid://dxxrhs12x2m2c" path="res://scenes/InventoryUI.tscn" id="11_pjux3"]
+[ext_resource type="PackedScene" uid="uid://brmbdno888s38" path="res://textures/tree.glb" id="14_08o8g"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_cfq0f"]
+shader = ExtResource("1_1wiy7")
+shader_parameter/use_directional_light = true
+shader_parameter/sun_color = Color(0.117406, 0.219399, 0.173574, 1)
+shader_parameter/sun_energy = -0.77
+shader_parameter/cloud_color = Color(0.669654, 0.3219, 0.145453, 1)
+shader_parameter/cloud_density = 3.46
+shader_parameter/cloud_depth = 3.615
+shader_parameter/cloud_sag = 1.66
+shader_parameter/noise_texture = ExtResource("2_u1u68")
+shader_parameter/noise_tiling = Vector2(1, 1)
+shader_parameter/wind_speed = Vector2(0.27, 0.28)
+shader_parameter/ground_bottom_color = Color(0.2, 0.169, 0.133, 1)
+shader_parameter/ground_curve = 0.037
+shader_parameter/exposure = 7.321
+
+[sub_resource type="Sky" id="Sky_x537r"]
+sky_material = SubResource("ShaderMaterial_cfq0f")
+radiance_size = 0
+
+[sub_resource type="Environment" id="Environment_cfq0f"]
+background_mode = 2
+background_energy_multiplier = 0.33
+sky = SubResource("Sky_x537r")
+fog_light_color = Color(0.808262, 0.429746, 0.296975, 1)
+fog_light_energy = 0.0
+fog_sun_scatter = 1.0
+fog_sky_affect = 0.0
+volumetric_fog_enabled = true
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_k24pf"]
+render_priority = -128
+shader = ExtResource("2_611at")
+shader_parameter/wave_1 = Vector4(0.3, 4, 0.2, 0.6)
+shader_parameter/wave_2 = Vector4(-0.26, -0.19, 0.01, 0.47)
+shader_parameter/wave_3 = Vector4(-7.67, 5.63, 0.1, 0.38)
+shader_parameter/wave_4 = Vector4(-0.42, -1.63, 0.1, 0.28)
+shader_parameter/wave_5 = Vector4(1.66, 0.07, 0.15, 1.81)
+shader_parameter/wave_6 = Vector4(1.2, 1.14, 0.01, 0.33)
+shader_parameter/wave_7 = Vector4(-1.6, 7.3, 0.11, 0.73)
+shader_parameter/wave_8 = Vector4(-0.42, -1.63, 0.15, 1.52)
+shader_parameter/time_factor = 6.975
+shader_parameter/noise_zoom = 3.885
+shader_parameter/noise_amp = 1.545
+shader_parameter/base_water_color = Color(0.188783, 0.538177, 0.53811, 1)
+shader_parameter/fresnel_water_color = Color(0.762158, 0.371565, 0.128367, 1)
+shader_parameter/deep_water_color = Color(0, 0.20636, 0.393908, 1)
+shader_parameter/shallow_water_color = Color(0.189291, 0.841735, 0.976884, 1)
+shader_parameter/beers_law = 0.405
+shader_parameter/depth_offset = 0.095
+shader_parameter/near = 7.0
+shader_parameter/far = 10000.0
+shader_parameter/edge_texture_scale = 4.715
+shader_parameter/edge_texture_offset = 1.0
+shader_parameter/edge_texture_speed = 0.1
+shader_parameter/edge_foam_intensity = 2.0
+shader_parameter/edge_fade_start = -3.0
+shader_parameter/edge_fade_end = 6.6
+shader_parameter/peak_height_threshold = 1.0
+shader_parameter/peak_color = Vector3(1, 1, 1)
+shader_parameter/peak_intensity = 1.0
+shader_parameter/foam_intensity = 1.0
+shader_parameter/foam_scale = 1.0
+shader_parameter/metallic = 1.87
+shader_parameter/roughness = 0.115
+shader_parameter/uv_scale_text_a = 0.23
+shader_parameter/uv_speed_text_a = Vector2(0.14, 0.3)
+shader_parameter/uv_scale_text_b = 0.855
+shader_parameter/uv_speed_text_b = Vector2(0.15, 0.1)
+shader_parameter/normal_strength = 0.28
+shader_parameter/uv_sampler_scale = 0.3
+shader_parameter/blend_factor = 0.795
+shader_parameter/perturbation_strength = 0.37
+shader_parameter/perturbation_time = 0.3
+shader_parameter/normalmap_a = ExtResource("6_x537r")
+shader_parameter/normalmap_b = ExtResource("7_cfq0f")
+shader_parameter/caustics_intensity = 17.2
+shader_parameter/num_caustic_layers = 16.0
+shader_parameter/caustic_distortion_strength = 0.001
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_qg23i"]
+lightmap_size_hint = Vector2i(251, 1001)
+material = SubResource("ShaderMaterial_k24pf")
+uv2_padding = 1.41
+size = Vector2(200, 200)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_c6dvc"]
+transparency = 1
+albedo_color = Color(1, 1, 1, 0.227451)
+emission_enabled = true
+emission = Color(0.483338, 0.649368, 1, 1)
+
+[sub_resource type="QuadMesh" id="QuadMesh_611at"]
+material = SubResource("StandardMaterial3D_c6dvc")
+
+[sub_resource type="Animation" id="Animation_ygjfp"]
+length = 0.001
+tracks/0/type = "scale_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Ripple")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0.5, 0.5, 0.5)
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Ripple:mesh:material:albedo_color")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0.227451)]
+}
+
+[sub_resource type="Animation" id="Animation_k24pf"]
+resource_name = "ripple"
+length = 0.8
+tracks/0/type = "scale_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Ripple")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0.5, 0.5, 0.5, 0.8, 1, 2, 2, 2)
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Ripple:mesh:material:albedo_color")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.8),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0.231373), Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_1wiy7"]
+_data = {
+&"RESET": SubResource("Animation_ygjfp"),
+&"ripple": SubResource("Animation_k24pf")
+}
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_u1u68"]
+albedo_color = Color(0.321569, 0.235294, 0, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_u1u68"]
+size = Vector3(1.885, 0.34, 12.555)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_pjux3"]
+top_radius = 0.005
+bottom_radius = 0.005
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kp0ql"]
+emission_enabled = true
+emission = Color(1, 1, 0.192157, 1)
+emission_energy_multiplier = 16.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_08o8g"]
+material = SubResource("StandardMaterial3D_kp0ql")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1wiy7"]
+shader = ExtResource("5_ygjfp")
+shader_parameter/pixel_size = 279.596
+
+[node name="MainScene" type="Node3D"]
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="BiteIndicator" type="TextureRect" parent="UI"]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_c6dvc")
+
+[node name="CatchUI" type="Control" parent="UI"]
+visible = false
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="BarBackground" type="ColorRect" parent="UI/CatchUI"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = 233.0
+offset_right = 300.0
+offset_bottom = 273.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.458405, 0.458405, 0.458405, 1)
+
+[node name="SweetSpot" type="ColorRect" parent="UI/CatchUI/BarBackground"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -60.0
+offset_top = -20.0
+offset_right = 60.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.513678, 1, 0.48175, 1)
+
+[node name="Marker" type="ColorRect" parent="UI/CatchUI/BarBackground"]
+layout_mode = 0
+offset_right = 6.0
+offset_bottom = 40.0
+
+[node name="CatchProgress" type="ProgressBar" parent="UI/CatchUI"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = 279.0
+offset_right = 300.0
+offset_bottom = 306.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CatchResultUI" parent="UI" instance=ExtResource("2_o3jky")]
+offset_top = -197.0
+offset_bottom = 197.0
+
+[node name="InventoryUI" parent="UI" instance=ExtResource("11_pjux3")]
+
+[node name="MoneyHUD" parent="UI" instance=ExtResource("1_kp0ql")]
+offset_right = 60.0
+offset_bottom = 43.0
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_cfq0f")
+
+[node name="PlayerCamera" type="Camera3D" parent="."]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 2.007, 0.0447942)
+script = ExtResource("1_ibiss")
+
+[node name="FishingRod" parent="PlayerCamera" node_paths=PackedStringArray("rod_tip", "hook", "catch_result_ui", "inventory_ui") instance=ExtResource("1_echbf")]
+transform = Transform3D(0.925417, -0.163176, -0.34202, 0.173648, 0.984808, 0, 0.336824, -0.0593912, 0.939693, 0.4, -0.40033, -1.03766)
+rod_tip = NodePath("RodTip")
+hook = NodePath("../../Hook")
+catch_result_ui = NodePath("../../UI/CatchResultUI")
+inventory_ui = NodePath("../../UI/InventoryUI")
+
+[node name="RodMesh" parent="PlayerCamera/FishingRod" index="0"]
+transform = Transform3D(1, 0, 0, 0, 0.984808, -0.173648, 0, 0.173648, 0.984808, 0, 0, 0)
+
+[node name="WaterPlane" type="MeshInstance3D" parent="."]
+transform = Transform3D(-1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0, 0, 1, 0, 1.31409, 91.1433)
+mesh = SubResource("PlaneMesh_qg23i")
+
+[node name="Hook" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.875422, 5)
+
+[node name="Ripple" type="MeshInstance3D" parent="Hook"]
+transform = Transform3D(0.5, 0, 0, 0, -2.18557e-08, 0.5, 0, -0.5, -2.18557e-08, 0, -0.233042, 0.217663)
+mesh = SubResource("QuadMesh_611at")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Hook"]
+libraries = {
+&"": SubResource("AnimationLibrary_1wiy7")
+}
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.931818, 0.362926, 0, -0.362926, 0.931818, -1.07784, 37.4465, 160.116)
+light_color = Color(0.99552, 0.467887, 0.0444731, 1)
+light_energy = 16.0
+light_indirect_energy = 5.041
+light_volumetric_fog_energy = 0.485
+light_angular_distance = 13.64
+light_specular = 0.676
+shadow_enabled = true
+directional_shadow_split_1 = 0.079
+directional_shadow_split_2 = 0.352
+directional_shadow_split_3 = 0.268
+directional_shadow_fade_start = 0.507
+directional_shadow_max_distance = 83.4
+sky_mode = 1
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.764632, -4.11893)
+material_override = SubResource("StandardMaterial3D_u1u68")
+mesh = SubResource("BoxMesh_u1u68")
+
+[node name="Line" type="MeshInstance3D" parent="." node_paths=PackedStringArray("rod_tip", "hook", "fishing_script")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.53619, 0.170711)
+mesh = SubResource("CylinderMesh_pjux3")
+script = ExtResource("10_pjux3")
+rod_tip = NodePath("../PlayerCamera/FishingRod/RodTip")
+hook = NodePath("../Hook")
+fishing_script = NodePath("../PlayerCamera/FishingRod")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(26.165, 0, 0, 0, 26.165, 0, 0, 0, 26.165, 0, 2.72752, 228.721)
+mesh = SubResource("SphereMesh_08o8g")
+
+[node name="tree" parent="." instance=ExtResource("14_08o8g")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.02284, 0, 17.0507)
+
+[node name="tree2" parent="." instance=ExtResource("14_08o8g")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.90339, 0.164468, 6.24356)
+
+[node name="Filter" type="CanvasLayer" parent="."]
+layer = 0
+
+[node name="PixelateOverlay" type="ColorRect" parent="Filter"]
+material = SubResource("ShaderMaterial_1wiy7")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 28.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[editable path="PlayerCamera/FishingRod"]
