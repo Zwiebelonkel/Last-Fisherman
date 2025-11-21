@@ -1,4 +1,4 @@
-[gd_scene load_steps=44 format=3 uid="uid://cx2sffjjdjuw5"]
+[gd_scene load_steps=46 format=3 uid="uid://cx2sffjjdjuw5"]
 
 [ext_resource type="Shader" uid="uid://b8mxoacu7poqc" path="res://shader/sky.gdshader" id="1_1wiy7"]
 [ext_resource type="PackedScene" uid="uid://b5ew1rfc8ow8g" path="res://scenes/fishingRod.tscn" id="1_echbf"]
@@ -9,7 +9,6 @@
 [ext_resource type="Texture2D" uid="uid://e7t33pnr13bp" path="res://textures/These-images-of-clouds-are-created-exclusively-using-Perlin-noise-It-simulates-the_Q320.jpg" id="2_u1u68"]
 [ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="3_8wjpf"]
 [ext_resource type="Texture2D" uid="uid://5bjxsmrb0phj" path="res://textures/NEURA_Logo.jpeg" id="3_c6dvc"]
-[ext_resource type="Shader" uid="uid://dmg556n5nwodi" path="res://shader/pixelate.gdshader" id="5_ygjfp"]
 [ext_resource type="Texture2D" uid="uid://cvllk03mhtybp" path="res://textures/723-normal.jpg" id="6_x537r"]
 [ext_resource type="Texture2D" uid="uid://d31603nl8y0gd" path="res://textures/Water_preview.jpgC878A51E-2B84-45CA-85CB-75E5BC88EEC8Large.jpg" id="7_cfq0f"]
 [ext_resource type="Script" uid="uid://bymrcyid32xsp" path="res://scripts/line.gd" id="10_pjux3"]
@@ -19,9 +18,26 @@
 [ext_resource type="PackedScene" uid="uid://cfptx2e41wve1" path="res://scenes/shop.tscn" id="15_0cxu4"]
 [ext_resource type="PackedScene" uid="uid://5eeohonkr6bu" path="res://textures/hillybilly.glb" id="16_xnxdc"]
 
+[sub_resource type="Shader" id="Shader_6b2wv"]
+code = "shader_type canvas_item;
+
+uniform sampler2D SCREEN_TEXTURE : hint_screen_texture, filter_nearest;
+uniform float pixel_size : hint_range(1.0, 1000.0) = 200;
+
+void fragment() {
+    vec2 uv = SCREEN_UV;
+
+    uv = floor(uv * pixel_size) / pixel_size;
+
+    COLOR = texture(SCREEN_TEXTURE, uv);
+}
+
+
+"
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1wiy7"]
-shader = ExtResource("5_ygjfp")
-shader_parameter/pixel_size = 279.596
+shader = SubResource("Shader_6b2wv")
+shader_parameter/pixel_size = 290.82
 
 [sub_resource type="Theme" id="Theme_25dfr"]
 default_font = ExtResource("3_8wjpf")
@@ -123,6 +139,8 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed(\"left\") or event.is_action_pressed(\"right\"):
 		handle_rotation_input(event)
 		return
+	if event.is_action_pressed(\"cast\") and current_rotation == 90:
+		enter_shop()
 
 	if state == STATE_ROTATING:
 		return  # Keine anderen Eingaben während Rotation
@@ -197,17 +215,18 @@ func update_rotation(delta: float) -> void:
 		is_rotating = false
 
 		# Bei 90° zum Shop wechseln
-		if current_rotation == 90.0:
-			enter_shop()
-		else:
-			state = STATE_IDLE
+		#if current_rotation == 90.0:
+			#enter_shop()
+		#else:
+			#state = STATE_IDLE
 
 
 func enter_shop() -> void:
 	print(\"Betrete Shop!\")
 	# Optional: Fade-Out Animation
 	#await get_tree().create_timer(0.3).timeout
-	#get_tree().change_scene_to_file(shop_scene_path)
+	get_tree().change_scene_to_file(\"res://scenes/shop_inside.tscn\")
+
 
 
 # ---------------------------------------------------------
@@ -525,6 +544,12 @@ emission_energy_multiplier = 16.0
 [sub_resource type="SphereMesh" id="SphereMesh_08o8g"]
 material = SubResource("StandardMaterial3D_kp0ql")
 
+[sub_resource type="PrismMesh" id="PrismMesh_8wjpf"]
+left_to_right = 1.0
+size = Vector3(5.1, 1.185, 100)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_25dfr"]
+
 [node name="MainScene" type="Node3D"]
 
 [node name="Filter" type="CanvasLayer" parent="."]
@@ -705,5 +730,10 @@ transform = Transform3D(-3.12536e-08, 0, 0.715, 0, 0.715, 0, -0.715, 0, -3.12536
 
 [node name="hillybilly" parent="." instance=ExtResource("16_xnxdc")]
 transform = Transform3D(-0.190341, 0, 1.51307, 0, 1.525, 0, -1.51307, 0, -0.190341, -3.27164, -0.424028, 0.672108)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(-4.37114e-08, 4.84175e-16, 1, 0.135335, 0.9908, 5.91569e-09, -0.9908, 0.135335, -4.33092e-08, 1.66543, -0.324611, 2.63534)
+mesh = SubResource("PrismMesh_8wjpf")
+surface_material_override/0 = SubResource("StandardMaterial3D_25dfr")
 
 [editable path="PlayerCamera/FishingRod"]

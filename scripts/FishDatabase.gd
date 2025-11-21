@@ -22,20 +22,23 @@ var RARITY_DATA = {
 #  FISH LISTS BY LOCATION
 # ===========================
 var FISH_LAKE = [
-	{"name": "Rotauge",      "rarity": RARITY.NORMAL,        "base_value": 5},
-	{"name": "Barsch",       "rarity": RARITY.UNGEWOEHNLICH, "base_value": 8},
-	{"name": "Hecht",        "rarity": RARITY.SELTEN,        "base_value": 15},
-	{"name": "Zander",       "rarity": RARITY.EPISCH,        "base_value": 25},
-	{"name": "Karpfenkönig", "rarity": RARITY.LEGENDAER,     "base_value": 40},
-	{"name": "Geisterforelle","rarity": RARITY.EXOTISCH,     "base_value": 100}
+	{"name": "Seetang",      "rarity": RARITY.NORMAL,        "base_value": 1,   "icon": "res://assets/fish/fish1.png"},
+	{"name": "Rotauge",      "rarity": RARITY.NORMAL,        "base_value": 5,   "icon": "res://assets/fish/fish1.png"},
+	{"name": "Barsch",       "rarity": RARITY.UNGEWOEHNLICH, "base_value": 8,   "icon": "res://assets/fish/fish2.png"},
+	{"name": "Hecht",        "rarity": RARITY.SELTEN,        "base_value": 15,  "icon": "res://assets/fish/fish3.png"},
+	{"name": "Zander",       "rarity": RARITY.EPISCH,        "base_value": 25,  "icon": "res://assets/fish/fish4.png"},
+	{"name": "Karpfenkönig", "rarity": RARITY.LEGENDAER,     "base_value": 40,  "icon": "res://assets/fish/fish5.png"},
+	{"name": "Geisterforelle","rarity": RARITY.EXOTISCH,     "base_value": 100, "icon": "res://assets/fish/fish6.png"},
+	{"name": "Plutonium",    "rarity": RARITY.EXOTISCH,     "base_value": 150, "icon": "res://assets/fish/fish1.png"}
 ]
 var FISH_CITY = [
-	{"name": "Schmutzgrundel",      "rarity": RARITY.NORMAL, "base_value": 6},
-	{"name": "Trümmerkabel-Fisch",  "rarity": RARITY.UNGEWOEHNLICH, "base_value": 10},
-	{"name": "Rohrschatten",        "rarity": RARITY.SELTEN, "base_value": 18},
-	{"name": "Neonflosser",         "rarity": RARITY.EPISCH, "base_value": 30},
-	{"name": "Altstadtgeist",       "rarity": RARITY.LEGENDAER, "base_value": 55},
-	{"name": "Stadtmythos",         "rarity": RARITY.EXOTISCH, "base_value": 150}
+	{"name": "Schmutzgrundel",      "rarity": RARITY.NORMAL,        "base_value": 6,   "icon": "res://assets/fish/schmutzgrundel.png"},
+	{"name": "Trümmerkabel-Fisch",  "rarity": RARITY.UNGEWOEHNLICH, "base_value": 10,  "icon": "res://assets/fish/truemmerkabel.png"},
+	{"name": "Rohrschatten",        "rarity": RARITY.SELTEN,        "base_value": 18,  "icon": "res://assets/fish/rohrschatten.png"},
+	{"name": "Neonflosser",         "rarity": RARITY.EPISCH,        "base_value": 30,  "icon": "res://assets/fish/neonflosser.png"},
+	{"name": "Altstadtgeist",       "rarity": RARITY.LEGENDAER,     "base_value": 55,  "icon": "res://assets/fish/altstadtgeist.png"},
+	{"name": "Stadtmythos",         "rarity": RARITY.EXOTISCH,      "base_value": 150, "icon": "res://assets/fish/stadtmythos.png"},
+	{"name": "Leiche",              "rarity": RARITY.EXOTISCH,      "base_value": 0,   "icon": "res://assets/fish/leiche.png"}
 ]
 # ===========================
 #  FISH SELECTION
@@ -63,3 +66,9 @@ func get_fish_difficulty(fish: Dictionary) -> float:
 func get_marker_speed_for_fish(fish: Dictionary, base_speed: float = 350.0) -> float:
 	var difficulty = get_fish_difficulty(fish)
 	return base_speed * difficulty
+
+# Icon laden
+func get_fish_icon(fish: Dictionary) -> Texture2D:
+	if fish.has("icon"):
+		return load(fish["icon"])
+	return null

@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dstq66nai8yi0" path="res://scripts/CatchResultUI.gd" id="1_dnped"]
 [ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="1_nuupr"]
-[ext_resource type="Texture2D" uid="uid://b25ona2mrq6va" path="res://concepts/einzelnn/fish1.png" id="2_poul8"]
+[ext_resource type="Texture2D" uid="uid://b25ona2mrq6va" path="res://assets/fish/fish1.png" id="2_poul8"]
 
 [sub_resource type="Theme" id="Theme_nvhde"]
 default_font = ExtResource("1_nuupr")

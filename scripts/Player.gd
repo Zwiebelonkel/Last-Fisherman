@@ -5,6 +5,10 @@ var money: int = 0
 var level: int = 1
 var xp: int = 0
 
+var upgrade_grip: int = 1
+var upgrade_bait: int = 1
+var upgrade_line: int = 1
+
 func add_money(amount: int) -> void:
 	money += amount
 	print("Geld hinzugefügt:", amount, " → Neues Guthaben:", money)

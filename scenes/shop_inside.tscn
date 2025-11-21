@@ -1,0 +1,154 @@
+[gd_scene load_steps=6 format=3 uid="uid://dme4l6a6jg0g6"]
+
+[ext_resource type="PackedScene" uid="uid://b5ew1rfc8ow8g" path="res://scenes/fishingRod.tscn" id="1_3qbwi"]
+[ext_resource type="Script" uid="uid://cl5fc0glwmnhs" path="res://scripts/UpgradeShop.gd" id="1_i2sg0"]
+
+[sub_resource type="Animation" id="Animation_3qbwi"]
+resource_name = "idle"
+length = 5.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 6.28319, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 1.3, 2.5, 3.91),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0.005, -2.792), Vector3(0, 0.155, -2.792), Vector3(0, 0.005, -2.792), Vector3(0, 0.155, -2.792)]
+}
+
+[sub_resource type="Animation" id="Animation_i2sg0"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0.005, -2.792)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_nnl43"]
+_data = {
+&"RESET": SubResource("Animation_i2sg0"),
+&"idle": SubResource("Animation_3qbwi")
+}
+
+[node name="ShopInside" type="Node3D"]
+script = ExtResource("1_i2sg0")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.10217)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="."]
+
+[node name="RodPreview" parent="." instance=ExtResource("1_3qbwi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.005, -2.792)
+script = null
+
+[node name="AnimationPlayer2" type="AnimationPlayer" parent="RodPreview"]
+libraries = {
+&"": SubResource("AnimationLibrary_nnl43")
+}
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="Panel" type="Panel" parent="UI"]
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -338.0
+offset_top = -203.5
+offset_right = -55.0
+offset_bottom = 203.5
+grow_horizontal = 0
+grow_vertical = 2
+
+[node name="GripButton" type="Button" parent="UI/Panel"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 31.0
+grow_horizontal = 2
+text = "Grip"
+
+[node name="BaitButton" type="Button" parent="UI/Panel"]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -15.5
+offset_bottom = 15.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "Bait"
+
+[node name="LineButton" type="Button" parent="UI/Panel"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -322.5
+offset_bottom = -291.5
+grow_horizontal = 2
+grow_vertical = 0
+text = "Line"
+
+[node name="BackButton" type="Button" parent="UI/Panel"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -22.5
+offset_top = -31.0
+offset_right = 22.5
+grow_horizontal = 2
+grow_vertical = 0
+text = "Back"
+
+[node name="MoneyLabel" type="Label" parent="UI"]
+offset_right = 40.0
+offset_bottom = 23.0
+text = "Moeny"
+
+[connection signal="pressed" from="UI/Panel/GripButton" to="." method="_on_GripButton_pressed"]
+[connection signal="pressed" from="UI/Panel/BaitButton" to="." method="_on_BaitButton_pressed"]
+[connection signal="pressed" from="UI/Panel/LineButton" to="." method="_on_LineButton_pressed"]
+[connection signal="pressed" from="UI/Panel/BackButton" to="." method="_on_BackButton_pressed"]

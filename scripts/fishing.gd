@@ -56,6 +56,8 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("left") or event.is_action_pressed("right"):
 		handle_rotation_input(event)
 		return
+	if event.is_action_pressed("cast") and current_rotation == 90:
+		enter_shop()
 
 	if state == STATE_ROTATING:
 		return  # Keine anderen Eingaben während Rotation
@@ -130,17 +132,14 @@ func update_rotation(delta: float) -> void:
 		is_rotating = false
 
 		# Bei 90° zum Shop wechseln
-		if current_rotation == 90.0:
-			enter_shop()
-		else:
-			state = STATE_IDLE
+
 
 
 func enter_shop() -> void:
 	print("Betrete Shop!")
 	# Optional: Fade-Out Animation
 	#await get_tree().create_timer(0.3).timeout
-	#get_tree().change_scene_to_file(shop_scene_path)
+	get_tree().change_scene_to_file("res://scenes/shop_inside.tscn")
 
 
 # ---------------------------------------------------------

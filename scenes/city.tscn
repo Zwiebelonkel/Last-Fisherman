@@ -92,6 +92,8 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed(\"left\") or event.is_action_pressed(\"right\"):
 		handle_rotation_input(event)
 		return
+	if event.is_action_pressed(\"cast\") and current_rotation == 90:
+		enter_shop()
 
 	if state == STATE_ROTATING:
 		return  # Keine anderen Eingaben während Rotation
@@ -166,17 +168,17 @@ func update_rotation(delta: float) -> void:
 		is_rotating = false
 
 		# Bei 90° zum Shop wechseln
-		if current_rotation == 90.0:
-			enter_shop()
-		else:
-			state = STATE_IDLE
+		#if current_rotation == 90.0:
+			#enter_shop()
+		#else:
+			#state = STATE_IDLE
 
 
 func enter_shop() -> void:
 	print(\"Betrete Shop!\")
 	# Optional: Fade-Out Animation
 	#await get_tree().create_timer(0.3).timeout
-	#get_tree().change_scene_to_file(shop_scene_path)
+	get_tree().change_scene_to_file(\"res://scenes/shop_inside.tscn\")
 
 
 # ---------------------------------------------------------
@@ -416,6 +418,11 @@ uniform float caustics_intensity = 15.0;
 uniform float num_caustic_layers = 16.0; // <<< IMPORTANT: DOUBLE CHECK THIS against your Texture2DArray's actual slices!
 uniform float caustic_distortion_strength = 0.001; // Keep this value within a range of 0.001 to 0.009
 
+// Group uniforms for water level control
+group_uniforms Water_Level;
+uniform float water_level = 0.0;  // Basis-Wasserpegel (hoch/runter)
+uniform float wave_amplitude_multiplier = 1.0;  // Multiplikator für Wellen-Höhe
+
 // Fresnel function to calculate the reflection/refraction effect
 float fresnel(float amount, vec3 normal, vec3 view) {
     return pow((1.0 - clamp(dot(normalize(normal), normalize(view)), 0.0, 1.0)), amount);
@@ -564,6 +571,10 @@ void vertex() {
     WaveResult waveResult = wave(VERTEX.xz, time);
     // Apply wave displacement to the vertex position
     VERTEX += waveResult.displacement;
+    // Apply wave amplitude multiplier
+    VERTEX.y *= wave_amplitude_multiplier;
+    // Apply water level offset
+    VERTEX.y += water_level;
     // Store the height of the wave displacement
     height = waveResult.displacement.y;
 
@@ -729,25 +740,25 @@ shader_parameter/wave_6 = Vector4(1.2, 1.14, 0.01, 0.33)
 shader_parameter/wave_7 = Vector4(-1.6, 7.3, 0.11, 0.73)
 shader_parameter/wave_8 = Vector4(-0.42, -1.63, 0.15, 1.52)
 shader_parameter/time_factor = 6.975
-shader_parameter/noise_zoom = 5.215
-shader_parameter/noise_amp = 1.5
+shader_parameter/noise_zoom = 12.02
+shader_parameter/noise_amp = 0.37
 shader_parameter/base_water_color = Color(0, 0, 0, 1)
 shader_parameter/fresnel_water_color = Color(0, 0, 0, 1)
 shader_parameter/deep_water_color = Color(0, 0.0652681, 0.151571, 1)
 shader_parameter/shallow_water_color = Color(0, 0, 0, 1)
-shader_parameter/beers_law = 1.465
+shader_parameter/beers_law = 10.51
 shader_parameter/depth_offset = 0.095
-shader_parameter/near = 7.0
+shader_parameter/near = 10.435
 shader_parameter/far = 10000.0
-shader_parameter/edge_texture_scale = 4.715
+shader_parameter/edge_texture_scale = 5.73
 shader_parameter/edge_texture_offset = 1.0
 shader_parameter/edge_texture_speed = 0.1
 shader_parameter/edge_foam_intensity = 2.0
 shader_parameter/edge_fade_start = -3.0
 shader_parameter/edge_fade_end = 6.6
-shader_parameter/peak_height_threshold = 1.0
+shader_parameter/peak_height_threshold = 4.675
 shader_parameter/peak_color = Vector3(1, 1, 1)
-shader_parameter/peak_intensity = 2.145
+shader_parameter/peak_intensity = 2.665
 shader_parameter/foam_intensity = 0.0
 shader_parameter/foam_scale = 1.0
 shader_parameter/metallic = 4.835
@@ -759,13 +770,15 @@ shader_parameter/uv_speed_text_b = Vector2(0.15, 0.1)
 shader_parameter/normal_strength = 5.095
 shader_parameter/uv_sampler_scale = 0.3
 shader_parameter/blend_factor = 0.795
-shader_parameter/perturbation_strength = 0.37
+shader_parameter/perturbation_strength = 0.47
 shader_parameter/perturbation_time = 0.245
 shader_parameter/normalmap_a = ExtResource("10_kg0fi")
 shader_parameter/normalmap_b = ExtResource("11_0orsp")
-shader_parameter/caustics_intensity = 16.66
+shader_parameter/caustics_intensity = 15.0
 shader_parameter/num_caustic_layers = 16.76
 shader_parameter/caustic_distortion_strength = 0.001
+shader_parameter/water_level = 4.03
+shader_parameter/wave_amplitude_multiplier = 18.68
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_qg23i"]
 lightmap_size_hint = Vector2i(251, 1001)
