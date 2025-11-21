@@ -1,15 +1,50 @@
-[gd_scene load_steps=9 format=3 uid="uid://b5ew1rfc8ow8g"]
+[gd_scene load_steps=18 format=3 uid="uid://b5ew1rfc8ow8g"]
 
 [ext_resource type="Script" uid="uid://b3fseqwbblvo8" path="res://scripts/fishing.gd" id="1_stpr7"]
+[ext_resource type="Material" uid="uid://cj86wv7c01tef" path="res://materials/outlineWhite.tres" id="2_wjujl"]
+[ext_resource type="Shader" uid="uid://cfsuhiaq15sgu" path="res://shader/outline.gdshader" id="3_8r45t"]
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_4swrq"]
-top_radius = 0.01
+material = ExtResource("2_wjujl")
+top_radius = 0.005
 bottom_radius = 0.03
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_stpr7"]
+material = ExtResource("2_wjujl")
 top_radius = 0.1
 bottom_radius = 0.1
 height = 0.1
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_byvj7"]
+render_priority = 0
+shader = ExtResource("3_8r45t")
+shader_parameter/color = Color(0, 0, 0, 1)
+shader_parameter/thickness = 0.01
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6deuo"]
+next_pass = SubResource("ShaderMaterial_byvj7")
+albedo_color = Color(0.49221, 0.239355, 4.81308e-08, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_dtr8f"]
+material = SubResource("StandardMaterial3D_6deuo")
+top_radius = 0.02
+bottom_radius = 0.02
+height = 0.061
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_8r45t"]
+render_priority = 0
+shader = ExtResource("3_8r45t")
+shader_parameter/color = Color(0, 0, 0, 1)
+shader_parameter/thickness = 0.01
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_byvj7"]
+next_pass = SubResource("ShaderMaterial_8r45t")
+albedo_color = Color(0.707967, 0.707967, 0.707967, 1)
+metallic = 0.87
+
+[sub_resource type="BoxMesh" id="BoxMesh_6deuo"]
+material = SubResource("StandardMaterial3D_byvj7")
+size = Vector3(0.05, 0.015, 0.105)
 
 [sub_resource type="Animation" id="Animation_wjujl"]
 length = 0.001
@@ -20,6 +55,18 @@ tracks/0/path = NodePath("RodMesh")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = PackedFloat32Array(0, 1, 0.0871557, 0, 0, 0.996195)
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("RodMesh:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(-0.258309, 0, 0)]
+}
 
 [sub_resource type="Animation" id="Animation_8r45t"]
 resource_name = "cast"
@@ -31,6 +78,23 @@ tracks/0/path = NodePath("RodMesh")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = PackedFloat32Array(0, 1, 0.0436194, 0, 0, 0.999048, 0.2, 1, -0.173648, 0, 0, 0.984808, 0.5, 1, 0.0436194, 0, 0, 0.999048)
+
+[sub_resource type="Animation" id="Animation_6deuo"]
+resource_name = "fight"
+length = 0.5
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("RodMesh:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.151238, 0.300768),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(0.174533, 0, 0), Vector3(-0.258309, 0, 0), Vector3(0.0139626, 0, 0), Vector3(-0.258309, 0, 0)]
+}
 
 [sub_resource type="Animation" id="Animation_stpr7"]
 resource_name = "idle"
@@ -58,6 +122,7 @@ tracks/0/keys = PackedFloat32Array(0, 1, 0.0436194, 0, 0, 0.999048, 0.25, 1, 0.1
 _data = {
 &"RESET": SubResource("Animation_wjujl"),
 &"cast": SubResource("Animation_8r45t"),
+&"fight": SubResource("Animation_6deuo"),
 &"idle": SubResource("Animation_stpr7"),
 &"reel": SubResource("Animation_byvj7")
 }
@@ -66,17 +131,29 @@ _data = {
 script = ExtResource("1_stpr7")
 
 [node name="RodMesh" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.984808, -0.173648, 0, 0.173648, 0.984808, 0, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 0.966824, 0.255446, 0, -0.255446, 0.966824, 0, 0, 0)
 mesh = SubResource("CylinderMesh_4swrq")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="RodMesh"]
-transform = Transform3D(0.0286892, 0.984402, -0.173576, -0.984402, 0.0579777, 0.166104, 0.173576, 0.166104, 0.970711, 0.0333985, -0.270843, -0.00647996)
+transform = Transform3D(0.0286892, 0.984402, -0.173576, -0.984402, 0.0579777, 0.166104, 0.173576, 0.166104, 0.970711, 0.0469366, -0.659301, -0.0129844)
 mesh = SubResource("CylinderMesh_stpr7")
+
+[node name="RodTip" type="Marker3D" parent="RodMesh"]
+transform = Transform3D(1, 0, 0, 0, 0.984808, 0.173648, 0, -0.173648, 0.984808, 0, 0.99204, 0.00167757)
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="RodMesh"]
+transform = Transform3D(-0.00739106, -0.999901, 0.0119594, 0.955586, -0.0105862, -0.294521, 0.294619, 0.00925145, 0.95557, -0.0301109, -0.5249, -0.00996324)
+mesh = SubResource("CylinderMesh_dtr8f")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="RodMesh/MeshInstance3D2"]
+transform = Transform3D(1, 2.91038e-11, 0, -2.85218e-09, 1, 0, -2.23517e-08, -5.58794e-09, 1, -0.00289083, 0.0320471, 0.0287847)
+mesh = SubResource("BoxMesh_6deuo")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="RodMesh"]
+transform = Transform3D(-0.00739106, -0.999901, 0.0119594, 0.955586, -0.0105862, -0.294521, 0.294619, 0.00925145, 0.95557, -0.0891956, -0.540106, 0.0475879)
+mesh = SubResource("CylinderMesh_dtr8f")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
 &"": SubResource("AnimationLibrary_6deuo")
 }
-
-[node name="RodTip" type="Marker3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.976678, 0.173918)

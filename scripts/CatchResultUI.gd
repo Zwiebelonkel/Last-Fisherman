@@ -1,9 +1,9 @@
 extends PanelContainer
 
-@onready var fish_icon: TextureRect = $VBoxContainer/FishIcon
-@onready var fish_name: Label = $VBoxContainer/FishName
-@onready var fish_rarity: Label = $VBoxContainer/FishRarity
-@onready var fish_value: Label = $VBoxContainer/FishValue
+@onready var fish_icon: TextureRect = $VBoxContainer/MarginContainer/PanelContainer/MarginContainer/FishIcon
+@onready var fish_name: Label = $VBoxContainer/MarginContainer2/FishName
+@onready var fish_rarity: Label = $VBoxContainer/MarginContainer3/FishRarity
+@onready var fish_value: Label = $VBoxContainer/MarginContainer4/FishValue
 @onready var continue_button: Button = $VBoxContainer/ContinueButton
 @onready var anim: AnimationPlayer = $VBoxContainer/AnimationPlayer
 
@@ -19,7 +19,7 @@ func show_fish(fish: Dictionary):
 	visible = true
 
 	# Füllen
-	fish_icon.texture = preload("res://textures/NEURA_Logo.jpeg") # Platzhalter
+	fish_icon.texture = preload("res://concepts/einzelnn/fish1.png") # Platzhalter
 	fish_name.text = fish["name"]
 
 	var rarity_data = FishDB.RARITY_DATA[fish["rarity"]]

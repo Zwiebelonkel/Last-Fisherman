@@ -2,20 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b4rl50vwm8jxk"
-path.s3tc="res://.godot/imported/tree_Ps1Tree1TrunkTexture.png-71c551b9ae97a894fc242669cc9087cb.s3tc.ctex"
+uid="uid://cw5ltmn3vtien"
+path.s3tc="res://.godot/imported/hillybilly_redneck_mat_baseColor.png-5267acd6d8bc51004448bf2c4968903d.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 generator_parameters={
-"md5": "5d5fafddff5c9406277b0780751dc0e5"
+"md5": "255df8ef6a7e544f1773f1d447626797"
 }
 
 [deps]
 
-source_file="res://textures/tree_Ps1Tree1TrunkTexture.png"
-dest_files=["res://.godot/imported/tree_Ps1Tree1TrunkTexture.png-71c551b9ae97a894fc242669cc9087cb.s3tc.ctex"]
+source_file="res://textures/hillybilly_redneck_mat_baseColor.png"
+dest_files=["res://.godot/imported/hillybilly_redneck_mat_baseColor.png-5267acd6d8bc51004448bf2c4968903d.s3tc.ctex"]
 
 [params]
 

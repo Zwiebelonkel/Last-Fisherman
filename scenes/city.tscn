@@ -1,0 +1,1185 @@
+[gd_scene load_steps=44 format=3 uid="uid://cvkrlt4ri1i2u"]
+
+[ext_resource type="Shader" uid="uid://dmg556n5nwodi" path="res://shader/pixelate.gdshader" id="1_f7b0s"]
+[ext_resource type="Texture2D" uid="uid://5bjxsmrb0phj" path="res://textures/NEURA_Logo.jpeg" id="2_dqb0a"]
+[ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="3_agolw"]
+[ext_resource type="PackedScene" uid="uid://cqtn78ty1fa7" path="res://scenes/CatchResultUI.tscn" id="4_yles7"]
+[ext_resource type="PackedScene" uid="uid://dxxrhs12x2m2c" path="res://scenes/InventoryUI.tscn" id="5_ibljb"]
+[ext_resource type="PackedScene" uid="uid://cdb3sodlv6np7" path="res://scenes/MoneyHUD.tscn" id="6_8y5tq"]
+[ext_resource type="Script" uid="uid://bl1xotduehieu" path="res://scripts/camera_sway.gd" id="7_k0m58"]
+[ext_resource type="PackedScene" uid="uid://b5ew1rfc8ow8g" path="res://scenes/fishingRod.tscn" id="8_7tlau"]
+[ext_resource type="Texture2D" uid="uid://cvllk03mhtybp" path="res://textures/723-normal.jpg" id="10_kg0fi"]
+[ext_resource type="Texture2D" uid="uid://d31603nl8y0gd" path="res://textures/Water_preview.jpgC878A51E-2B84-45CA-85CB-75E5BC88EEC8Large.jpg" id="11_0orsp"]
+[ext_resource type="Shader" uid="uid://cfsuhiaq15sgu" path="res://shader/outline.gdshader" id="12_h3250"]
+[ext_resource type="Script" uid="uid://bymrcyid32xsp" path="res://scripts/line.gd" id="13_my70f"]
+[ext_resource type="PackedScene" uid="uid://cfptx2e41wve1" path="res://scenes/shop.tscn" id="15_nmpot"]
+[ext_resource type="Texture2D" uid="uid://cw5ltmn3vtien" path="res://textures/hillybilly_redneck_mat_baseColor.png" id="15_yles7"]
+[ext_resource type="PackedScene" uid="uid://5eeohonkr6bu" path="res://textures/hillybilly.glb" id="16_hks51"]
+[ext_resource type="Shader" uid="uid://of02kbc2kqkw" path="res://shader/sky2.gdshader" id="17_agolw"]
+[ext_resource type="PackedScene" uid="uid://btgasvjdkp460" path="res://assets/hotel.glb" id="18_agolw"]
+[ext_resource type="PackedScene" uid="uid://ckje0fw3pep83" path="res://assets/skyscaper.glb" id="18_ibljb"]
+[ext_resource type="Texture2D" uid="uid://e7t33pnr13bp" path="res://textures/These-images-of-clouds-are-created-exclusively-using-Perlin-noise-It-simulates-the_Q320.jpg" id="18_yles7"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1wiy7"]
+shader = ExtResource("1_f7b0s")
+shader_parameter/pixel_size = 279.596
+
+[sub_resource type="Theme" id="Theme_25dfr"]
+default_font = ExtResource("3_agolw")
+
+[sub_resource type="Theme" id="Theme_kjvyo"]
+default_font = ExtResource("3_agolw")
+
+[sub_resource type="Theme" id="Theme_2phbr"]
+default_font = ExtResource("3_agolw")
+
+[sub_resource type="GDScript" id="GDScript_dqb0a"]
+script/source = "extends Node3D
+
+# NODE-REFERENCES
+@export var rod_tip: Node3D
+@export var hook: Node3D
+@export var catch_result_ui: Node
+@export var shop_scene_path: String = \"res://scenes/shop.tscn\"
+@export var rotation_speed: float = 2.0  # Drehgeschwindigkeit
+@export var camera: Camera3D
+
+@onready var anim: AnimationPlayer = $AnimationPlayer
+@onready var ripple_anim: AnimationPlayer = hook.get_node(\"AnimationPlayer\")
+
+@onready var ui_bite_indicator: TextureRect = get_node(\"../../UI/BiteIndicator\")
+@onready var catch_ui: Control = get_node(\"../../UI/CatchUI\")
+@onready var bar_background: Control = catch_ui.get_node(\"BarBackground\")
+@onready var marker: Control = bar_background.get_node(\"Marker\")
+@onready var sweet_spot: Control = bar_background.get_node(\"SweetSpot\")
+@onready var catch_progress: ProgressBar = catch_ui.get_node(\"CatchProgress\")
+@export var inventory_ui: Node
+signal line_visible(visible: bool)
+
+# STATE MACHINE
+enum {
+	STATE_IDLE,
+	STATE_CASTED,
+	STATE_BITE,
+	STATE_MINIGAME,
+	STATE_ROTATING
+}
+
+var state: int = STATE_IDLE
+
+# Minigame Variables
+var marker_pos: float = 0.0
+var marker_speed: float = 350.0
+var marker_slow_factor: float = 0.3
+var input_active: bool = false
+var current_fish: Dictionary = {}
+
+# Rotation Variables
+var current_rotation: float = 180.0  # 180 = Fischen, 90 = Shop
+var target_rotation: float = 180.0
+var is_rotating: bool = false
+
+
+func _ready() -> void:
+	anim.play(\"idle\")
+	hook.visible = false
+	ui_bite_indicator.visible = false
+	catch_ui.visible = false
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	# Rotation Eingabe (Arrow Left oder D)
+	if event.is_action_pressed(\"left\") or event.is_action_pressed(\"right\"):
+		handle_rotation_input(event)
+		return
+
+	if state == STATE_ROTATING:
+		return  # Keine anderen Eingaben während Rotation
+
+	if state == STATE_MINIGAME:
+		if event.is_action_pressed(\"cast\"):
+			input_active = true
+		if event.is_action_released(\"cast\"):
+			input_active = false
+
+	if event.is_action_pressed(\"cast\"):
+		match state:
+			STATE_IDLE:
+				cast_line()
+			STATE_CASTED, STATE_BITE:
+				reel_pressed()
+			STATE_MINIGAME:
+				pass
+	if event.is_action_pressed(\"inventory_toggle\"):
+		inventory_ui.toggle()
+
+
+# ---------------------------------------------------------
+# ROTATION HANDLING
+# ---------------------------------------------------------
+func handle_rotation_input(event: InputEvent) -> void:
+	if is_rotating:
+		return
+
+	if event.is_action_pressed(\"right\"):
+		# Nach rechts drehen = Shop (90°)
+		target_rotation = 90.0
+	elif event.is_action_pressed(\"left\"):
+		# Nach links drehen = Fischen (180°)
+		target_rotation = 180.0
+
+	if abs(target_rotation - current_rotation) > 1.0:
+		start_rotation()
+
+
+func start_rotation() -> void:
+	state = STATE_ROTATING
+	is_rotating = true
+	
+	# Stoppe Fisch-Aktivitäten
+	if state == STATE_MINIGAME:
+		catch_ui.visible = false
+
+
+func _process(delta: float) -> void:
+	if state == STATE_ROTATING:
+		update_rotation(delta)
+	elif state == STATE_MINIGAME:
+		update_catch_minigame(delta)
+
+
+func update_rotation(delta: float) -> void:
+	var rotation_step = rotation_speed * delta
+
+	if target_rotation > current_rotation:
+		current_rotation = min(current_rotation + rotation_step, target_rotation)
+	else:
+		current_rotation = max(current_rotation - rotation_step, target_rotation)
+
+	# Wende Rotation auf KAMERA an, nicht auf die Scene!
+	if camera:
+		camera.rotation.y = deg_to_rad(current_rotation)
+
+	# Rotation abgeschlossen
+	if abs(current_rotation - target_rotation) < 0.5:
+		current_rotation = target_rotation
+		is_rotating = false
+
+		# Bei 90° zum Shop wechseln
+		if current_rotation == 90.0:
+			enter_shop()
+		else:
+			state = STATE_IDLE
+
+
+func enter_shop() -> void:
+	print(\"Betrete Shop!\")
+	# Optional: Fade-Out Animation
+	#await get_tree().create_timer(0.3).timeout
+	#get_tree().change_scene_to_file(shop_scene_path)
+
+
+# ---------------------------------------------------------
+# CAST
+# ---------------------------------------------------------
+func cast_line() -> void:
+	print(\"CAST\")
+	state = STATE_CASTED
+	ui_bite_indicator.visible = false
+
+	anim.play(\"cast\")
+	camera.start_screenshake(0.01,0.3)
+	await anim.animation_finished
+
+	var x = randf_range(-2.0, 2.0)
+	var z = randf_range(4.0, 7.0)
+	hook.position = Vector3(x, 0.05, z)
+	hook.visible = true
+
+	ripple_anim.play(\"ripple\")
+	anim.play(\"idle\")
+
+	start_bite_timer()
+	emit_signal(\"line_visible\", true)
+
+
+# ---------------------------------------------------------
+# REEL
+# ---------------------------------------------------------
+func reel_pressed() -> void:
+	match state:
+		STATE_CASTED:
+			print(\"Zu früh oder zu spät!\")
+			reset_line()
+
+		STATE_BITE:
+			print(\"BISS! Minispiel starten\")
+			ui_bite_indicator.visible = false
+			start_catch_minigame()
+
+
+func reset_line() -> void:
+	state = STATE_IDLE
+	anim.play(\"reel\")
+	await anim.animation_finished
+
+	hook.visible = false
+	ui_bite_indicator.visible = false
+	anim.play(\"idle\")
+	emit_signal(\"line_visible\", false)
+
+
+# ---------------------------------------------------------
+# BITE TIMER
+# ---------------------------------------------------------
+func start_bite_timer() -> void:
+	var wait_time := randf_range(1.5, 4.0)
+	print(\"Bite Timer gestartet: \", wait_time, \"s\")
+	await get_tree().create_timer(wait_time).timeout
+
+	if state != STATE_CASTED:
+		print(\"Bite Timer abgebrochen: state = \", state)
+		return
+
+	print(\"BITE READY!\")
+	state = STATE_BITE
+	show_bite_indicator()
+
+
+func show_bite_indicator() -> void:
+	ui_bite_indicator.visible = true
+
+	while state == STATE_BITE:
+		ui_bite_indicator.modulate.a = 1.0
+		await get_tree().create_timer(0.2).timeout
+		if state != STATE_BITE:
+			break
+		ui_bite_indicator.modulate.a = 0.2
+		await get_tree().create_timer(0.2).timeout
+
+
+# ---------------------------------------------------------
+# CATCH MINIGAME
+# ---------------------------------------------------------
+func start_catch_minigame() -> void:
+	state = STATE_MINIGAME
+	catch_ui.visible = true
+	anim.play(\"fight\")
+	camera.start_screenshake(0.1,1)
+
+	current_fish = FishDB.get_random_from_list(FishDB.FISH_CITY)
+	var difficulty = FishDB.get_fish_difficulty(current_fish)
+	marker_speed = FishDB.get_marker_speed_for_fish(current_fish)
+	
+	print(\"Gefangen: \", current_fish[\"name\"], \" (Schwierigkeit: \", difficulty, \")\")
+
+	catch_progress.value = 50.0
+	marker_pos = 0.0
+	marker.position.x = 0.0
+
+
+func update_catch_minigame(delta: float) -> void:
+	camera.start_screenshake(0.03,0.2)
+	var current_speed = marker_speed
+
+	if input_active:
+		current_speed *= marker_slow_factor
+
+	marker_pos += current_speed * delta
+
+	var max_x := bar_background.size.x - marker.size.x
+
+	if marker_pos >= max_x:
+		marker_pos = max_x
+		marker_speed *= -1.0
+	elif marker_pos <= 0.0:
+		marker_pos = 0.0
+		marker_speed *= -1.0
+
+	marker.position.x = marker_pos
+
+	var in_spot := marker.position.x >= sweet_spot.position.x \\
+		and marker.position.x <= sweet_spot.position.x + sweet_spot.size.x
+
+	if in_spot:
+		catch_progress.value += 50 * delta
+	else:
+		catch_progress.value = max(0.0, catch_progress.value - 25.0 * delta)
+
+	if catch_progress.value >= 100.0:
+		end_catch_minigame(true)
+	elif catch_progress.value <= 0.0:
+		end_catch_minigame(false)
+
+
+func end_catch_minigame(success: bool) -> void:
+	camera.start_screenshake(0.4,0.3)
+	if success:
+		var fish = current_fish
+		Inventory.add_fish(fish)
+
+		if catch_result_ui:
+			catch_result_ui.show_fish(fish)
+
+		print(\"Erfolgreich gefangen: \", fish[\"name\"])
+	else:
+		print(\"Fisch entwischt! (\", current_fish[\"name\"], \")\")
+
+	catch_ui.visible = false
+	await reset_line()
+"
+
+[sub_resource type="Shader" id="Shader_dqb0a"]
+code = "// The following shader is used in order to simulate a simple ocean using Gerstner waves.
+// This shader can be added in a plane mesh. For a more detailed ocean, increase the width and depth subdivision.
+// Note 1: On larger planes ex. 500x500, increasing the subdivision above 1000 comes at great performance cost
+// Note 2: Special thanks to @ninetailsrabbit for fixing a caustics projection issue!
+
+shader_type spatial;
+
+// Set render modes: always draw depth and disable backface culling
+render_mode depth_draw_always, cull_disabled;
+
+// Uniforms for screen and depth textures
+uniform sampler2D SCREEN_TEXTURE : hint_screen_texture, filter_linear_mipmap;
+uniform sampler2D DEPTH_TEXTURE : hint_depth_texture, filter_linear_mipmap;
+
+// Group uniforms for wave parameters
+group_uniforms Waves;
+// Each wave is defined by a vec4: direction (x,y), amplitude, frequency
+uniform vec4 wave_1 = vec4(0.3, 4.0, 0.2, 0.6);
+uniform vec4 wave_2 = vec4(-0.26, -0.19, 0.01, 0.47);
+uniform vec4 wave_3 = vec4(-7.67, 5.63, 0.1, 0.38);
+uniform vec4 wave_4 = vec4(-0.42, -1.63, 0.1, 0.28);
+uniform vec4 wave_5 = vec4(1.66, 0.07, 0.15, 1.81);
+uniform vec4 wave_6 = vec4(1.20, 1.14, 0.01, 0.33);
+uniform vec4 wave_7 = vec4(-1.6, 7.3, 0.11, 0.73);
+uniform vec4 wave_8 = vec4(-0.42, -1.63, 0.15, 1.52);
+
+// Uniforms for time factor, noise zoom, and noise amplitude
+uniform float time_factor = 2.5;
+uniform float noise_zoom = 2.0;
+uniform float noise_amp = 1.0;
+
+// Group uniforms for water colors
+group_uniforms Water_colours;
+uniform vec3 base_water_color:source_color;
+uniform vec3 fresnel_water_color:source_color;
+uniform vec4 deep_water_color : source_color;
+uniform vec4 shallow_water_color : source_color;
+
+// Group uniforms for depth-related parameters
+group_uniforms Depth;
+uniform float beers_law = 0.5;
+uniform float depth_offset = -1.2;
+uniform float near = 7.0;
+uniform float far = 10000.0;
+
+// Group uniforms for edge detection and foam effects
+group_uniforms Edge_Detection;
+uniform float edge_texture_scale = 3.5;
+uniform float edge_texture_offset = 1.0;
+uniform float edge_texture_speed = 0.1;
+uniform float edge_foam_intensity = 2.0;
+uniform float edge_fade_start = -3.0;
+uniform float edge_fade_end = 6.6;
+uniform sampler2D edge_foam_texture;
+
+// Group uniforms for wave peak effects
+group_uniforms WavePeakEffect;
+uniform float peak_height_threshold = 1.0;
+uniform vec3 peak_color = vec3(1.0, 1.0, 1.0);
+uniform float peak_intensity = 1.0;
+uniform sampler2D foam_texture;
+uniform float foam_intensity = 1.0;
+uniform float foam_scale = 1.0;
+
+// Group uniforms for surface details
+group_uniforms Surface_details;
+uniform float metallic = 0.6;
+uniform float roughness = 0.045;
+uniform float uv_scale_text_a = 0.1;
+uniform vec2 uv_speed_text_a = vec2(0.42, 0.3);
+uniform float uv_scale_text_b = 0.6;
+uniform vec2 uv_speed_text_b = vec2(0.15, 0.1);
+uniform float normal_strength = 1.0;
+uniform float uv_sampler_scale = 0.3;
+uniform float blend_factor = 0.28;
+uniform float perturbation_strength = 1.0; // Adjust this value to tile/de-tile the oceans surface.
+uniform float perturbation_time = 0.3; // // Offset perturbation_time for patern variation
+uniform sampler2D normalmap_a;
+uniform sampler2D normalmap_b;
+uniform sampler2D uv_sampler;
+uniform sampler2DArray caustic_sampler : hint_default_black;
+uniform float caustics_intensity = 15.0;
+
+uniform float num_caustic_layers = 16.0; // <<< IMPORTANT: DOUBLE CHECK THIS against your Texture2DArray's actual slices!
+uniform float caustic_distortion_strength = 0.001; // Keep this value within a range of 0.001 to 0.009
+
+// Fresnel function to calculate the reflection/refraction effect
+float fresnel(float amount, vec3 normal, vec3 view) {
+    return pow((1.0 - clamp(dot(normalize(normal), normalize(view)), 0.0, 1.0)), amount);
+}
+
+// Function to calculate edge depth
+float edge(float depth) {
+    depth = 2.0 * depth - 1.0;
+    return near * far / (far - depth * (near - far));
+}
+
+// Function to calculate dynamic amplitude based on position and time
+float dynamic_amplitude(vec2 pos, float time) {
+    return 1.0 + 0.5 * sin(time + length(pos) * 0.1);
+}
+
+// Hash function for noise generation
+float hash(vec2 p) {
+    return fract(sin(dot(p * 17.17, vec2(14.91, 67.31))) * 4791.9511);
+}
+
+// 2D noise function
+float noise(vec2 x) {
+    vec2 p = floor(x);
+    vec2 f = fract(x);
+    f = f * f * (3.0 - 2.0 * f);
+    vec2 a = vec2(1.0, 0.0);
+    return mix(mix(hash(p + a.yy), hash(p + a.xy), f.x),
+               mix(hash(p + a.yx), hash(p + a.xx), f.x), f.y);
+}
+
+// Fractional Brownian Motion (fBM) function for generating complex noise
+float fbm(vec2 x) {
+    float height = 0.0;
+    float amplitude = 0.5;
+    float frequency = 3.0;
+    for (int i = 0; i < 6; i++) {
+        height += noise(x * frequency) * amplitude;
+        amplitude *= 0.5;
+        frequency *= 2.0;
+    }
+    return height;
+}
+
+// Structure to hold wave results: displacement, tangent, binormal, and normal
+struct WaveResult {
+    vec3 displacement;
+    vec3 tangent;
+    vec3 binormal;
+    vec3 normal;
+};
+
+// Gerstner wave function to calculate wave displacement and normals
+WaveResult gerstner_wave(vec4 params, vec2 pos, float time) {
+    float steepness = params.z * dynamic_amplitude(pos, time);
+    float wavelength = params.w;
+    float k = 2.0 * PI / wavelength;
+    float c = sqrt(9.81 / k);
+    vec2 d = normalize(params.xy);
+    float f = k * (dot(d, pos.xy) - c * time);
+    float a = steepness / k;
+
+    vec3 displacement = vec3(d.x * (a * cos(f)), a * sin(f), d.y * (a * cos(f)));
+
+    vec3 tangent = vec3(1.0 - d.x * d.x * steepness * sin(f), steepness * cos(f), -d.x * d.y * steepness * sin(f));
+    vec3 binormal = vec3(-d.x * d.y * steepness * sin(f), steepness * cos(f), 1.0 - d.y * d.y * steepness * sin(f));
+    vec3 normal = normalize(cross(tangent, binormal));
+
+    return WaveResult(displacement, tangent, binormal, normal);
+}
+
+// Function to combine multiple Gerstner waves
+WaveResult wave(vec2 pos, float time) {
+    WaveResult waveResult;
+    waveResult.displacement = vec3(0.0);
+    waveResult.tangent = vec3(1.0, 0.0, 0.0);
+    waveResult.binormal = vec3(0.0, 0.0, 1.0);
+    waveResult.normal = vec3(0.0, 1.0, 0.0);
+
+    WaveResult wr;
+    wr = gerstner_wave(wave_1, pos, time);
+    waveResult.displacement += wr.displacement;
+    waveResult.tangent += wr.tangent;
+    waveResult.binormal += wr.binormal;
+    waveResult.normal += wr.normal;
+
+    wr = gerstner_wave(wave_2, pos, time);
+    waveResult.displacement += wr.displacement;
+    waveResult.tangent += wr.tangent;
+    waveResult.binormal += wr.binormal;
+    waveResult.normal += wr.normal;
+
+    wr = gerstner_wave(wave_3, pos, time);
+    waveResult.displacement += wr.displacement;
+    waveResult.tangent += wr.tangent;
+    waveResult.binormal += wr.binormal;
+    waveResult.normal += wr.normal;
+
+    wr = gerstner_wave(wave_4, pos, time);
+    waveResult.displacement += wr.displacement;
+    waveResult.tangent += wr.tangent;
+    waveResult.binormal += wr.binormal;
+    waveResult.normal += wr.normal;
+
+    wr = gerstner_wave(wave_5, pos, time);
+    waveResult.displacement += wr.displacement;
+    waveResult.tangent += wr.tangent;
+    waveResult.binormal += wr.binormal;
+    waveResult.normal += wr.normal;
+
+    wr = gerstner_wave(wave_6, pos, time);
+    waveResult.displacement += wr.displacement;
+    waveResult.tangent += wr.tangent;
+    waveResult.binormal += wr.binormal;
+    waveResult.normal += wr.normal;
+
+    wr = gerstner_wave(wave_7, pos, time);
+    waveResult.displacement += wr.displacement;
+    waveResult.tangent += wr.tangent;
+    waveResult.binormal += wr.binormal;
+    waveResult.normal += wr.normal;
+
+    wr = gerstner_wave(wave_8, pos, time);
+    waveResult.displacement += wr.displacement;
+    waveResult.tangent += wr.tangent;
+    waveResult.binormal += wr.binormal;
+    waveResult.normal += wr.normal;
+
+    // Add noise to the wave displacement for more natural look
+    waveResult.displacement.y += fbm(pos.xy * (noise_zoom / 50.0)) * noise_amp;
+
+    return waveResult;
+}
+
+// Varying variables to pass data from vertex to fragment shader
+varying float height;
+varying vec3 world_position;
+varying mat3 tbn_matrix;
+varying mat4 inv_mvp;
+
+// Vertex shader function
+void vertex() {
+    // Calculate time based on the global TIME variable and time_factor
+    float time = TIME / time_factor;
+    // Calculate wave displacement and normals
+    WaveResult waveResult = wave(VERTEX.xz, time);
+    // Apply wave displacement to the vertex position
+    VERTEX += waveResult.displacement;
+    // Store the height of the wave displacement
+    height = waveResult.displacement.y;
+
+    // Transform normals, tangents, and binormals to world space
+    vec3 n = normalize((MODELVIEW_MATRIX * vec4(waveResult.normal, 0.0)).xyz);
+    vec3 t = normalize((MODELVIEW_MATRIX * vec4(waveResult.tangent.xyz, 0.0)).xyz);
+    vec3 b = normalize((MODELVIEW_MATRIX * vec4((cross(waveResult.normal, waveResult.tangent.xyz)), 0.0)).xyz);
+    // Calculate world position of the vertex
+    world_position = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
+    // Create TBN matrix for normal mapping
+    tbn_matrix = mat3(t, b, n);
+    // Calculate inverse MVP matrix for screen space transformations
+    inv_mvp = inverse(PROJECTION_MATRIX * MODELVIEW_MATRIX);
+}
+
+
+// 2D Random hash function
+float random(vec2 p) {
+    return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
+}
+
+// Smooth noise function
+float smooth_noise(vec2 p) {
+    vec2 i = floor(p);
+    vec2 f = fract(p);
+    vec2 u = f * f * (3.0 - 2.0 * f);
+    return mix(
+        mix(random(i + vec2(0.0, 0.0)), random(i + vec2(1.0, 0.0)), u.x),
+        mix(random(i + vec2(0.0, 1.0)), random(i + vec2(1.0, 1.0)), u.x),
+        u.y
+    );
+}
+
+// Layered noise for detiling
+float layered_noise(vec2 p, float scale) {
+    float n = 0.0;
+    n += smooth_noise(p * scale) * 0.5;
+    n += smooth_noise(p * scale * 2.0) * 0.25;
+    n += smooth_noise(p * scale * 4.0) * 0.125;
+    return n;
+}
+
+// Perturb UV coordinates for detiling
+vec2 perturb_uv(vec2 uv, vec2 world_pos, float time, float strength) {
+    // Use world position to generate unique noise patterns
+    vec2 noise_offset = vec2(
+        layered_noise(world_pos * 0.3 + time * 0.06, 1.0),
+        layered_noise(world_pos * 0.3 + time * 0.06 + vec2(10.0), 1.0)
+    );
+    // Apply subtle distortion to UVs
+    return uv + noise_offset * strength;
+}
+
+
+// Fragment shader function
+void fragment() {
+    // Calculate UV coordinates based on world position
+    vec2 uv = world_position.xz;
+
+    // Sample UV offset texture
+    vec2 uv_offset = texture(uv_sampler, uv * uv_sampler_scale).rg;
+
+    // Calculate base UV coordinates for normal maps
+    vec2 base_uv_a = (uv + uv_speed_text_a * TIME + uv_offset) * uv_scale_text_a;
+    vec2 base_uv_b = (uv + uv_speed_text_b * TIME + uv_offset) * uv_scale_text_b;
+
+    // Apply noise-based perturbation to UVs
+    vec2 animated_uv_a = perturb_uv(base_uv_a, world_position.xz, TIME, perturbation_strength);
+    vec2 animated_uv_b = perturb_uv(base_uv_b, world_position.xz, TIME + 0.0, perturbation_time);
+
+    // Sample normal maps
+    vec3 normal_sample_a = texture(normalmap_a, animated_uv_a).rgb;
+    vec3 normal_sample_b = texture(normalmap_b, animated_uv_b).rgb;
+
+    // Normalize normal samples and combine them
+    normal_sample_a = normalize(normal_sample_a * 2.0 - 1.0);
+    normal_sample_b = normalize(normal_sample_b * 2.0 - 1.0);
+    vec3 combined_normal = normalize(mix(normal_sample_a, normal_sample_b, blend_factor));
+
+    // Perturb the normal using the TBN matrix
+    vec3 perturbed_normal = normalize(tbn_matrix * (combined_normal * normal_strength));
+
+    // Sample depth texture
+    float depth_raw = texture(DEPTH_TEXTURE, SCREEN_UV).r;
+    float depth = PROJECTION_MATRIX[3][2] / (depth_raw + PROJECTION_MATRIX[2][2]);
+
+    // Calculate the distance from the camera to the water surface
+    float camera_depth = INV_VIEW_MATRIX[3].y - world_position.y;
+    if (camera_depth < 0.0) { // Camera is underwater
+        // Map the depth to a range where deeper = positive beers_law, closer = negative beers_law
+        float depth_factor = smoothstep(-10.0, 0.0, camera_depth); // Adjust -10.0 for the depth range
+        ALPHA -= depth_factor * 0.3;
+        }
+    // Calculate depth blend factor using Beer's law
+    float depth_blend = exp((depth + VERTEX.z + depth_offset) * -beers_law);
+    depth_blend = clamp(1.0 - depth_blend, 0.0, 1.0);
+    float depth_blend_power = clamp(pow(depth_blend, 2.5), 0.0, 1.0);
+
+    // Sample screen color and blend it with depth color
+    vec3 screen_color = textureLod(SCREEN_TEXTURE, SCREEN_UV, depth_blend_power * 2.5).rgb;
+    vec3 depth_color = mix(shallow_water_color.rgb, deep_water_color.rgb, depth_blend_power);
+    vec3 color = mix(screen_color * depth_color, depth_color * 0.25, depth_blend_power * 0.5);
+
+    // Calculate depth difference for edge detection
+    float z_depth = edge(texture(DEPTH_TEXTURE, SCREEN_UV).x);
+    float z_pos = edge(FRAGCOORD.z);
+    float z_dif = z_depth - z_pos;
+
+	// Calculate caustic effect
+	vec4 caustic_screenPos = vec4(SCREEN_UV * 2.0 - 1.0, depth_raw, 1.0);
+	vec4 caustic_localPos = inv_mvp * caustic_screenPos;
+	caustic_localPos = vec4(caustic_localPos.xyz / caustic_localPos.w, caustic_localPos.w);
+
+	vec2 caustic_Uv = caustic_localPos.xz / vec2(1024.0) + 0.5;
+	caustic_Uv += perturbed_normal.xz * caustic_distortion_strength;
+
+	float caustic_layer_index = floor(mod(TIME * 26.0, num_caustic_layers)); // Use floor for integer index
+
+	vec4 caustic_color = texture(caustic_sampler, vec3(caustic_Uv * 660.0, caustic_layer_index));
+	float caustic_intensity_multiplier = (1.0 - depth_blend_power) * caustics_intensity;
+
+	color *= 1.0 + pow(caustic_color.r, 1.50) * caustic_intensity_multiplier;
+
+    // Calculate fresnel effect
+    float fresnel = fresnel(5.0, NORMAL, VIEW);
+    vec3 surface_color = mix(base_water_color, fresnel_water_color, fresnel);
+
+    // Calculate edge foam effect
+    vec2 edge_uv = world_position.xz * edge_texture_scale + edge_texture_offset + TIME * edge_texture_speed;
+    float edge_fade = smoothstep(edge_fade_start, edge_fade_end, z_dif);
+    vec3 depth_color_adj = mix(texture(edge_foam_texture, edge_uv).rgb * edge_foam_intensity, color, edge_fade);
+
+    // Apply peak color effect based on height with noise
+    float peak_factor = smoothstep(peak_height_threshold, peak_height_threshold + 0.2, height);
+    float noise_factor = fbm(world_position.xz * 0.1 + TIME * 0.1);
+    peak_factor = peak_factor * noise_factor;
+
+    vec3 final_color = mix(surface_color, peak_color * peak_intensity, peak_factor);
+
+    // Sample the foam texture and blend it with the final color
+    vec2 foam_uv = world_position.xz * foam_scale + TIME * 0.1;
+    float foam_sample = texture(foam_texture, foam_uv).r;
+    float foam_blend_factor = smoothstep(0.0, 1.0, peak_factor) * foam_sample * foam_intensity;
+
+    final_color = mix(final_color, vec3(1.0), foam_blend_factor);
+
+    // Set the final color, metallic, roughness, and normal
+    ALBEDO = clamp(final_color + depth_color_adj, vec3(0.0), vec3(1.0));
+    METALLIC = metallic;
+    ROUGHNESS = roughness;
+    NORMAL = perturbed_normal;
+}"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_k24pf"]
+render_priority = -128
+shader = SubResource("Shader_dqb0a")
+shader_parameter/wave_1 = Vector4(6.485, 6.225, 0.2, 0.6)
+shader_parameter/wave_2 = Vector4(-0.26, -0.19, 0.01, 0.47)
+shader_parameter/wave_3 = Vector4(-7.67, 5.63, 0.1, 0.38)
+shader_parameter/wave_4 = Vector4(-0.42, -1.63, 0.1, 0.28)
+shader_parameter/wave_5 = Vector4(1.66, 0.07, 0.15, 1.81)
+shader_parameter/wave_6 = Vector4(1.2, 1.14, 0.01, 0.33)
+shader_parameter/wave_7 = Vector4(-1.6, 7.3, 0.11, 0.73)
+shader_parameter/wave_8 = Vector4(-0.42, -1.63, 0.15, 1.52)
+shader_parameter/time_factor = 6.975
+shader_parameter/noise_zoom = 5.215
+shader_parameter/noise_amp = 1.5
+shader_parameter/base_water_color = Color(0, 0, 0, 1)
+shader_parameter/fresnel_water_color = Color(0, 0, 0, 1)
+shader_parameter/deep_water_color = Color(0, 0.0652681, 0.151571, 1)
+shader_parameter/shallow_water_color = Color(0, 0, 0, 1)
+shader_parameter/beers_law = 1.465
+shader_parameter/depth_offset = 0.095
+shader_parameter/near = 7.0
+shader_parameter/far = 10000.0
+shader_parameter/edge_texture_scale = 4.715
+shader_parameter/edge_texture_offset = 1.0
+shader_parameter/edge_texture_speed = 0.1
+shader_parameter/edge_foam_intensity = 2.0
+shader_parameter/edge_fade_start = -3.0
+shader_parameter/edge_fade_end = 6.6
+shader_parameter/peak_height_threshold = 1.0
+shader_parameter/peak_color = Vector3(1, 1, 1)
+shader_parameter/peak_intensity = 2.145
+shader_parameter/foam_intensity = 0.0
+shader_parameter/foam_scale = 1.0
+shader_parameter/metallic = 4.835
+shader_parameter/roughness = 0.115
+shader_parameter/uv_scale_text_a = 0.255
+shader_parameter/uv_speed_text_a = Vector2(0.65, 0.3)
+shader_parameter/uv_scale_text_b = 0.855
+shader_parameter/uv_speed_text_b = Vector2(0.15, 0.1)
+shader_parameter/normal_strength = 5.095
+shader_parameter/uv_sampler_scale = 0.3
+shader_parameter/blend_factor = 0.795
+shader_parameter/perturbation_strength = 0.37
+shader_parameter/perturbation_time = 0.245
+shader_parameter/normalmap_a = ExtResource("10_kg0fi")
+shader_parameter/normalmap_b = ExtResource("11_0orsp")
+shader_parameter/caustics_intensity = 16.66
+shader_parameter/num_caustic_layers = 16.76
+shader_parameter/caustic_distortion_strength = 0.001
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_qg23i"]
+lightmap_size_hint = Vector2i(251, 1001)
+material = SubResource("ShaderMaterial_k24pf")
+uv2_padding = 1.41
+size = Vector2(200, 200)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_8wjpf"]
+render_priority = 0
+shader = ExtResource("12_h3250")
+shader_parameter/color = Color(0, 0, 0, 1)
+shader_parameter/thickness = 0.05
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_c6dvc"]
+next_pass = SubResource("ShaderMaterial_8wjpf")
+transparency = 1
+albedo_color = Color(1, 1, 1, 0.227451)
+emission_enabled = true
+emission = Color(0.483338, 0.649368, 1, 1)
+
+[sub_resource type="QuadMesh" id="QuadMesh_611at"]
+material = SubResource("StandardMaterial3D_c6dvc")
+
+[sub_resource type="Animation" id="Animation_ygjfp"]
+length = 0.001
+tracks/0/type = "scale_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Ripple")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0.5, 0.5, 0.5)
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Ripple:mesh:material:albedo_color")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0.227451)]
+}
+
+[sub_resource type="Animation" id="Animation_k24pf"]
+resource_name = "ripple"
+length = 0.8
+tracks/0/type = "scale_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Ripple")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0.5, 0.5, 0.5, 0.8, 1, 2, 2, 2)
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Ripple:mesh:material:albedo_color")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.8),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 0, 0, 1), Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_1wiy7"]
+_data = {
+&"RESET": SubResource("Animation_ygjfp"),
+&"ripple": SubResource("Animation_k24pf")
+}
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_0ehpd"]
+render_priority = 0
+shader = ExtResource("12_h3250")
+shader_parameter/color = Color(0, 0, 0, 1)
+shader_parameter/thickness = 0.02
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8wjpf"]
+next_pass = SubResource("ShaderMaterial_0ehpd")
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_pjux3"]
+material = SubResource("StandardMaterial3D_8wjpf")
+top_radius = 0.005
+bottom_radius = 0.005
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kp0ql"]
+emission_enabled = true
+emission = Color(1, 1, 1, 1)
+emission_energy_multiplier = 16.0
+disable_receive_shadows = true
+
+[sub_resource type="SphereMesh" id="SphereMesh_08o8g"]
+material = SubResource("StandardMaterial3D_kp0ql")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ibljb"]
+albedo_texture = ExtResource("15_yles7")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ibljb"]
+shader = ExtResource("17_agolw")
+shader_parameter/use_directional_light = false
+shader_parameter/sun_color = Color(0.0158297, 0.0357297, 0.0947171, 1)
+shader_parameter/sun_energy = 16.185
+shader_parameter/cloud_color = Color(0.0179562, 0.0357238, 0.0609136, 1)
+shader_parameter/cloud_density = 5.5
+shader_parameter/cloud_depth = -4.46
+shader_parameter/cloud_sag = 2.0
+shader_parameter/noise_texture = ExtResource("18_yles7")
+shader_parameter/noise_tiling = Vector2(1, 1)
+shader_parameter/wind_speed = Vector2(-0.19, -0.26)
+shader_parameter/ground_bottom_color = Color(0, 0, 0, 1)
+shader_parameter/ground_curve = 0.04
+shader_parameter/exposure = 5.741
+
+[sub_resource type="Sky" id="Sky_dqb0a"]
+sky_material = SubResource("ShaderMaterial_ibljb")
+
+[sub_resource type="Environment" id="Environment_agolw"]
+background_mode = 2
+sky = SubResource("Sky_dqb0a")
+glow_enabled = true
+glow_intensity = 8.0
+glow_strength = 0.94
+glow_hdr_threshold = 4.0
+glow_map_strength = 0.94
+volumetric_fog_enabled = true
+volumetric_fog_density = 0.0184
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_agolw"]
+emission_enabled = true
+emission = Color(1, 0, 0, 1)
+emission_energy_multiplier = 15.74
+
+[node name="MainScene" type="Node3D"]
+
+[node name="Filter" type="CanvasLayer" parent="."]
+layer = 0
+
+[node name="PixelateOverlay" type="ColorRect" parent="Filter"]
+material = SubResource("ShaderMaterial_1wiy7")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 28.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="BiteIndicator" type="TextureRect" parent="UI"]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_dqb0a")
+
+[node name="CatchUI" type="Control" parent="UI"]
+visible = false
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_25dfr")
+
+[node name="BarBackground" type="ColorRect" parent="UI/CatchUI"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = 233.0
+offset_right = 300.0
+offset_bottom = 273.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.458405, 0.458405, 0.458405, 1)
+
+[node name="SweetSpot" type="ColorRect" parent="UI/CatchUI/BarBackground"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -60.0
+offset_top = -20.0
+offset_right = 60.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.513678, 1, 0.48175, 1)
+
+[node name="Marker" type="ColorRect" parent="UI/CatchUI/BarBackground"]
+layout_mode = 0
+offset_right = 6.0
+offset_bottom = 40.0
+
+[node name="CatchProgress" type="ProgressBar" parent="UI/CatchUI"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = 279.0
+offset_right = 300.0
+offset_bottom = 306.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CatchResultUI" parent="UI" instance=ExtResource("4_yles7")]
+offset_top = -197.0
+offset_bottom = 197.0
+
+[node name="InventoryUI" parent="UI" instance=ExtResource("5_ibljb")]
+theme = SubResource("Theme_kjvyo")
+
+[node name="MoneyHUD" parent="UI" instance=ExtResource("6_8y5tq")]
+offset_right = 60.0
+offset_bottom = 43.0
+theme = SubResource("Theme_2phbr")
+
+[node name="PlayerCamera" type="Camera3D" parent="."]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 12.867, 0.0447942)
+script = ExtResource("7_k0m58")
+
+[node name="FishingRod" parent="PlayerCamera" node_paths=PackedStringArray("rod_tip", "hook", "catch_result_ui", "camera", "inventory_ui") instance=ExtResource("8_7tlau")]
+transform = Transform3D(0.925417, -0.163176, -0.34202, 0.173648, 0.984808, 0, 0.336824, -0.0593912, 0.939693, 0.4, -0.40033, -1.03766)
+script = SubResource("GDScript_dqb0a")
+rod_tip = NodePath("RodMesh/RodTip")
+hook = NodePath("../../Hook")
+catch_result_ui = NodePath("../../UI/CatchResultUI")
+rotation_speed = 300.0
+camera = NodePath("..")
+inventory_ui = NodePath("../../UI/InventoryUI")
+
+[node name="RodMesh" parent="PlayerCamera/FishingRod" index="0"]
+transform = Transform3D(0.8, 0, 0, 0, 0.773459, 0.204357, 0, -0.204357, 0.773459, 0.0485128, 0.275129, 0)
+
+[node name="WaterPlane" type="MeshInstance3D" parent="."]
+transform = Transform3D(-1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0, 0, 1, 0, 8.93222, 91.1433)
+mesh = SubResource("PlaneMesh_qg23i")
+
+[node name="Hook" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.875422, 5)
+
+[node name="Ripple" type="MeshInstance3D" parent="Hook"]
+transform = Transform3D(0.5, 0, 0, 0, -2.18557e-08, 0.5, 0, -0.5, -2.18557e-08, 0, 10.6269, 0.217663)
+mesh = SubResource("QuadMesh_611at")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Hook"]
+libraries = {
+&"": SubResource("AnimationLibrary_1wiy7")
+}
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.97848, -0.00843342, -0.206171, 0.0389501, 0.988751, 0.144411, 0.202634, -0.149334, 0.967801, -1.07784, 48.3065, 160.116)
+light_color = Color(0.212618, 0.391718, 0.51053, 1)
+light_energy = 0.646
+light_indirect_energy = 0.0
+light_volumetric_fog_energy = 0.485
+light_angular_distance = 13.64
+light_specular = 0.191
+shadow_enabled = true
+directional_shadow_split_1 = 0.079
+directional_shadow_split_2 = 0.352
+directional_shadow_split_3 = 0.268
+directional_shadow_fade_start = 0.507
+directional_shadow_max_distance = 83.4
+sky_mode = 1
+
+[node name="Line" type="MeshInstance3D" parent="." node_paths=PackedStringArray("rod_tip", "hook", "fishing_script")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.319973, 12.3962, 0.170711)
+mesh = SubResource("CylinderMesh_pjux3")
+script = ExtResource("13_my70f")
+rod_tip = NodePath("../PlayerCamera/FishingRod/RodMesh/RodTip")
+hook = NodePath("../Hook")
+fishing_script = NodePath("../PlayerCamera/FishingRod")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(26.165, 0, 0, 0, 26.165, 0, 0, 0, 26.165, -44.6195, 46.676, 226.268)
+mesh = SubResource("SphereMesh_08o8g")
+
+[node name="Shop" parent="." instance=ExtResource("15_nmpot")]
+transform = Transform3D(-3.12536e-08, 0, 0.715, 0, 0.715, 0, -0.715, 0, -3.12536e-08, -7.28633, 10.317, -0.991175)
+
+[node name="hillybilly" parent="." instance=ExtResource("16_hks51")]
+transform = Transform3D(-0.190341, 0, 1.51307, 0, 1.525, 0, -1.51307, 0, -0.190341, -7.9344, 10.4905, 0.672108)
+
+[node name="Object_34" parent="hillybilly/metarig/Skeleton3D" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.627528, -0.770657, 0.0789409)
+surface_material_override/0 = SubResource("StandardMaterial3D_ibljb")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_agolw")
+
+[node name="hotel" parent="." instance=ExtResource("18_agolw")]
+transform = Transform3D(-0.297821, -0.184998, 0.936525, -0.0560639, 0.982739, 0.176298, -0.952974, 0, -0.303052, 21.7924, 1.86945, 49.6451)
+
+[node name="Cube" parent="hotel" index="0"]
+transform = Transform3D(6.75741, 1.85016e-08, -2.38419e-07, 0, 22.171, -1.19209e-07, 1.19209e-07, 9.97467e-07, 6.75741, 0.409439, -7.1769, -1.2875)
+
+[node name="Text" parent="hotel" index="1"]
+transform = Transform3D(0, 3.34179, -4.81128e-08, 1.78814e-07, -2.98023e-08, -3.34179, -3.34179, 3.57628e-07, -2.63196e-07, 6.15054, 4.88431, -12.5286)
+surface_material_override/0 = SubResource("StandardMaterial3D_agolw")
+
+[node name="hotel3" parent="." instance=ExtResource("18_agolw")]
+transform = Transform3D(-0.228044, 0.159304, -0.96053, -0.0560639, 0.982739, 0.176298, 0.972035, 0.0940547, -0.215176, -34.9223, 12.6676, 49.6451)
+
+[node name="Cube" parent="hotel3" index="0"]
+transform = Transform3D(6.75741, 2.38419e-07, 0, 0, 22.171, 1.3411e-07, 0, 3.57628e-07, 6.75741, 0.409435, -7.1769, -1.2875)
+
+[node name="Text" parent="hotel3" index="1"]
+transform = Transform3D(0, 3.34179, -2.98023e-08, 1.41561e-07, 0, -3.34179, -3.34179, 2.38419e-07, -1.63913e-07, 6.15054, 4.88431, -12.5286)
+surface_material_override/0 = SubResource("StandardMaterial3D_agolw")
+
+[node name="hotel4" parent="." instance=ExtResource("18_agolw")]
+transform = Transform3D(-0.371483, 0.0210053, 0.928202, -0.110726, 0.991607, -0.0667545, -0.921814, -0.127574, -0.366039, -34.9223, -12.1992, 35.1696)
+
+[node name="Cube" parent="hotel4" index="0"]
+transform = Transform3D(6.75741, 0, -2.38419e-07, -5.96046e-08, 22.171, -5.96046e-08, -2.38419e-07, 3.57628e-07, 6.75741, -0.184185, -7.0806, -3.92704)
+
+[node name="Text" parent="hotel4" index="1"]
+transform = Transform3D(3.57628e-07, 3.34179, 2.98023e-08, 2.08616e-07, -1.49012e-07, -3.34179, -3.34179, 1.19209e-07, -1.49012e-07, 5.50709, 5.42689, -15.1982)
+surface_material_override/0 = SubResource("StandardMaterial3D_agolw")
+
+[node name="hotel5" parent="." instance=ExtResource("18_agolw")]
+transform = Transform3D(-0.914973, -0.0754837, 0.396391, -0.110726, 0.991607, -0.0667545, -0.388025, -0.104969, -0.915652, 17.6685, -3.07758, -3.14667)
+
+[node name="Cube" parent="hotel5" index="0"]
+transform = Transform3D(6.75741, 5.96046e-08, -9.53674e-07, -2.98023e-08, 22.171, 1.19209e-07, 1.19209e-06, 1.66893e-06, 6.75742, 1.78149, -16.437, -7.23126)
+
+[node name="Text" parent="hotel5" index="1"]
+transform = Transform3D(3.57628e-07, 3.34179, 1.49012e-08, 1.49012e-07, -5.96046e-08, -3.34179, -3.34179, 2.38419e-07, -1.78814e-07, 17.7097, -103.854, -7.8415)
+surface_material_override/0 = SubResource("StandardMaterial3D_agolw")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="hotel5"]
+transform = Transform3D(1, 2.04891e-07, -2.38419e-07, -5.21541e-08, 1, -2.98023e-08, 1.78814e-07, 1.11759e-07, 1, 5.8819, 17.8101, -11.6198)
+light_color = Color(0.923163, 1.44392e-06, 0.531728, 1)
+light_energy = 1.455
+light_indirect_energy = 5.848
+
+[node name="SpotLight3D" type="SpotLight3D" parent="."]
+transform = Transform3D(-0.843898, 0.310115, 0.437796, 0, -0.816017, 0.578029, 0.536504, 0.487797, 0.688634, -19.2425, 37.1631, 79.8723)
+light_color = Color(0.537891, 0.632999, 0.880007, 1)
+light_energy = 16.0
+light_indirect_energy = 1.323
+light_volumetric_fog_energy = 0.0
+spot_range = 44.3715
+spot_attenuation = 1.01
+spot_angle = 28.4266
+
+[node name="hotel2" parent="." instance=ExtResource("18_agolw")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.64746, -11.8151, -4.89928)
+
+[node name="skyscaper" parent="." instance=ExtResource("18_ibljb")]
+transform = Transform3D(0.401516, 0, 0.915852, 0, 1, 0, -0.915852, 0, 0.401516, 1.78701, 0.983576, 64.0503)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="skyscaper"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.52985, 27.183, -4.93816)
+light_color = Color(1, 1, 0, 1)
+light_energy = 30.135
+light_volumetric_fog_energy = 0.97
+
+[node name="OmniLight3D2" type="OmniLight3D" parent="skyscaper"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.89862, 32.7751, 5.35517)
+light_color = Color(1, 1, 0, 1)
+light_energy = 30.135
+light_volumetric_fog_energy = 0.97
+
+[node name="skyscaper2" parent="." instance=ExtResource("18_ibljb")]
+transform = Transform3D(0.392706, -0.208338, 0.895755, 0.0836513, 0.978057, 0.190807, -0.915852, 0, 0.401516, 33.9606, -9.53673, 28.9489)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="skyscaper2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.52985, 27.183, -4.93816)
+light_color = Color(1, 1, 0, 1)
+light_energy = 30.135
+light_volumetric_fog_energy = 0.97
+
+[node name="OmniLight3D2" type="OmniLight3D" parent="skyscaper2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.89862, 32.7751, 5.35517)
+light_color = Color(1, 1, 0, 1)
+light_energy = 30.135
+light_volumetric_fog_energy = 0.97
+
+[node name="skyscaper3" parent="." instance=ExtResource("18_ibljb")]
+transform = Transform3D(0.387038, 0.266111, 0.882829, -0.106848, 0.963942, -0.243719, -0.915852, 0, 0.401516, -54.5486, -11.4907, 19.2026)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="skyscaper3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.52985, 27.183, -4.93816)
+light_color = Color(1, 1, 0, 1)
+light_energy = 30.135
+light_volumetric_fog_energy = 0.97
+
+[node name="OmniLight3D2" type="OmniLight3D" parent="skyscaper3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.89862, 32.7751, 5.35517)
+light_color = Color(1, 1, 0, 1)
+light_energy = 30.135
+light_volumetric_fog_energy = 0.97
+
+[editable path="PlayerCamera/FishingRod"]
+[editable path="hillybilly"]
+[editable path="hotel"]
+[editable path="hotel3"]
+[editable path="hotel4"]
+[editable path="hotel5"]

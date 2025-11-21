@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://brmbdno888s38"
-path="res://.godot/imported/tree.glb-df0084b3482503b461873c828eb5ebfa.scn"
+uid="uid://ckje0fw3pep83"
+path="res://.godot/imported/skyscaper.glb-b41c03a820ea8f724c10ef7903452e04.scn"
 
 [deps]
 
-source_file="res://textures/tree.glb"
-dest_files=["res://.godot/imported/tree.glb-df0084b3482503b461873c828eb5ebfa.scn"]
+source_file="res://assets/skyscaper.glb"
+dest_files=["res://.godot/imported/skyscaper.glb-b41c03a820ea8f724c10ef7903452e04.scn"]
 
 [params]
 

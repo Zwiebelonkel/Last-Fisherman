@@ -56,7 +56,7 @@ func refresh() -> void:
 
 func _get_fish_icon(fish: Dictionary) -> Texture2D:
 	# Platzhalter – hier später richtige Icons nutzen
-	return preload("res://textures/NEURA_Logo.jpeg")
+	return preload("res://concepts/einzelnn/fish1.png")
 
 
 func _on_sell_all_pressed() -> void:

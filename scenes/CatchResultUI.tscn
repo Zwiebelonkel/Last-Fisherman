@@ -1,7 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://cqtn78ty1fa7"]
+[gd_scene load_steps=8 format=3 uid="uid://cqtn78ty1fa7"]
 
 [ext_resource type="Script" uid="uid://dstq66nai8yi0" path="res://scripts/CatchResultUI.gd" id="1_dnped"]
-[ext_resource type="Texture2D" uid="uid://5bjxsmrb0phj" path="res://textures/NEURA_Logo.jpeg" id="2_poul8"]
+[ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="1_nuupr"]
+[ext_resource type="Texture2D" uid="uid://b25ona2mrq6va" path="res://concepts/einzelnn/fish1.png" id="2_poul8"]
+
+[sub_resource type="Theme" id="Theme_nvhde"]
+default_font = ExtResource("1_nuupr")
 
 [sub_resource type="Animation" id="Animation_dnped"]
 length = 0.001
@@ -52,24 +56,34 @@ offset_right = 139.0
 offset_bottom = 193.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = SubResource("Theme_nvhde")
 script = ExtResource("1_dnped")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
 
-[node name="FishIcon" type="TextureRect" parent="VBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer"]
 layout_mode = 2
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/MarginContainer/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="FishIcon" type="TextureRect" parent="VBoxContainer/MarginContainer/PanelContainer/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
 texture = ExtResource("2_poul8")
-expand_mode = 4
-
-[node name="FishName" type="Label" parent="VBoxContainer"]
-layout_mode = 2
-
-[node name="FishRarity" type="Label" parent="VBoxContainer"]
-layout_mode = 2
-
-[node name="FishValue" type="Label" parent="VBoxContainer"]
-layout_mode = 2
 
 [node name="ContinueButton" type="Button" parent="VBoxContainer"]
 layout_mode = 2
@@ -79,3 +93,28 @@ text = "Continue"
 libraries = {
 &"": SubResource("AnimationLibrary_poul8")
 }
+
+[node name="MarginContainer2" type="MarginContainer" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_bottom = 0
+
+[node name="FishName" type="Label" parent="VBoxContainer/MarginContainer2"]
+layout_mode = 2
+text = "d"
+
+[node name="MarginContainer3" type="MarginContainer" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+
+[node name="FishRarity" type="Label" parent="VBoxContainer/MarginContainer3"]
+layout_mode = 2
+text = "d"
+
+[node name="MarginContainer4" type="MarginContainer" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+
+[node name="FishValue" type="Label" parent="VBoxContainer/MarginContainer4"]
+layout_mode = 2
+text = "d"
