@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://cqtn78ty1fa7"]
+[gd_scene load_steps=10 format=3 uid="uid://cqtn78ty1fa7"]
 
 [ext_resource type="Script" uid="uid://dstq66nai8yi0" path="res://scripts/CatchResultUI.gd" id="1_dnped"]
 [ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="1_nuupr"]
@@ -6,6 +6,14 @@
 
 [sub_resource type="Theme" id="Theme_nvhde"]
 default_font = ExtResource("1_nuupr")
+
+[sub_resource type="Animation" id="Animation_nuupr"]
+resource_name = "pulse"
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_nvhde"]
+_data = {
+&"pulse": SubResource("Animation_nuupr")
+}
 
 [sub_resource type="Animation" id="Animation_dnped"]
 length = 0.001
@@ -80,10 +88,17 @@ theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
 [node name="FishIcon" type="TextureRect" parent="VBoxContainer/MarginContainer/PanelContainer/MarginContainer"]
+layout_direction = 1
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 8
 texture = ExtResource("2_poul8")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="VBoxContainer/MarginContainer/PanelContainer"]
+root_node = NodePath("../MarginContainer/FishIcon")
+libraries = {
+&"": SubResource("AnimationLibrary_nvhde")
+}
 
 [node name="ContinueButton" type="Button" parent="VBoxContainer"]
 layout_mode = 2

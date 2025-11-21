@@ -24,7 +24,7 @@ light_energy = 16.0
 light_indirect_energy = 10.374
 light_volumetric_fog_energy = 5.202
 light_specular = 2.278
-spot_angle = 67.9545
+spot_angle = 64.6875
 
 [editable path="shop"]
 [editable path="cigs"]

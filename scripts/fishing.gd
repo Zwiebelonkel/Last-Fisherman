@@ -198,6 +198,9 @@ func reset_line() -> void:
 func start_bite_timer() -> void:
 	var wait_time := randf_range(1.5, 4.0)
 	print("Bite Timer gestartet: ", wait_time, "s")
+	# 🔥 UPGRADE: "Line" beeinflusst Biss-Geschwindigkeit
+	var modifier := 1.0 + (Player.upgrade_line - 1) * 0.35
+	wait_time /= modifier
 	await get_tree().create_timer(wait_time).timeout
 
 	if state != STATE_CASTED:
@@ -230,9 +233,10 @@ func start_catch_minigame() -> void:
 	anim.play("fight")
 	camera.start_screenshake(0.1,1)
 
-	current_fish = FishDB.get_random_from_list(FishDB.FISH_LAKE)
+	current_fish = FishDB.get_random_with_bait(Player.upgrade_bait)
 	var difficulty = FishDB.get_fish_difficulty(current_fish)
 	marker_speed = FishDB.get_marker_speed_for_fish(current_fish)
+	marker_speed /= 1.0 + (Player.upgrade_grip - 1) * 0.25
 	
 	print("Gefangen: ", current_fish["name"], " (Schwierigkeit: ", difficulty, ")")
 
