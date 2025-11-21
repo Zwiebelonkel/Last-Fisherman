@@ -1,0 +1,156 @@
+[gd_scene load_steps=7 format=3 uid="uid://c65603pesggni"]
+
+[ext_resource type="Texture2D" uid="uid://d2l0f1gb3wn01" path="res://textures/map.png" id="1_er4uf"]
+[ext_resource type="Script" uid="uid://2ilivy1i0ehi" path="res://scripts/MapScene.gd" id="1_y2hrc"]
+[ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="2_wikxs"]
+
+[sub_resource type="Theme" id="Theme_j1nvq"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1ddn7"]
+bg_color = Color(0.0862745, 0.207843, 0.352941, 1)
+
+[sub_resource type="Theme" id="Theme_bnqbi"]
+default_font = ExtResource("2_wikxs")
+
+[node name="MapScene" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_y2hrc")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_j1nvq")
+theme_override_styles/panel = SubResource("StyleBoxFlat_1ddn7")
+
+[node name="layout" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -267.0
+offset_top = -240.5
+offset_right = 267.0
+offset_bottom = 240.5
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_bnqbi")
+
+[node name="MapImage" type="TextureRect" parent="layout"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_er4uf")
+expand_mode = 1
+
+[node name="Locations" type="Control" parent="layout"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="BeachButton" type="Button" parent="layout/Locations"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 27.0
+offset_top = -117.0
+offset_right = 72.0
+offset_bottom = -86.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Lake"
+
+[node name="CityButton" type="Button" parent="layout/Locations"]
+layout_mode = 0
+offset_left = 117.5
+offset_top = 250.5
+offset_right = 155.5
+offset_bottom = 281.5
+text = "City
+"
+
+[node name="Popup" type="Panel" parent="layout"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 13.5
+offset_right = 142.0
+offset_bottom = 211.5
+
+[node name="Title" type="Label" parent="layout/Popup"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+text = "Title"
+
+[node name="Price" type="Label" parent="layout/Popup"]
+layout_mode = 0
+offset_top = 23.5
+offset_right = 40.0
+offset_bottom = 46.5
+text = "Preis"
+
+[node name="BuyButton" type="Button" parent="layout/Popup"]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -15.5
+offset_bottom = 15.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "Buy"
+
+[node name="CloseButton" type="Button" parent="layout/Popup"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -31.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Close
+"
+
+[node name="GoButton" type="Button" parent="layout/Popup"]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = 15.5
+offset_bottom = 46.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "Go"
+
+[node name="BackButton" type="Button" parent="layout"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -23.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Back"

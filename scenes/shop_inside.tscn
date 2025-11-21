@@ -1,7 +1,55 @@
-[gd_scene load_steps=6 format=3 uid="uid://dme4l6a6jg0g6"]
+[gd_scene load_steps=8 format=3 uid="uid://dme4l6a6jg0g6"]
 
 [ext_resource type="PackedScene" uid="uid://b5ew1rfc8ow8g" path="res://scenes/fishingRod.tscn" id="1_3qbwi"]
 [ext_resource type="Script" uid="uid://cl5fc0glwmnhs" path="res://scripts/UpgradeShop.gd" id="1_i2sg0"]
+[ext_resource type="Shader" uid="uid://imf547kyj0bj" path="res://shader/CRT.gdshader" id="2_nnl43"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_nnl43"]
+shader = ExtResource("2_nnl43")
+shader_parameter/grain_intensity = 0.0
+shader_parameter/min_lum = 0.0
+shader_parameter/max_lum = 1.0
+shader_parameter/time_scale = 0.5
+shader_parameter/vignette_darkness = 0.0
+shader_parameter/vignette_outer_radius = 0.999
+shader_parameter/vignette_inner_radius = 0.2
+shader_parameter/scanline_intensity = 0.2
+shader_parameter/barrel_distortion = 0.0
+shader_parameter/chromatic_aberration = 0.0
+shader_parameter/crt_vignette_power = 2.0
+shader_parameter/pixel_resolution_x = 320
+shader_parameter/pixel_resolution_y = 240
+shader_parameter/enable_color_quantization = true
+shader_parameter/color_quant_steps = 32.0
+shader_parameter/warble_amount = 0.002
+shader_parameter/warble_speed = 5.0
+
+[sub_resource type="Animation" id="Animation_i2sg0"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0.005, -2.792)]
+}
 
 [sub_resource type="Animation" id="Animation_3qbwi"]
 resource_name = "idle"
@@ -32,33 +80,6 @@ tracks/1/keys = {
 "values": [Vector3(0, 0.005, -2.792), Vector3(0, 0.155, -2.792), Vector3(0, 0.005, -2.792), Vector3(0, 0.155, -2.792)]
 }
 
-[sub_resource type="Animation" id="Animation_i2sg0"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:rotation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0, 0, 0)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath(".:position")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0, 0.005, -2.792)]
-}
-
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_nnl43"]
 _data = {
 &"RESET": SubResource("Animation_i2sg0"),
@@ -67,6 +88,16 @@ _data = {
 
 [node name="ShopInside" type="Node3D"]
 script = ExtResource("1_i2sg0")
+
+[node name="Filter" type="CanvasLayer" parent="."]
+
+[node name="TextureRect" type="ColorRect" parent="Filter"]
+material = SubResource("ShaderMaterial_nnl43")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.10217)

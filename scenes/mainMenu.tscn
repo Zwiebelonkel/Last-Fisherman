@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3 uid="uid://bw5el7n36awdr"]
+[gd_scene load_steps=28 format=3 uid="uid://bw5el7n36awdr"]
 
 [ext_resource type="Script" uid="uid://cslkhtib5limu" path="res://scripts/mainMenu.gd" id="1_tov5d"]
 [ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="3_jfr2g"]
@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://e7t33pnr13bp" path="res://textures/These-images-of-clouds-are-created-exclusively-using-Perlin-noise-It-simulates-the_Q320.jpg" id="8_d7xfv"]
 [ext_resource type="Shader" uid="uid://c37jx2ebwp1a3" path="res://shader/shader_water.gdshader" id="10_tlicg"]
 [ext_resource type="Texture2D" uid="uid://cvllk03mhtybp" path="res://textures/723-normal.jpg" id="11_808lr"]
+[ext_resource type="AudioStream" uid="uid://gqmombudmim" path="res://sounds/Fisher.mp3" id="11_tov5d"]
 [ext_resource type="Texture2D" uid="uid://d31603nl8y0gd" path="res://textures/Water_preview.jpgC878A51E-2B84-45CA-85CB-75E5BC88EEC8Large.jpg" id="12_uwljm"]
 [ext_resource type="Shader" uid="uid://cfsuhiaq15sgu" path="res://shader/outline.gdshader" id="13_1anpv"]
 [ext_resource type="PackedScene" uid="uid://brmbdno888s38" path="res://assets/tree.glb" id="14_3wx87"]
@@ -218,6 +219,18 @@ theme = SubResource("Theme_epn8x")
 text = "Luca Müller"
 vertical_alignment = 1
 
+[node name="ResetButton" type="Button" parent="UI"]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -105.0
+offset_top = -31.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "RESET GAME"
+
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_cfq0f")
 
@@ -265,6 +278,12 @@ script = null
 [node name="RodMesh" parent="FishingRod" index="0"]
 transform = Transform3D(0.8, 0, 0, 0, 0.773459, 0.204357, 0, -0.204357, 0.773459, 0.00607872, 0.0344733, 0)
 
+[node name="Music" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("11_tov5d")
+autoplay = true
+bus = &"Music"
+
 [connection signal="pressed" from="UI/Button" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="UI/ResetButton" to="." method="_on_reset_button_pressed"]
 
 [editable path="FishingRod"]

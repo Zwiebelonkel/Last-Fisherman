@@ -1,7 +1,7 @@
-[gd_scene load_steps=44 format=3 uid="uid://cvkrlt4ri1i2u"]
+[gd_scene load_steps=49 format=3 uid="uid://cvkrlt4ri1i2u"]
 
 [ext_resource type="Shader" uid="uid://dmg556n5nwodi" path="res://shader/pixelate.gdshader" id="1_f7b0s"]
-[ext_resource type="Texture2D" uid="uid://5bjxsmrb0phj" path="res://textures/NEURA_Logo.jpeg" id="2_dqb0a"]
+[ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="2_ikoiv"]
 [ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="3_agolw"]
 [ext_resource type="PackedScene" uid="uid://cqtn78ty1fa7" path="res://scenes/CatchResultUI.tscn" id="4_yles7"]
 [ext_resource type="PackedScene" uid="uid://dxxrhs12x2m2c" path="res://scenes/InventoryUI.tscn" id="5_ibljb"]
@@ -19,6 +19,11 @@
 [ext_resource type="PackedScene" uid="uid://btgasvjdkp460" path="res://assets/hotel.glb" id="18_agolw"]
 [ext_resource type="PackedScene" uid="uid://ckje0fw3pep83" path="res://assets/skyscaper.glb" id="18_ibljb"]
 [ext_resource type="Texture2D" uid="uid://e7t33pnr13bp" path="res://textures/These-images-of-clouds-are-created-exclusively-using-Perlin-noise-It-simulates-the_Q320.jpg" id="18_yles7"]
+[ext_resource type="AudioStream" uid="uid://esyv0p374c5j" path="res://sounds/bite.mp3" id="20_ikoiv"]
+[ext_resource type="AudioStream" uid="uid://cldy38iwm8ovi" path="res://sounds/cast.mp3" id="21_kg0fi"]
+[ext_resource type="AudioStream" uid="uid://26m0pjkxve85" path="res://sounds/sucess.mp3" id="22_0orsp"]
+[ext_resource type="AudioStream" uid="uid://cmr6cded4l11v" path="res://sounds/whoosh.mp3" id="23_h3250"]
+[ext_resource type="AudioStream" uid="uid://djac3dtda2yhn" path="res://sounds/city.mp3" id="24_my70f"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1wiy7"]
 shader = ExtResource("1_f7b0s")
@@ -43,6 +48,7 @@ script/source = "extends Node3D
 @export var shop_scene_path: String = \"res://scenes/shop.tscn\"
 @export var rotation_speed: float = 2.0  # Drehgeschwindigkeit
 @export var camera: Camera3D
+@export var fishing_location: String = \"city\"
 
 @onready var anim: AnimationPlayer = $AnimationPlayer
 @onready var ripple_anim: AnimationPlayer = hook.get_node(\"AnimationPlayer\")
@@ -53,6 +59,14 @@ script/source = "extends Node3D
 @onready var marker: Control = bar_background.get_node(\"Marker\")
 @onready var sweet_spot: Control = bar_background.get_node(\"SweetSpot\")
 @onready var catch_progress: ProgressBar = catch_ui.get_node(\"CatchProgress\")
+@onready var bite_sound: AudioStreamPlayer = get_node(\"../../Audio/bite\")
+@onready var cast_sound: AudioStreamPlayer = get_node(\"../../Audio/cast\")
+@onready var success_sound: AudioStreamPlayer = get_node(\"../../Audio/success\")
+@onready var whoosh_sound: AudioStreamPlayer = get_node(\"../../Audio/whoosh\")
+
+
+
+
 @export var inventory_ui: Node
 signal line_visible(visible: bool)
 
@@ -94,6 +108,9 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 	if event.is_action_pressed(\"cast\") and current_rotation == 90:
 		enter_shop()
+	if event.is_action_pressed(\"map_open\"):
+		Player.update_last_scene(\"res://scenes/city.tscn\")
+		get_tree().change_scene_to_file(\"res://scenes/MapScene.tscn\")
 
 	if state == STATE_ROTATING:
 		return  # Keine anderen Eingaben während Rotation
@@ -124,9 +141,11 @@ func handle_rotation_input(event: InputEvent) -> void:
 		return
 
 	if event.is_action_pressed(\"right\"):
+		whoosh_sound.play()
 		# Nach rechts drehen = Shop (90°)
 		target_rotation = 90.0
 	elif event.is_action_pressed(\"left\"):
+		whoosh_sound.play()
 		# Nach links drehen = Fischen (180°)
 		target_rotation = 180.0
 
@@ -158,7 +177,6 @@ func update_rotation(delta: float) -> void:
 	else:
 		current_rotation = max(current_rotation - rotation_step, target_rotation)
 
-	# Wende Rotation auf KAMERA an, nicht auf die Scene!
 	if camera:
 		camera.rotation.y = deg_to_rad(current_rotation)
 
@@ -166,19 +184,20 @@ func update_rotation(delta: float) -> void:
 	if abs(current_rotation - target_rotation) < 0.5:
 		current_rotation = target_rotation
 		is_rotating = false
-
-		# Bei 90° zum Shop wechseln
-		#if current_rotation == 90.0:
-			#enter_shop()
-		#else:
-			#state = STATE_IDLE
-
+		
+		# 💥 FIX: Inputs wieder freigeben
+		if target_rotation == 180.0:
+			state = STATE_IDLE
+		else:
+			state = STATE_ROTATING  # Shop-Modus
 
 func enter_shop() -> void:
 	print(\"Betrete Shop!\")
 	# Optional: Fade-Out Animation
 	#await get_tree().create_timer(0.3).timeout
+	Player.update_last_scene(\"res://scenes/city.tscn\")
 	get_tree().change_scene_to_file(\"res://scenes/shop_inside.tscn\")
+
 
 
 # ---------------------------------------------------------
@@ -186,6 +205,7 @@ func enter_shop() -> void:
 # ---------------------------------------------------------
 func cast_line() -> void:
 	print(\"CAST\")
+	cast_sound.play()
 	state = STATE_CASTED
 	ui_bite_indicator.visible = false
 
@@ -236,6 +256,9 @@ func reset_line() -> void:
 # ---------------------------------------------------------
 func start_bite_timer() -> void:
 	var wait_time := randf_range(1.5, 4.0)
+	# 🔥 UPGRADE: \"Line\" beeinflusst Biss-Geschwindigkeit
+	var modifier := 1.0 + (Player.upgrade_line - 1) * 0.35
+	wait_time /= modifier
 	print(\"Bite Timer gestartet: \", wait_time, \"s\")
 	await get_tree().create_timer(wait_time).timeout
 
@@ -246,9 +269,27 @@ func start_bite_timer() -> void:
 	print(\"BITE READY!\")
 	state = STATE_BITE
 	show_bite_indicator()
+	start_bite_window()   # 🔥 NEU
+	
+# ---------------------------------------------------------
+# BITE WINDOW (Spieler muss schnell reagieren)
+# ---------------------------------------------------------
+func start_bite_window() -> void:
+	var max_reaction_time := 2.0   # ⏱ 2 Sekunden Zeit zu reagieren
+
+	await get_tree().create_timer(max_reaction_time).timeout
+
+	# Wenn in der Zeit der Spieler NICHT gedrückt hat:
+	if state == STATE_BITE:
+		print(\"Zu langsam! Fisch hat wieder losgelassen.\")
+		ui_bite_indicator.visible = false
+		state = STATE_CASTED   # zurück zur Angel im Wasser
+		start_bite_timer()      # Timer nochmal starten
+
 
 
 func show_bite_indicator() -> void:
+	bite_sound.play()
 	ui_bite_indicator.visible = true
 
 	while state == STATE_BITE:
@@ -269,7 +310,7 @@ func start_catch_minigame() -> void:
 	anim.play(\"fight\")
 	camera.start_screenshake(0.1,1)
 
-	current_fish = FishDB.get_random_from_list(FishDB.FISH_CITY)
+	current_fish = FishDB.get_random_from_list(FishDB.FISH_CITY, Player.upgrade_bait)
 	var difficulty = FishDB.get_fish_difficulty(current_fish)
 	marker_speed = FishDB.get_marker_speed_for_fish(current_fish)
 	
@@ -281,7 +322,6 @@ func start_catch_minigame() -> void:
 
 
 func update_catch_minigame(delta: float) -> void:
-	camera.start_screenshake(0.03,0.2)
 	var current_speed = marker_speed
 
 	if input_active:
@@ -304,7 +344,10 @@ func update_catch_minigame(delta: float) -> void:
 		and marker.position.x <= sweet_spot.position.x + sweet_spot.size.x
 
 	if in_spot:
-		catch_progress.value += 50 * delta
+		var grip_multiplier := 1.0 + (Player.upgrade_grip - 1) * 0.05
+		catch_progress.value += 50.0 * grip_multiplier * delta
+		camera.start_screenshake(0.03,0.2)
+
 	else:
 		catch_progress.value = max(0.0, catch_progress.value - 25.0 * delta)
 
@@ -319,11 +362,14 @@ func end_catch_minigame(success: bool) -> void:
 	if success:
 		var fish = current_fish
 		Inventory.add_fish(fish)
+		success_sound.play()
 
 		if catch_result_ui:
 			catch_result_ui.show_fish(fish)
 
 		print(\"Erfolgreich gefangen: \", fish[\"name\"])
+		Player.save_game()
+
 	else:
 		print(\"Fisch entwischt! (\", current_fish[\"name\"], \")\")
 
@@ -932,12 +978,21 @@ grow_vertical = 2
 
 [node name="BiteIndicator" type="TextureRect" parent="UI"]
 visible = false
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -194.0
+offset_top = -234.0
+offset_right = -51.0
+offset_bottom = -114.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("2_dqb0a")
+scale = Vector2(2.75293, 4.01046)
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("2_ikoiv")
 
 [node name="CatchUI" type="Control" parent="UI"]
 visible = false
@@ -1024,6 +1079,7 @@ hook = NodePath("../../Hook")
 catch_result_ui = NodePath("../../UI/CatchResultUI")
 rotation_speed = 300.0
 camera = NodePath("..")
+fishing_location = "city"
 inventory_ui = NodePath("../../UI/InventoryUI")
 
 [node name="RodMesh" parent="PlayerCamera/FishingRod" index="0"]
@@ -1189,6 +1245,28 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.89862, 32.7751, 5.35517)
 light_color = Color(1, 1, 0, 1)
 light_energy = 30.135
 light_volumetric_fog_energy = 0.97
+
+[node name="Audio" type="Node" parent="."]
+
+[node name="bite" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("20_ikoiv")
+volume_db = -2.811
+
+[node name="cast" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("21_kg0fi")
+
+[node name="success" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("22_0orsp")
+
+[node name="whoosh" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("23_h3250")
+
+[node name="music" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("24_my70f")
+volume_db = -4.785
+pitch_scale = 1.1
+autoplay = true
+bus = &"Music"
 
 [editable path="PlayerCamera/FishingRod"]
 [editable path="hillybilly"]

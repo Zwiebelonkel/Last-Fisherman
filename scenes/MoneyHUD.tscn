@@ -1,6 +1,10 @@
-[gd_scene load_steps=2 format=3 uid="uid://cdb3sodlv6np7"]
+[gd_scene load_steps=4 format=3 uid="uid://cdb3sodlv6np7"]
 
 [ext_resource type="Script" uid="uid://c3hhdrnt0wxmv" path="res://scripts/MoneyHUD.gd" id="1_u3hsu"]
+[ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="2_isc6g"]
+
+[sub_resource type="Theme" id="Theme_rv30e"]
+default_font = ExtResource("2_isc6g")
 
 [node name="MoneyHUD" type="PanelContainer"]
 offset_right = 40.0
@@ -9,6 +13,7 @@ script = ExtResource("1_u3hsu")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 2
+theme = SubResource("Theme_rv30e")
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10

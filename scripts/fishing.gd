@@ -18,6 +18,8 @@ extends Node3D
 @onready var sweet_spot: Control = bar_background.get_node("SweetSpot")
 @onready var catch_progress: ProgressBar = catch_ui.get_node("CatchProgress")
 @export var inventory_ui: Node
+
+@onready var bite_sound: AudioStreamPlayer = get_node("$Audio/bite")
 signal line_visible(visible: bool)
 
 # STATE MACHINE
@@ -213,6 +215,7 @@ func start_bite_timer() -> void:
 
 
 func show_bite_indicator() -> void:
+	bite_sound.play()
 	ui_bite_indicator.visible = true
 
 	while state == STATE_BITE:
