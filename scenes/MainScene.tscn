@@ -628,7 +628,6 @@ grow_vertical = 2
 texture = ExtResource("1_2phbr")
 
 [node name="CatchUI" type="Control" parent="UI"]
-visible = false
 layout_mode = 3
 anchors_preset = 8
 anchor_left = 0.5
@@ -647,9 +646,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -300.0
-offset_top = 233.0
+offset_top = 256.0
 offset_right = 300.0
-offset_bottom = 273.0
+offset_bottom = 276.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.458405, 0.458405, 0.458405, 1)
@@ -662,17 +661,17 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -60.0
-offset_top = -20.0
+offset_top = -10.0
 offset_right = 60.0
-offset_bottom = 20.0
+offset_bottom = 10.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.513678, 1, 0.48175, 1)
+color = Color(1, 0.486275, 0.482353, 1)
 
 [node name="Marker" type="ColorRect" parent="UI/CatchUI/BarBackground"]
 layout_mode = 0
 offset_right = 6.0
-offset_bottom = 40.0
+offset_bottom = 20.0
 
 [node name="CatchProgress" type="ProgressBar" parent="UI/CatchUI"]
 layout_mode = 1
