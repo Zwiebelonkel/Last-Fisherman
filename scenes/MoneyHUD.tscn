@@ -7,6 +7,11 @@
 default_font = ExtResource("2_isc6g")
 
 [node name="MoneyHUD" type="PanelContainer"]
+anchors_preset = -1
+anchor_left = 0.01
+anchor_top = 0.01
+anchor_right = 0.034
+anchor_bottom = 0.01
 offset_right = 40.0
 offset_bottom = 23.0
 script = ExtResource("1_u3hsu")

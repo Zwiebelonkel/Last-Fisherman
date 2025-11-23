@@ -25,8 +25,8 @@ var RARITY_DATA = {
 #  FISH LISTS BY LOCATION
 # ===========================
 var FISH_LAKE = [
-	{"name": "Seetang",        "rarity": RARITY.NORMAL,        "base_value": 1000,   "icon": "res://assets/fish/fish1.png"},
-	{"name": "Rotauge",        "rarity": RARITY.NORMAL,        "base_value": 5000,   "icon": "res://assets/fish/fish1.png"},
+	{"name": "Seetang",        "rarity": RARITY.NORMAL,        "base_value": 10000,   "icon": "res://assets/fish/seetang.png"},
+	{"name": "Rotauge",        "rarity": RARITY.NORMAL,        "base_value": 50000,   "icon": "res://assets/fish/fish1.png"},
 	{"name": "Barsch",         "rarity": RARITY.UNGEWOEHNLICH, "base_value": 8,   "icon": "res://assets/fish/fish2.png"},
 	{"name": "Hecht",          "rarity": RARITY.SELTEN,        "base_value": 15,  "icon": "res://assets/fish/fish3.png"},
 	{"name": "Zander",         "rarity": RARITY.EPISCH,        "base_value": 25,  "icon": "res://assets/fish/fish4.png"},
@@ -42,7 +42,7 @@ var FISH_CITY = [
 	{"name": "Neonflosser",        "rarity": RARITY.EPISCH,        "base_value": 30,  "icon": "res://assets/fish/fish1.png"},
 	{"name": "Altstadtgeist",      "rarity": RARITY.LEGENDAER,     "base_value": 55,  "icon": "res://assets/fish/fish1.png"},
 	{"name": "Stadtmythos",        "rarity": RARITY.EXOTISCH,      "base_value": 150, "icon": "res://assets/fish/fish1.png"},
-	{"name": "Leiche",             "rarity": RARITY.EXOTISCH,      "base_value": 0,   "icon": "res://assets/fish/fish1.png"}
+	{"name": "Leiche",             "rarity": RARITY.EXOTISCH,      "base_value": 0,   "icon": "res://assets/fish/corpse.png"}
 ]
 
 # ===========================

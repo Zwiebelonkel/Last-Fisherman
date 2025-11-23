@@ -8,6 +8,7 @@ extends Control
 @onready var popup_go_button = $layout/Popup/GoButton
 @onready var popup_close_btn = $layout/Popup/CloseButton
 @onready var back_btn = $layout/BackButton
+@onready var interact = $Audio/interact
 var selected_spot := ""
 
 func _ready():
@@ -35,6 +36,7 @@ func assign_button(btn: Button, spot_name: String):
 		btn.modulate = Color(0.4, 0.4, 0.4)
 
 func show_spot_popup(spot_name: String):
+	interact.play()
 	selected_spot = spot_name
 	var price = Player.spot_prices[spot_name]
 	var unlocked = Player.unlocked_spots.get(spot_name, false)
@@ -70,6 +72,7 @@ func buy_spot(spot_name: String):
 	Player.money -= cost
 	Player.unlocked_spots[spot_name] = true
 	Player.save_game()
+	interact.play()
 	print("Ort gekauft:", spot_name)
 	# Popup schließen
 	hide_popup()
@@ -78,6 +81,7 @@ func buy_spot(spot_name: String):
 	assign_button(city_btn, "city")
 
 func go_to_spot(spot_name: String):
+	interact.play()
 	match spot_name:
 		"lake":
 			Player.update_last_scene("res://scenes/MainScene.tscn")

@@ -1,9 +1,8 @@
-[gd_scene load_steps=28 format=3 uid="uid://bw5el7n36awdr"]
+[gd_scene load_steps=27 format=3 uid="uid://bw5el7n36awdr"]
 
 [ext_resource type="Script" uid="uid://cslkhtib5limu" path="res://scripts/mainMenu.gd" id="1_tov5d"]
 [ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="3_jfr2g"]
 [ext_resource type="Shader" uid="uid://b8mxoacu7poqc" path="res://shader/sky.gdshader" id="7_ewahu"]
-[ext_resource type="Texture2D" uid="uid://e7t33pnr13bp" path="res://textures/These-images-of-clouds-are-created-exclusively-using-Perlin-noise-It-simulates-the_Q320.jpg" id="8_d7xfv"]
 [ext_resource type="Shader" uid="uid://c37jx2ebwp1a3" path="res://shader/shader_water.gdshader" id="10_tlicg"]
 [ext_resource type="Texture2D" uid="uid://cvllk03mhtybp" path="res://textures/723-normal.jpg" id="11_808lr"]
 [ext_resource type="AudioStream" uid="uid://gqmombudmim" path="res://sounds/Fisher.mp3" id="11_tov5d"]
@@ -48,18 +47,17 @@ default_font_size = 23
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_cfq0f"]
 shader = ExtResource("7_ewahu")
 shader_parameter/use_directional_light = true
-shader_parameter/sun_color = Color(0.117406, 0.219399, 0.173574, 1)
-shader_parameter/sun_energy = -0.77
-shader_parameter/cloud_color = Color(0.669654, 0.3219, 0.145453, 1)
-shader_parameter/cloud_density = 3.46
-shader_parameter/cloud_depth = 3.615
-shader_parameter/cloud_sag = 1.66
-shader_parameter/noise_texture = ExtResource("8_d7xfv")
+shader_parameter/sun_color = Color(1, 1, 1, 1)
+shader_parameter/sun_energy = 15.0
+shader_parameter/cloud_color = Color(0.296, 0.402, 0.521, 1)
+shader_parameter/cloud_density = 5.0
+shader_parameter/cloud_depth = 2.0
+shader_parameter/cloud_sag = 2.0
 shader_parameter/noise_tiling = Vector2(1, 1)
-shader_parameter/wind_speed = Vector2(0.27, 0.28)
+shader_parameter/wind_speed = Vector2(0.5, 0.5)
 shader_parameter/ground_bottom_color = Color(0.2, 0.169, 0.133, 1)
-shader_parameter/ground_curve = 0.037
-shader_parameter/exposure = 7.321
+shader_parameter/ground_curve = 0.04
+shader_parameter/exposure = 1.0
 
 [sub_resource type="Sky" id="Sky_x537r"]
 sky_material = SubResource("ShaderMaterial_cfq0f")

@@ -4,6 +4,9 @@ extends Node3D
 @onready var line_button: Button = $UI/Panel/LineButton
 @onready var money_label: Label = $UI/MoneyLabel
 @onready var rod_preview: Node3D = $RodPreview
+@onready var music: AudioStreamPlayer = $Audio/music
+@onready var interact: AudioStreamPlayer = $Audio/interact
+
 
 var base_grip_cost := 50
 var base_bait_cost := 75
@@ -36,6 +39,7 @@ func _on_GripButton_pressed():
 		Player.money -= grip_cost
 		Player.upgrade_grip += 1
 		Player.save_game()
+		interact.play()
 		update_ui()
 
 func _on_BaitButton_pressed():
@@ -44,6 +48,8 @@ func _on_BaitButton_pressed():
 		Player.money -= bait_cost
 		Player.upgrade_bait += 1
 		Player.save_game()
+		interact.play()
+
 		update_ui()
 
 func _on_LineButton_pressed():
@@ -52,6 +58,7 @@ func _on_LineButton_pressed():
 		Player.money -= line_cost
 		Player.upgrade_line += 1
 		Player.save_game()
+		interact.play()
 		update_ui()
 
 func _on_BackButton_pressed():

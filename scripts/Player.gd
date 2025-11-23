@@ -8,6 +8,7 @@ var upgrade_bait: int = 1
 var upgrade_line: int = 1
 var last_scene: String = "res://scenes/MainScene.tscn"
 var fish_inventory: Array = []  # Liste aller gefangenen Fische
+var caught_fish_species: Dictionary = {}  # Für das Fischbuch
 var unlocked_spots = {
 	"lake": true,
 	"city": false,
@@ -58,6 +59,12 @@ func go_to_last_scene() -> void:
 func add_fish(fish_data: Dictionary) -> void:
 	fish_inventory.append(fish_data)
 	print("Fisch ins Inventar hinzugefügt:", fish_data)
+	
+	# Fisch ins Fischbuch eintragen
+	if not caught_fish_species.has(fish_data["name"]):
+		caught_fish_species[fish_data["name"]] = true
+		print("🐟 Neue Fischart entdeckt:", fish_data["name"])
+	
 	save_game()
 
 func remove_fish(index: int) -> void:
@@ -85,6 +92,7 @@ func reset():
 	upgrade_line = 1
 	last_scene = "res://scenes/MainScene.tscn"
 	fish_inventory.clear()
+	caught_fish_species.clear()
 	unlocked_spots = {
 		"lake": true,
 		"city": false,
@@ -103,7 +111,8 @@ func save_game() -> void:
 		"upgrade_line": upgrade_line,
 		"last_scene": last_scene,
 		"fish_inventory": fish_inventory,
-		"unlocked_spots": unlocked_spots
+		"unlocked_spots": unlocked_spots,
+		"caught_fish_species": caught_fish_species
 	}
 	var file = FileAccess.open("user://savegame.dat", FileAccess.WRITE)
 	file.store_var(save_data)
@@ -122,6 +131,7 @@ func load_game() -> void:
 		last_scene = save_data.get("last_scene", "res://scenes/MainScene.tscn")
 		fish_inventory = save_data.get("fish_inventory", [])
 		unlocked_spots = save_data.get("unlocked_spots", unlocked_spots)
+		caught_fish_species = save_data.get("caught_fish_species", {})
 		print("Spiel geladen!")
 	else:
 		print("Keine Speicherdatei gefunden, starte neues Spiel")

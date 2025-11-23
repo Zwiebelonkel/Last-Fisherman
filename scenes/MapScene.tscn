@@ -1,8 +1,10 @@
-[gd_scene load_steps=7 format=3 uid="uid://c65603pesggni"]
+[gd_scene load_steps=9 format=3 uid="uid://c65603pesggni"]
 
 [ext_resource type="Texture2D" uid="uid://d2l0f1gb3wn01" path="res://textures/map.png" id="1_er4uf"]
 [ext_resource type="Script" uid="uid://2ilivy1i0ehi" path="res://scripts/MapScene.gd" id="1_y2hrc"]
 [ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="2_wikxs"]
+[ext_resource type="AudioStream" uid="uid://wy4qclas0bhw" path="res://sounds/map.mp3" id="4_1ddn7"]
+[ext_resource type="AudioStream" uid="uid://cgv2wx0vgdw41" path="res://sounds/interact.mp3" id="5_bnqbi"]
 
 [sub_resource type="Theme" id="Theme_j1nvq"]
 
@@ -154,3 +156,15 @@ offset_top = -23.0
 grow_horizontal = 2
 grow_vertical = 0
 text = "Back"
+
+[node name="Audio" type="Node" parent="."]
+
+[node name="music" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("4_1ddn7")
+volume_db = -4.685
+pitch_scale = 1.61
+autoplay = true
+bus = &"Music"
+
+[node name="interact" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("5_bnqbi")

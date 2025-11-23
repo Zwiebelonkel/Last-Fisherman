@@ -1,4 +1,4 @@
-[gd_scene load_steps=51 format=3 uid="uid://cx2sffjjdjuw5"]
+[gd_scene load_steps=52 format=3 uid="uid://cx2sffjjdjuw5"]
 
 [ext_resource type="Shader" uid="uid://dmg556n5nwodi" path="res://shader/pixelate.gdshader" id="1_1ns3k"]
 [ext_resource type="Shader" uid="uid://b8mxoacu7poqc" path="res://shader/sky.gdshader" id="1_1wiy7"]
@@ -8,9 +8,9 @@
 [ext_resource type="PackedScene" uid="uid://cdb3sodlv6np7" path="res://scenes/MoneyHUD.tscn" id="1_kp0ql"]
 [ext_resource type="Shader" uid="uid://c37jx2ebwp1a3" path="res://shader/shader_water.gdshader" id="2_611at"]
 [ext_resource type="PackedScene" uid="uid://cqtn78ty1fa7" path="res://scenes/CatchResultUI.tscn" id="2_o3jky"]
-[ext_resource type="Texture2D" uid="uid://e7t33pnr13bp" path="res://textures/These-images-of-clouds-are-created-exclusively-using-Perlin-noise-It-simulates-the_Q320.jpg" id="2_u1u68"]
 [ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="3_8wjpf"]
 [ext_resource type="Texture2D" uid="uid://cvllk03mhtybp" path="res://textures/723-normal.jpg" id="6_x537r"]
+[ext_resource type="PackedScene" uid="uid://be7bs5po2ukhi" path="res://scenes/FishBook.tscn" id="7_a7pbh"]
 [ext_resource type="Texture2D" uid="uid://d31603nl8y0gd" path="res://textures/Water_preview.jpgC878A51E-2B84-45CA-85CB-75E5BC88EEC8Large.jpg" id="7_cfq0f"]
 [ext_resource type="Script" uid="uid://bymrcyid32xsp" path="res://scripts/line.gd" id="10_pjux3"]
 [ext_resource type="PackedScene" uid="uid://dxxrhs12x2m2c" path="res://scenes/InventoryUI.tscn" id="11_pjux3"]
@@ -23,6 +23,7 @@
 [ext_resource type="AudioStream" uid="uid://26m0pjkxve85" path="res://sounds/sucess.mp3" id="20_1ns3k"]
 [ext_resource type="AudioStream" uid="uid://cmr6cded4l11v" path="res://sounds/whoosh.mp3" id="21_a7pbh"]
 [ext_resource type="AudioStream" uid="uid://he0cwfvqtp7v" path="res://sounds/beach.mp3" id="22_mkg2b"]
+[ext_resource type="PackedScene" uid="uid://dedujdavqgnhc" path="res://scenes/clouds.tscn" id="24_a7pbh"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1wiy7"]
 shader = ExtResource("1_1ns3k")
@@ -40,18 +41,17 @@ default_font = ExtResource("3_8wjpf")
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_cfq0f"]
 shader = ExtResource("1_1wiy7")
 shader_parameter/use_directional_light = true
-shader_parameter/sun_color = Color(0.117406, 0.219399, 0.173574, 1)
-shader_parameter/sun_energy = -0.77
-shader_parameter/cloud_color = Color(0.669654, 0.3219, 0.145453, 1)
-shader_parameter/cloud_density = 3.46
-shader_parameter/cloud_depth = 3.615
-shader_parameter/cloud_sag = 1.66
-shader_parameter/noise_texture = ExtResource("2_u1u68")
+shader_parameter/sun_color = Color(1, 1, 1, 1)
+shader_parameter/sun_energy = 15.0
+shader_parameter/cloud_color = Color(0.296, 0.402, 0.521, 1)
+shader_parameter/cloud_density = 5.0
+shader_parameter/cloud_depth = 2.0
+shader_parameter/cloud_sag = 2.0
 shader_parameter/noise_tiling = Vector2(1, 1)
-shader_parameter/wind_speed = Vector2(0.27, 0.28)
+shader_parameter/wind_speed = Vector2(0.5, 0.5)
 shader_parameter/ground_bottom_color = Color(0.2, 0.169, 0.133, 1)
-shader_parameter/ground_curve = 0.037
-shader_parameter/exposure = 7.321
+shader_parameter/ground_curve = 0.04
+shader_parameter/exposure = 1.0
 
 [sub_resource type="Sky" id="Sky_x537r"]
 sky_material = SubResource("ShaderMaterial_cfq0f")
@@ -80,6 +80,8 @@ script/source = "extends Node3D
 @export var rotation_speed: float = 2.0  # Drehgeschwindigkeit
 @export var camera: Camera3D
 @export var fishing_location: String = \"lake\"
+@export var fishbook_ui: Control
+
 
 @onready var anim: AnimationPlayer = $AnimationPlayer
 @onready var ripple_anim: AnimationPlayer = hook.get_node(\"AnimationPlayer\")
@@ -142,6 +144,9 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed(\"map_open\"):
 		Player.update_last_scene(\"res://scenes/MainScene.tscn\")
 		get_tree().change_scene_to_file(\"res://scenes/MapScene.tscn\")
+	if event.is_action_pressed(\"journal\"):
+		toggle_fishbook()
+
 
 	if state == STATE_ROTATING:
 		return  # Keine anderen Eingaben während Rotation
@@ -286,7 +291,7 @@ func reset_line() -> void:
 # BITE TIMER
 # ---------------------------------------------------------
 func start_bite_timer() -> void:
-	var wait_time := randf_range(1.5, 4.0)
+	var wait_time := randf_range(5, 20)
 	# 🔥 UPGRADE: \"Line\" beeinflusst Biss-Geschwindigkeit
 	var modifier := 1.0 + (Player.upgrade_line - 1) * 0.35
 	wait_time /= modifier
@@ -376,7 +381,7 @@ func update_catch_minigame(delta: float) -> void:
 
 	if in_spot:
 		var grip_multiplier := 1.0 + (Player.upgrade_grip - 1) * 0.05
-		catch_progress.value += 50.0 * grip_multiplier * delta
+		catch_progress.value += 40.0 * grip_multiplier * delta
 		camera.start_screenshake(0.03,0.2)
 
 	else:
@@ -393,6 +398,7 @@ func end_catch_minigame(success: bool) -> void:
 	if success:
 		var fish = current_fish
 		Inventory.add_fish(fish)
+		Player.caught_fish_species[fish[\"name\"]] = true
 		success_sound.play()
 
 		if catch_result_ui:
@@ -406,6 +412,17 @@ func end_catch_minigame(success: bool) -> void:
 
 	catch_ui.visible = false
 	await reset_line()
+	
+func toggle_fishbook():
+	if state == STATE_MINIGAME or state == STATE_BITE:
+		return  # während des Fang-Minispiels deaktiviert
+	fishbook_ui.visible = not fishbook_ui.visible
+
+   # Wenn Journal offen → Angel stoppen
+	if fishbook_ui.visible:
+		state = STATE_IDLE
+		ui_bite_indicator.visible = false
+		hook.visible = false
 "
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_k24pf"]
@@ -683,6 +700,9 @@ offset_right = 60.0
 offset_bottom = 43.0
 theme = SubResource("Theme_2phbr")
 
+[node name="FishBook" parent="UI" instance=ExtResource("7_a7pbh")]
+visible = false
+
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_cfq0f")
 
@@ -690,7 +710,7 @@ environment = SubResource("Environment_cfq0f")
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 2.007, 0.0447942)
 script = ExtResource("1_ibiss")
 
-[node name="FishingRod" parent="PlayerCamera" node_paths=PackedStringArray("rod_tip", "hook", "catch_result_ui", "camera", "inventory_ui") instance=ExtResource("1_echbf")]
+[node name="FishingRod" parent="PlayerCamera" node_paths=PackedStringArray("rod_tip", "hook", "catch_result_ui", "camera", "fishbook_ui", "inventory_ui") instance=ExtResource("1_echbf")]
 transform = Transform3D(0.925417, -0.163176, -0.34202, 0.173648, 0.984808, 0, 0.336824, -0.0593912, 0.939693, 0.4, -0.40033, -1.03766)
 script = SubResource("GDScript_8wjpf")
 rod_tip = NodePath("RodMesh/RodTip")
@@ -699,6 +719,7 @@ catch_result_ui = NodePath("../../UI/CatchResultUI")
 rotation_speed = 300.0
 camera = NodePath("..")
 fishing_location = "lake"
+fishbook_ui = NodePath("../../UI/FishBook")
 inventory_ui = NodePath("../../UI/InventoryUI")
 
 [node name="RodMesh" parent="PlayerCamera/FishingRod" index="0"]
@@ -789,8 +810,14 @@ stream = ExtResource("21_a7pbh")
 
 [node name="music" type="AudioStreamPlayer" parent="Audio"]
 stream = ExtResource("22_mkg2b")
-volume_db = -4.785
+volume_db = -10.407
 pitch_scale = 1.1
 autoplay = true
+
+[node name="clouds" parent="." instance=ExtResource("24_a7pbh")]
+transform = Transform3D(-1.81, -2.73302e-07, 1.19464e-14, 0, -7.91176e-08, -1.81, 2.73302e-07, -1.81, 7.91176e-08, 0, 4.53567, 8.9877)
+
+[node name="clouds2" parent="." instance=ExtResource("24_a7pbh")]
+transform = Transform3D(-1.81, -2.73302e-07, 1.19464e-14, 0, -7.91176e-08, -1.81, 2.73302e-07, -1.81, 7.91176e-08, 0, 4.53567, 3.86946)
 
 [editable path="PlayerCamera/FishingRod"]
