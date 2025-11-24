@@ -251,7 +251,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed(\"cast\") and current_rotation == 90:
 		enter_shop()
 	if event.is_action_pressed(\"map_open\"):
-		Player.update_last_scene(\"res://scenes/MainScene.tscn\")
+		Player.update_last_scene(\"res://scenes/sewer.tscn\")
 		get_tree().change_scene_to_file(\"res://scenes/MapScene.tscn\")
 	if event.is_action_pressed(\"journal\"):
 		toggle_fishbook()
@@ -348,7 +348,7 @@ func enter_shop() -> void:
 	print(\"Betrete Shop!\")
 	# Optional: Fade-Out Animation
 	#await get_tree().create_timer(0.3).timeout
-	Player.update_last_scene(\"res://scenes/MainScene.tscn\")
+	Player.update_last_scene(\"res://scenes/sewer.tscn\")
 	get_tree().change_scene_to_file(\"res://scenes/shop_inside.tscn\")
 
 

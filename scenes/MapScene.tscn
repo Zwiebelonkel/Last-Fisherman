@@ -90,6 +90,13 @@ offset_bottom = 281.5
 text = "City
 "
 
+[node name="SewerButton" type="Button" parent="layout/Locations"]
+offset_left = 358.0
+offset_top = 289.5
+offset_right = 404.0
+offset_bottom = 320.5
+text = "Sewer"
+
 [node name="Popup" type="Panel" parent="layout"]
 layout_mode = 0
 offset_left = 10.0

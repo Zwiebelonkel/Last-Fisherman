@@ -12,13 +12,13 @@ var caught_fish_species: Dictionary = {}  # Für das Fischbuch
 var unlocked_spots = {
 	"lake": true,
 	"city": false,
-	"forest": false,
+	"sewer": false,
 	"roof": false
 }
 var spot_prices = {
 	"lake": 0,
 	"city": 500,
-	"forest": 1200,
+	"sewer": 1200,
 	"roof": 2000
 }
 
@@ -96,7 +96,7 @@ func reset():
 	unlocked_spots = {
 		"lake": true,
 		"city": false,
-		"forest": false,
+		"sewer": false,
 		"roof": false
 	}
 	save_game()
