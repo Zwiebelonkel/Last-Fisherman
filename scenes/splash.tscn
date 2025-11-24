@@ -24,12 +24,12 @@ grow_amount = -1.506
 
 [sub_resource type="BoxMesh" id="BoxMesh_10vqf"]
 material = SubResource("StandardMaterial3D_86pdq")
-size = Vector3(0.13, 0.11, 0.09)
+size = Vector3(0.065, 0.05, 0.07)
 
 [node name="Splash" type="GPUParticles3D"]
 emitting = false
-amount = 20
-lifetime = 2.16
+amount = 25
+lifetime = 1.11
 one_shot = true
 explosiveness = 1.0
 process_material = SubResource("ParticleProcessMaterial_ft3mc")

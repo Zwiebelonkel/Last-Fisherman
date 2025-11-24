@@ -125,7 +125,7 @@ var state: int = STATE_IDLE
 
 # 🆕 Cast Power Variables
 var cast_power: float = 0.0
-var cast_power_speed: float = 1.5  # Wie schnell die Power auflädt
+var cast_power_speed: float = 3  # Wie schnell die Power auflädt
 var max_cast_power: float = 1.0
 var min_distance: float = 2.0  # Minimale Wurfweite
 var max_distance: float = 8.0  # Maximale Wurfweite
@@ -271,6 +271,7 @@ func enter_shop() -> void:
 # CAST CHARGING SYSTEM
 # ---------------------------------------------------------
 func start_charging_cast() -> void:
+	#anim.play(\"power\")
 	print(\"CHARGING CAST\")
 	state = STATE_CHARGING
 	cast_power = 0.0
@@ -411,6 +412,7 @@ func start_bite_window() -> void:
 
 
 func show_bite_indicator() -> void:
+	splash.restart()
 	bite_sound.play()
 	ui_bite_indicator.visible = true
 
@@ -617,9 +619,9 @@ tracks/0/type = "scale_3d"
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/path = NodePath("Ripple")
-tracks/0/interp = 1
+tracks/0/interp = 2
 tracks/0/loop_wrap = true
-tracks/0/keys = PackedFloat32Array(0, 1, 0.5, 0.5, 0.5, 0.8, 1, 2, 2, 2)
+tracks/0/keys = PackedFloat32Array(0, 1, 0.5, 0.5, 0.5, 0.6, 1, 2, 2, 2)
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
@@ -630,7 +632,7 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0, 0.8),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Color(1, 0, 0, 1), Color(1, 1, 1, 0)]
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_1wiy7"]
@@ -818,7 +820,7 @@ cast_power_ui_scene = ExtResource("11_7wwop")
 inventory_ui = NodePath("../../UI/InventoryUI")
 
 [node name="RodMesh" parent="PlayerCamera/FishingRod" index="0"]
-transform = Transform3D(0.8, 0, 0, 0, 0.773459, 0.204357, 0, -0.204357, 0.773459, 0.0485128, 0.275129, 0)
+transform = Transform3D(0.8, 0, 0, 0, 0.773459, 0.204357, 0, -0.204357, 0.773459, 0, 0, -0.0166266)
 
 [node name="WaterPlane" type="MeshInstance3D" parent="."]
 transform = Transform3D(-1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0, 0, 1, 0, 1.31409, 91.1433)

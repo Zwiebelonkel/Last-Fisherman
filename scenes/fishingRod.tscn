@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://b5ew1rfc8ow8g"]
+[gd_scene load_steps=19 format=3 uid="uid://b5ew1rfc8ow8g"]
 
 [ext_resource type="Script" uid="uid://b3fseqwbblvo8" path="res://scripts/fishing.gd" id="1_stpr7"]
 [ext_resource type="Material" uid="uid://cj86wv7c01tef" path="res://materials/outlineWhite.tres" id="2_wjujl"]
@@ -67,6 +67,18 @@ tracks/1/keys = {
 "update": 0,
 "values": [Vector3(-0.258309, 0, 0)]
 }
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("RodMesh:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, -0.0166266)]
+}
 
 [sub_resource type="Animation" id="Animation_8r45t"]
 resource_name = "cast"
@@ -118,12 +130,42 @@ tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = PackedFloat32Array(0, 1, 0.0436194, 0, 0, 0.999048, 0.25, 1, 0.130526, 0, 0, 0.991445, 0.5, 1, 0.0436194, 0, 0, 0.999048)
 
+[sub_resource type="Animation" id="Animation_dtr8f"]
+resource_name = "power"
+length = 2.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("RodMesh:rotation")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1, 2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(-0.258309, 0, 0), Vector3(0.445059, 0, 0), Vector3(-0.258309, 0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("RodMesh:position")
+tracks/1/interp = 2
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 1, 2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 0, 0.415), Vector3(0, 0, 0)]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_6deuo"]
 _data = {
 &"RESET": SubResource("Animation_wjujl"),
 &"cast": SubResource("Animation_8r45t"),
 &"fight": SubResource("Animation_6deuo"),
 &"idle": SubResource("Animation_stpr7"),
+&"power": SubResource("Animation_dtr8f"),
 &"reel": SubResource("Animation_byvj7")
 }
 
@@ -131,7 +173,7 @@ _data = {
 script = ExtResource("1_stpr7")
 
 [node name="RodMesh" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.966824, 0.255446, 0, -0.255446, 0.966824, 0, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 0.966824, 0.255446, 0, -0.255446, 0.966824, 0, 0, -0.0166266)
 mesh = SubResource("CylinderMesh_4swrq")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="RodMesh"]
