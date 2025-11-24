@@ -1,4 +1,4 @@
-[gd_scene load_steps=52 format=3 uid="uid://cx2sffjjdjuw5"]
+[gd_scene load_steps=54 format=3 uid="uid://cx2sffjjdjuw5"]
 
 [ext_resource type="Shader" uid="uid://dmg556n5nwodi" path="res://shader/pixelate.gdshader" id="1_1ns3k"]
 [ext_resource type="Shader" uid="uid://b8mxoacu7poqc" path="res://shader/sky.gdshader" id="1_1wiy7"]
@@ -13,6 +13,7 @@
 [ext_resource type="PackedScene" uid="uid://be7bs5po2ukhi" path="res://scenes/FishBook.tscn" id="7_a7pbh"]
 [ext_resource type="Texture2D" uid="uid://d31603nl8y0gd" path="res://textures/Water_preview.jpgC878A51E-2B84-45CA-85CB-75E5BC88EEC8Large.jpg" id="7_cfq0f"]
 [ext_resource type="Script" uid="uid://bymrcyid32xsp" path="res://scripts/line.gd" id="10_pjux3"]
+[ext_resource type="PackedScene" uid="uid://je70iqlm248a" path="res://scenes/CastPowerUI.tscn" id="11_7wwop"]
 [ext_resource type="PackedScene" uid="uid://dxxrhs12x2m2c" path="res://scenes/InventoryUI.tscn" id="11_pjux3"]
 [ext_resource type="Shader" uid="uid://cfsuhiaq15sgu" path="res://shader/outline.gdshader" id="13_0ehpd"]
 [ext_resource type="PackedScene" uid="uid://brmbdno888s38" path="res://assets/tree.glb" id="14_08o8g"]
@@ -24,6 +25,7 @@
 [ext_resource type="AudioStream" uid="uid://cmr6cded4l11v" path="res://sounds/whoosh.mp3" id="21_a7pbh"]
 [ext_resource type="AudioStream" uid="uid://he0cwfvqtp7v" path="res://sounds/beach.mp3" id="22_mkg2b"]
 [ext_resource type="PackedScene" uid="uid://dedujdavqgnhc" path="res://scenes/clouds.tscn" id="24_a7pbh"]
+[ext_resource type="PackedScene" uid="uid://dguwyn5rc7uog" path="res://scenes/splash.tscn" id="25_ye0jt"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1wiy7"]
 shader = ExtResource("1_1ns3k")
@@ -75,6 +77,8 @@ script/source = "extends Node3D
 # NODE-REFERENCES
 @export var rod_tip: Node3D
 @export var hook: Node3D
+@export var splash: GPUParticles3D  # 🆕 Splash Particle System
+@export var waterplane: Node3D  # 🆕 Referenz zur Wasseroberfläche
 @export var catch_result_ui: Node
 @export var shop_scene_path: String = \"res://scenes/shop.tscn\"
 @export var rotation_speed: float = 2.0  # Drehgeschwindigkeit
@@ -97,6 +101,10 @@ script/source = "extends Node3D
 @onready var success_sound: AudioStreamPlayer = get_node(\"../../Audio/success\")
 @onready var whoosh_sound: AudioStreamPlayer = get_node(\"../../Audio/whoosh\")
 
+# 🆕 UI für Cast Power (instanzierte Szene)
+@export var cast_power_ui_scene: PackedScene
+var cast_power_ui: Control = null
+
 
 
 
@@ -106,6 +114,7 @@ signal line_visible(visible: bool)
 # STATE MACHINE
 enum {
 	STATE_IDLE,
+	STATE_CHARGING,  # 🆕 Wurf wird aufgeladen
 	STATE_CASTED,
 	STATE_BITE,
 	STATE_MINIGAME,
@@ -113,6 +122,13 @@ enum {
 }
 
 var state: int = STATE_IDLE
+
+# 🆕 Cast Power Variables
+var cast_power: float = 0.0
+var cast_power_speed: float = 1.5  # Wie schnell die Power auflädt
+var max_cast_power: float = 1.0
+var min_distance: float = 2.0  # Minimale Wurfweite
+var max_distance: float = 8.0  # Maximale Wurfweite
 
 # Minigame Variables
 var marker_pos: float = 0.0
@@ -130,8 +146,15 @@ var is_rotating: bool = false
 func _ready() -> void:
 	anim.play(\"idle\")
 	hook.visible = false
+	splash.visible = false  # 🆕 Splash initial versteckt
+	splash.emitting = false  # 🆕 Partikel-Emission aus
 	ui_bite_indicator.visible = false
 	catch_ui.visible = false
+	
+	# 🆕 Cast Power UI instanzieren
+	if cast_power_ui_scene:
+		cast_power_ui = cast_power_ui_scene.instantiate()
+		add_child(cast_power_ui)
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -160,11 +183,17 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed(\"cast\"):
 		match state:
 			STATE_IDLE:
-				cast_line()
+				start_charging_cast()  # 🆕 Wurf aufladen starten
 			STATE_CASTED, STATE_BITE:
 				reel_pressed()
 			STATE_MINIGAME:
 				pass
+	
+	# 🆕 Cast loslassen
+	if event.is_action_released(\"cast\"):
+		if state == STATE_CHARGING:
+			release_cast()
+	
 	if event.is_action_pressed(\"inventory_toggle\"):
 		inventory_ui.toggle()
 
@@ -203,6 +232,8 @@ func _process(delta: float) -> void:
 		update_rotation(delta)
 	elif state == STATE_MINIGAME:
 		update_catch_minigame(delta)
+	elif state == STATE_CHARGING:
+		update_cast_power(delta)  # 🆕 Wurfkraft aktualisieren
 
 
 func update_rotation(delta: float) -> void:
@@ -237,10 +268,48 @@ func enter_shop() -> void:
 
 
 # ---------------------------------------------------------
+# CAST CHARGING SYSTEM
+# ---------------------------------------------------------
+func start_charging_cast() -> void:
+	print(\"CHARGING CAST\")
+	state = STATE_CHARGING
+	cast_power = 0.0
+	
+	if cast_power_ui and cast_power_ui.has_method(\"show_power\"):
+		cast_power_ui.show_power(0.0)
+
+
+func update_cast_power(delta: float) -> void:
+	# Ping-Pong Effekt: Power geht hoch und runter
+	cast_power += cast_power_speed * delta
+	
+	if cast_power > max_cast_power:
+		cast_power = max_cast_power
+		cast_power_speed *= -1.0  # Richtung umkehren
+	elif cast_power < 0.0:
+		cast_power = 0.0
+		cast_power_speed *= -1.0
+	
+	if cast_power_ui and cast_power_ui.has_method(\"show_power\"):
+		cast_power_ui.show_power(cast_power)
+
+
+func release_cast() -> void:
+	if cast_power_ui and cast_power_ui.has_method(\"hide_power\"):
+		cast_power_ui.hide_power()
+	
+	# Je näher an 1.0 (100%), desto weiter der Wurf
+	var power_quality = 1.0 - abs(cast_power - 1.0)  # 1.0 = perfekt, 0.0 = schwach
+	
+	print(\"Cast released with power: \", power_quality)
+	cast_line(power_quality)
+
+
+# ---------------------------------------------------------
 # CAST
 # ---------------------------------------------------------
-func cast_line() -> void:
-	print(\"CAST\")
+func cast_line(power: float = 1.0) -> void:  # 🆕 Power Parameter
+	print(\"CAST with power: \", power)
 	cast_sound.play()
 	state = STATE_CASTED
 	ui_bite_indicator.visible = false
@@ -250,9 +319,24 @@ func cast_line() -> void:
 	await anim.animation_finished
 
 	var x = randf_range(-2.0, 2.0)
-	var z = randf_range(4.0, 7.0)
-	hook.position = Vector3(x, 0.05, z)
+	
+	# 🆕 Z-Distanz basiert auf Wurfkraft
+	var distance = lerp(min_distance, max_distance, power)
+	var z = distance
+	
+	# 🆕 Y-Position von Waterplane übernehmen
+	var water_height = 0.05
+	if waterplane:
+		water_height = waterplane.global_position.y
+	
+	hook.position = Vector3(x, water_height, z)
 	hook.visible = true
+
+	# 🆕 Splash an gleicher Position wie Hook
+	splash.position = Vector3(x, water_height, z)
+	splash.visible = true
+	splash.emitting = true
+	splash.restart()  # Partikel-System neu starten
 
 	ripple_anim.play(\"ripple\")
 	anim.play(\"idle\")
@@ -282,6 +366,8 @@ func reset_line() -> void:
 	await anim.animation_finished
 
 	hook.visible = false
+	splash.visible = false  # 🆕 Splash verstecken
+	splash.emitting = false  # 🆕 Emission stoppen
 	ui_bite_indicator.visible = false
 	anim.play(\"idle\")
 	emit_signal(\"line_visible\", false)
@@ -345,6 +431,9 @@ func start_catch_minigame() -> void:
 	catch_ui.visible = true
 	anim.play(\"fight\")
 	camera.start_screenshake(0.1,1)
+
+	# 🆕 Splash-Effekt während des Kampfes (optional stärker)
+	splash.emitting = true
 
 	current_fish = FishDB.get_random_from_list(FishDB.FISH_LAKE, Player.upgrade_bait)
 	var difficulty = FishDB.get_fish_difficulty(current_fish)
@@ -423,6 +512,8 @@ func toggle_fishbook():
 		state = STATE_IDLE
 		ui_bite_indicator.visible = false
 		hook.visible = false
+		splash.visible = false  # 🆕 Splash auch verstecken
+		splash.emitting = false  # 🆕 Emission stoppen
 "
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_k24pf"]
@@ -572,15 +663,15 @@ size = Vector3(1.885, 0.34, 12.555)
 render_priority = 0
 shader = ExtResource("13_0ehpd")
 shader_parameter/color = Color(0, 0, 0, 1)
-shader_parameter/thickness = 0.02
+shader_parameter/thickness = 0.01
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8wjpf"]
 next_pass = SubResource("ShaderMaterial_0ehpd")
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_pjux3"]
 material = SubResource("StandardMaterial3D_8wjpf")
-top_radius = 0.005
-bottom_radius = 0.005
+top_radius = 0.01
+bottom_radius = 0.01
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kp0ql"]
 emission_enabled = true
@@ -702,6 +793,8 @@ theme = SubResource("Theme_2phbr")
 [node name="FishBook" parent="UI" instance=ExtResource("7_a7pbh")]
 visible = false
 
+[node name="CastPowerUI" parent="UI" instance=ExtResource("11_7wwop")]
+
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_cfq0f")
 
@@ -709,16 +802,19 @@ environment = SubResource("Environment_cfq0f")
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 2.007, 0.0447942)
 script = ExtResource("1_ibiss")
 
-[node name="FishingRod" parent="PlayerCamera" node_paths=PackedStringArray("rod_tip", "hook", "catch_result_ui", "camera", "fishbook_ui", "inventory_ui") instance=ExtResource("1_echbf")]
+[node name="FishingRod" parent="PlayerCamera" node_paths=PackedStringArray("rod_tip", "hook", "splash", "waterplane", "catch_result_ui", "camera", "fishbook_ui", "inventory_ui") instance=ExtResource("1_echbf")]
 transform = Transform3D(0.925417, -0.163176, -0.34202, 0.173648, 0.984808, 0, 0.336824, -0.0593912, 0.939693, 0.4, -0.40033, -1.03766)
 script = SubResource("GDScript_8wjpf")
 rod_tip = NodePath("RodMesh/RodTip")
 hook = NodePath("../../Hook")
+splash = NodePath("../../Splash")
+waterplane = NodePath("../../WaterPlane")
 catch_result_ui = NodePath("../../UI/CatchResultUI")
 rotation_speed = 300.0
 camera = NodePath("..")
 fishing_location = "lake"
 fishbook_ui = NodePath("../../UI/FishBook")
+cast_power_ui_scene = ExtResource("11_7wwop")
 inventory_ui = NodePath("../../UI/InventoryUI")
 
 [node name="RodMesh" parent="PlayerCamera/FishingRod" index="0"]
@@ -746,7 +842,7 @@ light_color = Color(0.99552, 0.467887, 0.0444731, 1)
 light_energy = 16.0
 light_indirect_energy = 5.041
 light_volumetric_fog_energy = 0.485
-light_angular_distance = 13.64
+light_angular_distance = 9.1
 light_specular = 0.676
 shadow_enabled = true
 directional_shadow_split_1 = 0.079
@@ -769,7 +865,7 @@ hook = NodePath("../Hook")
 fishing_script = NodePath("../PlayerCamera/FishingRod")
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
-transform = Transform3D(26.165, 0, 0, 0, 26.165, 0, 0, 0, 26.165, 0, 2.72752, 228.721)
+transform = Transform3D(26.165, 0, 0, 0, 26.165, 0, 0, 0, 26.165, 2.48185, 2.72752, 228.721)
 mesh = SubResource("SphereMesh_08o8g")
 
 [node name="tree" parent="." instance=ExtResource("14_08o8g")]
@@ -818,5 +914,7 @@ transform = Transform3D(-1.81, -2.73302e-07, 1.19464e-14, 0, -7.91176e-08, -1.81
 
 [node name="clouds2" parent="." instance=ExtResource("24_a7pbh")]
 transform = Transform3D(-1.81, -2.73302e-07, 1.19464e-14, 0, -7.91176e-08, -1.81, 2.73302e-07, -1.81, 7.91176e-08, 0, 4.53567, 3.86946)
+
+[node name="Splash" parent="." instance=ExtResource("25_ye0jt")]
 
 [editable path="PlayerCamera/FishingRod"]

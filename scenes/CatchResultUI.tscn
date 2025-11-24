@@ -88,11 +88,13 @@ theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
 [node name="FishIcon" type="TextureRect" parent="VBoxContainer/MarginContainer/PanelContainer/MarginContainer"]
+custom_minimum_size = Vector2(168.19, 114.4)
 layout_direction = 1
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 8
 texture = ExtResource("3_nuupr")
+expand_mode = 1
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="VBoxContainer/MarginContainer/PanelContainer"]
 root_node = NodePath("../MarginContainer/FishIcon")

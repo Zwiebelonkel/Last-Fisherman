@@ -25,21 +25,24 @@ var RARITY_DATA = {
 #  FISH LISTS BY LOCATION
 # ===========================
 var FISH_LAKE = [
-	{"name": "Seetang",        "rarity": RARITY.NORMAL,        "base_value": 10000,   "icon": "res://assets/fish/seetang.png"},
-	{"name": "Rotauge",        "rarity": RARITY.NORMAL,        "base_value": 50000,   "icon": "res://assets/fish/fish1.png"},
+	{"name": "Seetang",        "rarity": RARITY.NORMAL,        "base_value": 1,   "icon": "res://assets/fish/seetang.png"},
+	{"name": "Rotauge",        "rarity": RARITY.NORMAL,        "base_value": 5,   "icon": "res://assets/fish/fish1.png"},
 	{"name": "Barsch",         "rarity": RARITY.UNGEWOEHNLICH, "base_value": 8,   "icon": "res://assets/fish/fish2.png"},
 	{"name": "Hecht",          "rarity": RARITY.SELTEN,        "base_value": 15,  "icon": "res://assets/fish/fish3.png"},
 	{"name": "Zander",         "rarity": RARITY.EPISCH,        "base_value": 25,  "icon": "res://assets/fish/fish4.png"},
-	{"name": "Karpfenkönig",   "rarity": RARITY.LEGENDAER,     "base_value": 40,  "icon": "res://assets/fish/fish5.png"},
+	{"name": "Kaugummikarpfen",  "rarity": RARITY.EPISCH,        "base_value": 28,  "icon": "res://assets/fish/Kaugummi.png"},
+	{"name": "Karpfenkönigin",   "rarity": RARITY.LEGENDAER,     "base_value": 40,  "icon": "res://assets/fish/Prinzessinor.png"},
 	{"name": "Geisterforelle", "rarity": RARITY.EXOTISCH,      "base_value": 100, "icon": "res://assets/fish/fish6.png"},
-	{"name": "Plutonium",      "rarity": RARITY.EXOTISCH,      "base_value": 150, "icon": "res://assets/fish/fish1.png"}
+	{"name": "Plutonium",      "rarity": RARITY.EXOTISCH,      "base_value": 150, "icon": "res://assets/fish/Plutonium.png"}
 ]
 
 var FISH_CITY = [
 	{"name": "Schmutzgrundel",     "rarity": RARITY.NORMAL,        "base_value": 6,   "icon": "res://assets/fish/fish1.png"},
+	{"name": "Signalfänger",       "rarity": RARITY.NORMAL,        "base_value": 7,   "icon": "res://assets/fish/signal.png"},
 	{"name": "Trümmerkabel-Fisch", "rarity": RARITY.UNGEWOEHNLICH, "base_value": 10,  "icon": "res://assets/fish/fish1.png"},
 	{"name": "Rohrschatten",       "rarity": RARITY.SELTEN,        "base_value": 18,  "icon": "res://assets/fish/fish1.png"},
 	{"name": "Neonflosser",        "rarity": RARITY.EPISCH,        "base_value": 30,  "icon": "res://assets/fish/fish1.png"},
+	{"name": "Zigaretten",        "rarity": RARITY.EPISCH,        "base_value": 35,  "icon": "res://assets/fish/Boro.png"},
 	{"name": "Altstadtgeist",      "rarity": RARITY.LEGENDAER,     "base_value": 55,  "icon": "res://assets/fish/fish1.png"},
 	{"name": "Stadtmythos",        "rarity": RARITY.EXOTISCH,      "base_value": 150, "icon": "res://assets/fish/fish1.png"},
 	{"name": "Leiche",             "rarity": RARITY.EXOTISCH,      "base_value": 0,   "icon": "res://assets/fish/corpse.png"}

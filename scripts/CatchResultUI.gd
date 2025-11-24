@@ -37,7 +37,7 @@ func _get_fish_icon(fish: Dictionary) -> Texture2D:
 		if texture:
 			return texture
 	# Fallback, falls kein Icon vorhanden
-	return preload("res://assets/fish/fish1.png")
+	return preload("res://assets/fish/unknown.png")
 
 func _on_continue_pressed():
 	visible = false

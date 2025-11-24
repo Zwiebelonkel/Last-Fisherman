@@ -1,4 +1,4 @@
-[gd_scene load_steps=49 format=3 uid="uid://cvkrlt4ri1i2u"]
+[gd_scene load_steps=51 format=3 uid="uid://cvkrlt4ri1i2u"]
 
 [ext_resource type="Shader" uid="uid://dmg556n5nwodi" path="res://shader/pixelate.gdshader" id="1_f7b0s"]
 [ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="2_ikoiv"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://cqtn78ty1fa7" path="res://scenes/CatchResultUI.tscn" id="4_yles7"]
 [ext_resource type="PackedScene" uid="uid://dxxrhs12x2m2c" path="res://scenes/InventoryUI.tscn" id="5_ibljb"]
 [ext_resource type="PackedScene" uid="uid://cdb3sodlv6np7" path="res://scenes/MoneyHUD.tscn" id="6_8y5tq"]
+[ext_resource type="PackedScene" uid="uid://be7bs5po2ukhi" path="res://scenes/FishBook.tscn" id="7_0orsp"]
 [ext_resource type="Script" uid="uid://bl1xotduehieu" path="res://scripts/camera_sway.gd" id="7_k0m58"]
 [ext_resource type="PackedScene" uid="uid://b5ew1rfc8ow8g" path="res://scenes/fishingRod.tscn" id="8_7tlau"]
 [ext_resource type="Texture2D" uid="uid://cvllk03mhtybp" path="res://textures/723-normal.jpg" id="10_kg0fi"]
@@ -24,6 +25,7 @@
 [ext_resource type="AudioStream" uid="uid://26m0pjkxve85" path="res://sounds/sucess.mp3" id="22_0orsp"]
 [ext_resource type="AudioStream" uid="uid://cmr6cded4l11v" path="res://sounds/whoosh.mp3" id="23_h3250"]
 [ext_resource type="AudioStream" uid="uid://djac3dtda2yhn" path="res://sounds/city.mp3" id="24_my70f"]
+[ext_resource type="PackedScene" uid="uid://dguwyn5rc7uog" path="res://scenes/splash.tscn" id="25_kg0fi"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1wiy7"]
 shader = ExtResource("1_f7b0s")
@@ -44,11 +46,15 @@ script/source = "extends Node3D
 # NODE-REFERENCES
 @export var rod_tip: Node3D
 @export var hook: Node3D
+@export var splash: GPUParticles3D  # 🆕 Splash Particle System
+@export var waterplane: Node3D  # 🆕 Referenz zur Wasseroberfläche
 @export var catch_result_ui: Node
 @export var shop_scene_path: String = \"res://scenes/shop.tscn\"
 @export var rotation_speed: float = 2.0  # Drehgeschwindigkeit
 @export var camera: Camera3D
 @export var fishing_location: String = \"city\"
+@export var fishbook_ui: Control
+
 
 @onready var anim: AnimationPlayer = $AnimationPlayer
 @onready var ripple_anim: AnimationPlayer = hook.get_node(\"AnimationPlayer\")
@@ -97,6 +103,8 @@ var is_rotating: bool = false
 func _ready() -> void:
 	anim.play(\"idle\")
 	hook.visible = false
+	splash.visible = false  # 🆕 Splash initial versteckt
+	splash.emitting = false  # 🆕 Partikel-Emission aus
 	ui_bite_indicator.visible = false
 	catch_ui.visible = false
 
@@ -109,8 +117,11 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed(\"cast\") and current_rotation == 90:
 		enter_shop()
 	if event.is_action_pressed(\"map_open\"):
-		Player.update_last_scene(\"res://scenes/city.tscn\")
+		Player.update_last_scene(\"res://scenes/MainScene.tscn\")
 		get_tree().change_scene_to_file(\"res://scenes/MapScene.tscn\")
+	if event.is_action_pressed(\"journal\"):
+		toggle_fishbook()
+
 
 	if state == STATE_ROTATING:
 		return  # Keine anderen Eingaben während Rotation
@@ -195,7 +206,7 @@ func enter_shop() -> void:
 	print(\"Betrete Shop!\")
 	# Optional: Fade-Out Animation
 	#await get_tree().create_timer(0.3).timeout
-	Player.update_last_scene(\"res://scenes/city.tscn\")
+	Player.update_last_scene(\"res://scenes/MainScene.tscn\")
 	get_tree().change_scene_to_file(\"res://scenes/shop_inside.tscn\")
 
 
@@ -217,6 +228,12 @@ func cast_line() -> void:
 	var z = randf_range(4.0, 7.0)
 	hook.position = Vector3(x, 0.05, z)
 	hook.visible = true
+
+	# 🆕 Splash an gleicher Position wie Hook
+	splash.position = Vector3(x, 0.05, z)
+	splash.visible = true
+	splash.emitting = true
+	splash.restart()  # Partikel-System neu starten
 
 	ripple_anim.play(\"ripple\")
 	anim.play(\"idle\")
@@ -246,6 +263,8 @@ func reset_line() -> void:
 	await anim.animation_finished
 
 	hook.visible = false
+	splash.visible = false  # 🆕 Splash verstecken
+	splash.emitting = false  # 🆕 Emission stoppen
 	ui_bite_indicator.visible = false
 	anim.play(\"idle\")
 	emit_signal(\"line_visible\", false)
@@ -255,7 +274,7 @@ func reset_line() -> void:
 # BITE TIMER
 # ---------------------------------------------------------
 func start_bite_timer() -> void:
-	var wait_time := randf_range(1.5, 4.0)
+	var wait_time := randf_range(5, 20)
 	# 🔥 UPGRADE: \"Line\" beeinflusst Biss-Geschwindigkeit
 	var modifier := 1.0 + (Player.upgrade_line - 1) * 0.35
 	wait_time /= modifier
@@ -310,6 +329,9 @@ func start_catch_minigame() -> void:
 	anim.play(\"fight\")
 	camera.start_screenshake(0.1,1)
 
+	# 🆕 Splash-Effekt während des Kampfes (optional stärker)
+	splash.emitting = true
+
 	current_fish = FishDB.get_random_from_list(FishDB.FISH_CITY, Player.upgrade_bait)
 	var difficulty = FishDB.get_fish_difficulty(current_fish)
 	marker_speed = FishDB.get_marker_speed_for_fish(current_fish)
@@ -345,7 +367,7 @@ func update_catch_minigame(delta: float) -> void:
 
 	if in_spot:
 		var grip_multiplier := 1.0 + (Player.upgrade_grip - 1) * 0.05
-		catch_progress.value += 50.0 * grip_multiplier * delta
+		catch_progress.value += 40.0 * grip_multiplier * delta
 		camera.start_screenshake(0.03,0.2)
 
 	else:
@@ -362,6 +384,7 @@ func end_catch_minigame(success: bool) -> void:
 	if success:
 		var fish = current_fish
 		Inventory.add_fish(fish)
+		Player.caught_fish_species[fish[\"name\"]] = true
 		success_sound.play()
 
 		if catch_result_ui:
@@ -375,6 +398,19 @@ func end_catch_minigame(success: bool) -> void:
 
 	catch_ui.visible = false
 	await reset_line()
+	
+func toggle_fishbook():
+	if state == STATE_MINIGAME or state == STATE_BITE:
+		return  # während des Fang-Minispiels deaktiviert
+	fishbook_ui.visible = not fishbook_ui.visible
+
+   # Wenn Journal offen → Angel stoppen
+	if fishbook_ui.visible:
+		state = STATE_IDLE
+		ui_bite_indicator.visible = false
+		hook.visible = false
+		splash.visible = false  # 🆕 Splash auch verstecken
+		splash.emitting = false  # 🆕 Emission stoppen
 "
 
 [sub_resource type="Shader" id="Shader_dqb0a"]
@@ -1066,19 +1102,24 @@ offset_bottom = 306.0
 grow_horizontal = 2
 grow_vertical = 2
 
+[node name="FishBook" parent="UI" instance=ExtResource("7_0orsp")]
+
 [node name="PlayerCamera" type="Camera3D" parent="."]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 12.867, 0.0447942)
 script = ExtResource("7_k0m58")
 
-[node name="FishingRod" parent="PlayerCamera" node_paths=PackedStringArray("rod_tip", "hook", "catch_result_ui", "camera", "inventory_ui") instance=ExtResource("8_7tlau")]
+[node name="FishingRod" parent="PlayerCamera" node_paths=PackedStringArray("rod_tip", "hook", "splash", "waterplane", "catch_result_ui", "camera", "fishbook_ui", "inventory_ui") instance=ExtResource("8_7tlau")]
 transform = Transform3D(0.925417, -0.163176, -0.34202, 0.173648, 0.984808, 0, 0.336824, -0.0593912, 0.939693, 0.4, -0.40033, -1.03766)
 script = SubResource("GDScript_dqb0a")
 rod_tip = NodePath("RodMesh/RodTip")
 hook = NodePath("../../Hook")
+splash = NodePath("../../Splash")
+waterplane = NodePath("../../WaterPlane")
 catch_result_ui = NodePath("../../UI/CatchResultUI")
 rotation_speed = 300.0
 camera = NodePath("..")
 fishing_location = "city"
+fishbook_ui = NodePath("../../UI/FishBook")
 inventory_ui = NodePath("../../UI/InventoryUI")
 
 [node name="RodMesh" parent="PlayerCamera/FishingRod" index="0"]
@@ -1266,6 +1307,8 @@ volume_db = -4.785
 pitch_scale = 1.1
 autoplay = true
 bus = &"Music"
+
+[node name="Splash" parent="." instance=ExtResource("25_kg0fi")]
 
 [editable path="PlayerCamera/FishingRod"]
 [editable path="hillybilly"]
