@@ -1,0 +1,1517 @@
+[gd_scene load_steps=54 format=4 uid="uid://bwpkoys7chajb"]
+
+[ext_resource type="Shader" uid="uid://dmg556n5nwodi" path="res://shader/pixelate.gdshader" id="1_qk11g"]
+[ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="2_rtjjv"]
+[ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="3_yudd4"]
+[ext_resource type="PackedScene" uid="uid://cqtn78ty1fa7" path="res://scenes/CatchResultUI.tscn" id="4_0tnqg"]
+[ext_resource type="PackedScene" uid="uid://dxxrhs12x2m2c" path="res://scenes/InventoryUI.tscn" id="5_s0tj3"]
+[ext_resource type="PackedScene" uid="uid://cdb3sodlv6np7" path="res://scenes/MoneyHUD.tscn" id="6_i37rq"]
+[ext_resource type="PackedScene" uid="uid://be7bs5po2ukhi" path="res://scenes/FishBook.tscn" id="7_skxsd"]
+[ext_resource type="PackedScene" uid="uid://je70iqlm248a" path="res://scenes/CastPowerUI.tscn" id="8_rxgvs"]
+[ext_resource type="Script" uid="uid://bl1xotduehieu" path="res://scripts/camera_sway.gd" id="10_11ck5"]
+[ext_resource type="PackedScene" uid="uid://b5ew1rfc8ow8g" path="res://scenes/fishingRod.tscn" id="11_c82cw"]
+[ext_resource type="Texture2D" uid="uid://cvllk03mhtybp" path="res://textures/723-normal.jpg" id="13_kyn5a"]
+[ext_resource type="Texture2D" uid="uid://d31603nl8y0gd" path="res://textures/Water_preview.jpgC878A51E-2B84-45CA-85CB-75E5BC88EEC8Large.jpg" id="14_2n20e"]
+[ext_resource type="Shader" uid="uid://cfsuhiaq15sgu" path="res://shader/outline.gdshader" id="15_xp0e5"]
+[ext_resource type="Script" uid="uid://bymrcyid32xsp" path="res://scripts/line.gd" id="16_ros3w"]
+[ext_resource type="PackedScene" uid="uid://cfptx2e41wve1" path="res://scenes/shop.tscn" id="17_vqh58"]
+[ext_resource type="PackedScene" uid="uid://5eeohonkr6bu" path="res://textures/hillybilly.glb" id="18_cl88l"]
+[ext_resource type="AudioStream" uid="uid://esyv0p374c5j" path="res://sounds/bite.mp3" id="19_aj5s8"]
+[ext_resource type="AudioStream" uid="uid://cldy38iwm8ovi" path="res://sounds/cast.mp3" id="20_v8e37"]
+[ext_resource type="AudioStream" uid="uid://26m0pjkxve85" path="res://sounds/sucess.mp3" id="21_fko2s"]
+[ext_resource type="AudioStream" uid="uid://cmr6cded4l11v" path="res://sounds/whoosh.mp3" id="22_aqbbn"]
+[ext_resource type="AudioStream" uid="uid://he0cwfvqtp7v" path="res://sounds/beach.mp3" id="23_ioklf"]
+[ext_resource type="PackedScene" uid="uid://dguwyn5rc7uog" path="res://scenes/splash.tscn" id="24_kn4m2"]
+[ext_resource type="Material" uid="uid://628otcyxtolv" path="res://materials/wall.tres" id="24_kqfxt"]
+[ext_resource type="PackedScene" uid="uid://dhwdor1h68xly" path="res://assets/trainstation.glb" id="25_1jdg1"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1wiy7"]
+shader = ExtResource("1_qk11g")
+shader_parameter/pixel_size = 290.82
+
+[sub_resource type="Theme" id="Theme_25dfr"]
+default_font = ExtResource("3_yudd4")
+
+[sub_resource type="Theme" id="Theme_kjvyo"]
+default_font = ExtResource("3_yudd4")
+
+[sub_resource type="Theme" id="Theme_2phbr"]
+default_font = ExtResource("3_yudd4")
+
+[sub_resource type="Shader" id="Shader_kqfxt"]
+code = "shader_type sky;
+
+group_uniforms Sky;
+/**
+ * Use directional light for sun color
+*/
+uniform bool use_directional_light = true;
+uniform vec4 sun_color : source_color = vec4(1.0);
+uniform float sun_energy = 15.0;
+uniform vec4 cloud_color : source_color = vec4(0.296, 0.402, 0.521, 1.0);
+/**
+ * Determines how much light the clouds absorb
+*/
+uniform float cloud_density = 5.0;
+/**
+ * Depth of the parallax effect
+*/
+uniform float cloud_depth = 2.0;
+/**
+ * Higher values give the clouds a heavier appearance
+*/
+uniform float cloud_sag = 2.0;
+uniform sampler2D noise_texture;
+uniform vec2 noise_tiling = vec2(1.0);
+uniform vec2 wind_speed = vec2(0.5);
+group_uniforms;
+
+group_uniforms Ground;
+uniform vec4 ground_bottom_color : source_color = vec4(0.2, 0.169, 0.133, 1.0);
+uniform float ground_curve : hint_range(0, 1) = 0.04;
+group_uniforms;
+
+uniform float exposure : hint_range(0, 128) = 1.0;
+
+// https://www.scratchapixel.com/lessons/3d-basic-rendering/minimal-ray-tracer-rendering-simple-shapes/ray-plane-and-ray-disk-intersection.html
+float ray_plane_intersection(vec3 origin, vec3 normal, vec3 ray_start, vec3 ray_dir) {
+	return dot(origin - ray_start, normal) / dot(ray_dir, normal);
+}
+
+float sample_height(vec2 uv) {
+	float height = texture(noise_texture, uv).r;
+	return pow(height, cloud_sag);
+}
+
+float beers_law(float absorption, float dist) {
+	return exp(-absorption * dist);
+}
+
+void sky() {
+	vec3 light_color = vec3(0.0);
+	if (use_directional_light)
+		light_color = LIGHT0_COLOR * LIGHT0_ENERGY * dot(LIGHT0_DIRECTION, vec3(0.0, 1.0, 0.0));
+	else
+		light_color = sun_color.rgb * sun_energy;
+
+	vec3 sky = cloud_color.rgb;
+
+	// Find view ray intersection with cloud layer
+	float t = ray_plane_intersection(vec3(0.0, 1.0, 0.0), vec3(0.0, -1.0, 0.0), vec3(0.0), EYEDIR);
+	if (t >= 0.0) {
+		vec3 wind = vec3(wind_speed.x, 0.0, wind_speed.y) * TIME * 0.1;
+		vec3 tiling = vec3(noise_tiling.x, 1.0, noise_tiling.y) * 0.2;
+		vec3 cloud_pos = EYEDIR * t * tiling + wind;
+
+		// Parallax mapping
+		float height = sample_height(cloud_pos.xz);
+		cloud_pos += EYEDIR * height * cloud_depth * 0.1;
+		height = sample_height(cloud_pos.xz);
+
+		// Attenuate light by view angle to simulate occlusion
+		float n_dot_v = dot(vec3(0.0, 1.0, 0.0), EYEDIR);
+		sky += light_color * beers_law(cloud_density, 1.0 - height * n_dot_v);
+	}
+	vec3 horizon = cloud_color.rgb + light_color * beers_law(cloud_density, 1.0);
+	vec3 ground = mix(horizon, ground_bottom_color.rgb, clamp(1.0 - pow(1.0 + EYEDIR.y, 1.0 / ground_curve), 0.0, 1.0));
+	COLOR = mix(ground, sky, step(0.0, EYEDIR.y)) * exposure;
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_cfq0f"]
+shader = SubResource("Shader_kqfxt")
+shader_parameter/use_directional_light = false
+shader_parameter/sun_color = Color(0.0605303, 0.0605303, 0.0605303, 1)
+shader_parameter/sun_energy = 8.525
+shader_parameter/cloud_color = Color(0, 0, 0, 1)
+shader_parameter/cloud_density = 5.0
+shader_parameter/cloud_depth = 2.0
+shader_parameter/cloud_sag = 2.0
+shader_parameter/noise_tiling = Vector2(1, 1)
+shader_parameter/wind_speed = Vector2(0.5, 0.5)
+shader_parameter/ground_bottom_color = Color(0.2, 0.169, 0.133, 1)
+shader_parameter/ground_curve = 0.04
+shader_parameter/exposure = 1.0
+
+[sub_resource type="Sky" id="Sky_x537r"]
+sky_material = SubResource("ShaderMaterial_cfq0f")
+radiance_size = 0
+
+[sub_resource type="Environment" id="Environment_8tyyj"]
+background_mode = 2
+background_energy_multiplier = 0.33
+sky = SubResource("Sky_x537r")
+ambient_light_color = Color(0.145602, 0.198216, 0.120107, 1)
+glow_enabled = true
+glow_intensity = 2.4
+glow_strength = 0.99
+fog_enabled = true
+fog_sky_affect = 0.0
+volumetric_fog_enabled = true
+volumetric_fog_density = 0.1026
+volumetric_fog_albedo = Color(0.591023, 0.993234, 0.681451, 1)
+volumetric_fog_length = 42.44
+volumetric_fog_ambient_inject = 0.2
+
+[sub_resource type="GDScript" id="GDScript_qk11g"]
+script/source = "extends Node3D
+
+# NODE-REFERENCES
+@export var rod_tip: Node3D
+@export var hook: Node3D
+@export var splash: GPUParticles3D  # 🆕 Splash Particle System
+@export var waterplane: Node3D  # 🆕 Referenz zur Wasseroberfläche
+@export var catch_result_ui: Node
+@export var shop_scene_path: String = \"res://scenes/shop.tscn\"
+@export var rotation_speed: float = 2.0  # Drehgeschwindigkeit
+@export var camera: Camera3D
+@export var fishing_location: String = \"sewer\"
+@export var fishbook_ui: Control
+
+
+@onready var anim: AnimationPlayer = $AnimationPlayer
+@onready var ripple_anim: AnimationPlayer = hook.get_node(\"AnimationPlayer\")
+
+@onready var ui_bite_indicator: TextureRect = get_node(\"../../UI/BiteIndicator\")
+@onready var catch_ui: Control = get_node(\"../../UI/CatchUI\")
+@onready var bar_background: Control = catch_ui.get_node(\"BarBackground\")
+@onready var marker: Control = bar_background.get_node(\"Marker\")
+@onready var sweet_spot: Control = bar_background.get_node(\"SweetSpot\")
+@onready var catch_progress: ProgressBar = catch_ui.get_node(\"CatchProgress\")
+@onready var bite_sound: AudioStreamPlayer = get_node(\"../../Audio/bite\")
+@onready var cast_sound: AudioStreamPlayer = get_node(\"../../Audio/cast\")
+@onready var success_sound: AudioStreamPlayer = get_node(\"../../Audio/success\")
+@onready var whoosh_sound: AudioStreamPlayer = get_node(\"../../Audio/whoosh\")
+
+# 🆕 UI für Cast Power (instanzierte Szene)
+@export var cast_power_ui_scene: PackedScene
+var cast_power_ui: Control = null
+
+
+
+
+@export var inventory_ui: Node
+signal line_visible(visible: bool)
+
+# STATE MACHINE
+enum {
+	STATE_IDLE,
+	STATE_CHARGING,  # 🆕 Wurf wird aufgeladen
+	STATE_CASTED,
+	STATE_BITE,
+	STATE_MINIGAME,
+	STATE_ROTATING
+}
+
+var state: int = STATE_IDLE
+
+# 🆕 Cast Power Variables
+var cast_power: float = 0.0
+var cast_power_speed: float = 3  # Wie schnell die Power auflädt
+var max_cast_power: float = 1.0
+var min_distance: float = 2.0  # Minimale Wurfweite
+var max_distance: float = 8.0  # Maximale Wurfweite
+
+# Minigame Variables
+var marker_pos: float = 0.0
+var marker_speed: float = 350.0
+var marker_slow_factor: float = 0.3
+var input_active: bool = false
+var current_fish: Dictionary = {}
+
+# Rotation Variables
+var current_rotation: float = 180.0  # 180 = Fischen, 90 = Shop
+var target_rotation: float = 180.0
+var is_rotating: bool = false
+
+var hook_start_position: Vector3
+var hook_end_position: Vector3
+
+
+
+func _ready() -> void:
+	anim.play(\"idle\")
+	hook.visible = false
+	splash.visible = false  # 🆕 Splash initial versteckt
+	splash.emitting = false  # 🆕 Partikel-Emission aus
+	ui_bite_indicator.visible = false
+	catch_ui.visible = false
+	
+	# 🆕 Cast Power UI instanzieren
+	if cast_power_ui_scene:
+		cast_power_ui = cast_power_ui_scene.instantiate()
+		add_child(cast_power_ui)
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	# Rotation Eingabe (Arrow Left oder D)
+	if event.is_action_pressed(\"left\") or event.is_action_pressed(\"right\"):
+		handle_rotation_input(event)
+		return
+	if event.is_action_pressed(\"cast\") and current_rotation == 90:
+		enter_shop()
+	if event.is_action_pressed(\"map_open\"):
+		Player.update_last_scene(\"res://scenes/MainScene.tscn\")
+		get_tree().change_scene_to_file(\"res://scenes/MapScene.tscn\")
+	if event.is_action_pressed(\"journal\"):
+		toggle_fishbook()
+
+
+	if state == STATE_ROTATING:
+		return  # Keine anderen Eingaben während Rotation
+
+	if state == STATE_MINIGAME:
+		if event.is_action_pressed(\"cast\"):
+			input_active = true
+		if event.is_action_released(\"cast\"):
+			input_active = false
+
+	if event.is_action_pressed(\"cast\"):
+		match state:
+			STATE_IDLE:
+				start_charging_cast()  # 🆕 Wurf aufladen starten
+			STATE_CASTED, STATE_BITE:
+				reel_pressed()
+			STATE_MINIGAME:
+				pass
+	
+	# 🆕 Cast loslassen
+	if event.is_action_released(\"cast\"):
+		if state == STATE_CHARGING:
+			release_cast()
+	
+	if event.is_action_pressed(\"inventory_toggle\"):
+		inventory_ui.toggle()
+
+
+# ---------------------------------------------------------
+# ROTATION HANDLING
+# ---------------------------------------------------------
+func handle_rotation_input(event: InputEvent) -> void:
+	if is_rotating:
+		return
+
+	if event.is_action_pressed(\"right\"):
+		whoosh_sound.play()
+		# Nach rechts drehen = Shop (90°)
+		target_rotation = 90.0
+	elif event.is_action_pressed(\"left\"):
+		whoosh_sound.play()
+		# Nach links drehen = Fischen (180°)
+		target_rotation = 180.0
+
+	if abs(target_rotation - current_rotation) > 1.0:
+		start_rotation()
+
+
+func start_rotation() -> void:
+	state = STATE_ROTATING
+	is_rotating = true
+	
+	# Stoppe Fisch-Aktivitäten
+	if state == STATE_MINIGAME:
+		catch_ui.visible = false
+
+
+func _process(delta: float) -> void:
+	if state == STATE_ROTATING:
+		update_rotation(delta)
+	elif state == STATE_MINIGAME:
+		update_catch_minigame(delta)
+	elif state == STATE_CHARGING:
+		update_cast_power(delta)  # 🆕 Wurfkraft aktualisieren
+
+
+func update_rotation(delta: float) -> void:
+	var rotation_step = rotation_speed * delta
+
+	if target_rotation > current_rotation:
+		current_rotation = min(current_rotation + rotation_step, target_rotation)
+	else:
+		current_rotation = max(current_rotation - rotation_step, target_rotation)
+
+	if camera:
+		camera.rotation.y = deg_to_rad(current_rotation)
+
+	# Rotation abgeschlossen
+	if abs(current_rotation - target_rotation) < 0.5:
+		current_rotation = target_rotation
+		is_rotating = false
+		
+		# 💥 FIX: Inputs wieder freigeben
+		if target_rotation == 180.0:
+			state = STATE_IDLE
+		else:
+			state = STATE_ROTATING  # Shop-Modus
+
+func enter_shop() -> void:
+	print(\"Betrete Shop!\")
+	# Optional: Fade-Out Animation
+	#await get_tree().create_timer(0.3).timeout
+	Player.update_last_scene(\"res://scenes/MainScene.tscn\")
+	get_tree().change_scene_to_file(\"res://scenes/shop_inside.tscn\")
+
+
+
+# ---------------------------------------------------------
+# CAST CHARGING SYSTEM
+# ---------------------------------------------------------
+func start_charging_cast() -> void:
+	#anim.play(\"power\")
+	print(\"CHARGING CAST\")
+	state = STATE_CHARGING
+	cast_power = 0.0
+	
+	if cast_power_ui and cast_power_ui.has_method(\"show_power\"):
+		cast_power_ui.show_power(0.0)
+
+
+func update_cast_power(delta: float) -> void:
+	# Ping-Pong Effekt: Power geht hoch und runter
+	cast_power += cast_power_speed * delta
+	
+	if cast_power > max_cast_power:
+		cast_power = max_cast_power
+		cast_power_speed *= -1.0  # Richtung umkehren
+	elif cast_power < 0.0:
+		cast_power = 0.0
+		cast_power_speed *= -1.0
+	
+	if cast_power_ui and cast_power_ui.has_method(\"show_power\"):
+		cast_power_ui.show_power(cast_power)
+
+
+func release_cast() -> void:
+	if cast_power_ui and cast_power_ui.has_method(\"hide_power\"):
+		cast_power_ui.hide_power()
+	
+	# Je näher an 1.0 (100%), desto weiter der Wurf
+	var power_quality = 1.0 - abs(cast_power - 1.0)  # 1.0 = perfekt, 0.0 = schwach
+	
+	print(\"Cast released with power: \", power_quality)
+	cast_line(power_quality)
+
+
+# ---------------------------------------------------------
+# CAST
+# ---------------------------------------------------------
+func cast_line(power: float = 1.0) -> void:  # 🆕 Power Parameter
+	print(\"CAST with power: \", power)
+	cast_sound.play()
+	state = STATE_CASTED
+	ui_bite_indicator.visible = false
+
+	anim.play(\"cast\")
+	camera.start_screenshake(0.01,0.3)
+	await anim.animation_finished
+
+	var x = randf_range(-2.0, 2.0)
+	
+	# 🆕 Z-Distanz basiert auf Wurfkraft
+	var distance = lerp(min_distance, max_distance, power)
+	var z = distance
+	
+	# 🆕 Y-Position von Waterplane übernehmen
+	var water_height = 0.05
+	if waterplane:
+		water_height = waterplane.global_position.y
+	
+	hook.position = Vector3(x, water_height, z)
+	hook.visible = true
+	hook_start_position = hook.global_position
+	hook_end_position = rod_tip.global_position
+
+
+	# 🆕 Splash an gleicher Position wie Hook
+	splash.position = Vector3(x, water_height, z)
+	splash.visible = true
+	splash.emitting = true
+	splash.restart()  # Partikel-System neu starten
+
+	ripple_anim.play(\"ripple\")
+	anim.play(\"idle\")
+
+	start_bite_timer()
+	emit_signal(\"line_visible\", true)
+
+
+# ---------------------------------------------------------
+# REEL
+# ---------------------------------------------------------
+func reel_pressed() -> void:
+	match state:
+		STATE_CASTED:
+			print(\"Zu früh oder zu spät!\")
+			reset_line()
+
+		STATE_BITE:
+			print(\"BISS! Minispiel starten\")
+			ui_bite_indicator.visible = false
+			start_catch_minigame()
+
+
+func reset_line() -> void:
+	state = STATE_IDLE
+	anim.play(\"reel\")
+	await anim.animation_finished
+
+	hook.visible = false
+	splash.visible = false  # 🆕 Splash verstecken
+	splash.emitting = false  # 🆕 Emission stoppen
+	ui_bite_indicator.visible = false
+	anim.play(\"idle\")
+	emit_signal(\"line_visible\", false)
+
+
+# ---------------------------------------------------------
+# BITE TIMER
+# ---------------------------------------------------------
+func start_bite_timer() -> void:
+	var wait_time := randf_range(5, 20)
+	# 🔥 UPGRADE: \"Line\" beeinflusst Biss-Geschwindigkeit
+	var modifier := 1.0 + (Player.upgrade_line - 1) * 0.35
+	wait_time /= modifier
+	print(\"Bite Timer gestartet: \", wait_time, \"s\")
+	await get_tree().create_timer(wait_time).timeout
+
+	if state != STATE_CASTED:
+		print(\"Bite Timer abgebrochen: state = \", state)
+		return
+
+	print(\"BITE READY!\")
+	state = STATE_BITE
+	show_bite_indicator()
+	start_bite_window()   # 🔥 NEU
+	
+# ---------------------------------------------------------
+# BITE WINDOW (Spieler muss schnell reagieren)
+# ---------------------------------------------------------
+func start_bite_window() -> void:
+	var max_reaction_time := 2.0   # ⏱ 2 Sekunden Zeit zu reagieren
+
+	await get_tree().create_timer(max_reaction_time).timeout
+
+	# Wenn in der Zeit der Spieler NICHT gedrückt hat:
+	if state == STATE_BITE:
+		print(\"Zu langsam! Fisch hat wieder losgelassen.\")
+		ui_bite_indicator.visible = false
+		state = STATE_CASTED   # zurück zur Angel im Wasser
+		start_bite_timer()      # Timer nochmal starten
+
+
+
+func show_bite_indicator() -> void:
+	splash.restart()
+	bite_sound.play()
+	ui_bite_indicator.visible = true
+
+	while state == STATE_BITE:
+		ui_bite_indicator.modulate.a = 1.0
+		await get_tree().create_timer(0.2).timeout
+		if state != STATE_BITE:
+			break
+		ui_bite_indicator.modulate.a = 0.2
+		await get_tree().create_timer(0.2).timeout
+
+
+# ---------------------------------------------------------
+# CATCH MINIGAME
+# ---------------------------------------------------------
+func start_catch_minigame() -> void:
+	state = STATE_MINIGAME
+	catch_ui.visible = true
+	anim.play(\"fight\")
+	camera.start_screenshake(0.1,1)
+
+	# 🆕 Splash-Effekt während des Kampfes (optional stärker)
+	splash.emitting = true
+
+	current_fish = FishDB.get_random_from_list(FishDB.FISH_SEWER, Player.upgrade_bait)
+	var difficulty = FishDB.get_fish_difficulty(current_fish)
+	marker_speed = FishDB.get_marker_speed_for_fish(current_fish)
+	
+	print(\"Gefangen: \", current_fish[\"name\"], \" (Schwierigkeit: \", difficulty, \")\")
+
+	catch_progress.value = 50.0
+	marker_pos = 0.0
+	marker.position.x = 0.0
+
+
+func update_catch_minigame(delta: float) -> void:
+	var current_speed = marker_speed
+	var t := catch_progress.value / 100
+	var new_pos := hook_start_position.lerp(hook_end_position, t)
+	new_pos.y = hook_start_position.y
+	hook.global_position = new_pos
+
+	if input_active:
+		current_speed *= marker_slow_factor
+
+	marker_pos += current_speed * delta
+
+	var max_x := bar_background.size.x - marker.size.x
+
+	if marker_pos >= max_x:
+		marker_pos = max_x
+		marker_speed *= -1.0
+	elif marker_pos <= 0.0:
+		marker_pos = 0.0
+		marker_speed *= -1.0
+
+	marker.position.x = marker_pos
+
+	var in_spot := marker.position.x >= sweet_spot.position.x \\
+		and marker.position.x <= sweet_spot.position.x + sweet_spot.size.x
+
+	if in_spot:
+		var grip_multiplier := 1.0 + (Player.upgrade_grip - 1) * 0.05
+		catch_progress.value += 40.0 * grip_multiplier * delta
+		splash.restart()
+		camera.start_screenshake(0.03,0.2)
+
+	else:
+		catch_progress.value = max(0.0, catch_progress.value - 25.0 * delta)
+
+	if catch_progress.value >= 100.0:
+		end_catch_minigame(true)
+	elif catch_progress.value <= 0.0:
+		end_catch_minigame(false)
+
+
+func end_catch_minigame(success: bool) -> void:
+	camera.start_screenshake(0.4,0.3)
+	if success:
+		var fish = current_fish
+		Inventory.add_fish(fish)
+		Player.caught_fish_species[fish[\"name\"]] = true
+		success_sound.play()
+
+		if catch_result_ui:
+			catch_result_ui.show_fish(fish)
+
+		print(\"Erfolgreich gefangen: \", fish[\"name\"])
+		Player.save_game()
+
+	else:
+		print(\"Fisch entwischt! (\", current_fish[\"name\"], \")\")
+
+	catch_ui.visible = false
+	await reset_line()
+	
+func toggle_fishbook():
+	if state == STATE_MINIGAME or state == STATE_BITE:
+		return  # während des Fang-Minispiels deaktiviert
+	fishbook_ui.visible = not fishbook_ui.visible
+
+   # Wenn Journal offen → Angel stoppen
+	if fishbook_ui.visible:
+		state = STATE_IDLE
+		ui_bite_indicator.visible = false
+		hook.visible = false
+		splash.visible = false  # 🆕 Splash auch verstecken
+		splash.emitting = false  # 🆕 Emission stoppen
+"
+
+[sub_resource type="Shader" id="Shader_muv0v"]
+code = "// The following shader is used in order to simulate a simple ocean using Gerstner waves.
+// This shader can be added in a plane mesh. For a more detailed ocean, increase the width and depth subdivision.
+// Note 1: On larger planes ex. 500x500, increasing the subdivision above 1000 comes at great performance cost
+// Note 2: Special thanks to @ninetailsrabbit for fixing a caustics projection issue!
+
+shader_type spatial;
+
+// Set render modes: always draw depth and disable backface culling
+render_mode depth_draw_always, cull_disabled;
+
+// Uniforms for screen and depth textures
+uniform sampler2D SCREEN_TEXTURE : hint_screen_texture, filter_linear_mipmap;
+uniform sampler2D DEPTH_TEXTURE : hint_depth_texture, filter_linear_mipmap;
+
+// Group uniforms for wave parameters
+group_uniforms Waves;
+// Each wave is defined by a vec4: direction (x,y), amplitude, frequency
+uniform vec4 wave_1 = vec4(0.3, 4.0, 0.2, 0.6);
+uniform vec4 wave_2 = vec4(-0.26, -0.19, 0.01, 0.47);
+uniform vec4 wave_3 = vec4(-7.67, 5.63, 0.1, 0.38);
+uniform vec4 wave_4 = vec4(-0.42, -1.63, 0.1, 0.28);
+uniform vec4 wave_5 = vec4(1.66, 0.07, 0.15, 1.81);
+uniform vec4 wave_6 = vec4(1.20, 1.14, 0.01, 0.33);
+uniform vec4 wave_7 = vec4(-1.6, 7.3, 0.11, 0.73);
+uniform vec4 wave_8 = vec4(-0.42, -1.63, 0.15, 1.52);
+
+// Uniforms for time factor, noise zoom, and noise amplitude
+uniform float time_factor = 2.5;
+uniform float noise_zoom = 2.0;
+uniform float noise_amp = 1.0;
+
+// Group uniforms for water colors
+group_uniforms Water_colours;
+uniform vec3 base_water_color:source_color;
+uniform vec3 fresnel_water_color:source_color;
+uniform vec4 deep_water_color : source_color;
+uniform vec4 shallow_water_color : source_color;
+
+// Group uniforms for depth-related parameters
+group_uniforms Depth;
+uniform float beers_law = 0.5;
+uniform float depth_offset = -1.2;
+uniform float near = 7.0;
+uniform float far = 10000.0;
+
+// Group uniforms for edge detection and foam effects
+group_uniforms Edge_Detection;
+uniform float edge_texture_scale = 3.5;
+uniform float edge_texture_offset = 1.0;
+uniform float edge_texture_speed = 0.1;
+uniform float edge_foam_intensity = 2.0;
+uniform float edge_fade_start = -3.0;
+uniform float edge_fade_end = 6.6;
+uniform sampler2D edge_foam_texture;
+
+// Group uniforms for wave peak effects
+group_uniforms WavePeakEffect;
+uniform float peak_height_threshold = 1.0;
+uniform vec3 peak_color = vec3(1.0, 1.0, 1.0);
+uniform float peak_intensity = 1.0;
+uniform sampler2D foam_texture;
+uniform float foam_intensity = 1.0;
+uniform float foam_scale = 1.0;
+
+// Group uniforms for surface details
+group_uniforms Surface_details;
+uniform float metallic = 0.6;
+uniform float roughness = 0.045;
+uniform float uv_scale_text_a = 0.1;
+uniform vec2 uv_speed_text_a = vec2(0.42, 0.3);
+uniform float uv_scale_text_b = 0.6;
+uniform vec2 uv_speed_text_b = vec2(0.15, 0.1);
+uniform float normal_strength = 1.0;
+uniform float uv_sampler_scale = 0.3;
+uniform float blend_factor = 0.28;
+uniform float perturbation_strength = 1.0; // Adjust this value to tile/de-tile the oceans surface.
+uniform float perturbation_time = 0.3; // // Offset perturbation_time for patern variation
+uniform sampler2D normalmap_a;
+uniform sampler2D normalmap_b;
+uniform sampler2D uv_sampler;
+uniform sampler2DArray caustic_sampler : hint_default_black;
+uniform float caustics_intensity = 15.0;
+
+uniform float num_caustic_layers = 16.0; // <<< IMPORTANT: DOUBLE CHECK THIS against your Texture2DArray's actual slices!
+uniform float caustic_distortion_strength = 0.001; // Keep this value within a range of 0.001 to 0.009
+
+// Fresnel function to calculate the reflection/refraction effect
+float fresnel(float amount, vec3 normal, vec3 view) {
+    return pow((1.0 - clamp(dot(normalize(normal), normalize(view)), 0.0, 1.0)), amount);
+}
+
+// Function to calculate edge depth
+float edge(float depth) {
+    depth = 2.0 * depth - 1.0;
+    return near * far / (far - depth * (near - far));
+}
+
+// Function to calculate dynamic amplitude based on position and time
+float dynamic_amplitude(vec2 pos, float time) {
+    return 1.0 + 0.5 * sin(time + length(pos) * 0.1);
+}
+
+// Hash function for noise generation
+float hash(vec2 p) {
+    return fract(sin(dot(p * 17.17, vec2(14.91, 67.31))) * 4791.9511);
+}
+
+// 2D noise function
+float noise(vec2 x) {
+    vec2 p = floor(x);
+    vec2 f = fract(x);
+    f = f * f * (3.0 - 2.0 * f);
+    vec2 a = vec2(1.0, 0.0);
+    return mix(mix(hash(p + a.yy), hash(p + a.xy), f.x),
+               mix(hash(p + a.yx), hash(p + a.xx), f.x), f.y);
+}
+
+// Fractional Brownian Motion (fBM) function for generating complex noise
+float fbm(vec2 x) {
+    float height = 0.0;
+    float amplitude = 0.5;
+    float frequency = 3.0;
+    for (int i = 0; i < 6; i++) {
+        height += noise(x * frequency) * amplitude;
+        amplitude *= 0.5;
+        frequency *= 2.0;
+    }
+    return height;
+}
+
+// Structure to hold wave results: displacement, tangent, binormal, and normal
+struct WaveResult {
+    vec3 displacement;
+    vec3 tangent;
+    vec3 binormal;
+    vec3 normal;
+};
+
+// Gerstner wave function to calculate wave displacement and normals
+WaveResult gerstner_wave(vec4 params, vec2 pos, float time) {
+    float steepness = params.z * dynamic_amplitude(pos, time);
+    float wavelength = params.w;
+    float k = 2.0 * PI / wavelength;
+    float c = sqrt(9.81 / k);
+    vec2 d = normalize(params.xy);
+    float f = k * (dot(d, pos.xy) - c * time);
+    float a = steepness / k;
+
+    vec3 displacement = vec3(d.x * (a * cos(f)), a * sin(f), d.y * (a * cos(f)));
+
+    vec3 tangent = vec3(1.0 - d.x * d.x * steepness * sin(f), steepness * cos(f), -d.x * d.y * steepness * sin(f));
+    vec3 binormal = vec3(-d.x * d.y * steepness * sin(f), steepness * cos(f), 1.0 - d.y * d.y * steepness * sin(f));
+    vec3 normal = normalize(cross(tangent, binormal));
+
+    return WaveResult(displacement, tangent, binormal, normal);
+}
+
+// Function to combine multiple Gerstner waves
+WaveResult wave(vec2 pos, float time) {
+    WaveResult waveResult;
+    waveResult.displacement = vec3(0.0);
+    waveResult.tangent = vec3(1.0, 0.0, 0.0);
+    waveResult.binormal = vec3(0.0, 0.0, 1.0);
+    waveResult.normal = vec3(0.0, 1.0, 0.0);
+
+    WaveResult wr;
+    wr = gerstner_wave(wave_1, pos, time);
+    waveResult.displacement += wr.displacement;
+    waveResult.tangent += wr.tangent;
+    waveResult.binormal += wr.binormal;
+    waveResult.normal += wr.normal;
+
+    wr = gerstner_wave(wave_2, pos, time);
+    waveResult.displacement += wr.displacement;
+    waveResult.tangent += wr.tangent;
+    waveResult.binormal += wr.binormal;
+    waveResult.normal += wr.normal;
+
+    wr = gerstner_wave(wave_3, pos, time);
+    waveResult.displacement += wr.displacement;
+    waveResult.tangent += wr.tangent;
+    waveResult.binormal += wr.binormal;
+    waveResult.normal += wr.normal;
+
+    wr = gerstner_wave(wave_4, pos, time);
+    waveResult.displacement += wr.displacement;
+    waveResult.tangent += wr.tangent;
+    waveResult.binormal += wr.binormal;
+    waveResult.normal += wr.normal;
+
+    wr = gerstner_wave(wave_5, pos, time);
+    waveResult.displacement += wr.displacement;
+    waveResult.tangent += wr.tangent;
+    waveResult.binormal += wr.binormal;
+    waveResult.normal += wr.normal;
+
+    wr = gerstner_wave(wave_6, pos, time);
+    waveResult.displacement += wr.displacement;
+    waveResult.tangent += wr.tangent;
+    waveResult.binormal += wr.binormal;
+    waveResult.normal += wr.normal;
+
+    wr = gerstner_wave(wave_7, pos, time);
+    waveResult.displacement += wr.displacement;
+    waveResult.tangent += wr.tangent;
+    waveResult.binormal += wr.binormal;
+    waveResult.normal += wr.normal;
+
+    wr = gerstner_wave(wave_8, pos, time);
+    waveResult.displacement += wr.displacement;
+    waveResult.tangent += wr.tangent;
+    waveResult.binormal += wr.binormal;
+    waveResult.normal += wr.normal;
+
+    // Add noise to the wave displacement for more natural look
+    waveResult.displacement.y += fbm(pos.xy * (noise_zoom / 50.0)) * noise_amp;
+
+    return waveResult;
+}
+
+// Varying variables to pass data from vertex to fragment shader
+varying float height;
+varying vec3 world_position;
+varying mat3 tbn_matrix;
+varying mat4 inv_mvp;
+
+// Vertex shader function
+void vertex() {
+    // Calculate time based on the global TIME variable and time_factor
+    float time = TIME / time_factor;
+    // Calculate wave displacement and normals
+    WaveResult waveResult = wave(VERTEX.xz, time);
+    // Apply wave displacement to the vertex position
+    VERTEX += waveResult.displacement;
+    // Store the height of the wave displacement
+    height = waveResult.displacement.y;
+
+    // Transform normals, tangents, and binormals to world space
+    vec3 n = normalize((MODELVIEW_MATRIX * vec4(waveResult.normal, 0.0)).xyz);
+    vec3 t = normalize((MODELVIEW_MATRIX * vec4(waveResult.tangent.xyz, 0.0)).xyz);
+    vec3 b = normalize((MODELVIEW_MATRIX * vec4((cross(waveResult.normal, waveResult.tangent.xyz)), 0.0)).xyz);
+    // Calculate world position of the vertex
+    world_position = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
+    // Create TBN matrix for normal mapping
+    tbn_matrix = mat3(t, b, n);
+    // Calculate inverse MVP matrix for screen space transformations
+    inv_mvp = inverse(PROJECTION_MATRIX * MODELVIEW_MATRIX);
+}
+
+
+// 2D Random hash function
+float random(vec2 p) {
+    return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
+}
+
+// Smooth noise function
+float smooth_noise(vec2 p) {
+    vec2 i = floor(p);
+    vec2 f = fract(p);
+    vec2 u = f * f * (3.0 - 2.0 * f);
+    return mix(
+        mix(random(i + vec2(0.0, 0.0)), random(i + vec2(1.0, 0.0)), u.x),
+        mix(random(i + vec2(0.0, 1.0)), random(i + vec2(1.0, 1.0)), u.x),
+        u.y
+    );
+}
+
+// Layered noise for detiling
+float layered_noise(vec2 p, float scale) {
+    float n = 0.0;
+    n += smooth_noise(p * scale) * 0.5;
+    n += smooth_noise(p * scale * 2.0) * 0.25;
+    n += smooth_noise(p * scale * 4.0) * 0.125;
+    return n;
+}
+
+// Perturb UV coordinates for detiling
+vec2 perturb_uv(vec2 uv, vec2 world_pos, float time, float strength) {
+    // Use world position to generate unique noise patterns
+    vec2 noise_offset = vec2(
+        layered_noise(world_pos * 0.3 + time * 0.06, 1.0),
+        layered_noise(world_pos * 0.3 + time * 0.06 + vec2(10.0), 1.0)
+    );
+    // Apply subtle distortion to UVs
+    return uv + noise_offset * strength;
+}
+
+
+// Fragment shader function
+void fragment() {
+    // Calculate UV coordinates based on world position
+    vec2 uv = world_position.xz;
+
+    // Sample UV offset texture
+    vec2 uv_offset = texture(uv_sampler, uv * uv_sampler_scale).rg;
+
+    // Calculate base UV coordinates for normal maps
+    vec2 base_uv_a = (uv + uv_speed_text_a * TIME + uv_offset) * uv_scale_text_a;
+    vec2 base_uv_b = (uv + uv_speed_text_b * TIME + uv_offset) * uv_scale_text_b;
+
+    // Apply noise-based perturbation to UVs
+    vec2 animated_uv_a = perturb_uv(base_uv_a, world_position.xz, TIME, perturbation_strength);
+    vec2 animated_uv_b = perturb_uv(base_uv_b, world_position.xz, TIME + 0.0, perturbation_time);
+
+    // Sample normal maps
+    vec3 normal_sample_a = texture(normalmap_a, animated_uv_a).rgb;
+    vec3 normal_sample_b = texture(normalmap_b, animated_uv_b).rgb;
+
+    // Normalize normal samples and combine them
+    normal_sample_a = normalize(normal_sample_a * 2.0 - 1.0);
+    normal_sample_b = normalize(normal_sample_b * 2.0 - 1.0);
+    vec3 combined_normal = normalize(mix(normal_sample_a, normal_sample_b, blend_factor));
+
+    // Perturb the normal using the TBN matrix
+    vec3 perturbed_normal = normalize(tbn_matrix * (combined_normal * normal_strength));
+
+    // Sample depth texture
+    float depth_raw = texture(DEPTH_TEXTURE, SCREEN_UV).r;
+    float depth = PROJECTION_MATRIX[3][2] / (depth_raw + PROJECTION_MATRIX[2][2]);
+
+    // Calculate the distance from the camera to the water surface
+    float camera_depth = INV_VIEW_MATRIX[3].y - world_position.y;
+    if (camera_depth < 0.0) { // Camera is underwater
+        // Map the depth to a range where deeper = positive beers_law, closer = negative beers_law
+        float depth_factor = smoothstep(-10.0, 0.0, camera_depth); // Adjust -10.0 for the depth range
+        ALPHA -= depth_factor * 0.3;
+        }
+    // Calculate depth blend factor using Beer's law
+    float depth_blend = exp((depth + VERTEX.z + depth_offset) * -beers_law);
+    depth_blend = clamp(1.0 - depth_blend, 0.0, 1.0);
+    float depth_blend_power = clamp(pow(depth_blend, 2.5), 0.0, 1.0);
+
+    // Sample screen color and blend it with depth color
+    vec3 screen_color = textureLod(SCREEN_TEXTURE, SCREEN_UV, depth_blend_power * 2.5).rgb;
+    vec3 depth_color = mix(shallow_water_color.rgb, deep_water_color.rgb, depth_blend_power);
+    vec3 color = mix(screen_color * depth_color, depth_color * 0.25, depth_blend_power * 0.5);
+
+    // Calculate depth difference for edge detection
+    float z_depth = edge(texture(DEPTH_TEXTURE, SCREEN_UV).x);
+    float z_pos = edge(FRAGCOORD.z);
+    float z_dif = z_depth - z_pos;
+
+	// Calculate caustic effect
+	vec4 caustic_screenPos = vec4(SCREEN_UV * 2.0 - 1.0, depth_raw, 1.0);
+	vec4 caustic_localPos = inv_mvp * caustic_screenPos;
+	caustic_localPos = vec4(caustic_localPos.xyz / caustic_localPos.w, caustic_localPos.w);
+
+	vec2 caustic_Uv = caustic_localPos.xz / vec2(1024.0) + 0.5;
+	caustic_Uv += perturbed_normal.xz * caustic_distortion_strength;
+
+	float caustic_layer_index = floor(mod(TIME * 26.0, num_caustic_layers)); // Use floor for integer index
+
+	vec4 caustic_color = texture(caustic_sampler, vec3(caustic_Uv * 660.0, caustic_layer_index));
+	float caustic_intensity_multiplier = (1.0 - depth_blend_power) * caustics_intensity;
+
+	color *= 1.0 + pow(caustic_color.r, 1.50) * caustic_intensity_multiplier;
+
+    // Calculate fresnel effect
+    float fresnel = fresnel(5.0, NORMAL, VIEW);
+    vec3 surface_color = mix(base_water_color, fresnel_water_color, fresnel);
+
+    // Calculate edge foam effect
+    vec2 edge_uv = world_position.xz * edge_texture_scale + edge_texture_offset + TIME * edge_texture_speed;
+    float edge_fade = smoothstep(edge_fade_start, edge_fade_end, z_dif);
+    vec3 depth_color_adj = mix(texture(edge_foam_texture, edge_uv).rgb * edge_foam_intensity, color, edge_fade);
+
+    // Apply peak color effect based on height with noise
+    float peak_factor = smoothstep(peak_height_threshold, peak_height_threshold + 0.2, height);
+    float noise_factor = fbm(world_position.xz * 0.1 + TIME * 0.1);
+    peak_factor = peak_factor * noise_factor;
+
+    vec3 final_color = mix(surface_color, peak_color * peak_intensity, peak_factor);
+
+    // Sample the foam texture and blend it with the final color
+    vec2 foam_uv = world_position.xz * foam_scale + TIME * 0.1;
+    float foam_sample = texture(foam_texture, foam_uv).r;
+    float foam_blend_factor = smoothstep(0.0, 1.0, peak_factor) * foam_sample * foam_intensity;
+
+    final_color = mix(final_color, vec3(1.0), foam_blend_factor);
+
+    // Set the final color, metallic, roughness, and normal
+    ALBEDO = clamp(final_color + depth_color_adj, vec3(0.0), vec3(1.0));
+    METALLIC = metallic;
+    ROUGHNESS = roughness;
+    NORMAL = perturbed_normal;
+}"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_k24pf"]
+render_priority = -128
+shader = SubResource("Shader_muv0v")
+shader_parameter/wave_1 = Vector4(0.3, 4, 0.2, 0.6)
+shader_parameter/wave_2 = Vector4(-0.26, -0.19, 0.01, 0.47)
+shader_parameter/wave_3 = Vector4(-7.67, 5.63, 0.1, 0.38)
+shader_parameter/wave_4 = Vector4(-0.42, -1.63, 0.1, 0.28)
+shader_parameter/wave_5 = Vector4(1.66, 0.07, 0.15, 1.81)
+shader_parameter/wave_6 = Vector4(1.2, 1.14, 0.01, 0.33)
+shader_parameter/wave_7 = Vector4(-1.6, 7.3, 0.11, 0.73)
+shader_parameter/wave_8 = Vector4(-0.42, -1.63, 0.15, 1.52)
+shader_parameter/time_factor = 6.975
+shader_parameter/noise_zoom = 3.885
+shader_parameter/noise_amp = 1.545
+shader_parameter/base_water_color = Color(0.188235, 0.537255, 0.282353, 1)
+shader_parameter/fresnel_water_color = Color(0.338312, 0.553894, 0.419979, 1)
+shader_parameter/deep_water_color = Color(0.116021, 0.237972, 0.128846, 1)
+shader_parameter/shallow_water_color = Color(0.56641, 0.833903, 0.620567, 1)
+shader_parameter/beers_law = 0.405
+shader_parameter/depth_offset = 0.095
+shader_parameter/near = 7.0
+shader_parameter/far = 10000.0
+shader_parameter/edge_texture_scale = 4.715
+shader_parameter/edge_texture_offset = 1.0
+shader_parameter/edge_texture_speed = 0.1
+shader_parameter/edge_foam_intensity = 2.0
+shader_parameter/edge_fade_start = -3.0
+shader_parameter/edge_fade_end = 6.6
+shader_parameter/peak_height_threshold = 1.0
+shader_parameter/peak_color = Vector3(1, 1, 1)
+shader_parameter/peak_intensity = 1.0
+shader_parameter/foam_intensity = 1.0
+shader_parameter/foam_scale = 1.0
+shader_parameter/metallic = 1.79
+shader_parameter/roughness = 0.07
+shader_parameter/uv_scale_text_a = 0.23
+shader_parameter/uv_speed_text_a = Vector2(0.015, -0.03)
+shader_parameter/uv_scale_text_b = 0.36
+shader_parameter/uv_speed_text_b = Vector2(-0.025, 0.1)
+shader_parameter/normal_strength = 1.28
+shader_parameter/uv_sampler_scale = 0.3
+shader_parameter/blend_factor = 0.795
+shader_parameter/perturbation_strength = 0.37
+shader_parameter/perturbation_time = 0.3
+shader_parameter/normalmap_a = ExtResource("13_kyn5a")
+shader_parameter/normalmap_b = ExtResource("14_2n20e")
+shader_parameter/caustics_intensity = 14.48
+shader_parameter/num_caustic_layers = 16.0
+shader_parameter/caustic_distortion_strength = 0.001
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_66o8q"]
+lightmap_size_hint = Vector2i(251, 1001)
+material = SubResource("ShaderMaterial_k24pf")
+uv2_padding = 1.41
+size = Vector2(10, 10)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_8wjpf"]
+render_priority = 0
+shader = ExtResource("15_xp0e5")
+shader_parameter/color = Color(0, 0, 0, 1)
+shader_parameter/thickness = 0.05
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_c6dvc"]
+next_pass = SubResource("ShaderMaterial_8wjpf")
+transparency = 1
+albedo_color = Color(1, 1, 1, 0.227451)
+emission_enabled = true
+emission = Color(0.483338, 0.649368, 1, 1)
+
+[sub_resource type="QuadMesh" id="QuadMesh_611at"]
+material = SubResource("StandardMaterial3D_c6dvc")
+
+[sub_resource type="Animation" id="Animation_ygjfp"]
+length = 0.001
+tracks/0/type = "scale_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Ripple")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0.5, 0.5, 0.5)
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Ripple:mesh:material:albedo_color")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0.227451)]
+}
+
+[sub_resource type="Animation" id="Animation_k24pf"]
+resource_name = "ripple"
+length = 0.8
+tracks/0/type = "scale_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Ripple")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0.5, 0.5, 0.5, 0.6, 1, 2, 2, 2)
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Ripple:mesh:material:albedo_color")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.8),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_1wiy7"]
+_data = {
+&"RESET": SubResource("Animation_ygjfp"),
+&"ripple": SubResource("Animation_k24pf")
+}
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_0ehpd"]
+render_priority = 0
+shader = ExtResource("15_xp0e5")
+shader_parameter/color = Color(0, 0, 0, 1)
+shader_parameter/thickness = 0.01
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8wjpf"]
+next_pass = SubResource("ShaderMaterial_0ehpd")
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_pjux3"]
+material = SubResource("StandardMaterial3D_8wjpf")
+top_radius = 0.01
+bottom_radius = 0.01
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3ivuj"]
+resource_name = "Material.002"
+cull_mode = 2
+albedo_color = Color(0, 0, 0, 1)
+metallic = 1.0
+roughness = 0.295276
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wxijf"]
+resource_name = "Material.003"
+cull_mode = 2
+albedo_color = Color(0.906332, 0.906332, 0.906332, 1)
+roughness = 0.5
+emission_enabled = true
+emission = Color(1, 0.71856, 0.382334, 1)
+emission_energy_multiplier = 556.6
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_4b0ho"]
+_surfaces = [{
+"aabb": AABB(-2.37086, -1.24606, -0.0780046, 4.74172, 0.515919, 0.156009),
+"format": 34359742465,
+"index_count": 1098,
+"index_data": PackedByteArray("AAABAAIAUgAAAAIAAAADAAEAAwAAAFMAUwAAAFIAAwBUAAEAAwBTAFUAAwBVAFQAVQBTAFYAVgBTAFIAVQCLAFQAVQBWAIwAVQCMAIsAVgBSAI0AjABWAI4AjgBWAI0AjABaAIsAjACOAI8AjACPAFoAjgCNAJAAjwCOAFkAWQCOAJAAjwBcAFoAjwBZAJEAjwCRAFwAWQCQAJIAkQBZAAUABQBZAJIAkQCTAFwAkQAFAAQAkQAEAJMAlACSAJAAWwBaAFwAlQBcAJMAWwBcAJUAlQBJAFsAWwBJAEcAlQBLAEkAlgBaAFsAWwBHAJYAlgCLAFoAlgBHAEUAlwCLAJYAlgBFAJcAlwBUAIsAlwBFAEMAIQBUAJcAlwBDACEAIQABAFQAIQBDAD4ABwABACEAIQA+AAcABwACAAEABwA+AD0AmAACAAcABwA9AJgAmABSAAIAmAA9ADwAVwBSAJgAmAA8AFcAVwCNAFIAVwA8ADsAmQCNAFcAVwA7AJkAmQCQAI0AmQA7ADkAlACQAJkAmQA5AJQAlAA5ADcAlAA3AJoAmgA3ADUAmgCSAJQAmgA1AJsAmgBYAJIAmwBYAJoAmwA1ADMABQCSAFgAmwAzAF0AXQAzADEAmwCcAFgAXQCcAJsABgAFAFgABgBYAJwAXQAxAJ0AnQAxADAAXQBeAJwAnQBeAF0AngCcAF4AngAGAJwAnQAwAF8AXwAwAC8AnQBhAF4AXwBhAJ0AYgCeAF4AYgBeAGEAXwAvAJ8AnwAvAC4AXwBjAGEAnwBjAF8AZABiAGEAZABhAGMAnwAuAKAAoAAuAC0AnwChAGMAoAChAJ8AogBkAGMAogBjAKEAoAAtAGAAYAAtACwAoABlAKEAYABlAKAAZgCiAKEAZgChAGUAYAAsAKMAowAsACsAYACkAGUAowCkAGAApQBmAGUApQBlAKQAowArAGgAaAArACoAowBnAKQAaABnAKMApgClAKQApgCkAGcAaAAqAKcApwAqACkAaABqAGcApwBqAGgAaQCmAGcAaQBnAGoApwApAKgAqAApACgApwBsAGoAqABsAKcAawBpAGoAawBqAGwAqAAoAKkAqQAoACcAqACqAGwAqQCqAKgAbgBrAGwAbgBsAKoAqQAnAKsAqwAnACYAqQCsAKoAqwCsAKkAEgBuAKoAEgCqAKwAqwAmAK0ArQAmACUAqwCuAKwArQCuAKsAFwCsAK4AFwASAKwArQAlAK8ArwAlACQArQCwAK4ArwCwAK0AsQCuALAAsQAXAK4ArwAkALIAsgAkACIArwBtALAAsgBtAK8AswCxALAAswCwAG0AsgAiALQAtAAiACMAsgBwAG0AtABwALIAtQCzAG0AtQBtAHAAtAAjABYAFgAjADIAtABxAHAAFgBxALQAcgC1AHAAcgBwAHEAFgAyACAAIAAyADQAFgAUAHEAIAAUABYAcwByAHEAcwBxABQAIAA0AHQAdAA0ADYAIAAKABQAdAAKACAAdQBzABQAdQAUAAoAdAB2AAoAdgB1AAoAdAA2ALYAtgB2AHQAtgA2ADgAeABzAHUAeAB1AHYAeAByAHMAeQByAHgAeQB4AHYAeQC1AHIAtgA4AHcAtgC3AHYAeQB2ALcAdwC3ALYAdwA4ADoAuAB5ALcAuAC1AHkAuACzALUAuAC3AHsAdwB7ALcAuQCzALgAuQC4AHsAuQCxALMAdwA6AHoAegB7AHcAegA6AD8AuQB7AHwAegB8AHsAGQCxALkAGQC5AHwAGQAXALEAegA/AH0AfQB8AHoAfQA/AEAAfQC6AHwAGQB8ALoAfQBAALsAuwC6AH0AuwBAAEEAEwAZALoAuwB+ALoAEwC6AH4AuwBBALwAvAB+ALsAvABBAEIAvABCAL0AvQBCAEQAvACAAH4AvQCAALwAvgB+AIAAvgATAH4AvQBEAL8AvwBEAEYAvQCBAIAAvwCBAL0AwAC+AIAAwACAAIEAwABuAL4AwABrAG4AvgBuABIAvgASABMAwQBrAMAAwQDAAIEAwQBpAGsAvwCCAIEAwQCBAIIAbwBpAMEAbwDBAIIAbwCmAGkAwgCCAL8AvwBGAMIAwgBGAEgAwgCDAIIAbwCCAIMAwgBIAMMAwwCDAMIAwwBIAEoAxACmAG8AxABvAIMAxAClAKYAwwCEAIMAxACDAIQAwwBKAMUAxQCEAMMAxQBKAEwAxgClAMQAxgDEAIQAxgBmAKUAxQCFAIQAxgCEAIUAxQBMAH8AfwCFAMUAfwBMAE4AxwBmAMYAxwDGAIUAxwCiAGYAfwDIAIUAxwCFAMgAfwBOAMkAyQDIAH8AyQBOAFAAygCiAMcAygDHAMgAygBkAKIAyQDLAMgAygDIAMsAyQBQAMwAzADLAMkAzABQAFEAzQBkAMoAzQDKAMsAzQBiAGQAzACHAMsAzQDLAIcAzABRAIYAhgCHAMwAhgBRAE8AzgBiAM0AzgDNAIcAzgCeAGIAhgCJAIcAzgCHAIkAhgBPAM8AzwCJAIYAzwBPAE0AEQCeAM4AEQDOAIkAEQAGAJ4AzwCKAIkAEQCJAIoAzwBNAIgAiACKAM8AiABNAEsAiABLAJUAlQCTAIgAiACTAIoABACKAJMABAARAIoADgARAAQAEAAGABEAEAARAA4ACQAGABAACQAFAAYACAAEAAUACAAFAAkADgAEAAgAEAANAAkACAAMAA4ADgAPABAAEAAPAA0ADgAMAA8ACQANAAsACQALAAgACwANAA8ACAALAAwACwAPAAwAGgAdABgAGAAdAB4AHgAdAB8AGgAfAB0AHgAfABwAGAAXABoAGgAXABkAGAASABcAGwAfABoAGgAZABsAGwAcAB8AGwAZABMAFQAeABwAFQAcABsAGAAeABUAGwATABUAFQASABgAFQATABIA"),
+"lods": [0.000101607, PackedByteArray("AAABAAIAUgAAAAIAAAADAAEAAwAAAFMAUwAAAFIAAwBUAAEAAwBTAFUAAwBVAFQAVgBTAFIAVQBTAFYAVwBSAAIAVQBWAAQAVQAEAFQAVgBSAFgAVwBYAFIABABWAFkAWQBWAFgABABaAFQABABZAAUABQBZAFgAWwBUAFoABgAFAFgAWwBaAFwABABcAFoAIQBUAFsAIQABAFQAWwBDACEAIQBDAD4AWwBFAEMAWwBHAEUAWwBJAEcAWwBLAEkABwABACEAIQA+AAcABwACAAEABwA+AD0AVwACAAcABwA9AFcAVwA9ADwAVwA8ADsAVwA7ADkAVwA5AF0AXQA5ADcAXQA3ADUAXQA1ADMAXQBYAFcAXQAzADEAXQBeAFgAXQAxAF8AXwBeAF0AXwAxADAABgBYAF4AXwAwAC8AXwAvAGAAYAAvAC4AYAAuAC0AYAAtACwAXwBhAF4AYgBeAGEAYgAGAF4AXwBjAGEAYABjAF8AZABiAGEAZABhAGMAYABlAGMAEQBiAGQAEQAGAGIAZgBkAGMAZgBjAGUAEQBkAGYAYABnAGUAZgBlAGcAYAAsAGgAaABnAGAAaAAsACsAaAArACoAaAAqACkAaAApACgAaAAoACcAaAAnACYAaAAmACUAaAAlACQAaQBmAGcAEQBmAGkAaQBnAGoAaABqAGcAaAAkABYAFgAkACIAFgAiACMAFgAjADIAawBpAGoAaABsAGoAawBqAGwAaABtAGwAFgBtAGgAbgBrAGwAbgBsAG0AbwBpAGsAEQBpAG8AEwBrAG4AbwBrABMAEgBuAG0AEwBuABIAFwASAG0AFwBtAHAAFgBwAG0AFgBxAHAAcgBwAHEAcgAXAHAAFgAUAHEAcwByAHEAcwBxABQAIAAUABYAFgAyACAAIAAyADQAIAA0AHQAdAA0ADYAIAAKABQAdAAKACAAdQBzABQAdQAUAAoAdAB2AAoAdgB1AAoAdAA2AHcAdwB2AHQAdwA2ADgAdwA4ADoAeABzAHUAeAB1AHYAeAByAHMAeQByAHgAeQB4AHYAeQAXAHIAdwA6AHoAdwB7AHYAeQB2AHsAegB7AHcAegA6AD8AGQB5AHsAGQAXAHkAegB8AHsAGQB7AHwAegA/AH0AfQB8AHoAfQA/AEAAfQBAAEEAfQBBAEIAfQB+AHwAGQB8AH4AfQBCAH8AfwBCAEQAfwBEAEYAfwBGAEgAfwBIAEoAfwBKAEwAfwBMAE4AfQCAAH4AfwCAAH0AEwB+AIAAEwAZAH4AfwCBAIAAEwCAAIEAbwATAIEAbwCBAIIAfwCCAIEAbwCCAIMAfwCDAIIAEQBvAIMAfwCEAIMAEQCDAIQAfwCFAIQAEQCEAIUAhgCFAH8AfwBOAIYAhgBOAFAAhgBQAFEAhgBRAE8AhgCHAIUAEQCFAIcAhgBPAIgAiABPAE0AhgCJAIcAiACJAIYAEQCHAIkAiABNAEsAiABLAFsAWwBcAIgAiACKAIkAiABcAIoAEQCJAIoABACKAFwABAARAIoADgARAAQAEAARAA4AEAAGABEADgAEAAgACAAEAAUACQAFAAYACAAFAAkACQAGABAACAAMAA4AEAANAAkACQALAAgACAALAAwACQANAAsADgAMAA8ADgAPABAACwAPAAwAEAAPAA0ACwANAA8AGgAdABgAGAAdAB4AHgAdAB8AGgAfAB0AHgAfABwAGAAXABoAGgAXABkAGAASABcAGwAfABoAGgAZABsAGwAcAB8AGwAZABMAFQAeABwAFQAcABsAGAAeABUAGwATABUAFQASABgAFQATABIA"), 0.335111, PackedByteArray("AAABAAIAAAADAAEAAwAAAAQAAwAEAAEABQAAAAIABAAAAAUABgAFAAIABwACAAEACAAEAAUACQAFAAYACAAFAAkABAAKAAEACQALAAgACAALAAwACQANAAsADgAEAAgACAAMAA4ACwAPAAwACwANAA8ADgAMAA8AEAANAAkAEAAPAA0ADgAPABAACQAGABAADgARAAQAEAARAA4AEAAGABEABAARAAoAEQAGABIAEQATAAoAEQASABMAEgAGABQABgACABQAFQATABIAFgAUAAIAFgACAAcAFwASABQAGAASABcAFQASABgAGQAXABQAEwAZAAoAGQAUAAoAGgAXABkAGAAXABoAGwAZABMAGwATABUAGgAZABsAFQAcABsAGgAdABgAGAAeABUAFQAeABwAGAAdAB4AGwAcAB8AGwAfABoAHgAfABwAGgAfAB0AHgAdAB8AIAAKABQAIAAUABYAIQAKACAAIQABAAoABwABACEAFgAiACMAFgAkACIAFgAlACQAFgAmACUAFgAnACYAFgAoACcAFgApACgAFgAqACkAFgArACoAFgAsACsAFgAtACwAFgAuAC0AFgAvAC4AFgAwAC8AFgAxADAAFgAjADIABwAxABYAFgAyACAABwAzADEAIAAyADQABwA1ADMAIAA0ADYABwA3ADUAIAA2ADgABwA5ADcAIAA4ADoABwA7ADkABwA8ADsABwA9ADwABwA+AD0AIAA6AD8AIAA/AEAAIABAAEEAIABBAEIAIQA+AAcAIABCACEAIQBDAD4AIQBCAEQAIQBFAEMAIQBEAEYAIQBHAEUAIQBGAEgAIQBJAEcAIQBIAEoAIQBLAEkAIQBKAEwAIQBNAEsAIQBMAE4AIQBPAE0AIQBOAFAAIQBRAE8AIQBQAFEA")],
+"name": "Material.002",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 208,
+"vertex_data": PackedByteArray("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")
+}, {
+"aabb": AABB(-2.32793, -0.753252, -0.0350729, 4.65585, 1e-05, 0.0701457),
+"format": 34896613377,
+"index_count": 138,
+"index_data": PackedByteArray("AAABAAIAAAADAAEABAADAAAABAAFAAMABgAFAAQABgAHAAUACAAHAAYACAAJAAcACgAJAAgACgALAAkADAALAAoADAANAAsADgANAAwADgAPAA0AEAAPAA4AEAARAA8AEgARABAAEgATABEAFAATABIAFAAVABMAFgAVABQAFgAXABUAGAAXABYAGAAZABcAGgAZABgAGgAbABkAHAAbABoAHAAdABsAHgAdABwAHgAfAB0AIAAfAB4AIAAhAB8AIgAhACAAIgAjACEAJAAjACIAJAAlACMAJgAlACQAJgAnACUAKAAnACYAKAApACcAKgApACgAKgArACkALAArACoALAAtACsALgAtACwALgAvAC0A"),
+"name": "Material.003",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 48,
+"vertex_data": PackedByteArray("BfcAAP7/AAD//wAAAAAAAP//AAD//wAABfcAAAAAAACv6wAA/v8AAK/rAAAAAAAAWeAAAP7/AABZ4AAAAAAAAAPVAAD+/wAAA9UAAAAAAACtyQAA/v8AAK3JAAAAAAAAV74AAP7/AABXvgAAAAAAAAKzAAD+/wAAArMAAAAAAACspwAA/v8AAKynAAAAAAAAVpwAAP7/AABWnAAAAAAAAACRAAD+/wAAAJEAAAAAAACqhQAA/v8AAKqFAAAAAAAAVHoAAP7/AABUegAAAAAAAP5uAAD+/wAA/m4AAAAAAACoYwAA/v8AAKhjAAAAAAAAUlgAAP7/AABSWAAAAAAAAPxMAAD+/wAA/EwAAAAAAACnQQAA/v8AAKdBAAAAAAAAUTYAAP7/AABRNgAAAAAAAPsqAAD+/wAA+yoAAAAAAAClHwAA/v8AAKUfAAAAAAAATxQAAP7/AABPFAAAAAAAAPkIAAD+/wAA+QgAAAAAAAAAAAAA/v8AAAAAAAAAAAAA")
+}]
+blend_shape_mode = 0
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_4jkq6"]
+resource_name = "trainstation_Cube_006"
+_surfaces = [{
+"aabb": AABB(-2.37086, -1.24606, -0.0780046, 4.74172, 0.515919, 0.156009),
+"attribute_data": PackedByteArray("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"),
+"format": 34359742487,
+"index_count": 1098,
+"index_data": PackedByteArray("AAABAAIAAAADAAEAFAGjABUBFQGjAF4AFgEFAAYAFgEXAQUAGAFaABkBGQFaAFgAuQC4ALcAuQC6ALgAuwC6ALkAuwAaAboAGwEaAbsAGwEcARoBHQEcARsBHQEeARwBBAAeAR0BBAAHAB4BCAAHAAQACAAEAAkAHwEMAAoAHwELAAwAIAELAB8BIAENAAsAIQENACABIQEOAA0AIgEOACEBIgEPAA4AIwEPACIBIwEQAA8AJAEQACMBJAERABAAJQERACQBJQESABEAJgESACUBJgETABIA0wATACYB0wAUABMAJwEUANMAJwEVABQA1AAVACcB1AAWABUAKAEWANQAKAEXABYAKQEXACgBKQEYABcA1QAYACkB1QAZABgAKgEZANUAKgEaABkA1gAaACoB1gAcABoAKwEcANYAKwEdABwALAEdACsBLAEeAB0ALQEeACwBLQEfAB4ALgEfAC0BLgEgAB8A1wAgAC4B1wAhACAALwEhANcALwEiACEAGwAiAC8BGwAjACIAMAEmADEBMQEmACgAMAElACYAMQEoANgA2gAlADAB2AAoACoA2gAnACUA2AAqADIBMwEnANoAMgEqACwAMwEpACcAMgEsANkANAEpADMB2QAsAC4ANAErACkA2QAuADUBNgErADQBNQEuADAANgEtACsANQEwANsANwEtADYB2wAwADEANwEvAC0A2wAxADgBOQEvADcBOAExADIAOQE0AC8AOAEyADoBOgEyADMAOgEzACQAOwE0ADkBOwE2ADQAPAE2ADsBPAE3ADYA3AA3ADwB3AA4ADcA3QA4ANwA3QA5ADgA3gA5AN0A3gA6ADkAPQE6AN4APQE7ADoA3wA7AD0B3wA8ADsANQA8AN8ANQA9ADwAPgDgAOEAPgA/AOAA4QDgAOIA4QDiAD4BPgHiAD8BPgE/AUABQAE/AeMAQAHjAEEBQQHjAEEAQQFBAEAAQgBAAEEAQgBBAEMARABFAEYARABHAEUASABCAUMBQwFCAeQASABNAEIBTgBNAEgATgBIAE8AQwHkAEQBRAHkAOUARAHlAEUBRQHlAEYBRQFGAUcBRwFGAeYARwHmAEgBSAHmAEkBSAFJAUoBSgFJAUsBSgFLAegA6ABLAecA6ADnAEwBTAHnAOkATAHpAE0BTQHpAOoATQHqAE4BTgHqAEkATgFJAEoASwBKAEkASwBJAEwAUABRAFIAUABTAFEA0gBPAVYA0gBQAU8B0ADPANEA0ABRAc8AUQHOAM8AUQFSAc4AUgFTAc4AUgFUAVMBVAFVAVMBVAFUAFUBVABWAVUBVABVAFYBVQBXAVYBVQDNAFcBzQDMAFcBzQDLAMwAywDKAMwAywDJAMoAyQDIAMoAyQBYAcgAWAFZAcgAWAFaAVkBWgHHAFkBWgHGAMcAxgBbAccAxgBcAVsBXAHFAFsBXAHEAMUAxADDAMUAxADCAMMAwgDBAMMAwgBdAcEAXQFeAcEAXQFXAF4BVwC/AF4BVwBZAL8AWQBfAb8AWQDAAF8BwABgAV8BwABhAWABYQFiAWABYQG+AGIBvgC9AGIBvgC8AL0AWwBjAV0AWwBkAWMBtgBlAbUAtgBmAWUBZgG0AGUBZgFnAbQAZwGzALQAZwFoAbMAaAFpAbMAaAFcAGkBXACyAGkBXABfALIAXwCxALIAXwBqAbEAagGwALEAagFrAbAAawFsAbAAawFtAWwBbQFuAWwBbQFvAW4BbwGvAG4BbwFwAa8AcAGuAK8AcAFxAa4AcQGtAK4AcQGrAK0AqwCsAK0AqwByAawAcgGqAKwAcgFzAaoAcwGpAKoAcwF0AakAdAGoAKkAdAFgAKgAYAB1AagAYABhAHUBYQCnAHUBYQB2AacAdgGmAKcAdgF3AaYAdwF4AaYAdwGlAHgBpQCkAHgBpQCiAKQAYgBjAGQAYgBlAGMAZgBnAGgAZgBpAGcAagBrAGwAagBtAGsAbgBvAHAAbgBxAG8AcgBzAHQAcgB1AHMAdgB3AHgAdgB5AHcAegB7AHwAegB9AHsAfgB/AIAAfgCBAH8AggCDAIQAggCFAIMAhgCHAIgAhgCJAIcAigCLAIwAigCNAIsAjgCPAJAAjgCRAI8AkgCTAJQAlACTAOsAkgCWAJMAlADrAHkBegGWAJIAeQHrAHsBegHvAJYAeQF7AXwB7QDvAHoBfAF7Ae4A7QB9Ae8AfAHuAOwAfgF9Ae0A7ADuAPAAfgF/AX0B7ADwAIABgQF/AX4BgAHwAIIBgQGDAX8BgAGCAfIAhAGDAYEB8gCCAfQAhAHxAIMB8gD0AIUBhgHxAIQBhQH0APYAhgGHAfEAhQH2APgA8wCHAYYB+AD2APoA8wD1AIcB+AD6AIgBiQH1APMAiAH6AIoBiQH5APUAiAGKAYsB9wD5AIkBiwGKAYwB9wD7APkAiwGMAQABjQH7APcAAAGMAfwAjQGOAfsAAAH8AI8BkAGOAY0BjwH8AAUBkAH+AI4BjwEFAZEB/QD+AJABkQEFARMB/QCSAf4AkQETAZMBlAGSAf0AkwETARIBlAH/AJIBkwESAZUBAQH/AJQBlQESAREBAQECAf8AlQERAZYBlwECAQEBlgERARABlwEDAQIBlgEQAZgBmQEDAZcBmAEQAQ8BmQGaAQMBmAEPAZsBnAGaAZkBmwEPAZ0BnAGeAZoBmwGdAQ4BnwGeAZwBDgGdAQ0BnwGgAZ4BDgENAQwBoQGgAZ8BDAENAQsBoQGiAaABDAELAQoBowGiAaEBCgELAaQBowEEAaIBCgGkAaUBpgEEAaMBpQGkAQkBpgEGAQQBpQEJAQgBpwEGAaYBCAEJAZUApwEHAQYBCAGVAJcAmAAHAacBlwCVAJkAmACZAAcBlwCZAJgAmgCbAJwAmgCdAJsAngCfAKAAngChAJ8A"),
+"lods": [0.000101607, PackedByteArray("AAABAAIAAAADAAEAogCjAKQApACjAF4ApQCiAKQApQCkAKYAYQClAKYAYQCmAKcAYQCnAKgAYABhAKgAYACoAKkAYACpAKoAqwBgAKoAqwCqAKwAqwCsAK0AXwCrAK0AXwCtAK4AXwCuAK8AXwCvALAAXwCwALEAXwCxALIAXABfALIAXACyALMAXACzALQAXAC0ALUAtgBcALUAWwC2ALUAWwC1AF0AtwAFAAYAtwC4AAUAuQC4ALcAuQC6ALgAuwC6ALkAuwAHALoABAAHALsACAAHAAQACAAEAAkAvABaAL0AvQBaAFgAvgC8AL0AvgC9AL8AwAC+AL8AWQDAAL8AVwBZAL8AVwC/AMEAwgBXAMEAwgDBAMMAxADCAMMAxADDAMUAxgDEAMUAxgDFAMcAxgDHAMgAyQDGAMgAyQDIAMoAywDJAMoAywDKAMwAzQDLAMwAzQDMAM4AVQDNAM4AVABVAM4AVADOAM8A0ABUAM8A0ADPANEA0gDQANEA0gDRAFYACgALAAwACgANAAsA0wANAAoA0wAOAA0A0wAPAA4A0wAQAA8A0wARABAA0wASABEA0wATABIA0wAUABMA0wAVABQA1AAVANMA1AAWABUA1AAXABYA1AAYABcA1QAYANQA1QAZABgA1QAaABkA1gAaANUA1gAcABoA1gAdABwA1gAeAB0A1gAfAB4A1wAfANYA1wAgAB8A1wAhACAA1wAiACEAGwAiANcAGwAjACIA2AAlACYA2AAmACgA2AAoACoA2AAqANkA2QAqACwA2QAsAC4A2gAlANgA2QAuANsA2gAnACUA2wAuADAA2wAwADEA2wAxADIA2wAyADMA2wAzACQA2gApACcA2gArACkA2gAtACsA2gAvAC0A2gA0AC8A3AA0ANoA3AA2ADQA3AA3ADYA3AA4ADcA3QA4ANwA3QA5ADgA3gA5AN0A3gA6ADkA3gA7ADoA3wA7AN4A3wA8ADsANQA8AN8ANQA9ADwAPgDgAOEAPgA/AOAA4QDgAOIA4QDiAEAAQADiAOMAQADjAEEAQgBAAEEAQgBBAEMARABFAEYARABHAEUASABNAOQATgBNAEgATgBIAE8ASADkAOUASADlAOYASADmAOcASADnAOgA6ADnAOkA6ADpAEoASgDpAOoASgDqAEkASwBKAEkASwBJAEwAUABRAFIAUABTAFEAYgBjAGQAYgBlAGMAZgBnAGgAZgBpAGcAagBrAGwAagBtAGsAbgBvAHAAbgBxAG8AcgBzAHQAcgB1AHMAdgB3AHgAdgB5AHcAegB7AHwAegB9AHsAfgB/AIAAfgCBAH8AggCDAIQAggCFAIMAhgCHAIgAhgCJAIcAigCLAIwAigCNAIsAjgCPAJAAjgCRAI8AkgCTAJQAlACTAOsAkgCWAJMAlADrAOwA7QCWAJIA7ADrAO4A7QDvAJYA7ADuAPAA7QDxAO8A7ADwAPIA8wDxAO0A8gDwAPQA8wD1APEA8gD0APYA9wD1APMA8gD2APgA9wD5APUA+AD2APoA9wD7APkA+AD6APwA/QD7APcA/QD+APsA/QD/AP4A+AD8AAABAQH/AP0AAQECAf8AAQEDAQIBAQEEAQMBAAH8AAUBmAAEAQEBmAAGAQQBmAAHAQYBmACZAAcBlwCZAJgAlwCVAJkACAGVAJcACAEJAZUACgEJAQgBCgELAQkBDAELAQoBDAENAQsBDgENAQwBDgEPAQ0BDgEQAQ8BAAEQAQ4BAAERARABAAESAREBAAETARIBAAEFARMBmgCbAJwAmgCdAJsAngCfAKAAngChAJ8A"), 0.335111, PackedByteArray("AAABAAIAAAADAAEABAAFAAYABAAHAAUACAAHAAQACAAEAAkACgALAAwACgANAAsACgAOAA0ACgAPAA4ACgAQAA8ACgARABAACgASABEACgATABIACgAUABMACgAVABQACgAWABUACgAXABYACgAYABcACgAZABgACgAaABkAGwAaAAoAGwAcABoAGwAdABwAGwAeAB0AGwAfAB4AGwAgAB8AGwAhACAAGwAiACEAGwAjACIAJAAlACYAJAAnACUAJAAmACgAJAApACcAJAAoACoAJAArACkAJAAqACwAJAAtACsAJAAsAC4AJAAvAC0AJAAuADAAJAAwADEAJAAxADIAJAAyADMAJAA0AC8ANQA0ACQANQA2ADQANQA3ADYANQA4ADcANQA5ADgANQA6ADkANQA7ADoANQA8ADsANQA9ADwAPgA/AEAAQAA/AEEAQgBAAEEAQgBBAEMARABFAEYARABHAEUASABJAEoASwBKAEkASwBJAEwASABNAEkATgBNAEgATgBIAE8AUABRAFIAUABTAFEAVABVAFYAVQBXAFYAVwBYAFYAVwBZAFgAWQBaAFgAWwBcAF0AXABeAF0AXABfAF4AXwBgAF4AYABhAF4AYgBjAGQAYgBlAGMAZgBnAGgAZgBpAGcAagBrAGwAagBtAGsAbgBvAHAAbgBxAG8AcgBzAHQAcgB1AHMAdgB3AHgAdgB5AHcAegB7AHwAegB9AHsAfgB/AIAAfgCBAH8AggCDAIQAggCFAIMAhgCHAIgAhgCJAIcAigCLAIwAigCNAIsAjgCPAJAAjgCRAI8AkgCTAJQAlACTAJUAkgCWAJMAlACVAJcAmACWAJIAlwCVAJkAmACZAJYAlwCZAJgAmgCbAJwAmgCdAJsAngCfAKAAngChAJ8A")],
+"material": SubResource("StandardMaterial3D_3ivuj"),
+"name": "Material.002",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 424,
+"vertex_data": PackedByteArray("q/EKQE8KYb/iwJ+9JrwXQIvqOr/iwJ89JrwXQIvqOr/iwJ+9q/EKQE8KYb/iwJ89x4arv08KYb8q+Uw9JrwXwIvqOr/iwJ+9JrwXwIvqOr/iwJ89x4arv08KYb8q+Uy9smCov08KYb8rv1q9sWCov08KYb8rv1o9wfwUwIvqOr+TqA+9ZYoKwCPVQL+SqA+9wfwUwCPVQL+TqA+9SbH6vyPVQL+SqA+9yE3gvyPVQL+RqA+9R+rFvyPVQL+RqA+9xoarvyPVQL+RqA+9RSORvyPVQL+RqA+9iH9tvyPVQL+RqA+9hrg4vyPVQL+RqA+9hPEDvyPVQL+RqA+9BFWeviPVQL+RqA+9ABzTvSPVQL+RqA+9EBzTPSPVQL+RqA+9CFWePiPVQL+RqA+9hvEDPyPVQL+RqA+9iLg4PyPVQL+RqA+9wfwUQIvqOr+TqA+9in9tPyPVQL+RqA+9RiORPyPVQL+RqA+9x4arPyPVQL+RqA+9SOrFPyPVQL+RqA+9yU3gPyPVQL+RqA+9SrH6PyPVQL+RqA+9ZooKQCPVQL+RqA+9wfwUQCPVQL+TqA+9wfwUQIvqOr+TqA89hPEDPyPVQL+RqA89hrg4PyPVQL+RqA89BFWePiPVQL+RqA89iH9tPyPVQL+RqA89ABzTPSPVQL+RqA89RSORPyPVQL+RqA89EBzTvSPVQL+RqA89xoarPyPVQL+RqA89CFWeviPVQL+RqA89R+rFPyPVQL+RqA89hvEDvyPVQL+RqA89yE3gPyPVQL+RqA89SbH6PyPVQL+SqA89ZYoKQCPVQL+SqA89wfwUQCPVQL+TqA89iLg4vyPVQL+RqA89wfwUwIvqOr+SqA89in9tvyPVQL+RqA89RiORvyPVQL+RqA89x4arvyPVQL+RqA89SOrFvyPVQL+RqA89yU3gvyPVQL+RqA89SrH6vyPVQL+RqA89ZooKwCPVQL+RqA89wfwUwCPVQL+SqA89q/EKQE8KYb/iwJ89q/EKQE8KYb/iwJ+9x4arP08KYb8q+Uw9x4arP08KYb8q+Uy9smCoP08KYb8rv1o9sWCoP08KYb8rv1q9smCoP08KYb8rv1o9W0mUP+p+n78rv1o9W0mUP08KYb8rv1o9smCoP+p+n78rv1o9RiORP08KYb8q+Uw9RiORv08KYb8q+Uy9RiORv08KYb8q+Uw9WkmUv08KYb8rv1o9W0mUv08KYb8rv1q9RiORP08KYb8q+Uy9WkmUP08KYb8rv1q9W0mUP08KYb8rv1o9smCov08KYb8rv1q9W0mUv+p+n78rv1q9W0mUv08KYb8rv1q9smCov+p+n78rv1q9x4arv08KYb8q+Uy9RiORv08KYb8q+Uy9JrwXwIvqOr/iwJ+9RiORP08KYb8q+Uy9JrwXQIvqOr/iwJ+9x4arP08KYb8q+Uy9q/EKQE8KYb/iwJ+9q/EKQE8KYb/iwJ89x4arP08KYb8q+Uw9JrwXQIvqOr/iwJ89JrwXwIvqOr/iwJ89RiORP08KYb8q+Uw9RiORv08KYb8q+Uw9x4arv08KYb8q+Uw9sWCov08KYb8rv1o9RiORv08KYb8q+Uw9WkmUv08KYb8rv1o9x4arv08KYb8q+Uw9W0mUP08KYb8rv1o9x4arP08KYb8q+Uw9smCoP08KYb8rv1o9RiORP08KYb8q+Uw9sWCoP08KYb8rv1q9RiORP08KYb8q+Uy9WkmUP08KYb8rv1q9x4arP08KYb8q+Uy9W0mUv08KYb8rv1q9x4arv08KYb8q+Uy9smCov08KYb8rv1q9RiORv08KYb8q+Uy9smCoP+p+n78rv1o9WkmUP+p+n78rv1q9W0mUP+p+n78rv1o9sWCoP+p+n78rv1q9WkmUv+p+n78rv1o9smCov+p+n78rv1q9sWCov+p+n78rv1o9W0mUv+p+n78rv1q9W0mUv08KYb8rv1q9WkmUv+p+n78rv1o9WkmUv08KYb8rv1o9W0mUv+p+n78rv1q9sWCoP08KYb8rv1q9smCoP+p+n78rv1o9smCoP08KYb8rv1o9sWCoP+p+n78rv1q9WkmUP08KYb8rv1q9sWCoP+p+n78rv1q9sWCoP08KYb8rv1q9WkmUP+p+n78rv1q9WkmUv08KYb8rv1o9sWCov+p+n78rv1o9sWCov08KYb8rv1o9WkmUv+p+n78rv1o9sWCov08KYb8rv1o9smCov+p+n78rv1q9smCov08KYb8rv1q9sWCov+p+n78rv1o9W0mUP08KYb8rv1o9WkmUP+p+n78rv1q9WkmUP08KYb8rv1q9W0mUP+p+n78rv1o9wfwUQIvqOr+TqA+9JrwXQIvqOr/iwJ89wfwUQIvqOr+TqA89JrwXwIvqOr/iwJ89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yU3gv08KYb8q+Uw9SrH6v4vqOr/iwJ89ZYoKQIvqOr+SqA89ZooKQIvqOr+RqA+9SbH6P4vqOr/iwJ89SbH6P4vqOr+SqA89SrH6P4vqOr/iwJ+9yU3gP4vqOr+RqA+9yU3gP4vqOr/iwJ+9R+rFP4vqOr+RqA89SOrFP4vqOr+RqA+9xoarP4vqOr/iwJ89SOrFP4vqOr/iwJ+9x4arP4vqOr+RqA+9RSORP4vqOr+RqA89RiORP4vqOr+RqA+9RiORP4vqOr/iwJ+9hrg4P4vqOr+RqA89iLg4P4vqOr+RqA+9hPEDP4vqOr/iwJ89hPEDP4vqOr+RqA89BFWePovqOr/iwJ89CFWePovqOr+RqA+9CFWePovqOr/iwJ+9ABzTPYvqOr+RqA89EBzTPYvqOr+RqA+9EBzTvYvqOr+RqA89ABzTvYvqOr/iwJ+9CFWevovqOr+RqA89BFWevovqOr+RqA+9hvEDv4vqOr+RqA89iLg4v4vqOr+RqA89hrg4v4vqOr+RqA+9in9tv4vqOr+RqA89iH9tv4vqOr+RqA+9iH9tv4vqOr/iwJ+9RiORv4vqOr+RqA89RSORv4vqOr+RqA+9x4arv4vqOr/iwJ89RSORv4vqOr/iwJ+9xoarv4vqOr+RqA+9xoarv4vqOr/iwJ+9R+rFv4vqOr+RqA+9R+rFv4vqOr/iwJ+9yE3gv4vqOr+RqA+9SrH6v4vqOr/iwJ89SrH6v4vqOr+RqA89SbH6v4vqOr+SqA+9ZYoKwIvqOr+SqA+9pramNljJUtumtqY2WMlS26a2pjZYyVLbpramNljJUtv/fwAAAACw0FhJpjamNlLbWEmmNqY2Utv/fwAA1CH/v/9/AABAK/+//38AAAAAC+L/f/9/////P/9//3////8//3//f////z//f/9/////P/9//3////8//3//f////z//f/9/////P/9//3////8//3//f////z//f/9/////P/9//3////8//3//f////z//f/9/////P/9//3////8//3//f////z//f/9/////P/9//3////8//3//f////z//f/9/////P/9//3////8//3//f////z//f/9/////P/9//3////8//3//f////z//f/9/////P/9//3////8//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/9/AAAAAIrt/38AAHNo/7//fwAA1CH/v/9/AAAAALDQ/38AAEAr/7//fwAAAAAL4v9//3////8//3//f////z//f/9/////P/9//3////8//38AAAAAsND/fwAAAACw0P9/AADUIf+//38AAEAr/7//fwAAAAAL4v9/AADUIf+//38AAEAr/7//fwAAAAAL4v////////+//////////7//////////v/////////+/w+sAAMRr/v/D6wAAxGv+/1//0A44MzLew+sAADuU/v+fANAOxswy3sPrAAA7lP7/nwDQDremG+8ucV9/xqGi7P9/xGv/f+H1LnFff5jDm9nQjl9/Zjyb2f9/xGv/f+H1/3/Ea/9/4fX/f8Rr/3/h9f9///8AAP+//3///wAA/7//f///AAD/v/9///8AAP+//3///wAA/7//f///AAD/v/9///8AAP+//3///wAA/7//f///AAD/v/9///8AAP+//3///wAA/7//f///AAD/v/9///8AAP+//3///wAA/7//f///AAD/v/9///8AAP+//38AAAAA/7//fwAAAAD/v/9/AAAAAP+//38AAAAA/7//fwAAAAD/v/9/AAAAAP+//38AAAAA/7//fwAAAAD/v////3////+/////f////7////9/////v////3////+/////f////7////9/////v////3////+/////f////7//////////v/////////+//////////7//////////v/9//3////8//3//f////z//f/9/////P/9//3////8/AAD/f////78AAP9/////vwAA/3////+/AAD/f////78AAP9/////vwAA/3////+/AAD/f////78AAP9/////v/9////+//+//3///////7//f///////v/9///////+//3////7//7//f////v//v/9////+//+//3////7//78AAP9/////vwAA/3////+/AAD/f////78AAP9/////v////3////+/////f////7////9/////v////3////+//3/Ea/9/4fXQjl9/OF6i7P9/xGv/f+H1/3/Ea/9/4fX/f8Rr/3/h9f9/xGv/f+H1/3/Ea/9/4fX/f8Rr/3/h9f9/xGv/f+H1/3/Ea/9/4fX/f8Rr/3/h9f9/xGv/f+H1/3/Ea/9/4fX/f8Rr/3/h9f9/xGv/f+H1/3/Ea/9/4fX/f8Rr/3/h9f9/xGv/f+H1/3/Ea/9/4fX/f8Rr/3/h9f9/xGv/f+H1/38AAHNo/7//fwAAAACK7f9/AAD0Rv+//38AAAAAA+T/fwAAAAD/v8PrAAA6lP7/w+sAADqU/v/D6wAAOpT+/8PrAAA7lP7/w+sAADqU/v/D6wAAO5T+/8PrAAA7lP7/w+sAADuU/v/D6wAAO5T+/8PrAAA7lP7/w+sAADqU/v/D6wAAOpT+/8PrAADEa/7/w+sAAMRr/v/D6wAAxGv+/8PrAADEa/7/w+sAAMRr/v/D6wAAxGv+/8PrAADEa/7/w+sAAMRr/v/D6wAAxGv+/8PrAADEa/7/X//QDkdZG+//f/9/////P/9//3////8//3//f////z//f/9/////P/9//3////8//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/9/AAD0Rv+//38AAAAAA+T/fwAAAAD/v/9/AAAAAP+//38AAAAA/7//fwAAAAD/v/9/AAAAAP+//38AAAAA/7//fwAAAAD/v/9/AAAAAP+//38AAAAA/7//f///////v/9////+//+//3///////7//f///////v/9///////+//3///////7//f///////v/9///////+//3///////7//f///////v/9///////+//3///////7//f///////v/9///////+//3///////7//f///////v/9///////+//3///////7//f///////v/9///////+//3///////7//f///////v/9///////+//3///////7//f///////v/9///////+//3///////7//f///////v/9///////+//3///////7//f///////v/9///////+//3///////7//f///////v/9///////+//3///////7//f///////v/9///////+//3///////7//f///////v/9///////+/0I5ffxN9//3Qjl9/Rz6p2lhJpjamNlLbWEmmNqY2UtufANAO/YOJ/p8A0A6qyiLf/38AAAAA/7//fwAAAAD/v/9/AAAAAP+//38AAAAA/7//fwAAAAD/v/9//3////8//3//f////z//f/9/////P/9//3////8//3//f////z//f/9/////P/9//3////8//3//f////z//f/9/////P/9//3////8//3//f////z//f/9/////P/9//3////8//3//f////z//f/9/////P/9//3////8//3//f////z//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//38AAAAA/7//fwAAAAD/v/9/AAAAAP+//38AAAAA/7//fwAAAAD/v/9/AAAAAP+//38AAAAA/7//fwAAAAD/v/9/AAAAAP+//38AAAAA/7//fwAAAAD/v/9/AAAAAP+//38AAAAA/7//fwAAAAD/v/9/AAAAAP+//38AAAAA/7//fwAAAAD/v1//0A5UNSLfX//QDgF8if7D6wAAxGv+/8PrAAA6lP7/w+sAADqU/v/D6wAAxGv+/8PrAADEa/7/w+sAAMRr/v/D6wAAxGv+/8PrAAA6lP7/w+sAADqU/v/D6wAAOpT+/8PrAAA6lP7/w+sAADuU/v/D6wAAO5T+/8PrAAA7lP7/w+sAADuU/v/D6wAAOpT+/8PrAAA6lP7/w+sAADqU/v8ucV9/t8Gp2i5xX3/rgv/9/3/Ea/9/4fX/f8Rr/3/h9f9/xGv/f+H1/3/Ea/9/4fX/f8Rr/3/h9f9/xGv/f+H1/3/Ea/9/4fX/f8Rr/3/h9f9/xGv/f+H1/3/Ea/9/4fX/f8Rr/3/h9f9/xGv/f+H1/3/Ea/9/4fX/f8Rr/3/h9f9/xGv/f+H1/3/Ea/9/4fX/f8Rr/3/h9f9/xGv/f+H1/3/Ea/9/4fX/f8Rr/3/h9f9///////+//3///////7//f///////v/9///////+//3///////7//f///////v/9///////+//3///////7//f///////v/9///////+//3///////7//f///////v/9///////+//3///////7//f///////v/9///////+//3///////7//f///////v/9///////+//3///////7//f///////v/9///////+//3///////7//f///////v/9///////+//3///////7//f///////v/9///////+//3///////7//f///////v/9///////+//3///////7//f///////v/9///////+//3///////7//f///////v/9///////+//3///////7//f///////v/9///////+//3///////7//f///////v/9///////+//3///////7//f///////v/9///////+//3///////78=")
+}, {
+"aabb": AABB(-2.32793, -0.753252, -0.0350729, 4.65585, 1e-05, 0.0701457),
+"attribute_data": PackedByteArray("Nt1ibmrfnFFq32JuNt2cUW7aYm5u2pxRptdibqbXnFHd1GJu3dScURXSYm4V0pxRTc9ibk3PnFGEzGJuhMycUbzJYm68yZxR9MZibvTGnFErxGJuK8ScUWPBYm5jwZxRm75ibpu+nFHSu2Ju0rucUQq5Ym4KuZxRQrZibkK2nFF5s2JuebOcUbGwYm6xsJxR6a1ibumtnFEgq2JuIKucUVioYm5YqJxRkKVibpClnFHHomJux6KcUZOgYm6ToJxR"),
+"format": 34896613399,
+"index_count": 138,
+"index_data": PackedByteArray("AAABAAIAAAADAAEABAADAAAABAAFAAMABgAFAAQABgAHAAUACAAHAAYACAAJAAcACgAJAAgACgALAAkADAALAAoADAANAAsADgANAAwADgAPAA0AEAAPAA4AEAARAA8AEgARABAAEgATABEAFAATABIAFAAVABMAFgAVABQAFgAXABUAGAAXABYAGAAZABcAGgAZABgAGgAbABkAHAAbABoAHAAdABsAHgAdABwAHgAfAB0AIAAfAB4AIAAhAB8AIgAhACAAIgAjACEAJAAjACIAJAAlACMAJgAlACQAJgAnACUAKAAnACYAKAApACcAKgApACgAKgArACkALAArACoALAAtACsALgAtACwALgAvAC0A"),
+"material": SubResource("StandardMaterial3D_wxijf"),
+"name": "Material.003",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 48,
+"vertex_data": PackedByteArray("BfcAAP7//7///wAAAAD/v///AAD///+/BfcAAAAA/7+v6wAA/v//v6/rAAAAAP+/WeAAAP7//79Z4AAAAAD/vwPVAAD+//+/A9UAAAAA/7+tyQAA/v//v63JAAAAAP+/V74AAP7//79XvgAAAAD/vwKzAAD+//+/ArMAAAAA/7+spwAA/v//v6ynAAAAAP+/VpwAAP7//79WnAAAAAD/vwCRAAD+//+/AJEAAAAA/7+qhQAA/v//v6qFAAAAAP+/VHoAAP7//79UegAAAAD/v/5uAAD+//+//m4AAAAA/7+oYwAA/v//v6hjAAAAAP+/UlgAAP7//79SWAAAAAD/v/xMAAD+//+//EwAAAAA/7+nQQAA/v//v6dBAAAAAP+/UTYAAP7//79RNgAAAAD/v/sqAAD+//+/+yoAAAAA/7+lHwAA/v//v6UfAAAAAP+/TxQAAP7//79PFAAAAAD/v/kIAAD+//+/+QgAAAAA/78AAAAA/v//vwAAAAAAAP+/////f////3////9/////f////3////9/////f////3////9/////f////3////9/////f////3////9/////f////3////9/////f////3////9/////f////3////9/////f////3////9/////f////3////9/////f////3////9/////f////3////9/////f////3////9/////f////3////9/////f////3////9/////f////3////9/")
+}]
+blend_shape_mode = 0
+shadow_mesh = SubResource("ArrayMesh_4b0ho")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_k2hnf"]
+resource_name = "Material"
+cull_mode = 2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_c1vcr"]
+resource_name = "wall_side"
+cull_mode = 2
+albedo_color = Color(0.399992, 0.393765, 0.229826, 1)
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_tnwxi"]
+_surfaces = [{
+"aabb": AABB(-1, -1, -1, 2, 2, 2),
+"format": 34896613377,
+"index_count": 30,
+"index_data": PackedByteArray("AAABAAIAAAADAAEABAABAAMABQACAAEABAAFAAEABQAGAAIABgAFAAQABgAAAAIABgAEAAcABgAHAAAA"),
+"name": "Material",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 8,
+"vertex_data": PackedByteArray("/////wAAAAAAAP////8AAAAA//8AAAAA////////AAD//wAA//8AAAAAAAD//wAAAAAAAAAAAAD//wAAAAAAAA==")
+}, {
+"aabb": AABB(1, -1, -1, 1e-05, 2, 2),
+"format": 34896613377,
+"index_count": 6,
+"index_data": PackedByteArray("AAABAAIAAAADAAEA"),
+"name": "wall_side",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 4,
+"vertex_data": PackedByteArray("AAAAAAAAAAAAAP////8AAAAA//8AAAAAAAAAAP//AAA=")
+}]
+blend_shape_mode = 0
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_jj4mk"]
+resource_name = "trainstation_Cube_007"
+_surfaces = [{
+"aabb": AABB(-1, -1, -1, 2, 2, 2),
+"attribute_data": PackedByteArray("/5//f//f/z//3/9//5//P/9f/z//nwAA/5//P/9fAAD/X////5//v/+f////X/+//x//f/9f/z//X/9//x//P/9f/7//n/9//5//v/9f/38="),
+"format": 34896613399,
+"index_count": 30,
+"index_data": PackedByteArray("AAABAAIAAAADAAEABAAFAAYABAAHAAUACAAJAAoACAALAAkADAANAA4ADAAPAA0AEAARABIAEAATABEA"),
+"material": SubResource("StandardMaterial3D_k2hnf"),
+"name": "Material",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 20,
+"vertex_data": PackedByteArray("/////wAA//8AAP///////wAA//8AAP///////////////wAA////vwAA//////+//////////78AAAAA////vwAAAAD//1TVAAD//wAAVNUAAP////9U1QAAAAAAAFTVAAAAAAAA/7///wAA////v///AAAAAP+/AAAAAP///78AAAAAAAD///////8AAP//AAD//wAA/////wAAAAD///9//7//f/+//3//v/9//7//////////////////////VNVU1VTVVNVU1VTVVNVU1QAA/38AAP9/AAD/fwAA/3//v/+//7//v/+//7//v/+/")
+}, {
+"aabb": AABB(1, -1, -1, 1e-05, 2, 2),
+"attribute_data": PackedByteArray("/1//f/+f/z//n/9//1//Pw=="),
+"format": 34896613399,
+"index_count": 6,
+"index_data": PackedByteArray("AAABAAIAAAADAAEA"),
+"material": SubResource("StandardMaterial3D_c1vcr"),
+"name": "wall_side",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 4,
+"vertex_data": PackedByteArray("AAAAAAAAVNUAAP////9U1QAA//8AAFTVAAAAAP//VNWqKqoqqiqqKqoqqiqqKqoq")
+}]
+blend_shape_mode = 0
+shadow_mesh = SubResource("ArrayMesh_tnwxi")
+
+[node name="MainScene" type="Node3D"]
+
+[node name="Filter" type="CanvasLayer" parent="."]
+layer = 0
+
+[node name="PixelateOverlay" type="ColorRect" parent="Filter"]
+material = SubResource("ShaderMaterial_1wiy7")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 28.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="BiteIndicator" type="TextureRect" parent="UI"]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -185.0
+offset_top = -185.0
+offset_right = 185.0
+offset_bottom = 185.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_rtjjv")
+
+[node name="CatchUI" type="Control" parent="UI"]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_25dfr")
+
+[node name="BarBackground" type="ColorRect" parent="UI/CatchUI"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = 256.0
+offset_right = 300.0
+offset_bottom = 276.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.458405, 0.458405, 0.458405, 1)
+
+[node name="SweetSpot" type="ColorRect" parent="UI/CatchUI/BarBackground"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -60.0
+offset_top = -10.0
+offset_right = 60.0
+offset_bottom = 10.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(1, 0.486275, 0.482353, 1)
+
+[node name="Marker" type="ColorRect" parent="UI/CatchUI/BarBackground"]
+layout_mode = 0
+offset_right = 6.0
+offset_bottom = 20.0
+
+[node name="CatchProgress" type="ProgressBar" parent="UI/CatchUI"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = 279.0
+offset_right = 300.0
+offset_bottom = 306.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CatchResultUI" parent="UI" instance=ExtResource("4_0tnqg")]
+offset_top = -197.0
+offset_bottom = 197.0
+
+[node name="InventoryUI" parent="UI" instance=ExtResource("5_s0tj3")]
+theme = SubResource("Theme_kjvyo")
+
+[node name="MoneyHUD" parent="UI" instance=ExtResource("6_i37rq")]
+offset_right = 60.0
+offset_bottom = 43.0
+theme = SubResource("Theme_2phbr")
+
+[node name="FishBook" parent="UI" instance=ExtResource("7_skxsd")]
+visible = false
+
+[node name="CastPowerUI" parent="UI" instance=ExtResource("8_rxgvs")]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_8tyyj")
+
+[node name="PlayerCamera" type="Camera3D" parent="."]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 2.007, 1.85558)
+script = ExtResource("10_11ck5")
+
+[node name="FishingRod" parent="PlayerCamera" node_paths=PackedStringArray("rod_tip", "hook", "splash", "waterplane", "catch_result_ui", "camera", "fishbook_ui", "inventory_ui") instance=ExtResource("11_c82cw")]
+transform = Transform3D(0.925417, -0.163176, -0.34202, 0.173648, 0.984808, 0, 0.336824, -0.0593912, 0.939693, 0.4, -0.40033, -1.03766)
+script = SubResource("GDScript_qk11g")
+rod_tip = NodePath("RodMesh/RodTip")
+hook = NodePath("../../Hook")
+splash = NodePath("../../Splash")
+waterplane = NodePath("../../WaterPlane")
+catch_result_ui = NodePath("../../UI/CatchResultUI")
+rotation_speed = 300.0
+camera = NodePath("..")
+fishing_location = "sewer"
+fishbook_ui = NodePath("../../UI/FishBook")
+cast_power_ui_scene = ExtResource("8_rxgvs")
+inventory_ui = NodePath("../../UI/InventoryUI")
+
+[node name="RodMesh" parent="PlayerCamera/FishingRod" index="0"]
+transform = Transform3D(0.8, 0, 0, 0, 0.773459, 0.204357, 0, -0.204357, 0.773459, 0, 0, -0.0166266)
+
+[node name="WaterPlane" type="MeshInstance3D" parent="."]
+transform = Transform3D(-1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0, 0, 1, 0, -0.104424, 8.93399)
+mesh = SubResource("PlaneMesh_66o8q")
+
+[node name="Hook" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0925, 5)
+
+[node name="Ripple" type="MeshInstance3D" parent="Hook"]
+transform = Transform3D(0.5, 0, 0, 0, -2.18557e-08, 0.5, 0, -0.5, -2.18557e-08, 0.79701, -0.233042, 3.28897)
+mesh = SubResource("QuadMesh_611at")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Hook"]
+libraries = {
+&"": SubResource("AnimationLibrary_1wiy7")
+}
+
+[node name="Line" type="MeshInstance3D" parent="." node_paths=PackedStringArray("rod_tip", "hook", "fishing_script")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.319973, 1.53619, 0.170711)
+mesh = SubResource("CylinderMesh_pjux3")
+script = ExtResource("16_ros3w")
+rod_tip = NodePath("../PlayerCamera/FishingRod/RodMesh/RodTip")
+hook = NodePath("../Hook")
+fishing_script = NodePath("../PlayerCamera/FishingRod")
+
+[node name="Shop" parent="." instance=ExtResource("17_vqh58")]
+transform = Transform3D(-3.12536e-08, 0, 0.715, 0, 0.715, 0, -0.715, 0, -3.12536e-08, -6.26471, -0.00616801, 1.59074)
+
+[node name="hillybilly" parent="." instance=ExtResource("18_cl88l")]
+transform = Transform3D(-0.190341, 0, 1.51307, 0, 1.525, 0, -1.51307, 0, -0.190341, -6.9608, -0.684955, 1.96083)
+
+[node name="Audio" type="Node" parent="."]
+
+[node name="bite" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("19_aj5s8")
+volume_db = -2.811
+
+[node name="cast" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("20_v8e37")
+
+[node name="success" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("21_fko2s")
+
+[node name="whoosh" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("22_aqbbn")
+
+[node name="music" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("23_ioklf")
+volume_db = -10.407
+pitch_scale = 1.1
+autoplay = true
+
+[node name="Splash" parent="." instance=ExtResource("24_kn4m2")]
+
+[node name="trainstation" parent="." instance=ExtResource("25_1jdg1")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -5.66553, 0, 1.90603)
+
+[node name="Cube" parent="trainstation" index="0"]
+surface_material_override/0 = ExtResource("24_kqfxt")
+
+[node name="Cube_004" parent="trainstation" index="6"]
+surface_material_override/0 = ExtResource("24_kqfxt")
+
+[node name="Cube_003" parent="trainstation" index="7"]
+surface_material_override/0 = ExtResource("24_kqfxt")
+
+[node name="Cube_005" parent="trainstation" index="8"]
+surface_material_override/0 = ExtResource("24_kqfxt")
+
+[node name="lampe_003" type="MeshInstance3D" parent="trainstation"]
+transform = Transform3D(-0.00407969, 0.273288, 0.961924, -0.00115904, -0.961932, 0.273285, 0.999991, 1.23156e-08, 0.00424114, -10.3432, 2.86309, 5.6682)
+mesh = SubResource("ArrayMesh_4jkq6")
+skeleton = NodePath("")
+
+[node name="SpotLight3D" type="SpotLight3D" parent="trainstation/lampe_003"]
+transform = Transform3D(0.999985, -0.00419527, 0.00361931, 0.00419527, 0.146601, -0.989187, 0.00361931, 0.989187, 0.146616, -0.000687715, -0.570764, 0.162154)
+light_color = Color(0.937163, 0.914398, 0, 1)
+light_energy = 16.0
+light_indirect_energy = 0.0
+light_volumetric_fog_energy = 1.323
+spot_range = 8.042
+spot_angle = 46.71
+
+[node name="lampe_004" type="MeshInstance3D" parent="trainstation"]
+transform = Transform3D(-0.00418452, 0.162861, 0.98664, -0.000690709, -0.986649, 0.16286, 0.999991, 7.48869e-09, 0.00424114, -3.81579, 2.86309, 5.66819)
+mesh = SubResource("ArrayMesh_4jkq6")
+skeleton = NodePath("")
+
+[node name="SpotLight3D" type="SpotLight3D" parent="trainstation/lampe_004"]
+transform = Transform3D(0.999985, -0.00419527, 0.00361931, 0.00419527, 0.146601, -0.989187, 0.00361931, 0.989187, 0.146616, -0.000687715, -0.570764, 0.162154)
+light_color = Color(0.937163, 0.914398, 0, 1)
+light_energy = 16.0
+light_indirect_energy = 0.0
+light_volumetric_fog_energy = 1.323
+spot_range = 8.042
+spot_angle = 46.71
+
+[node name="Cube_006" type="MeshInstance3D" parent="trainstation"]
+transform = Transform3D(9.33041, 3.66138e-07, 6.44816e-16, -3.5655e-14, 9.15345e-08, -0.168739, -1.63138e-06, 2.09406, 7.37583e-09, -4.60284, 4.2215, 4.08503)
+mesh = SubResource("ArrayMesh_jj4mk")
+skeleton = NodePath("")
+surface_material_override/0 = ExtResource("24_kqfxt")
+
+[node name="Cube_007" type="MeshInstance3D" parent="trainstation"]
+transform = Transform3D(9.33041, 3.66138e-07, 6.44816e-16, -3.5655e-14, 9.15345e-08, -0.168739, -1.63138e-06, 2.09406, 7.37583e-09, -4.60284, 4.2215, 7.99679)
+mesh = SubResource("ArrayMesh_jj4mk")
+skeleton = NodePath("")
+surface_material_override/0 = ExtResource("24_kqfxt")
+
+[editable path="PlayerCamera/FishingRod"]
+[editable path="trainstation"]

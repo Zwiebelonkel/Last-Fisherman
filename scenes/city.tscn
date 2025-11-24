@@ -70,6 +70,10 @@ script/source = "extends Node3D
 @onready var success_sound: AudioStreamPlayer = get_node(\"../../Audio/success\")
 @onready var whoosh_sound: AudioStreamPlayer = get_node(\"../../Audio/whoosh\")
 
+# 🆕 UI für Cast Power (instanzierte Szene)
+@export var cast_power_ui_scene: PackedScene
+var cast_power_ui: Control = null
+
 
 
 
@@ -79,6 +83,7 @@ signal line_visible(visible: bool)
 # STATE MACHINE
 enum {
 	STATE_IDLE,
+	STATE_CHARGING,  # 🆕 Wurf wird aufgeladen
 	STATE_CASTED,
 	STATE_BITE,
 	STATE_MINIGAME,
@@ -86,6 +91,13 @@ enum {
 }
 
 var state: int = STATE_IDLE
+
+# 🆕 Cast Power Variables
+var cast_power: float = 0.0
+var cast_power_speed: float = 3  # Wie schnell die Power auflädt
+var max_cast_power: float = 1.0
+var min_distance: float = 2.0  # Minimale Wurfweite
+var max_distance: float = 8.0  # Maximale Wurfweite
 
 # Minigame Variables
 var marker_pos: float = 0.0
@@ -99,6 +111,10 @@ var current_rotation: float = 180.0  # 180 = Fischen, 90 = Shop
 var target_rotation: float = 180.0
 var is_rotating: bool = false
 
+var hook_start_position: Vector3
+var hook_end_position: Vector3
+
+
 
 func _ready() -> void:
 	anim.play(\"idle\")
@@ -107,6 +123,11 @@ func _ready() -> void:
 	splash.emitting = false  # 🆕 Partikel-Emission aus
 	ui_bite_indicator.visible = false
 	catch_ui.visible = false
+	
+	# 🆕 Cast Power UI instanzieren
+	if cast_power_ui_scene:
+		cast_power_ui = cast_power_ui_scene.instantiate()
+		add_child(cast_power_ui)
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -135,11 +156,17 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed(\"cast\"):
 		match state:
 			STATE_IDLE:
-				cast_line()
+				start_charging_cast()  # 🆕 Wurf aufladen starten
 			STATE_CASTED, STATE_BITE:
 				reel_pressed()
 			STATE_MINIGAME:
 				pass
+	
+	# 🆕 Cast loslassen
+	if event.is_action_released(\"cast\"):
+		if state == STATE_CHARGING:
+			release_cast()
+	
 	if event.is_action_pressed(\"inventory_toggle\"):
 		inventory_ui.toggle()
 
@@ -178,6 +205,8 @@ func _process(delta: float) -> void:
 		update_rotation(delta)
 	elif state == STATE_MINIGAME:
 		update_catch_minigame(delta)
+	elif state == STATE_CHARGING:
+		update_cast_power(delta)  # 🆕 Wurfkraft aktualisieren
 
 
 func update_rotation(delta: float) -> void:
@@ -212,10 +241,49 @@ func enter_shop() -> void:
 
 
 # ---------------------------------------------------------
+# CAST CHARGING SYSTEM
+# ---------------------------------------------------------
+func start_charging_cast() -> void:
+	#anim.play(\"power\")
+	print(\"CHARGING CAST\")
+	state = STATE_CHARGING
+	cast_power = 0.0
+	
+	if cast_power_ui and cast_power_ui.has_method(\"show_power\"):
+		cast_power_ui.show_power(0.0)
+
+
+func update_cast_power(delta: float) -> void:
+	# Ping-Pong Effekt: Power geht hoch und runter
+	cast_power += cast_power_speed * delta
+	
+	if cast_power > max_cast_power:
+		cast_power = max_cast_power
+		cast_power_speed *= -1.0  # Richtung umkehren
+	elif cast_power < 0.0:
+		cast_power = 0.0
+		cast_power_speed *= -1.0
+	
+	if cast_power_ui and cast_power_ui.has_method(\"show_power\"):
+		cast_power_ui.show_power(cast_power)
+
+
+func release_cast() -> void:
+	if cast_power_ui and cast_power_ui.has_method(\"hide_power\"):
+		cast_power_ui.hide_power()
+	
+	# Je näher an 1.0 (100%), desto weiter der Wurf
+	var power_quality = 1.0 - abs(cast_power - 1.0)  # 1.0 = perfekt, 0.0 = schwach
+	
+	print(\"Cast released with power: \", power_quality)
+	cast_line(power_quality)
+
+
+# ---------------------------------------------------------
 # CAST
 # ---------------------------------------------------------
-func cast_line() -> void:
-	print(\"CAST\")
+func cast_line(power: float = 1.0) -> void:  # 🆕 Power Parameter
+	print(\"CAST with power: \", power)
 	cast_sound.play()
 	state = STATE_CASTED
 	ui_bite_indicator.visible = false
@@ -225,12 +293,24 @@ func cast_line() -> void:
 	await anim.animation_finished
 
 	var x = randf_range(-2.0, 2.0)
-	var z = randf_range(4.0, 7.0)
-	hook.position = Vector3(x, 0.05, z)
+	
+	# 🆕 Z-Distanz basiert auf Wurfkraft
+	var distance = lerp(min_distance, max_distance, power)
+	var z = distance
+	
+	# 🆕 Y-Position von Waterplane übernehmen
+	var water_height = 0.05
+	if waterplane:
+		water_height = waterplane.global_position.y
+	
+	hook.position = Vector3(x, water_height, z)
 	hook.visible = true
+	hook_start_position = hook.global_position
+	hook_end_position = rod_tip.global_position
+
 
 	# 🆕 Splash an gleicher Position wie Hook
-	splash.position = Vector3(x, 0.05, z)
+	splash.position = Vector3(x, water_height, z)
 	splash.visible = true
 	splash.emitting = true
 	splash.restart()  # Partikel-System neu starten
@@ -308,6 +388,7 @@ func start_bite_window() -> void:
 
 
 func show_bite_indicator() -> void:
+	splash.restart()
 	bite_sound.play()
 	ui_bite_indicator.visible = true
 
@@ -345,6 +426,10 @@ func start_catch_minigame() -> void:
 
 func update_catch_minigame(delta: float) -> void:
 	var current_speed = marker_speed
+	var t := catch_progress.value / 100
+	var new_pos := hook_start_position.lerp(hook_end_position, t)
+	new_pos.y = hook_start_position.y
+	hook.global_position = new_pos
 
 	if input_active:
 		current_speed *= marker_slow_factor
@@ -1120,6 +1205,7 @@ rotation_speed = 300.0
 camera = NodePath("..")
 fishing_location = "city"
 fishbook_ui = NodePath("../../UI/FishBook")
+cast_power_ui_scene = null
 inventory_ui = NodePath("../../UI/InventoryUI")
 
 [node name="RodMesh" parent="PlayerCamera/FishingRod" index="0"]

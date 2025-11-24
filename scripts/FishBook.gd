@@ -12,7 +12,9 @@ func _init():
 	# Mapping von Location zu Fisch-Listen
 	LOCATION_FISH = {
 		"lake": FishDB.FISH_LAKE,
-		"city": FishDB.FISH_CITY
+		"city": FishDB.FISH_CITY,
+		"sewer": FishDB.FISH_SEWER
+
 	}
 
 # Prüft, ob ein Fisch bereits gefangen wurde

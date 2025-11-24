@@ -48,6 +48,8 @@ func _ready():
 		location_selector.clear()
 		location_selector.add_item("🌊 See")
 		location_selector.add_item("🏙️ Stadt")
+		location_selector.add_item("🏙️ Kanal")
+
 		location_selector.select(0)
 	elif location_selector is Button:
 		print("⚠️ LocationSelector ist ein Button, kein OptionButton")
@@ -100,6 +102,8 @@ func update_stats():
 			title_label.text = "📖 Fischbuch - See"
 		"city":
 			title_label.text = "📖 Fischbuch - Stadt"
+		"sewer":
+			title_label.text = "📖 Fischbuch - Kanal"
 
 func _on_location_changed(index: int):
 	match index:
@@ -107,6 +111,8 @@ func _on_location_changed(index: int):
 			current_location = "lake"
 		1:
 			current_location = "city"
+		2:
+			current_location = "sewer"
 	
 	load_bestiary()
 
