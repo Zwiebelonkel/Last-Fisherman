@@ -49,6 +49,8 @@ func _ready():
 		location_selector.add_item("🌊 See")
 		location_selector.add_item("🏙️ Stadt")
 		location_selector.add_item("🏙️ Kanal")
+		location_selector.add_item("🏙️ Wald")
+
 
 		location_selector.select(0)
 	elif location_selector is Button:
@@ -104,6 +106,8 @@ func update_stats():
 			title_label.text = "📖 Fischbuch - Stadt"
 		"sewer":
 			title_label.text = "📖 Fischbuch - Kanal"
+		"forest":
+			title_label.text = "📖 Fischbuch - Wald"
 
 func _on_location_changed(index: int):
 	match index:
@@ -113,6 +117,8 @@ func _on_location_changed(index: int):
 			current_location = "city"
 		2:
 			current_location = "sewer"
+		3:
+			current_location = "forest"
 	
 	load_bestiary()
 

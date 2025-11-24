@@ -121,9 +121,9 @@ void sky() {
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_cfq0f"]
 shader = SubResource("Shader_kqfxt")
 shader_parameter/use_directional_light = false
-shader_parameter/sun_color = Color(0.0605303, 0.0605303, 0.0605303, 1)
+shader_parameter/sun_color = Color(0.125911, 0.125911, 0.125911, 1)
 shader_parameter/sun_energy = 8.525
-shader_parameter/cloud_color = Color(0, 0, 0, 1)
+shader_parameter/cloud_color = Color(0.151276, 0.151276, 0.151276, 1)
 shader_parameter/cloud_density = 5.0
 shader_parameter/cloud_depth = 2.0
 shader_parameter/cloud_sag = 2.0
@@ -139,13 +139,14 @@ radiance_size = 0
 
 [sub_resource type="Environment" id="Environment_di3lw"]
 background_mode = 2
-background_energy_multiplier = 0.33
+background_energy_multiplier = 0.15
 sky = SubResource("Sky_x537r")
+glow_enabled = true
+glow_strength = 0.98
 fog_light_color = Color(0.808262, 0.429746, 0.296975, 1)
 fog_light_energy = 0.0
 fog_sun_scatter = 1.0
 fog_sky_affect = 0.0
-volumetric_fog_enabled = true
 volumetric_fog_density = 0.0184
 volumetric_fog_albedo = Color(0.812995, 0.875895, 1, 1)
 volumetric_fog_length = 42.44
@@ -157,15 +158,14 @@ script/source = "extends Node3D
 # NODE-REFERENCES
 @export var rod_tip: Node3D
 @export var hook: Node3D
-@export var splash: GPUParticles3D  # 🆕 Splash Particle System
-@export var waterplane: Node3D  # 🆕 Referenz zur Wasseroberfläche
+@export var splash: GPUParticles3D
+@export var waterplane: Node3D
 @export var catch_result_ui: Node
 @export var shop_scene_path: String = \"res://scenes/shop.tscn\"
-@export var rotation_speed: float = 2.0  # Drehgeschwindigkeit
+@export var rotation_speed: float = 2.0
 @export var camera: Camera3D
-@export var fishing_location: String = \"lake\"
+@export var fishing_location: String = \"forest\"
 @export var fishbook_ui: Control
-
 
 @onready var anim: AnimationPlayer = $AnimationPlayer
 @onready var ripple_anim: AnimationPlayer = hook.get_node(\"AnimationPlayer\")
@@ -181,12 +181,8 @@ script/source = "extends Node3D
 @onready var success_sound: AudioStreamPlayer = get_node(\"../../Audio/success\")
 @onready var whoosh_sound: AudioStreamPlayer = get_node(\"../../Audio/whoosh\")
 
-# 🆕 UI für Cast Power (instanzierte Szene)
 @export var cast_power_ui_scene: PackedScene
 var cast_power_ui: Control = null
-
-
-
 
 @export var inventory_ui: Node
 signal line_visible(visible: bool)
@@ -194,7 +190,7 @@ signal line_visible(visible: bool)
 # STATE MACHINE
 enum {
 	STATE_IDLE,
-	STATE_CHARGING,  # 🆕 Wurf wird aufgeladen
+	STATE_CHARGING,
 	STATE_CASTED,
 	STATE_BITE,
 	STATE_MINIGAME,
@@ -203,12 +199,12 @@ enum {
 
 var state: int = STATE_IDLE
 
-# 🆕 Cast Power Variables
+# Cast Power Variables
 var cast_power: float = 0.0
-var cast_power_speed: float = 3  # Wie schnell die Power auflädt
+var cast_power_speed: float = 3
 var max_cast_power: float = 1.0
-var min_distance: float = 2.0  # Minimale Wurfweite
-var max_distance: float = 8.0  # Maximale Wurfweite
+var min_distance: float = 2.0
+var max_distance: float = 8.0
 
 # Minigame Variables
 var marker_pos: float = 0.0
@@ -217,63 +213,87 @@ var marker_slow_factor: float = 0.3
 var input_active: bool = false
 var current_fish: Dictionary = {}
 
-# Rotation Variables
-var current_rotation: float = 180.0  # 180 = Fischen, 90 = Shop
+# 🆕 Erweiterte Rotation Variables (4 Richtungen)
+var current_rotation: float = 180.0  # Start bei Fishing
 var target_rotation: float = 180.0
 var is_rotating: bool = false
+
+# 🆕 Definierte Rotationspositionen
+const ROTATION_FISHING: float = 180.0  # Angelposition
+const ROTATION_SHOP: float = 90.0      # Shop
+const ROTATION_EMPTY_1: float = 0.0    # Leere Position
+const ROTATION_EMPTY_2: float = 270.0  # Leere Position
 
 var hook_start_position: Vector3
 var hook_end_position: Vector3
 
 
-
 func _ready() -> void:
 	anim.play(\"idle\")
 	hook.visible = false
-	splash.visible = false  # 🆕 Splash initial versteckt
-	splash.emitting = false  # 🆕 Partikel-Emission aus
+	splash.visible = false
+	splash.emitting = false
 	ui_bite_indicator.visible = false
 	catch_ui.visible = false
 	
-	# 🆕 Cast Power UI instanzieren
 	if cast_power_ui_scene:
 		cast_power_ui = cast_power_ui_scene.instantiate()
 		add_child(cast_power_ui)
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	# Rotation Eingabe (Arrow Left oder D)
-	if event.is_action_pressed(\"left\") or event.is_action_pressed(\"right\"):
-		handle_rotation_input(event)
+	# 🆕 Rotation in beide Richtungen
+	if event.is_action_pressed(\"left\"):
+		rotate_camera_left()
 		return
-	if event.is_action_pressed(\"cast\") and current_rotation == 90:
-		enter_shop()
+	
+	if event.is_action_pressed(\"right\"):
+		rotate_camera_right()
+		return
+	
 	if event.is_action_pressed(\"map_open\"):
-		Player.update_last_scene(\"res://scenes/MainScene.tscn\")
+		Player.update_last_scene(\"res://scenes/forest.tscn\")
 		get_tree().change_scene_to_file(\"res://scenes/MapScene.tscn\")
+		return
+	
 	if event.is_action_pressed(\"journal\"):
 		toggle_fishbook()
+		return
 
+	# 🆕 Shop betreten bei 90° (VOR der Rotation-Blockade!)
+	if event.is_action_pressed(\"cast\") and abs(current_rotation - ROTATION_SHOP) < 1.0:
+		print(\"DEBUG: Versuche Shop zu betreten, State = \", state)
+		enter_shop()
+		return
 
+	# Keine anderen Eingaben während Rotation
 	if state == STATE_ROTATING:
-		return  # Keine anderen Eingaben während Rotation
+		return
 
+	# Minigame Input
 	if state == STATE_MINIGAME:
 		if event.is_action_pressed(\"cast\"):
 			input_active = true
 		if event.is_action_released(\"cast\"):
 			input_active = false
 
+	# 🆕 Cast-Taste Handling je nach Position
 	if event.is_action_pressed(\"cast\"):
+		print(\"DEBUG: current_rotation = \", current_rotation, \" | camera.rotation.y = \", rad_to_deg(camera.rotation.y))
+		
+		# Angeln nur bei 180°
+		if abs(current_rotation - ROTATION_FISHING) > 1.0:
+			print(\"Angeln nur bei 180° möglich! Aktuelle Rotation: \", current_rotation)
+			return
+		
 		match state:
 			STATE_IDLE:
-				start_charging_cast()  # 🆕 Wurf aufladen starten
+				start_charging_cast()
 			STATE_CASTED, STATE_BITE:
 				reel_pressed()
 			STATE_MINIGAME:
 				pass
 	
-	# 🆕 Cast loslassen
 	if event.is_action_released(\"cast\"):
 		if state == STATE_CHARGING:
 			release_cast()
@@ -283,30 +303,51 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 # ---------------------------------------------------------
-# ROTATION HANDLING
+# 🆕 4-RICHTUNGS ROTATION SYSTEM
 # ---------------------------------------------------------
-func handle_rotation_input(event: InputEvent) -> void:
+func rotate_camera_left() -> void:
 	if is_rotating:
 		return
+	
+	whoosh_sound.play()
+	
+	# Im Uhrzeigersinn: 180 → 270 → 0 → 90 → 180
+	if current_rotation == ROTATION_FISHING:  # 180 → 270
+		target_rotation = ROTATION_EMPTY_2
+	elif current_rotation == ROTATION_EMPTY_2:  # 270 → 0
+		target_rotation = ROTATION_EMPTY_1
+	elif current_rotation == ROTATION_EMPTY_1:  # 0 → 90
+		target_rotation = ROTATION_SHOP
+	elif current_rotation == ROTATION_SHOP:  # 90 → 180
+		target_rotation = ROTATION_FISHING
+	
+	start_rotation()
 
-	if event.is_action_pressed(\"right\"):
-		whoosh_sound.play()
-		# Nach rechts drehen = Shop (90°)
-		target_rotation = 90.0
-	elif event.is_action_pressed(\"left\"):
-		whoosh_sound.play()
-		# Nach links drehen = Fischen (180°)
-		target_rotation = 180.0
 
-	if abs(target_rotation - current_rotation) > 1.0:
-		start_rotation()
+func rotate_camera_right() -> void:
+	if is_rotating:
+		return
+	
+	whoosh_sound.play()
+	
+	# Gegen Uhrzeigersinn: 180 → 90 → 0 → 270 → 180
+	if current_rotation == ROTATION_FISHING:  # 180 → 90
+		target_rotation = ROTATION_SHOP
+	elif current_rotation == ROTATION_SHOP:  # 90 → 0
+		target_rotation = ROTATION_EMPTY_1
+	elif current_rotation == ROTATION_EMPTY_1:  # 0 → 270
+		target_rotation = ROTATION_EMPTY_2
+	elif current_rotation == ROTATION_EMPTY_2:  # 270 → 180
+		target_rotation = ROTATION_FISHING
+	
+	start_rotation()
 
 
 func start_rotation() -> void:
 	state = STATE_ROTATING
 	is_rotating = true
 	
-	# Stoppe Fisch-Aktivitäten
+	# Fisch-Aktivitäten stoppen
 	if state == STATE_MINIGAME:
 		catch_ui.visible = false
 
@@ -317,16 +358,34 @@ func _process(delta: float) -> void:
 	elif state == STATE_MINIGAME:
 		update_catch_minigame(delta)
 	elif state == STATE_CHARGING:
-		update_cast_power(delta)  # 🆕 Wurfkraft aktualisieren
+		update_cast_power(delta)
 
 
 func update_rotation(delta: float) -> void:
 	var rotation_step = rotation_speed * delta
-
-	if target_rotation > current_rotation:
-		current_rotation = min(current_rotation + rotation_step, target_rotation)
+	
+	# 🆕 Normalisiere die Rotation für 360° Wrap-Around
+	var diff = target_rotation - current_rotation
+	
+	# Wenn Differenz > 180°, gehe in die andere Richtung
+	if diff > 180.0:
+		diff -= 360.0
+	elif diff < -180.0:
+		diff += 360.0
+	
+	# Bewege in die richtige Richtung
+	if abs(diff) < rotation_step:
+		current_rotation = target_rotation
+	elif diff > 0:
+		current_rotation += rotation_step
 	else:
-		current_rotation = max(current_rotation - rotation_step, target_rotation)
+		current_rotation -= rotation_step
+	
+	# Normalisiere current_rotation auf 0-360
+	if current_rotation >= 360.0:
+		current_rotation -= 360.0
+	elif current_rotation < 0.0:
+		current_rotation += 360.0
 
 	if camera:
 		camera.rotation.y = deg_to_rad(current_rotation)
@@ -336,26 +395,23 @@ func update_rotation(delta: float) -> void:
 		current_rotation = target_rotation
 		is_rotating = false
 		
-		# 💥 FIX: Inputs wieder freigeben
-		if target_rotation == 180.0:
-			state = STATE_IDLE
+		# 🆕 State basierend auf Position setzen
+		if current_rotation == ROTATION_FISHING:
+			state = STATE_IDLE  # Fischen erlaubt
 		else:
-			state = STATE_ROTATING  # Shop-Modus
+			state = STATE_ROTATING  # Keine Aktionen außer Drehen
+
 
 func enter_shop() -> void:
 	print(\"Betrete Shop!\")
-	# Optional: Fade-Out Animation
-	#await get_tree().create_timer(0.3).timeout
-	Player.update_last_scene(\"res://scenes/MainScene.tscn\")
+	Player.update_last_scene(\"res://scenes/forest.tscn\")
 	get_tree().change_scene_to_file(\"res://scenes/shop_inside.tscn\")
-
 
 
 # ---------------------------------------------------------
 # CAST CHARGING SYSTEM
 # ---------------------------------------------------------
 func start_charging_cast() -> void:
-	#anim.play(\"power\")
 	print(\"CHARGING CAST\")
 	state = STATE_CHARGING
 	cast_power = 0.0
@@ -365,12 +421,11 @@ func start_charging_cast() -> void:
 
 
 func update_cast_power(delta: float) -> void:
-	# Ping-Pong Effekt: Power geht hoch und runter
 	cast_power += cast_power_speed * delta
 	
 	if cast_power > max_cast_power:
 		cast_power = max_cast_power
-		cast_power_speed *= -1.0  # Richtung umkehren
+		cast_power_speed *= -1.0
 	elif cast_power < 0.0:
 		cast_power = 0.0
 		cast_power_speed *= -1.0
@@ -383,8 +438,7 @@ func release_cast() -> void:
 	if cast_power_ui and cast_power_ui.has_method(\"hide_power\"):
 		cast_power_ui.hide_power()
 	
-	# Je näher an 1.0 (100%), desto weiter der Wurf
-	var power_quality = 1.0 - abs(cast_power - 1.0)  # 1.0 = perfekt, 0.0 = schwach
+	var power_quality = 1.0 - abs(cast_power - 1.0)
 	
 	print(\"Cast released with power: \", power_quality)
 	cast_line(power_quality)
@@ -393,7 +447,7 @@ func release_cast() -> void:
 # ---------------------------------------------------------
 # CAST
 # ---------------------------------------------------------
-func cast_line(power: float = 1.0) -> void:  # 🆕 Power Parameter
+func cast_line(power: float = 1.0) -> void:
 	print(\"CAST with power: \", power)
 	cast_sound.play()
 	state = STATE_CASTED
@@ -404,12 +458,9 @@ func cast_line(power: float = 1.0) -> void:  # 🆕 Power Parameter
 	await anim.animation_finished
 
 	var x = randf_range(-2.0, 2.0)
-	
-	# 🆕 Z-Distanz basiert auf Wurfkraft
 	var distance = lerp(min_distance, max_distance, power)
 	var z = distance
 	
-	# 🆕 Y-Position von Waterplane übernehmen
 	var water_height = 0.05
 	if waterplane:
 		water_height = waterplane.global_position.y
@@ -419,12 +470,10 @@ func cast_line(power: float = 1.0) -> void:  # 🆕 Power Parameter
 	hook_start_position = hook.global_position
 	hook_end_position = rod_tip.global_position
 
-
-	# 🆕 Splash an gleicher Position wie Hook
 	splash.position = Vector3(x, water_height, z)
 	splash.visible = true
 	splash.emitting = true
-	splash.restart()  # Partikel-System neu starten
+	splash.restart()
 
 	ripple_anim.play(\"ripple\")
 	anim.play(\"idle\")
@@ -454,8 +503,8 @@ func reset_line() -> void:
 	await anim.animation_finished
 
 	hook.visible = false
-	splash.visible = false  # 🆕 Splash verstecken
-	splash.emitting = false  # 🆕 Emission stoppen
+	splash.visible = false
+	splash.emitting = false
 	ui_bite_indicator.visible = false
 	anim.play(\"idle\")
 	emit_signal(\"line_visible\", false)
@@ -466,7 +515,6 @@ func reset_line() -> void:
 # ---------------------------------------------------------
 func start_bite_timer() -> void:
 	var wait_time := randf_range(5, 20)
-	# 🔥 UPGRADE: \"Line\" beeinflusst Biss-Geschwindigkeit
 	var modifier := 1.0 + (Player.upgrade_line - 1) * 0.35
 	wait_time /= modifier
 	print(\"Bite Timer gestartet: \", wait_time, \"s\")
@@ -479,23 +527,19 @@ func start_bite_timer() -> void:
 	print(\"BITE READY!\")
 	state = STATE_BITE
 	show_bite_indicator()
-	start_bite_window()   # 🔥 NEU
-	
-# ---------------------------------------------------------
-# BITE WINDOW (Spieler muss schnell reagieren)
-# ---------------------------------------------------------
+	start_bite_window()
+
+
 func start_bite_window() -> void:
-	var max_reaction_time := 2.0   # ⏱ 2 Sekunden Zeit zu reagieren
+	var max_reaction_time := 2.0
 
 	await get_tree().create_timer(max_reaction_time).timeout
 
-	# Wenn in der Zeit der Spieler NICHT gedrückt hat:
 	if state == STATE_BITE:
 		print(\"Zu langsam! Fisch hat wieder losgelassen.\")
 		ui_bite_indicator.visible = false
-		state = STATE_CASTED   # zurück zur Angel im Wasser
-		start_bite_timer()      # Timer nochmal starten
-
+		state = STATE_CASTED
+		start_bite_timer()
 
 
 func show_bite_indicator() -> void:
@@ -521,10 +565,9 @@ func start_catch_minigame() -> void:
 	anim.play(\"fight\")
 	camera.start_screenshake(0.1,1)
 
-	# 🆕 Splash-Effekt während des Kampfes (optional stärker)
 	splash.emitting = true
 
-	current_fish = FishDB.get_random_from_list(FishDB.FISH_LAKE, Player.upgrade_bait)
+	current_fish = FishDB.get_random_from_list(FishDB.FISH_FOREST, Player.upgrade_bait)
 	var difficulty = FishDB.get_fish_difficulty(current_fish)
 	marker_speed = FishDB.get_marker_speed_for_fish(current_fish)
 	
@@ -564,9 +607,12 @@ func update_catch_minigame(delta: float) -> void:
 	if in_spot:
 		var grip_multiplier := 1.0 + (Player.upgrade_grip - 1) * 0.05
 		catch_progress.value += 40.0 * grip_multiplier * delta
-		splash.restart()
+		
+		# 🆕 Splash-Effekt nur wenn nicht bereits aktiv
+		if not splash.emitting:
+			trigger_splash_burst()
+		
 		camera.start_screenshake(0.03,0.2)
-
 	else:
 		catch_progress.value = max(0.0, catch_progress.value - 25.0 * delta)
 
@@ -589,25 +635,38 @@ func end_catch_minigame(success: bool) -> void:
 
 		print(\"Erfolgreich gefangen: \", fish[\"name\"])
 		Player.save_game()
-
 	else:
 		print(\"Fisch entwischt! (\", current_fish[\"name\"], \")\")
 
 	catch_ui.visible = false
 	await reset_line()
-	
+
+
 func toggle_fishbook():
 	if state == STATE_MINIGAME or state == STATE_BITE:
-		return  # während des Fang-Minispiels deaktiviert
+		return
 	fishbook_ui.visible = not fishbook_ui.visible
 
-   # Wenn Journal offen → Angel stoppen
 	if fishbook_ui.visible:
 		state = STATE_IDLE
 		ui_bite_indicator.visible = false
 		hook.visible = false
-		splash.visible = false  # 🆕 Splash auch verstecken
-		splash.emitting = false  # 🆕 Emission stoppen
+		splash.visible = false
+		splash.emitting = false
+
+
+# 🆕 Splash Burst Funktion für zuverlässige Partikel-Emission
+func trigger_splash_burst() -> void:
+	if not splash:
+		return
+	
+	splash.emitting = true
+	
+	# Kurzer Burst, dann automatisch stoppen
+	await get_tree().create_timer(0.15).timeout
+	
+	if splash and state == STATE_MINIGAME:
+		splash.emitting = false
 "
 
 [sub_resource type="Shader" id="Shader_muv0v"]
@@ -1268,7 +1327,7 @@ waterplane = NodePath("../../WaterPlane")
 catch_result_ui = NodePath("../../UI/CatchResultUI")
 rotation_speed = 300.0
 camera = NodePath("..")
-fishing_location = "lake"
+fishing_location = "forest"
 fishbook_ui = NodePath("../../UI/FishBook")
 cast_power_ui_scene = ExtResource("8_u01n2")
 inventory_ui = NodePath("../../UI/InventoryUI")
@@ -1295,14 +1354,14 @@ libraries = {
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.931818, 0.362926, 0, -0.362926, 0.931818, -1.07784, 37.4465, 160.116)
 light_color = Color(0.616389, 0.890253, 1, 1)
-light_energy = 5.495
+light_energy = 9.277
 light_indirect_energy = 5.041
-light_volumetric_fog_energy = 0.485
-light_angular_distance = 9.1
+light_volumetric_fog_energy = 0.0
+light_angular_distance = 9.92
 light_specular = 0.676
 shadow_enabled = true
-directional_shadow_split_1 = 0.079
-directional_shadow_split_2 = 0.352
+directional_shadow_split_1 = 0.67
+directional_shadow_split_2 = 0.561
 directional_shadow_split_3 = 0.268
 directional_shadow_fade_start = 0.507
 directional_shadow_max_distance = 83.4
@@ -1317,7 +1376,7 @@ hook = NodePath("../Hook")
 fishing_script = NodePath("../PlayerCamera/FishingRod")
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
-transform = Transform3D(26.165, 0, 0, 0, 26.165, 0, 0, 0, 26.165, -7.91366, 54.587, 228.721)
+transform = Transform3D(26.165, 0, 0, 0, 26.165, 0, 0, 0, 26.165, -1.11962, 33.4443, 101.832)
 mesh = SubResource("SphereMesh_08o8g")
 
 [node name="tree3" parent="." instance=ExtResource("15_lr7uy")]
@@ -1355,4 +1414,17 @@ autoplay = true
 [node name="lake" parent="." instance=ExtResource("24_jyv4r")]
 transform = Transform3D(-6.62228e-08, 0, -1.515, 0, 1.515, 0, 1.515, 0, -6.62228e-08, 0.449, 0.358, 21.9631)
 
+[node name="tree" parent="lake/Tree" index="243" instance=ExtResource("15_lr7uy")]
+transform = Transform3D(-1.07836e-07, 0, 2.467, 0, 2.467, 0, -2.467, 0, -1.07836e-07, 20.6338, -0.566296, 3.76118)
+
+[node name="tree4" parent="lake/Tree" index="244" instance=ExtResource("15_lr7uy")]
+transform = Transform3D(-1.07836e-07, 0, 2.467, 0, 2.467, 0, -2.467, 0, -1.07836e-07, 20.6338, -0.566296, 18.7489)
+
+[node name="tree2" parent="lake/Tree" index="245" instance=ExtResource("15_lr7uy")]
+transform = Transform3D(-1.7979, 0, 2.6375, 0, 3.192, 0, -2.6375, 0, -1.7979, 17.0565, -0.566296, -3.14902)
+
+[node name="tree3" parent="lake/Tree" index="246" instance=ExtResource("15_lr7uy")]
+transform = Transform3D(-1.7979, 0, 2.6375, 0, 3.192, 0, -2.6375, 0, -1.7979, -6.81108, -5.36572, 20.2761)
+
 [editable path="PlayerCamera/FishingRod"]
+[editable path="lake"]

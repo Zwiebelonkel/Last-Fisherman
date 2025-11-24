@@ -13,7 +13,8 @@ func _init():
 	LOCATION_FISH = {
 		"lake": FishDB.FISH_LAKE,
 		"city": FishDB.FISH_CITY,
-		"sewer": FishDB.FISH_SEWER
+		"sewer": FishDB.FISH_SEWER,
+		"forest": FishDB.FISH_FOREST
 
 	}
 

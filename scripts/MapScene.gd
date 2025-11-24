@@ -2,6 +2,8 @@ extends Control
 @onready var lake_btn = $layout/Locations/BeachButton
 @onready var city_btn = $layout/Locations/CityButton
 @onready var sewer_btn = $layout/Locations/SewerButton
+@onready var forest_btn = $layout/Locations/ForestButton
+
 
 @onready var popup = $layout/Popup
 @onready var popup_title = $layout/Popup/Title
@@ -17,6 +19,8 @@ func _ready():
 	assign_button(lake_btn, "lake")
 	assign_button(city_btn, "city")
 	assign_button(sewer_btn, "sewer")
+	assign_button(forest_btn, "forest")
+
 
 	popup.visible = false
 	popup_close_btn.pressed.connect(hide_popup)
@@ -84,6 +88,7 @@ func buy_spot(spot_name: String):
 	assign_button(lake_btn, "lake")
 	assign_button(city_btn, "city")
 	assign_button(sewer_btn, "sewer")
+	assign_button(forest_btn, "forest")
 
 
 func go_to_spot(spot_name: String):
@@ -98,6 +103,9 @@ func go_to_spot(spot_name: String):
 		"sewer":
 			Player.update_last_scene("res://scenes/sewer.tscn")
 			get_tree().change_scene_to_file("res://scenes/sewer.tscn")
+		"forest":
+			Player.update_last_scene("res://scenes/forest.tscn")
+			get_tree().change_scene_to_file("res://scenes/forest.tscn")
 
 # Helferfunktion zum sicheren Trennen der Signale
 func _disconnect_all(btn: Button):
