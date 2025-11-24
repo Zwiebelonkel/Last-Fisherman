@@ -1062,7 +1062,7 @@ shader = ExtResource("15_xp0e5")
 shader_parameter/color = Color(0, 0, 0, 1)
 shader_parameter/thickness = 0.05
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_c6dvc"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a7pbh"]
 next_pass = SubResource("ShaderMaterial_8wjpf")
 transparency = 1
 albedo_color = Color(1, 1, 1, 0.227451)
@@ -1070,7 +1070,7 @@ emission_enabled = true
 emission = Color(0.483338, 0.649368, 1, 1)
 
 [sub_resource type="QuadMesh" id="QuadMesh_611at"]
-material = SubResource("StandardMaterial3D_c6dvc")
+material = SubResource("StandardMaterial3D_a7pbh")
 
 [sub_resource type="Animation" id="Animation_ygjfp"]
 length = 0.001
@@ -1129,11 +1129,11 @@ shader = ExtResource("15_xp0e5")
 shader_parameter/color = Color(0, 0, 0, 1)
 shader_parameter/thickness = 0.01
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8wjpf"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ye0jt"]
 next_pass = SubResource("ShaderMaterial_0ehpd")
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_pjux3"]
-material = SubResource("StandardMaterial3D_8wjpf")
+material = SubResource("StandardMaterial3D_ye0jt")
 top_radius = 0.01
 bottom_radius = 0.01
 
