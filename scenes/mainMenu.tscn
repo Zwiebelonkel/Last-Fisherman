@@ -1,7 +1,8 @@
-[gd_scene load_steps=27 format=3 uid="uid://bw5el7n36awdr"]
+[gd_scene load_steps=29 format=3 uid="uid://bw5el7n36awdr"]
 
 [ext_resource type="Script" uid="uid://cslkhtib5limu" path="res://scripts/mainMenu.gd" id="1_tov5d"]
 [ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="3_jfr2g"]
+[ext_resource type="PackedScene" uid="uid://b08obrprd472u" path="res://scenes/OptionsControl.tscn" id="3_tov5d"]
 [ext_resource type="Shader" uid="uid://b8mxoacu7poqc" path="res://shader/sky.gdshader" id="7_ewahu"]
 [ext_resource type="Shader" uid="uid://c37jx2ebwp1a3" path="res://shader/shader_water.gdshader" id="10_tlicg"]
 [ext_resource type="Texture2D" uid="uid://cvllk03mhtybp" path="res://textures/723-normal.jpg" id="11_808lr"]
@@ -43,6 +44,9 @@ default_font_size = 23
 [sub_resource type="Theme" id="Theme_epn8x"]
 default_font = ExtResource("3_jfr2g")
 default_font_size = 23
+
+[sub_resource type="Theme" id="Theme_vt84v"]
+default_font = ExtResource("3_jfr2g")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_cfq0f"]
 shader = ExtResource("7_ewahu")
@@ -159,8 +163,9 @@ emission_energy_multiplier = 16.0
 [sub_resource type="SphereMesh" id="SphereMesh_08o8g"]
 material = SubResource("StandardMaterial3D_kp0ql")
 
-[node name="MainScene" type="Node3D"]
+[node name="MainScene" type="Node3D" node_paths=PackedStringArray("options")]
 script = ExtResource("1_tov5d")
+options = NodePath("UI/OptionsControl")
 
 [node name="Filter" type="CanvasLayer" parent="."]
 layer = 0
@@ -191,7 +196,7 @@ grow_vertical = 2
 theme = SubResource("Theme_6b2wv")
 text = "LAST FISHERMAN"
 
-[node name="Button" type="Button" parent="UI"]
+[node name="Start" type="Button" parent="UI"]
 anchors_preset = 14
 anchor_top = 0.5
 anchor_right = 1.0
@@ -227,7 +232,39 @@ offset_left = -105.0
 offset_top = -31.0
 grow_horizontal = 0
 grow_vertical = 0
+theme = SubResource("Theme_vt84v")
 text = "RESET GAME"
+
+[node name="Quit" type="Button" parent="UI"]
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = 184.0
+offset_bottom = 213.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme = SubResource("Theme_tov5d")
+text = "Quit"
+
+[node name="OptionsControl" parent="UI" instance=ExtResource("3_tov5d")]
+visible = false
+
+[node name="Back" parent="UI/OptionsControl/Panel" index="0"]
+visible = false
+text = "Back"
+
+[node name="Settings" type="Button" parent="UI"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -70.0
+offset_bottom = 31.0
+grow_horizontal = 0
+theme = SubResource("Theme_vt84v")
+text = "Settings"
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_cfq0f")
@@ -281,7 +318,10 @@ stream = ExtResource("11_tov5d")
 autoplay = true
 bus = &"Music"
 
-[connection signal="pressed" from="UI/Button" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="UI/Start" to="." method="_on_button_pressed"]
 [connection signal="pressed" from="UI/ResetButton" to="." method="_on_reset_button_pressed"]
+[connection signal="pressed" from="UI/Quit" to="." method="_on_quit_pressed"]
+[connection signal="pressed" from="UI/Settings" to="." method="_on_settings_pressed"]
 
+[editable path="UI/OptionsControl"]
 [editable path="FishingRod"]
