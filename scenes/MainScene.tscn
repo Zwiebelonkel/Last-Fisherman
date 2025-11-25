@@ -1,4 +1,4 @@
-[gd_scene load_steps=59 format=3 uid="uid://cx2sffjjdjuw5"]
+[gd_scene load_steps=57 format=3 uid="uid://cx2sffjjdjuw5"]
 
 [ext_resource type="Shader" uid="uid://dmg556n5nwodi" path="res://shader/pixelate.gdshader" id="1_1ns3k"]
 [ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="1_2phbr"]
@@ -1243,12 +1243,6 @@ emission_energy_multiplier = 16.0
 [sub_resource type="SphereMesh" id="SphereMesh_08o8g"]
 material = SubResource("StandardMaterial3D_kp0ql")
 
-[sub_resource type="PrismMesh" id="PrismMesh_8wjpf"]
-left_to_right = 1.0
-size = Vector3(5.1, 1.185, 100)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_25dfr"]
-
 [node name="MainScene" type="Node3D"]
 
 [node name="Filter" type="CanvasLayer" parent="."]
@@ -1466,11 +1460,6 @@ transform = Transform3D(-3.12536e-08, 0, 0.715, 0, 0.715, 0, -0.715, 0, -3.12536
 
 [node name="hillybilly" parent="." instance=ExtResource("16_xnxdc")]
 transform = Transform3D(-0.190341, 0, 1.51307, 0, 1.525, 0, -1.51307, 0, -0.190341, -3.27164, -0.424028, 0.672108)
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-transform = Transform3D(-4.37114e-08, 4.84175e-16, 1, 0.135335, 0.9908, 5.91569e-09, -0.9908, 0.135335, -4.33092e-08, 1.66543, -0.324611, 2.63534)
-mesh = SubResource("PrismMesh_8wjpf")
-surface_material_override/0 = SubResource("StandardMaterial3D_25dfr")
 
 [node name="Audio" type="Node" parent="."]
 
