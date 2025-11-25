@@ -11,6 +11,8 @@ config_version=5
 [application]
 
 config/name="Last Fisherman"
+config/description="Catastrophic fishing simulator"
+config/version="1.0"
 run/main_scene="uid://bw5el7n36awdr"
 config/features=PackedStringArray("4.4", "Mobile")
 config/icon="uid://b25ona2mrq6va"

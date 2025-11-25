@@ -1,4 +1,4 @@
-[gd_scene load_steps=55 format=3 uid="uid://cx2sffjjdjuw5"]
+[gd_scene load_steps=56 format=3 uid="uid://cx2sffjjdjuw5"]
 
 [ext_resource type="Shader" uid="uid://dmg556n5nwodi" path="res://shader/pixelate.gdshader" id="1_1ns3k"]
 [ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="1_2phbr"]
@@ -11,6 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://be7bs5po2ukhi" path="res://scenes/FishBook.tscn" id="7_a7pbh"]
 [ext_resource type="Texture2D" uid="uid://d31603nl8y0gd" path="res://textures/Water_preview.jpgC878A51E-2B84-45CA-85CB-75E5BC88EEC8Large.jpg" id="7_cfq0f"]
 [ext_resource type="PackedScene" uid="uid://b08obrprd472u" path="res://scenes/OptionsControl.tscn" id="9_ye0jt"]
+[ext_resource type="PackedScene" uid="uid://ckje0fw3pep83" path="res://assets/skyscaper.glb" id="10_7wwop"]
 [ext_resource type="Script" uid="uid://bymrcyid32xsp" path="res://scripts/line.gd" id="10_pjux3"]
 [ext_resource type="PackedScene" uid="uid://je70iqlm248a" path="res://scenes/CastPowerUI.tscn" id="11_7wwop"]
 [ext_resource type="PackedScene" uid="uid://dxxrhs12x2m2c" path="res://scenes/InventoryUI.tscn" id="11_pjux3"]
@@ -1355,6 +1356,24 @@ visible = false
 
 [node name="OptionsControl" parent="UI" instance=ExtResource("9_ye0jt")]
 visible = false
+
+[node name="skyscaper" parent="UI" instance=ExtResource("10_7wwop")]
+transform = Transform3D(0.307902, 0, 0.186538, 0, 0.36, 0, -0.186538, 0, 0.307902, 41.717, 6.24582, 38.3284)
+
+[node name="skyscaper2" parent="UI" instance=ExtResource("10_7wwop")]
+transform = Transform3D(0.307902, 0, 0.186538, 0, 0.36, 0, -0.186538, 0, 0.307902, 46.7262, 6.24582, 35.5814)
+
+[node name="skyscaper3" parent="UI" instance=ExtResource("10_7wwop")]
+transform = Transform3D(0.461853, 0, 0.279807, 0, 0.54, 0, -0.279807, 0, 0.461853, 51.2507, 9.08063, 40.429)
+
+[node name="skyscaper4" parent="UI" instance=ExtResource("10_7wwop")]
+transform = Transform3D(-0.260732, 0, 0.248231, 0, 0.36, 0, -0.248231, 0, -0.260732, 34.359, 6.24582, 5.22791)
+
+[node name="skyscaper5" parent="UI" instance=ExtResource("10_7wwop")]
+transform = Transform3D(-0.260732, 0, 0.248231, 0, 0.36, 0, -0.248231, 0, -0.260732, 30.3949, 6.24582, 1.11404)
+
+[node name="skyscaper6" parent="UI" instance=ExtResource("10_7wwop")]
+transform = Transform3D(-0.391098, 0, 0.372347, 0, 0.54, 0, -0.372347, 0, -0.391098, 33.8869, 9.08063, -4.52298)
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_cfq0f")
