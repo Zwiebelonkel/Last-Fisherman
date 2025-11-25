@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://be7bs5po2ukhi"]
+[gd_scene load_steps=5 format=3 uid="uid://be7bs5po2ukhi"]
 
 [ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="1_h6whl"]
 [ext_resource type="Script" uid="uid://jxikjspekvvp" path="res://scripts/FishBookUI.gd" id="1_mijii"]
+[ext_resource type="StyleBox" uid="uid://c8rkdsvu78m67" path="res://materials/PanelCustom.tres" id="3_a2f2e"]
 
 [sub_resource type="Theme" id="Theme_a2f2e"]
 default_font = ExtResource("1_h6whl")
@@ -28,6 +29,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_styles/panel = ExtResource("3_a2f2e")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 1
@@ -74,4 +76,4 @@ custom_minimum_size = Vector2(600, 0)
 layout_mode = 2
 size_flags_horizontal = 6
 size_flags_vertical = 3
-columns = 8
+columns = 4

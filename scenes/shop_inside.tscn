@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://dme4l6a6jg0g6"]
+[gd_scene load_steps=18 format=3 uid="uid://dme4l6a6jg0g6"]
 
 [ext_resource type="PackedScene" uid="uid://b5ew1rfc8ow8g" path="res://scenes/fishingRod.tscn" id="1_3qbwi"]
 [ext_resource type="Script" uid="uid://cl5fc0glwmnhs" path="res://scripts/UpgradeShop.gd" id="1_i2sg0"]
@@ -106,6 +106,16 @@ _data = {
 &"idle": SubResource("Animation_3qbwi")
 }
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pmnnn"]
+bg_color = Color(0.133196, 0.133196, 0.133196, 0.709804)
+border_color = Color(0.650128, 0.650128, 0.650128, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+shadow_color = Color(0, 0, 0, 0.172549)
+shadow_size = 15
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ltjmg"]
 albedo_color = Color(0.273803, 0.0859764, 0.039961, 1)
 metallic_specular = 1.0
@@ -169,39 +179,34 @@ offset_bottom = 203.5
 grow_horizontal = 0
 grow_vertical = 2
 theme = SubResource("Theme_pmnnn")
+theme_override_styles/panel = SubResource("StyleBoxFlat_pmnnn")
 
-[node name="GripButton" type="Button" parent="UI/Panel"]
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/Panel"]
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
-offset_bottom = 31.0
+offset_bottom = 385.0
 grow_horizontal = 2
+theme_override_constants/separation = 50
+
+[node name="GripButton" type="Button" parent="UI/Panel/VBoxContainer"]
+layout_mode = 2
+tooltip_text = "Increases fishing progress in sweetspot"
+tooltip_auto_translate_mode = 1
 theme = SubResource("Theme_pmnnn")
 text = "Grip"
 
-[node name="BaitButton" type="Button" parent="UI/Panel"]
-layout_mode = 1
-anchors_preset = 14
-anchor_top = 0.5
-anchor_right = 1.0
-anchor_bottom = 0.5
-offset_top = -66.0
-offset_bottom = -35.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="BaitButton" type="Button" parent="UI/Panel/VBoxContainer"]
+layout_mode = 2
+tooltip_text = "Increases chance of fishing rare items"
+tooltip_auto_translate_mode = 1
 theme = SubResource("Theme_pmnnn")
 text = "Bait"
 
-[node name="LineButton" type="Button" parent="UI/Panel"]
-layout_mode = 1
-anchors_preset = 12
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = -322.5
-offset_bottom = -291.5
-grow_horizontal = 2
-grow_vertical = 0
+[node name="LineButton" type="Button" parent="UI/Panel/VBoxContainer"]
+layout_mode = 2
+tooltip_text = "Reduces waiting time"
+tooltip_auto_translate_mode = 1
 theme = SubResource("Theme_pmnnn")
 text = "Line"
 
@@ -285,9 +290,9 @@ light_volumetric_fog_energy = 0.0
 omni_range = 0.046
 omni_attenuation = 3.185
 
-[connection signal="pressed" from="UI/Panel/GripButton" to="." method="_on_GripButton_pressed"]
-[connection signal="pressed" from="UI/Panel/BaitButton" to="." method="_on_BaitButton_pressed"]
-[connection signal="pressed" from="UI/Panel/LineButton" to="." method="_on_LineButton_pressed"]
+[connection signal="pressed" from="UI/Panel/VBoxContainer/GripButton" to="." method="_on_GripButton_pressed"]
+[connection signal="pressed" from="UI/Panel/VBoxContainer/BaitButton" to="." method="_on_BaitButton_pressed"]
+[connection signal="pressed" from="UI/Panel/VBoxContainer/LineButton" to="." method="_on_LineButton_pressed"]
 [connection signal="pressed" from="UI/Panel/BackButton" to="." method="_on_BackButton_pressed"]
 
 [editable path="hillybilly"]

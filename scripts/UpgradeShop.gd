@@ -1,7 +1,7 @@
 extends Node3D
-@onready var grip_button: Button = $UI/Panel/GripButton
-@onready var bait_button: Button = $UI/Panel/BaitButton
-@onready var line_button: Button = $UI/Panel/LineButton
+@onready var grip_button: Button = $UI/Panel/VBoxContainer/GripButton
+@onready var bait_button: Button = $UI/Panel/VBoxContainer/BaitButton
+@onready var line_button: Button = $UI/Panel/VBoxContainer/LineButton
 @onready var money_label: Label = $UI/MoneyLabel
 @onready var rod_preview: Node3D = $RodPreview
 @onready var music: AudioStreamPlayer = $Audio/music

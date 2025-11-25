@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://dxxrhs12x2m2c"]
+[gd_scene load_steps=3 format=3 uid="uid://dxxrhs12x2m2c"]
 
 [ext_resource type="Script" uid="uid://d3iohn7q1clid" path="res://scripts/InventoryUI.gd" id="1_wqexf"]
+[ext_resource type="StyleBox" uid="uid://c8rkdsvu78m67" path="res://materials/PanelCustom.tres" id="2_ju2k0"]
 
 [node name="InventoryUI" type="Control"]
 layout_mode = 3
@@ -24,14 +25,22 @@ offset_right = 443.0
 offset_bottom = 222.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_styles/panel = ExtResource("2_ju2k0")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer"]
 layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_top = 5
 
 [node name="Label" type="Label" parent="PanelContainer/VBoxContainer"]
 layout_mode = 2
 text = "Titel"
 horizontal_alignment = 1
+
+[node name="HSeparator2" type="HSeparator" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
 
 [node name="ScrollContainer" type="ScrollContainer" parent="PanelContainer/VBoxContainer"]
 layout_mode = 2

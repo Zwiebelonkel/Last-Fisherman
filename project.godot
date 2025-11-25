@@ -15,7 +15,9 @@ config/description="Catastrophic fishing simulator"
 config/version="1.0"
 run/main_scene="uid://bw5el7n36awdr"
 config/features=PackedStringArray("4.4", "Mobile")
-config/icon="uid://b25ona2mrq6va"
+boot_splash/image="uid://duvvsfsrxg6uw"
+config/icon="uid://duvvsfsrxg6uw"
+config/windows_native_icon="res://assets/logo.ico"
 
 [autoload]
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://b08obrprd472u"]
+[gd_scene load_steps=8 format=3 uid="uid://b08obrprd472u"]
 
 [ext_resource type="Script" uid="uid://cm8ti46pvtir5" path="res://scripts/options.gd" id="1_cfnh7"]
 [ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="2_5683i"]
@@ -8,6 +8,15 @@
 
 [sub_resource type="Theme" id="Theme_tkc0w"]
 default_font = ExtResource("2_5683i")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5683i"]
+bg_color = Color(0.133196, 0.133196, 0.133196, 0.709804)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+shadow_color = Color(0, 0, 0, 0.172549)
+shadow_size = 15
 
 [node name="OptionsControl" type="Control"]
 layout_mode = 3
@@ -40,6 +49,7 @@ offset_bottom = 105.5
 grow_horizontal = 2
 grow_vertical = 2
 theme = SubResource("Theme_tkc0w")
+theme_override_styles/panel = SubResource("StyleBoxFlat_5683i")
 
 [node name="Back" type="Button" parent="Panel"]
 layout_mode = 1
