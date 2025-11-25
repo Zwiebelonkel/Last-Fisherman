@@ -1,4 +1,4 @@
-[gd_scene load_steps=53 format=3 uid="uid://cvkrlt4ri1i2u"]
+[gd_scene load_steps=56 format=3 uid="uid://cvkrlt4ri1i2u"]
 
 [ext_resource type="Shader" uid="uid://dmg556n5nwodi" path="res://shader/pixelate.gdshader" id="1_f7b0s"]
 [ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="2_ikoiv"]
@@ -28,6 +28,7 @@
 [ext_resource type="AudioStream" uid="uid://cmr6cded4l11v" path="res://sounds/whoosh.mp3" id="23_h3250"]
 [ext_resource type="AudioStream" uid="uid://djac3dtda2yhn" path="res://sounds/city.mp3" id="24_my70f"]
 [ext_resource type="PackedScene" uid="uid://dguwyn5rc7uog" path="res://scenes/splash.tscn" id="25_kg0fi"]
+[ext_resource type="PackedScene" uid="uid://bw4vof4oddwco" path="res://assets/ödland.glb" id="29_86b61"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1wiy7"]
 shader = ExtResource("1_f7b0s")
@@ -1161,6 +1162,12 @@ emission_enabled = true
 emission = Color(1, 0, 0, 1)
 emission_energy_multiplier = 15.74
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_86b61"]
+albedo_color = Color(0.194349, 0.194349, 0.194349, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nmpot"]
+albedo_color = Color(0.180005, 0.180005, 0.180005, 1)
+
 [node name="MainScene" type="Node3D"]
 
 [node name="Filter" type="CanvasLayer" parent="."]
@@ -1487,9 +1494,23 @@ bus = &"Music"
 
 [node name="Splash" parent="." instance=ExtResource("25_kg0fi")]
 
+[node name="ödland" parent="." instance=ExtResource("29_86b61")]
+transform = Transform3D(1, 0, 0, 0, 1.765, 0, 0, 0, 0.475, -14.9951, 5.05564, -85.7626)
+
+[node name="Plane" parent="ödland" index="0"]
+surface_material_override/0 = SubResource("StandardMaterial3D_86b61")
+
+[node name="ödland2" parent="." instance=ExtResource("29_86b61")]
+transform = Transform3D(-0.0550024, 0, 0.474281, 0, 1.765, 0, -0.998486, 0, -0.0261261, 179.55, 4.99006, 5.19084)
+
+[node name="Plane" parent="ödland2" index="0"]
+surface_material_override/0 = SubResource("StandardMaterial3D_nmpot")
+
 [editable path="PlayerCamera/FishingRod"]
 [editable path="hillybilly"]
 [editable path="hotel"]
 [editable path="hotel3"]
 [editable path="hotel4"]
 [editable path="hotel5"]
+[editable path="ödland"]
+[editable path="ödland2"]
