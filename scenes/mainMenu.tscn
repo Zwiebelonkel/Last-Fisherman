@@ -1,9 +1,11 @@
-[gd_scene load_steps=29 format=3 uid="uid://bw5el7n36awdr"]
+[gd_scene load_steps=30 format=3 uid="uid://bw5el7n36awdr"]
 
 [ext_resource type="Script" uid="uid://cslkhtib5limu" path="res://scripts/mainMenu.gd" id="1_tov5d"]
+[ext_resource type="Shader" uid="uid://dmg556n5nwodi" path="res://shader/pixelate.gdshader" id="2_vt84v"]
 [ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="3_jfr2g"]
 [ext_resource type="PackedScene" uid="uid://b08obrprd472u" path="res://scenes/OptionsControl.tscn" id="3_tov5d"]
 [ext_resource type="Shader" uid="uid://b8mxoacu7poqc" path="res://shader/sky.gdshader" id="7_ewahu"]
+[ext_resource type="Material" uid="uid://cj86wv7c01tef" path="res://materials/outlineWhite.tres" id="10_lam2r"]
 [ext_resource type="Shader" uid="uid://c37jx2ebwp1a3" path="res://shader/shader_water.gdshader" id="10_tlicg"]
 [ext_resource type="Texture2D" uid="uid://cvllk03mhtybp" path="res://textures/723-normal.jpg" id="11_808lr"]
 [ext_resource type="AudioStream" uid="uid://gqmombudmim" path="res://sounds/Fisher.mp3" id="11_tov5d"]
@@ -12,25 +14,8 @@
 [ext_resource type="PackedScene" uid="uid://brmbdno888s38" path="res://assets/tree.glb" id="14_3wx87"]
 [ext_resource type="PackedScene" uid="uid://b5ew1rfc8ow8g" path="res://scenes/fishingRod.tscn" id="15_5p8yk"]
 
-[sub_resource type="Shader" id="Shader_6b2wv"]
-code = "shader_type canvas_item;
-
-uniform sampler2D SCREEN_TEXTURE : hint_screen_texture, filter_nearest;
-uniform float pixel_size : hint_range(1.0, 1000.0) = 200;
-
-void fragment() {
-    vec2 uv = SCREEN_UV;
-
-    uv = floor(uv * pixel_size) / pixel_size;
-
-    COLOR = texture(SCREEN_TEXTURE, uv);
-}
-
-
-"
-
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1wiy7"]
-shader = SubResource("Shader_6b2wv")
+shader = ExtResource("2_vt84v")
 shader_parameter/pixel_size = 290.82
 
 [sub_resource type="Theme" id="Theme_6b2wv"]
@@ -295,6 +280,7 @@ sky_mode = 1
 [node name="Steg" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.764632, -4.11893)
 mesh = SubResource("BoxMesh_u1u68")
+surface_material_override/0 = ExtResource("10_lam2r")
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
 transform = Transform3D(26.165, 0, 0, 0, 26.165, 0, 0, 0, 26.165, 0, 2.72752, 228.721)

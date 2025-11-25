@@ -1,11 +1,35 @@
-[gd_scene load_steps=10 format=3 uid="uid://cqtn78ty1fa7"]
+[gd_scene load_steps=13 format=3 uid="uid://cqtn78ty1fa7"]
 
 [ext_resource type="Script" uid="uid://dstq66nai8yi0" path="res://scripts/CatchResultUI.gd" id="1_dnped"]
 [ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="1_nuupr"]
 [ext_resource type="Texture2D" uid="uid://cdqevtqdy43fr" path="res://assets/fish/unknown.png" id="3_nuupr"]
+[ext_resource type="Shader" uid="uid://cba6yft4b3q2g" path="res://shader/2DShine.gdshader" id="3_nvhde"]
 
 [sub_resource type="Theme" id="Theme_nvhde"]
 default_font = ExtResource("1_nuupr")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_e4ghr"]
+bg_color = Color(0.133196, 0.133196, 0.133196, 0.709804)
+border_color = Color(0.650128, 0.650128, 0.650128, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+shadow_color = Color(0, 0, 0, 0.172549)
+shadow_size = 15
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ksy5q"]
+shader = ExtResource("3_nvhde")
+shader_parameter/Line_Smoothness = 0.045
+shader_parameter/Line_Width = 0.09
+shader_parameter/Brightness = -9.76
+shader_parameter/Rotation_deg = 30.0
+shader_parameter/Distortion = 1.418
+shader_parameter/Speed = 0.7
+shader_parameter/Position = 0.0
+shader_parameter/Position_Min = 0.25
+shader_parameter/Position_Max = 0.5
+shader_parameter/Alpha = 1.0
 
 [sub_resource type="Animation" id="Animation_nuupr"]
 resource_name = "pulse"
@@ -65,7 +89,12 @@ offset_bottom = 96.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = SubResource("Theme_nvhde")
+theme_override_styles/panel = SubResource("StyleBoxFlat_e4ghr")
 script = ExtResource("1_dnped")
+
+[node name="Panel" type="Panel" parent="."]
+material = SubResource("ShaderMaterial_ksy5q")
+layout_mode = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
