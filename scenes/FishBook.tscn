@@ -49,8 +49,12 @@ size_flags_vertical = 0
 theme_override_font_sizes/font_size = 28
 text = "📖 Fischbuch - See"
 
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 9
+
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
-custom_minimum_size = Vector2(0, 60)
+custom_minimum_size = Vector2(0, 31.7)
 layout_mode = 2
 size_flags_vertical = 0
 
@@ -62,7 +66,7 @@ size_flags_vertical = 2
 
 [node name="StatsLabel" type="Label" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
-size_flags_horizontal = 2
+size_flags_horizontal = 10
 size_flags_vertical = 2
 text = "Gefangen: 0 / 0 (0%)"
 

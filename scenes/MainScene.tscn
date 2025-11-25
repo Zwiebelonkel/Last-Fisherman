@@ -1,4 +1,4 @@
-[gd_scene load_steps=56 format=3 uid="uid://cx2sffjjdjuw5"]
+[gd_scene load_steps=58 format=3 uid="uid://cx2sffjjdjuw5"]
 
 [ext_resource type="Shader" uid="uid://dmg556n5nwodi" path="res://shader/pixelate.gdshader" id="1_1ns3k"]
 [ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="1_2phbr"]
@@ -26,6 +26,8 @@
 [ext_resource type="AudioStream" uid="uid://he0cwfvqtp7v" path="res://sounds/beach.mp3" id="22_mkg2b"]
 [ext_resource type="PackedScene" uid="uid://dedujdavqgnhc" path="res://scenes/clouds.tscn" id="24_a7pbh"]
 [ext_resource type="PackedScene" uid="uid://dguwyn5rc7uog" path="res://scenes/splash.tscn" id="25_ye0jt"]
+[ext_resource type="PackedScene" uid="uid://bej6o0ysl85et" path="res://assets/rock.glb" id="27_jcw2p"]
+[ext_resource type="PackedScene" uid="uid://bmbrqb7ef6c5i" path="res://assets/tripod.glb" id="28_qavw1"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1wiy7"]
 shader = ExtResource("1_1ns3k")
@@ -1502,5 +1504,50 @@ transform = Transform3D(-1.81, -2.73302e-07, 1.19464e-14, 0, -7.91176e-08, -1.81
 transform = Transform3D(-1.81, -2.73302e-07, 1.19464e-14, 0, -7.91176e-08, -1.81, 2.73302e-07, -1.81, 7.91176e-08, 0, 4.53567, 3.86946)
 
 [node name="Splash" parent="." instance=ExtResource("25_ye0jt")]
+
+[node name="rock" parent="." instance=ExtResource("27_jcw2p")]
+transform = Transform3D(0.948771, 0, 0.315964, 0, 1, 0, -0.315964, 0, 0.948771, -2.27037, 0.736188, -4.39134)
+
+[node name="rock2" parent="." instance=ExtResource("27_jcw2p")]
+transform = Transform3D(0.698877, 0, 0.715242, 0, 1, 0, -0.715242, 0, 0.698877, 0.345207, 0.872352, -6.6617)
+
+[node name="rock3" parent="." instance=ExtResource("27_jcw2p")]
+transform = Transform3D(0.998703, 0, 0.0509067, 0, 1, 0, -0.0509067, 0, 0.998703, 2.723, 1.31977, -5.82947)
+
+[node name="rock6" parent="." instance=ExtResource("27_jcw2p")]
+transform = Transform3D(0.998703, 0, 0.0509067, 0, 1, 0, -0.0509067, 0, 0.998703, 11.3084, 1.31977, -1.26815)
+
+[node name="rock7" parent="." instance=ExtResource("27_jcw2p")]
+transform = Transform3D(0.54272, 0, -0.839914, 0, 1, 0, 0.839914, 0, 0.54272, 11.6927, 0.340672, 1.33103)
+
+[node name="rock4" parent="." instance=ExtResource("27_jcw2p")]
+transform = Transform3D(1.51304, 0, 0.0771236, 0, 1.515, 0, -0.0771236, 0, 1.51304, 7.741, 1.40847, -5.82947)
+
+[node name="rock5" parent="." instance=ExtResource("27_jcw2p")]
+transform = Transform3D(1.51304, 0, 0.0771236, 0, 1.515, 0, -0.0771236, 0, 1.51304, -6.16736, -0.569815, 12.0792)
+
+[node name="tripod" parent="." instance=ExtResource("28_qavw1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.65372, 0.0457652, -3.18022)
+
+[node name="tripod2" parent="." instance=ExtResource("28_qavw1")]
+transform = Transform3D(0.808247, 0, 0.588844, 0, 1, 0, -0.588844, 0, 0.808247, 7.68541, 0.0457652, -1.51576)
+
+[node name="tripod3" parent="." instance=ExtResource("28_qavw1")]
+transform = Transform3D(0.644604, 0, 0.764517, 0, 1, 0, -0.764517, 0, 0.644604, 9.18158, 0.0457652, 0.748709)
+
+[node name="tripod4" parent="." instance=ExtResource("28_qavw1")]
+transform = Transform3D(0.644604, 0, 0.764517, 0, 1, 0, -0.764517, 0, 0.644604, 12.9018, 0.0457652, 3.66018)
+
+[node name="tripod5" parent="." instance=ExtResource("28_qavw1")]
+transform = Transform3D(0.644604, 0, 0.764517, 0, 1, 0, -0.764517, 0, 0.644604, 14.9236, 0.0457652, 4.14542)
+
+[node name="tripod6" parent="." instance=ExtResource("28_qavw1")]
+transform = Transform3D(0.644604, 0, 0.764517, 0, 1, 0, -0.764517, 0, 0.644604, 16.9455, 0.0457652, 4.38804)
+
+[node name="tripod7" parent="." instance=ExtResource("28_qavw1")]
+transform = Transform3D(0.809888, 0, 0.586584, 0, 1, 0, -0.586584, 0, 0.809888, -2.4361, 0.0457652, 3.33668)
+
+[node name="tripod8" parent="." instance=ExtResource("28_qavw1")]
+transform = Transform3D(0.809888, 0, 0.586584, 0, 1, 0, -0.586584, 0, 0.809888, -2.4361, 0.0457652, 3.33668)
 
 [editable path="PlayerCamera/FishingRod"]
