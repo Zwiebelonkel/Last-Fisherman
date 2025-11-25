@@ -1,4 +1,4 @@
-[gd_scene load_steps=58 format=3 uid="uid://cx2sffjjdjuw5"]
+[gd_scene load_steps=59 format=3 uid="uid://cx2sffjjdjuw5"]
 
 [ext_resource type="Shader" uid="uid://dmg556n5nwodi" path="res://shader/pixelate.gdshader" id="1_1ns3k"]
 [ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="1_2phbr"]
@@ -28,6 +28,7 @@
 [ext_resource type="PackedScene" uid="uid://dguwyn5rc7uog" path="res://scenes/splash.tscn" id="25_ye0jt"]
 [ext_resource type="PackedScene" uid="uid://bej6o0ysl85et" path="res://assets/rock.glb" id="27_jcw2p"]
 [ext_resource type="PackedScene" uid="uid://bmbrqb7ef6c5i" path="res://assets/tripod.glb" id="28_qavw1"]
+[ext_resource type="PackedScene" uid="uid://bw4vof4oddwco" path="res://assets/ödland.glb" id="29_i7ifx"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1wiy7"]
 shader = ExtResource("1_1ns3k")
@@ -1549,5 +1550,8 @@ transform = Transform3D(0.809888, 0, 0.586584, 0, 1, 0, -0.586584, 0, 0.809888, 
 
 [node name="tripod8" parent="." instance=ExtResource("28_qavw1")]
 transform = Transform3D(0.809888, 0, 0.586584, 0, 1, 0, -0.586584, 0, 0.809888, -2.4361, 0.0457652, 3.33668)
+
+[node name="ödland" parent="." instance=ExtResource("29_i7ifx")]
+transform = Transform3D(-0.214954, 0, -0.000824433, 0, 0.35, 0, 0.00443134, 0, -0.0399915, 14.1822, 2.77085, -23.087)
 
 [editable path="PlayerCamera/FishingRod"]
