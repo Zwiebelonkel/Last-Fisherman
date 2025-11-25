@@ -1481,7 +1481,7 @@ environment = SubResource("Environment_8tyyj")
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 2.007, 1.85558)
 script = ExtResource("10_11ck5")
 
-[node name="FishingRod" parent="PlayerCamera" node_paths=PackedStringArray("rod_tip", "hook", "splash", "waterplane", "catch_result_ui", "camera", "fishbook_ui", "inventory_ui") instance=ExtResource("11_c82cw")]
+[node name="FishingRod" parent="PlayerCamera" node_paths=PackedStringArray("rod_tip", "hook", "splash", "waterplane", "catch_result_ui", "camera", "fishbook_ui", "options", "inventory_ui") instance=ExtResource("11_c82cw")]
 transform = Transform3D(0.925417, -0.163176, -0.34202, 0.173648, 0.984808, 0, 0.336824, -0.0593912, 0.939693, 0.4, -0.40033, -1.03766)
 script = SubResource("GDScript_qk11g")
 rod_tip = NodePath("RodMesh/RodTip")
@@ -1493,6 +1493,7 @@ rotation_speed = 300.0
 camera = NodePath("..")
 fishing_location = "sewer"
 fishbook_ui = NodePath("../../UI/FishBook")
+options = NodePath("../../UI/OptionsControl")
 cast_power_ui_scene = ExtResource("8_rxgvs")
 inventory_ui = NodePath("../../UI/InventoryUI")
 

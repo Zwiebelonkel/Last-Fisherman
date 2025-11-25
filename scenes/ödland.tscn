@@ -1,46 +1,50 @@
-[gd_scene load_steps=58 format=3 uid="uid://bnj4irwko1m1j"]
+[gd_scene load_steps=52 format=3 uid="uid://bnj4irwko1m1j"]
 
-[ext_resource type="Shader" uid="uid://dmg556n5nwodi" path="res://shader/pixelate.gdshader" id="1_epr5y"]
-[ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="2_vtbep"]
-[ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="3_tp83w"]
-[ext_resource type="PackedScene" uid="uid://cqtn78ty1fa7" path="res://scenes/CatchResultUI.tscn" id="4_ndhwi"]
-[ext_resource type="PackedScene" uid="uid://dxxrhs12x2m2c" path="res://scenes/InventoryUI.tscn" id="5_658ny"]
-[ext_resource type="PackedScene" uid="uid://cdb3sodlv6np7" path="res://scenes/MoneyHUD.tscn" id="6_vuvs8"]
-[ext_resource type="PackedScene" uid="uid://be7bs5po2ukhi" path="res://scenes/FishBook.tscn" id="7_bgkw0"]
-[ext_resource type="PackedScene" uid="uid://je70iqlm248a" path="res://scenes/CastPowerUI.tscn" id="8_i24nt"]
-[ext_resource type="PackedScene" uid="uid://b08obrprd472u" path="res://scenes/OptionsControl.tscn" id="9_shocd"]
-[ext_resource type="PackedScene" uid="uid://ckje0fw3pep83" path="res://assets/skyscaper.glb" id="10_sppor"]
-[ext_resource type="Script" uid="uid://bl1xotduehieu" path="res://scripts/camera_sway.gd" id="11_j0x6j"]
-[ext_resource type="PackedScene" uid="uid://b5ew1rfc8ow8g" path="res://scenes/fishingRod.tscn" id="12_scyfx"]
-[ext_resource type="Texture2D" uid="uid://cvllk03mhtybp" path="res://textures/723-normal.jpg" id="13_ag8kn"]
-[ext_resource type="Texture2D" uid="uid://d31603nl8y0gd" path="res://textures/Water_preview.jpgC878A51E-2B84-45CA-85CB-75E5BC88EEC8Large.jpg" id="14_afujr"]
-[ext_resource type="Shader" uid="uid://cfsuhiaq15sgu" path="res://shader/outline.gdshader" id="15_4clwp"]
-[ext_resource type="Script" uid="uid://bymrcyid32xsp" path="res://scripts/line.gd" id="16_o0ldv"]
-[ext_resource type="PackedScene" uid="uid://brmbdno888s38" path="res://assets/tree.glb" id="17_ctx8p"]
-[ext_resource type="PackedScene" uid="uid://cfptx2e41wve1" path="res://scenes/shop.tscn" id="18_xlamg"]
-[ext_resource type="PackedScene" uid="uid://5eeohonkr6bu" path="res://textures/hillybilly.glb" id="19_4vggc"]
-[ext_resource type="AudioStream" uid="uid://esyv0p374c5j" path="res://sounds/bite.mp3" id="20_0wku6"]
-[ext_resource type="AudioStream" uid="uid://cldy38iwm8ovi" path="res://sounds/cast.mp3" id="21_gmaeg"]
-[ext_resource type="AudioStream" uid="uid://26m0pjkxve85" path="res://sounds/sucess.mp3" id="22_se0xy"]
-[ext_resource type="AudioStream" uid="uid://cmr6cded4l11v" path="res://sounds/whoosh.mp3" id="23_s45gh"]
-[ext_resource type="AudioStream" uid="uid://he0cwfvqtp7v" path="res://sounds/beach.mp3" id="24_3vnef"]
-[ext_resource type="PackedScene" uid="uid://dedujdavqgnhc" path="res://scenes/clouds.tscn" id="25_5eobj"]
-[ext_resource type="PackedScene" uid="uid://dguwyn5rc7uog" path="res://scenes/splash.tscn" id="26_bhspk"]
-[ext_resource type="PackedScene" uid="uid://bej6o0ysl85et" path="res://assets/rock.glb" id="27_h38np"]
-[ext_resource type="PackedScene" uid="uid://bmbrqb7ef6c5i" path="res://assets/tripod.glb" id="28_veoth"]
+[ext_resource type="Shader" uid="uid://dmg556n5nwodi" path="res://shader/pixelate.gdshader" id="1_kuao5"]
+[ext_resource type="Shader" uid="uid://bso2ewb2ieq7x" path="res://shader/warp.gdshader" id="1_tx5p3"]
+[ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="2_acjgc"]
+[ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="3_tx5p3"]
+[ext_resource type="PackedScene" uid="uid://cqtn78ty1fa7" path="res://scenes/CatchResultUI.tscn" id="4_lbf82"]
+[ext_resource type="PackedScene" uid="uid://dxxrhs12x2m2c" path="res://scenes/InventoryUI.tscn" id="5_bo4cb"]
+[ext_resource type="PackedScene" uid="uid://cdb3sodlv6np7" path="res://scenes/MoneyHUD.tscn" id="6_flfji"]
+[ext_resource type="PackedScene" uid="uid://be7bs5po2ukhi" path="res://scenes/FishBook.tscn" id="7_re5ia"]
+[ext_resource type="PackedScene" uid="uid://je70iqlm248a" path="res://scenes/CastPowerUI.tscn" id="8_8cl07"]
+[ext_resource type="PackedScene" uid="uid://b08obrprd472u" path="res://scenes/OptionsControl.tscn" id="9_it8te"]
+[ext_resource type="Script" uid="uid://bl1xotduehieu" path="res://scripts/camera_sway.gd" id="10_smrcg"]
+[ext_resource type="PackedScene" uid="uid://b5ew1rfc8ow8g" path="res://scenes/fishingRod.tscn" id="11_y20ih"]
+[ext_resource type="Texture2D" uid="uid://cvllk03mhtybp" path="res://textures/723-normal.jpg" id="12_tcwwm"]
+[ext_resource type="Texture2D" uid="uid://d31603nl8y0gd" path="res://textures/Water_preview.jpgC878A51E-2B84-45CA-85CB-75E5BC88EEC8Large.jpg" id="13_xyw1b"]
+[ext_resource type="Shader" uid="uid://cfsuhiaq15sgu" path="res://shader/outline.gdshader" id="14_6d2g4"]
+[ext_resource type="Script" uid="uid://bymrcyid32xsp" path="res://scripts/line.gd" id="15_wbcdt"]
+[ext_resource type="PackedScene" uid="uid://cfptx2e41wve1" path="res://scenes/shop.tscn" id="16_mabyp"]
+[ext_resource type="PackedScene" uid="uid://5eeohonkr6bu" path="res://textures/hillybilly.glb" id="17_hc2xf"]
+[ext_resource type="AudioStream" uid="uid://esyv0p374c5j" path="res://sounds/bite.mp3" id="18_yqxbp"]
+[ext_resource type="AudioStream" uid="uid://cldy38iwm8ovi" path="res://sounds/cast.mp3" id="19_uxuqp"]
+[ext_resource type="AudioStream" uid="uid://26m0pjkxve85" path="res://sounds/sucess.mp3" id="20_p58cv"]
+[ext_resource type="AudioStream" uid="uid://cmr6cded4l11v" path="res://sounds/whoosh.mp3" id="21_f6jba"]
+[ext_resource type="AudioStream" uid="uid://cwsg3mblt4ye6" path="res://sounds/desert.mp3" id="22_acjgc"]
+[ext_resource type="PackedScene" uid="uid://dguwyn5rc7uog" path="res://scenes/splash.tscn" id="23_73ipf"]
+[ext_resource type="PackedScene" uid="uid://bw4vof4oddwco" path="res://assets/ödland.glb" id="24_iho6p"]
+[ext_resource type="PackedScene" uid="uid://bej6o0ysl85et" path="res://assets/rock.glb" id="25_a4tue"]
+[ext_resource type="PackedScene" uid="uid://ckje0fw3pep83" path="res://assets/skyscaper.glb" id="26_acjgc"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_lbf82"]
+shader = ExtResource("1_tx5p3")
+shader_parameter/warp_intensity = 0.019
+shader_parameter/time_scale = 0.655
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1wiy7"]
-shader = ExtResource("1_epr5y")
+shader = ExtResource("1_kuao5")
 shader_parameter/pixel_size = 290.82
 
 [sub_resource type="Theme" id="Theme_25dfr"]
-default_font = ExtResource("3_tp83w")
+default_font = ExtResource("3_tx5p3")
 
 [sub_resource type="Theme" id="Theme_kjvyo"]
-default_font = ExtResource("3_tp83w")
+default_font = ExtResource("3_tx5p3")
 
 [sub_resource type="Theme" id="Theme_2phbr"]
-default_font = ExtResource("3_tp83w")
+default_font = ExtResource("3_tx5p3")
 
 [sub_resource type="Shader" id="Shader_kqfxt"]
 code = "shader_type sky;
@@ -122,13 +126,13 @@ void sky() {
 }
 "
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_cfq0f"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_55u6b"]
 shader = SubResource("Shader_kqfxt")
 shader_parameter/use_directional_light = false
-shader_parameter/sun_color = Color(0.0605303, 0.0605303, 0.0605303, 1)
-shader_parameter/sun_energy = 8.525
-shader_parameter/cloud_color = Color(0, 0, 0, 1)
-shader_parameter/cloud_density = 5.0
+shader_parameter/sun_color = Color(1, 1, 1, 1)
+shader_parameter/sun_energy = 9.925
+shader_parameter/cloud_color = Color(1, 0, 0, 1)
+shader_parameter/cloud_density = 3.62
 shader_parameter/cloud_depth = 2.0
 shader_parameter/cloud_sag = 2.0
 shader_parameter/noise_tiling = Vector2(1, 1)
@@ -138,7 +142,7 @@ shader_parameter/ground_curve = 0.04
 shader_parameter/exposure = 1.0
 
 [sub_resource type="Sky" id="Sky_x537r"]
-sky_material = SubResource("ShaderMaterial_cfq0f")
+sky_material = SubResource("ShaderMaterial_55u6b")
 radiance_size = 0
 
 [sub_resource type="Environment" id="Environment_cfq0f"]
@@ -150,6 +154,7 @@ fog_light_energy = 0.0
 fog_sun_scatter = 1.0
 fog_sky_affect = 0.0
 volumetric_fog_enabled = true
+volumetric_fog_density = 0.0233
 volumetric_fog_length = 42.44
 volumetric_fog_ambient_inject = 0.2
 
@@ -165,7 +170,7 @@ script/source = "extends Node3D
 @export var shop_scene_path: String = \"res://scenes/shop.tscn\"
 @export var rotation_speed: float = 2.0
 @export var camera: Camera3D
-@export var fishing_location: String = \"lake\"
+@export var fishing_location: String = \"desert\"
 @export var fishbook_ui: Control
 @export var options: Control
 
@@ -208,8 +213,8 @@ var paused: bool = false
 var cast_power: float = 0.0
 var cast_power_speed: float = 3
 var max_cast_power: float = 1.0
-var min_distance: float = 2.0
-var max_distance: float = 8.0
+var min_distance: float = 20.0
+var max_distance: float = 30.0
 
 # Minigame Variables
 var marker_pos: float = 0.0
@@ -260,7 +265,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 	
 	if event.is_action_pressed(\"map_open\"):
-		Player.update_last_scene(\"res://scenes/MainScene.tscn\")
+		Player.update_last_scene(\"res://scenes/ödland.tscn\")
 		get_tree().change_scene_to_file(\"res://scenes/MapScene.tscn\")
 		return
 	
@@ -414,7 +419,7 @@ func update_rotation(delta: float) -> void:
 
 func enter_shop() -> void:
 	print(\"Betrete Shop!\")
-	Player.update_last_scene(\"res://scenes/MainScene.tscn\")
+	Player.update_last_scene(\"res://scenes/ödland.tscn\")
 	get_tree().change_scene_to_file(\"res://scenes/shop_inside.tscn\")
 
 
@@ -577,7 +582,7 @@ func start_catch_minigame() -> void:
 
 	splash.emitting = true
 
-	current_fish = FishDB.get_random_from_list(FishDB.FISH_LAKE, Player.upgrade_bait)
+	current_fish = FishDB.get_random_from_list(FishDB.FISH_DESERT, Player.upgrade_bait)
 	var difficulty = FishDB.get_fish_difficulty(current_fish)
 	marker_speed = FishDB.get_marker_speed_for_fish(current_fish)
 	
@@ -1077,7 +1082,7 @@ void fragment() {
     NORMAL = perturbed_normal;
 }"
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_k24pf"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_7r1ho"]
 render_priority = -128
 shader = SubResource("Shader_muv0v")
 shader_parameter/wave_1 = Vector4(0.3, 4, 0.2, 0.6)
@@ -1110,32 +1115,32 @@ shader_parameter/peak_color = Vector3(1, 1, 1)
 shader_parameter/peak_intensity = 1.0
 shader_parameter/foam_intensity = 1.0
 shader_parameter/foam_scale = 1.0
-shader_parameter/metallic = 1.79
-shader_parameter/roughness = 0.07
-shader_parameter/uv_scale_text_a = 0.23
+shader_parameter/metallic = 0.92
+shader_parameter/roughness = 0.125
+shader_parameter/uv_scale_text_a = 0.31
 shader_parameter/uv_speed_text_a = Vector2(0.015, -0.03)
 shader_parameter/uv_scale_text_b = 0.36
-shader_parameter/uv_speed_text_b = Vector2(-0.025, 0.1)
-shader_parameter/normal_strength = 1.28
+shader_parameter/uv_speed_text_b = Vector2(0.355, 0.305)
+shader_parameter/normal_strength = 3.32
 shader_parameter/uv_sampler_scale = 0.3
 shader_parameter/blend_factor = 0.795
 shader_parameter/perturbation_strength = 0.37
 shader_parameter/perturbation_time = 0.3
-shader_parameter/normalmap_a = ExtResource("13_ag8kn")
-shader_parameter/normalmap_b = ExtResource("14_afujr")
+shader_parameter/normalmap_a = ExtResource("12_tcwwm")
+shader_parameter/normalmap_b = ExtResource("13_xyw1b")
 shader_parameter/caustics_intensity = 14.48
 shader_parameter/num_caustic_layers = 16.0
-shader_parameter/caustic_distortion_strength = 0.001
+shader_parameter/caustic_distortion_strength = 0.236
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_qg23i"]
+[sub_resource type="PlaneMesh" id="PlaneMesh_eank5"]
 lightmap_size_hint = Vector2i(251, 1001)
-material = SubResource("ShaderMaterial_k24pf")
+material = SubResource("ShaderMaterial_7r1ho")
 uv2_padding = 1.41
-size = Vector2(200, 200)
+size = Vector2(300, 300)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_8wjpf"]
 render_priority = 0
-shader = ExtResource("15_4clwp")
+shader = ExtResource("14_6d2g4")
 shader_parameter/color = Color(0, 0, 0, 1)
 shader_parameter/thickness = 0.05
 
@@ -1200,29 +1205,9 @@ _data = {
 &"ripple": SubResource("Animation_k24pf")
 }
 
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_8wjpf"]
-width = 1117
-height = 1
-seamless = true
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_25dfr"]
-render_priority = 0
-shader = ExtResource("15_4clwp")
-shader_parameter/color = Color(0, 0, 0, 1)
-shader_parameter/thickness = 0.05
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kjvyo"]
-next_pass = SubResource("ShaderMaterial_25dfr")
-albedo_color = Color(0.38745, 0.137208, 0, 1)
-albedo_texture = SubResource("NoiseTexture2D_8wjpf")
-
-[sub_resource type="BoxMesh" id="BoxMesh_u1u68"]
-material = SubResource("StandardMaterial3D_kjvyo")
-size = Vector3(1.885, 0.34, 12.555)
-
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_0ehpd"]
 render_priority = 0
-shader = ExtResource("15_4clwp")
+shader = ExtResource("14_6d2g4")
 shader_parameter/color = Color(0, 0, 0, 1)
 shader_parameter/thickness = 0.01
 
@@ -1234,21 +1219,28 @@ material = SubResource("StandardMaterial3D_ye0jt")
 top_radius = 0.01
 bottom_radius = 0.01
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kp0ql"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_55u6b"]
 emission_enabled = true
-emission = Color(1, 1, 1, 1)
+emission = Color(0.845271, 0.824996, 0.832398, 1)
 emission_energy_multiplier = 16.0
 
-[sub_resource type="SphereMesh" id="SphereMesh_08o8g"]
-material = SubResource("StandardMaterial3D_kp0ql")
-
-[sub_resource type="PrismMesh" id="PrismMesh_8wjpf"]
-left_to_right = 1.0
-size = Vector3(5.1, 1.185, 100)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_25dfr"]
+[sub_resource type="SphereMesh" id="SphereMesh_7r1ho"]
+material = SubResource("StandardMaterial3D_55u6b")
 
 [node name="MainScene" type="Node3D"]
+
+[node name="Filter2" type="CanvasLayer" parent="."]
+layer = 0
+
+[node name="PixelateOverlay" type="ColorRect" parent="Filter2"]
+material = SubResource("ShaderMaterial_lbf82")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 28.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
 
 [node name="Filter" type="CanvasLayer" parent="."]
 layer = 0
@@ -1277,7 +1269,7 @@ offset_right = 185.0
 offset_bottom = 185.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("2_vtbep")
+texture = ExtResource("2_acjgc")
 
 [node name="CatchUI" type="Control" parent="UI"]
 layout_mode = 3
@@ -1339,52 +1331,34 @@ offset_bottom = 306.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="CatchResultUI" parent="UI" instance=ExtResource("4_ndhwi")]
+[node name="CatchResultUI" parent="UI" instance=ExtResource("4_lbf82")]
 offset_top = -197.0
 offset_bottom = 197.0
 
-[node name="InventoryUI" parent="UI" instance=ExtResource("5_658ny")]
+[node name="InventoryUI" parent="UI" instance=ExtResource("5_bo4cb")]
 theme = SubResource("Theme_kjvyo")
 
-[node name="MoneyHUD" parent="UI" instance=ExtResource("6_vuvs8")]
+[node name="MoneyHUD" parent="UI" instance=ExtResource("6_flfji")]
 offset_right = 60.0
 offset_bottom = 43.0
 theme = SubResource("Theme_2phbr")
 
-[node name="FishBook" parent="UI" instance=ExtResource("7_bgkw0")]
+[node name="FishBook" parent="UI" instance=ExtResource("7_re5ia")]
 visible = false
 
-[node name="CastPowerUI" parent="UI" instance=ExtResource("8_i24nt")]
+[node name="CastPowerUI" parent="UI" instance=ExtResource("8_8cl07")]
 
-[node name="OptionsControl" parent="UI" instance=ExtResource("9_shocd")]
+[node name="OptionsControl" parent="UI" instance=ExtResource("9_it8te")]
 visible = false
-
-[node name="skyscaper" parent="UI" instance=ExtResource("10_sppor")]
-transform = Transform3D(0.307902, 0, 0.186538, 0, 0.36, 0, -0.186538, 0, 0.307902, 41.717, 6.24582, 38.3284)
-
-[node name="skyscaper2" parent="UI" instance=ExtResource("10_sppor")]
-transform = Transform3D(0.307902, 0, 0.186538, 0, 0.36, 0, -0.186538, 0, 0.307902, 46.7262, 6.24582, 35.5814)
-
-[node name="skyscaper3" parent="UI" instance=ExtResource("10_sppor")]
-transform = Transform3D(0.461853, 0, 0.279807, 0, 0.54, 0, -0.279807, 0, 0.461853, 51.2507, 9.08063, 40.429)
-
-[node name="skyscaper4" parent="UI" instance=ExtResource("10_sppor")]
-transform = Transform3D(-0.260732, 0, 0.248231, 0, 0.36, 0, -0.248231, 0, -0.260732, 34.359, 6.24582, 5.22791)
-
-[node name="skyscaper5" parent="UI" instance=ExtResource("10_sppor")]
-transform = Transform3D(-0.260732, 0, 0.248231, 0, 0.36, 0, -0.248231, 0, -0.260732, 30.3949, 6.24582, 1.11404)
-
-[node name="skyscaper6" parent="UI" instance=ExtResource("10_sppor")]
-transform = Transform3D(-0.391098, 0, 0.372347, 0, 0.54, 0, -0.372347, 0, -0.391098, 33.8869, 9.08063, -4.52298)
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_cfq0f")
 
 [node name="PlayerCamera" type="Camera3D" parent="."]
 transform = Transform3D(-1, 0, -1.50996e-07, 0, 1, 0, 1.50996e-07, 0, -1, 0, 2.007, 0.0447942)
-script = ExtResource("11_j0x6j")
+script = ExtResource("10_smrcg")
 
-[node name="FishingRod" parent="PlayerCamera" node_paths=PackedStringArray("rod_tip", "hook", "splash", "waterplane", "catch_result_ui", "camera", "fishbook_ui", "options", "inventory_ui") instance=ExtResource("12_scyfx")]
+[node name="FishingRod" parent="PlayerCamera" node_paths=PackedStringArray("rod_tip", "hook", "splash", "waterplane", "catch_result_ui", "camera", "fishbook_ui", "options", "inventory_ui") instance=ExtResource("11_y20ih")]
 transform = Transform3D(0.925417, -0.163176, -0.34202, 0.173648, 0.984808, 0, 0.336824, -0.0593912, 0.939693, 0.4, -0.40033, -1.03766)
 script = SubResource("GDScript_8wjpf")
 rod_tip = NodePath("RodMesh/RodTip")
@@ -1394,24 +1368,24 @@ waterplane = NodePath("../../WaterPlane")
 catch_result_ui = NodePath("../../UI/CatchResultUI")
 rotation_speed = 300.0
 camera = NodePath("..")
-fishing_location = "lake"
+fishing_location = "desert"
 fishbook_ui = NodePath("../../UI/FishBook")
 options = NodePath("../../UI/OptionsControl")
-cast_power_ui_scene = ExtResource("8_i24nt")
+cast_power_ui_scene = ExtResource("8_8cl07")
 inventory_ui = NodePath("../../UI/InventoryUI")
 
 [node name="RodMesh" parent="PlayerCamera/FishingRod" index="0"]
 transform = Transform3D(0.8, 0, 0, 0, 0.773459, 0.204357, 0, -0.204357, 0.773459, 0, 0, -0.0166266)
 
 [node name="WaterPlane" type="MeshInstance3D" parent="."]
-transform = Transform3D(-1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0, 0, 1, 0, 1.31409, 91.1433)
-mesh = SubResource("PlaneMesh_qg23i")
+transform = Transform3D(-1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0, 0, 1, 0, -10.13, 129.833)
+mesh = SubResource("PlaneMesh_eank5")
 
 [node name="Hook" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0925, 5)
 
 [node name="Ripple" type="MeshInstance3D" parent="Hook"]
-transform = Transform3D(0.5, 0, 0, 0, -2.18557e-08, 0.5, 0, -0.5, -2.18557e-08, 0, -0.233042, 0.217663)
+transform = Transform3D(0.5, 0, 0, 0, -2.18557e-08, 0.5, 0, -0.5, -2.18557e-08, 0, -0.233042, 15.1203)
 mesh = SubResource("QuadMesh_611at")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Hook"]
@@ -1421,10 +1395,10 @@ libraries = {
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.931818, 0.362926, 0, -0.362926, 0.931818, -1.07784, 37.4465, 160.116)
-light_color = Color(0.99552, 0.467887, 0.0444731, 1)
-light_energy = 16.0
+light_color = Color(0.810809, 0.655906, 0.414645, 1)
+light_energy = 7.564
 light_indirect_energy = 5.041
-light_volumetric_fog_energy = 0.485
+light_volumetric_fog_energy = 0.63
 light_angular_distance = 9.1
 light_specular = 0.676
 shadow_enabled = true
@@ -1435,119 +1409,64 @@ directional_shadow_fade_start = 0.507
 directional_shadow_max_distance = 83.4
 sky_mode = 1
 
-[node name="Steg" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.764632, -4.11893)
-mesh = SubResource("BoxMesh_u1u68")
-
 [node name="Line" type="MeshInstance3D" parent="." node_paths=PackedStringArray("rod_tip", "hook", "fishing_script")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.319973, 1.53619, 0.170711)
 mesh = SubResource("CylinderMesh_pjux3")
-script = ExtResource("16_o0ldv")
+script = ExtResource("15_wbcdt")
 rod_tip = NodePath("../PlayerCamera/FishingRod/RodMesh/RodTip")
 hook = NodePath("../Hook")
 fishing_script = NodePath("../PlayerCamera/FishingRod")
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
-transform = Transform3D(26.165, 0, 0, 0, 26.165, 0, 0, 0, 26.165, 2.48185, 2.72752, 228.721)
-mesh = SubResource("SphereMesh_08o8g")
+transform = Transform3D(101.89, 0, 0, 0, 101.89, 0, 0, 0, 101.89, 18.9142, 88.4997, 385.297)
+mesh = SubResource("SphereMesh_7r1ho")
 
-[node name="tree" parent="." instance=ExtResource("17_ctx8p")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.02284, 0, 17.0507)
+[node name="Shop" parent="." instance=ExtResource("16_mabyp")]
+transform = Transform3D(-3.12536e-08, 0, 0.715, 0.183488, 0.691055, 8.02051e-09, -0.691055, 0.183488, -3.02069e-08, -2.74395, 0.284576, -0.208801)
 
-[node name="tree3" parent="." instance=ExtResource("17_ctx8p")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.52933, 0, 28.9893)
-
-[node name="tree2" parent="." instance=ExtResource("17_ctx8p")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.40193, 0.164468, 2.28083)
-
-[node name="Shop" parent="." instance=ExtResource("18_xlamg")]
-transform = Transform3D(-3.12536e-08, 0, 0.715, 0, 0.715, 0, -0.715, 0, -3.12536e-08, -2.74395, 0.673682, -0.208801)
-
-[node name="hillybilly" parent="." instance=ExtResource("19_4vggc")]
-transform = Transform3D(-0.190341, 0, 1.51307, 0, 1.525, 0, -1.51307, 0, -0.190341, -3.27164, -0.424028, 0.672108)
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-transform = Transform3D(-4.37114e-08, 4.84175e-16, 1, 0.135335, 0.9908, 5.91569e-09, -0.9908, 0.135335, -4.33092e-08, 1.66543, -0.324611, 2.63534)
-mesh = SubResource("PrismMesh_8wjpf")
-surface_material_override/0 = SubResource("StandardMaterial3D_25dfr")
+[node name="hillybilly" parent="." instance=ExtResource("17_hc2xf")]
+transform = Transform3D(-0.190341, 0, 1.51307, 0.328081, 1.48872, 0.0412719, -1.47707, 0.330668, -0.185813, -3.27164, -0.849061, 0.365361)
 
 [node name="Audio" type="Node" parent="."]
 
 [node name="bite" type="AudioStreamPlayer" parent="Audio"]
-stream = ExtResource("20_0wku6")
+stream = ExtResource("18_yqxbp")
 volume_db = -2.811
 bus = &"SFX"
 
 [node name="cast" type="AudioStreamPlayer" parent="Audio"]
-stream = ExtResource("21_gmaeg")
+stream = ExtResource("19_uxuqp")
 bus = &"SFX"
 
 [node name="success" type="AudioStreamPlayer" parent="Audio"]
-stream = ExtResource("22_se0xy")
+stream = ExtResource("20_p58cv")
 bus = &"SFX"
 
 [node name="whoosh" type="AudioStreamPlayer" parent="Audio"]
-stream = ExtResource("23_s45gh")
+stream = ExtResource("21_f6jba")
 bus = &"SFX"
 
 [node name="music" type="AudioStreamPlayer" parent="Audio"]
-stream = ExtResource("24_3vnef")
-volume_db = -10.407
-pitch_scale = 1.1
+stream = ExtResource("22_acjgc")
+volume_db = -2.735
 autoplay = true
 bus = &"Music"
 
-[node name="clouds" parent="." instance=ExtResource("25_5eobj")]
-transform = Transform3D(-1.81, -2.73302e-07, 1.19464e-14, 0, -7.91176e-08, -1.81, 2.73302e-07, -1.81, 7.91176e-08, 0, 4.53567, 8.9877)
+[node name="Splash" parent="." instance=ExtResource("23_73ipf")]
 
-[node name="clouds2" parent="." instance=ExtResource("25_5eobj")]
-transform = Transform3D(-1.81, -2.73302e-07, 1.19464e-14, 0, -7.91176e-08, -1.81, 2.73302e-07, -1.81, 7.91176e-08, 0, 4.53567, 3.86946)
+[node name="ödland" parent="." instance=ExtResource("24_iho6p")]
+transform = Transform3D(0.0800075, 0, 0.996794, 0, 1, 0, -0.996794, 0, 0.0800075, 54.7656, -16.3662, -20.1391)
 
-[node name="Splash" parent="." instance=ExtResource("26_bhspk")]
+[node name="ödland2" parent="." instance=ExtResource("24_iho6p")]
+transform = Transform3D(0.0800075, 0, 0.996794, 0, 1, 0, -0.996794, 0, 0.0800075, 54.7656, -6.76015, 144.277)
 
-[node name="rock" parent="." instance=ExtResource("27_h38np")]
-transform = Transform3D(0.948771, 0, 0.315964, 0, 1, 0, -0.315964, 0, 0.948771, -2.27037, 0.736188, -4.39134)
+[node name="rock" parent="." instance=ExtResource("25_a4tue")]
+transform = Transform3D(3.61, 0, 0, 0, 3.61, 0, 0, 0, 3.61, 34.6369, -11.2076, 37.7598)
 
-[node name="rock2" parent="." instance=ExtResource("27_h38np")]
-transform = Transform3D(0.698877, 0, 0.715242, 0, 1, 0, -0.715242, 0, 0.698877, 0.345207, 0.872352, -6.6617)
+[node name="rock2" parent="." instance=ExtResource("25_a4tue")]
+transform = Transform3D(2.46045, 0, -2.64165, 0, 3.61, 0, 2.64165, 0, 2.46045, -16.9159, -11.4367, 14.9909)
 
-[node name="rock3" parent="." instance=ExtResource("27_h38np")]
-transform = Transform3D(0.998703, 0, 0.0509067, 0, 1, 0, -0.0509067, 0, 0.998703, 2.723, 1.31977, -5.82947)
-
-[node name="rock6" parent="." instance=ExtResource("27_h38np")]
-transform = Transform3D(0.998703, 0, 0.0509067, 0, 1, 0, -0.0509067, 0, 0.998703, 11.3084, 1.31977, -1.26815)
-
-[node name="rock7" parent="." instance=ExtResource("27_h38np")]
-transform = Transform3D(0.54272, 0, -0.839914, 0, 1, 0, 0.839914, 0, 0.54272, 11.6927, 0.340672, 1.33103)
-
-[node name="rock4" parent="." instance=ExtResource("27_h38np")]
-transform = Transform3D(1.51304, 0, 0.0771236, 0, 1.515, 0, -0.0771236, 0, 1.51304, 7.741, 1.40847, -5.82947)
-
-[node name="rock5" parent="." instance=ExtResource("27_h38np")]
-transform = Transform3D(1.51304, 0, 0.0771236, 0, 1.515, 0, -0.0771236, 0, 1.51304, -6.16736, -0.569815, 12.0792)
-
-[node name="tripod" parent="." instance=ExtResource("28_veoth")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.65372, 0.0457652, -3.18022)
-
-[node name="tripod2" parent="." instance=ExtResource("28_veoth")]
-transform = Transform3D(0.808247, 0, 0.588844, 0, 1, 0, -0.588844, 0, 0.808247, 7.68541, 0.0457652, -1.51576)
-
-[node name="tripod3" parent="." instance=ExtResource("28_veoth")]
-transform = Transform3D(0.644604, 0, 0.764517, 0, 1, 0, -0.764517, 0, 0.644604, 9.18158, 0.0457652, 0.748709)
-
-[node name="tripod4" parent="." instance=ExtResource("28_veoth")]
-transform = Transform3D(0.644604, 0, 0.764517, 0, 1, 0, -0.764517, 0, 0.644604, 12.9018, 0.0457652, 3.66018)
-
-[node name="tripod5" parent="." instance=ExtResource("28_veoth")]
-transform = Transform3D(0.644604, 0, 0.764517, 0, 1, 0, -0.764517, 0, 0.644604, 14.9236, 0.0457652, 4.14542)
-
-[node name="tripod6" parent="." instance=ExtResource("28_veoth")]
-transform = Transform3D(0.644604, 0, 0.764517, 0, 1, 0, -0.764517, 0, 0.644604, 16.9455, 0.0457652, 4.38804)
-
-[node name="tripod7" parent="." instance=ExtResource("28_veoth")]
-transform = Transform3D(0.809888, 0, 0.586584, 0, 1, 0, -0.586584, 0, 0.809888, -2.4361, 0.0457652, 3.33668)
-
-[node name="tripod8" parent="." instance=ExtResource("28_veoth")]
-transform = Transform3D(0.809888, 0, 0.586584, 0, 1, 0, -0.586584, 0, 0.809888, -2.4361, 0.0457652, 3.33668)
+[node name="skyscaper" parent="." instance=ExtResource("26_acjgc")]
+transform = Transform3D(0.878719, -0.277194, 0.388609, 0.300839, 0.953675, 0, -0.370607, 0.116909, 0.921403, 66.4738, -12.1969, 68.7822)
 
 [editable path="PlayerCamera/FishingRod"]

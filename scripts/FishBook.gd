@@ -14,7 +14,9 @@ func _init():
 		"lake": FishDB.FISH_LAKE,
 		"city": FishDB.FISH_CITY,
 		"sewer": FishDB.FISH_SEWER,
-		"forest": FishDB.FISH_FOREST
+		"forest": FishDB.FISH_FOREST,
+		"desert": FishDB.FISH_DESERT
+
 
 	}
 

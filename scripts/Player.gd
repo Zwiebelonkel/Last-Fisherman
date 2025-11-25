@@ -14,13 +14,17 @@ var unlocked_spots = {
 	"lake": true,
 	"city": false,
 	"sewer": false,
-	"forest": false
+	"forest": false,
+	"desert": false,
+
 }
 var spot_prices = {
 	"lake": 0,
 	"city": 500,
 	"sewer": 1200,
-	"forest": 2000
+	"forest": 2000,
+	"desert": 4000
+
 }
 
 func _ready():
@@ -98,7 +102,9 @@ func reset():
 		"lake": true,
 		"city": false,
 		"sewer": false,
-		"forest": false
+		"forest": false,
+		"desert": false
+
 	}
 	save_game()
 

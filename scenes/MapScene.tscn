@@ -122,6 +122,21 @@ offset_right = 230.0
 offset_bottom = 180.5
 text = "Forest"
 
+[node name="DesertButton" type="Button" parent="layout/Locations"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -84.0
+offset_top = 76.0
+offset_right = -19.0
+offset_bottom = 107.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Desert"
+
 [node name="Popup" type="Panel" parent="layout"]
 layout_mode = 0
 offset_left = -32.0
@@ -202,8 +217,10 @@ text = "Back"
 
 [node name="Filter" type="CanvasLayer" parent="."]
 layer = 0
+visible = false
 
 [node name="PixelateOverlay" type="ColorRect" parent="Filter"]
+visible = false
 material = SubResource("ShaderMaterial_jqekx")
 anchors_preset = 15
 anchor_right = 1.0
