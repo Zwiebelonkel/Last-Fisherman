@@ -99,6 +99,7 @@ offset_bottom = 320.5
 text = "Sewer"
 
 [node name="ForestButton" type="Button" parent="layout/Locations"]
+layout_mode = 0
 offset_left = 175.0
 offset_top = 149.5
 offset_right = 230.0

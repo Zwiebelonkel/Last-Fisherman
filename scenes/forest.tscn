@@ -1,4 +1,4 @@
-[gd_scene load_steps=48 format=3 uid="uid://bru2npwxw6p10"]
+[gd_scene load_steps=51 format=3 uid="uid://bru2npwxw6p10"]
 
 [ext_resource type="Shader" uid="uid://dmg556n5nwodi" path="res://shader/pixelate.gdshader" id="1_di3lw"]
 [ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="2_8wf4g"]
@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://cdb3sodlv6np7" path="res://scenes/MoneyHUD.tscn" id="6_g34gq"]
 [ext_resource type="PackedScene" uid="uid://be7bs5po2ukhi" path="res://scenes/FishBook.tscn" id="7_soql2"]
 [ext_resource type="PackedScene" uid="uid://je70iqlm248a" path="res://scenes/CastPowerUI.tscn" id="8_u01n2"]
+[ext_resource type="PackedScene" uid="uid://b08obrprd472u" path="res://scenes/OptionsControl.tscn" id="9_lhlip"]
 [ext_resource type="Script" uid="uid://bl1xotduehieu" path="res://scripts/camera_sway.gd" id="9_qu0hn"]
 [ext_resource type="PackedScene" uid="uid://b5ew1rfc8ow8g" path="res://scenes/fishingRod.tscn" id="10_0fv5i"]
 [ext_resource type="Texture2D" uid="uid://cvllk03mhtybp" path="res://textures/723-normal.jpg" id="11_4uh7g"]
@@ -24,6 +25,7 @@
 [ext_resource type="AudioStream" uid="uid://he0cwfvqtp7v" path="res://sounds/beach.mp3" id="22_eos0w"]
 [ext_resource type="PackedScene" uid="uid://dguwyn5rc7uog" path="res://scenes/splash.tscn" id="23_7jawt"]
 [ext_resource type="PackedScene" uid="uid://cnx6x67gnieje" path="res://scenes/lake.glb" id="24_jyv4r"]
+[ext_resource type="Material" uid="uid://cj86wv7c01tef" path="res://materials/outlineWhite.tres" id="25_8wf4g"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_lvx2t"]
 shader = ExtResource("1_di3lw")
@@ -166,6 +168,8 @@ script/source = "extends Node3D
 @export var camera: Camera3D
 @export var fishing_location: String = \"forest\"
 @export var fishbook_ui: Control
+@export var options: Control
+
 
 @onready var anim: AnimationPlayer = $AnimationPlayer
 @onready var ripple_anim: AnimationPlayer = hook.get_node(\"AnimationPlayer\")
@@ -198,6 +202,8 @@ enum {
 }
 
 var state: int = STATE_IDLE
+
+var paused: bool = false
 
 # Cast Power Variables
 var cast_power: float = 0.0
@@ -242,6 +248,9 @@ func _ready() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+
+	if paused:
+		return
 	# 🆕 Rotation in beide Richtungen
 	if event.is_action_pressed(\"left\"):
 		rotate_camera_left()
@@ -353,6 +362,8 @@ func start_rotation() -> void:
 
 
 func _process(delta: float) -> void:
+	if Input.is_action_just_pressed(\"pause\"):
+		pauseMenu()
 	if state == STATE_ROTATING:
 		update_rotation(delta)
 	elif state == STATE_MINIGAME:
@@ -667,6 +678,16 @@ func trigger_splash_burst() -> void:
 	
 	if splash and state == STATE_MINIGAME:
 		splash.emitting = false
+	
+func pauseMenu():
+	print(paused)
+	paused = !paused
+	if paused:
+		options.show()        # ✅ Wenn pausiert, ZEIGE Menü
+		Engine.time_scale = 0  # ✅ Zeit anhalten
+	else:
+		options.hide()        # ✅ Wenn nicht pausiert, VERSTECKE Menü
+		Engine.time_scale = 1  # ✅ Zeit normal
 "
 
 [sub_resource type="Shader" id="Shader_muv0v"]
@@ -1202,6 +1223,10 @@ emission_energy_multiplier = 16.0
 [sub_resource type="SphereMesh" id="SphereMesh_08o8g"]
 material = SubResource("StandardMaterial3D_kp0ql")
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lhlip"]
+albedo_color = Color(0.279936, 0.188314, 0.060554, 1)
+metallic_specular = 0.0
+
 [node name="MainScene" type="Node3D"]
 
 [node name="Filter" type="CanvasLayer" parent="."]
@@ -1310,6 +1335,9 @@ visible = false
 
 [node name="CastPowerUI" parent="UI" instance=ExtResource("8_u01n2")]
 
+[node name="OptionsControl" parent="UI" instance=ExtResource("9_lhlip")]
+visible = false
+
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_di3lw")
 
@@ -1393,21 +1421,26 @@ transform = Transform3D(-0.190341, 0, 1.51307, 0, 1.525, 0, -1.51307, 0, -0.1903
 [node name="bite" type="AudioStreamPlayer" parent="Audio"]
 stream = ExtResource("18_a8hxt")
 volume_db = -2.811
+bus = &"SFX"
 
 [node name="cast" type="AudioStreamPlayer" parent="Audio"]
 stream = ExtResource("19_eomrh")
+bus = &"SFX"
 
 [node name="success" type="AudioStreamPlayer" parent="Audio"]
 stream = ExtResource("20_a88r6")
+bus = &"SFX"
 
 [node name="whoosh" type="AudioStreamPlayer" parent="Audio"]
 stream = ExtResource("21_okwed")
+bus = &"SFX"
 
 [node name="music" type="AudioStreamPlayer" parent="Audio"]
 stream = ExtResource("22_eos0w")
 volume_db = -10.407
 pitch_scale = 1.1
 autoplay = true
+bus = &"Music"
 
 [node name="Splash" parent="." instance=ExtResource("23_7jawt")]
 
@@ -1420,11 +1453,39 @@ transform = Transform3D(-1.07836e-07, 0, 2.467, 0, 2.467, 0, -2.467, 0, -1.07836
 [node name="tree4" parent="lake/Tree" index="244" instance=ExtResource("15_lr7uy")]
 transform = Transform3D(-1.07836e-07, 0, 2.467, 0, 2.467, 0, -2.467, 0, -1.07836e-07, 20.6338, -0.566296, 18.7489)
 
-[node name="tree2" parent="lake/Tree" index="245" instance=ExtResource("15_lr7uy")]
+[node name="tree5" parent="lake/Tree" index="245" instance=ExtResource("15_lr7uy")]
+transform = Transform3D(0.878785, 0, 2.30517, 0, 2.467, 0, -2.30517, 0, 0.878785, -5.32857, -2.96601, 16.9984)
+
+[node name="tree6" parent="lake/Tree" index="246" instance=ExtResource("15_lr7uy")]
+transform = Transform3D(0.878785, 0, 2.30517, 0, 2.467, 0, -2.30517, 0, 0.878785, -5.32857, -2.96601, 14.9897)
+
+[node name="tree7" parent="lake/Tree" index="247" instance=ExtResource("15_lr7uy")]
+transform = Transform3D(0.878785, 0, 2.30517, 0, 2.467, 0, -2.30517, 0, 0.878785, -5.32857, -2.96601, 11.8827)
+
+[node name="tree8" parent="lake/Tree" index="248" instance=ExtResource("15_lr7uy")]
+transform = Transform3D(0.878785, 0, 2.30517, 0, 2.467, 0, -2.30517, 0, 0.878785, -5.32857, -2.96601, 8.49319)
+
+[node name="tree9" parent="lake/Tree" index="249" instance=ExtResource("15_lr7uy")]
+transform = Transform3D(0.878785, 0, 2.30517, 0, 2.467, 0, -2.30517, 0, 0.878785, -5.32857, -2.96601, 5.10371)
+
+[node name="tree10" parent="lake/Tree" index="250" instance=ExtResource("15_lr7uy")]
+transform = Transform3D(0.878785, 0, 2.30517, 0, 2.467, 0, -2.30517, 0, 0.878785, -5.32857, -2.96601, 5.10371)
+
+[node name="tree11" parent="lake/Tree" index="251" instance=ExtResource("15_lr7uy")]
+transform = Transform3D(0.878785, 0, 2.30517, 0, 2.467, 0, -2.30517, 0, 0.878785, -5.32857, -2.96601, 2.13474)
+
+[node name="tree2" parent="lake/Tree" index="252" instance=ExtResource("15_lr7uy")]
 transform = Transform3D(-1.7979, 0, 2.6375, 0, 3.192, 0, -2.6375, 0, -1.7979, 17.0565, -0.566296, -3.14902)
 
-[node name="tree3" parent="lake/Tree" index="246" instance=ExtResource("15_lr7uy")]
+[node name="tree3" parent="lake/Tree" index="253" instance=ExtResource("15_lr7uy")]
 transform = Transform3D(-1.7979, 0, 2.6375, 0, 3.192, 0, -2.6375, 0, -1.7979, -6.81108, -5.36572, 20.2761)
+
+[node name="Cube" parent="lake" index="182"]
+material_override = ExtResource("25_8wf4g")
+surface_material_override/0 = SubResource("StandardMaterial3D_lhlip")
+
+[node name="Cube_001" parent="lake" index="183"]
+surface_material_override/0 = ExtResource("25_8wf4g")
 
 [editable path="PlayerCamera/FishingRod"]
 [editable path="lake"]

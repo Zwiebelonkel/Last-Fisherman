@@ -7,6 +7,7 @@ var upgrade_grip: int = 1
 var upgrade_bait: int = 1
 var upgrade_line: int = 1
 var last_scene: String = "res://scenes/MainScene.tscn"
+var options: String = "res://scenes/OptionsCOntrol.tscn"
 var fish_inventory: Array = []  # Liste aller gefangenen Fische
 var caught_fish_species: Dictionary = {}  # Für das Fischbuch
 var unlocked_spots = {
@@ -135,3 +136,4 @@ func load_game() -> void:
 		print("Spiel geladen!")
 	else:
 		print("Keine Speicherdatei gefunden, starte neues Spiel")
+		

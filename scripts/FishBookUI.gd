@@ -75,10 +75,6 @@ func load_bestiary():
 	
 	await get_tree().process_frame  # Warte bis alles gelöscht ist
 	
-	print("  GridContainer Size: ", grid_container.size)
-	print("  GridContainer Position: ", grid_container.position)
-	print("  GridContainer Columns: ", grid_container.columns)
-	
 	# Neue Einträge laden
 	var entries = fish_book.get_bestiary_entries(current_location)
 	print("  Entries zu laden: ", entries.size())
@@ -87,11 +83,7 @@ func load_bestiary():
 		var entry = entries[i]
 		var entry_ui = fish_entry_scene.instantiate()
 		entry_ui.set_fish_data(entry)
-		grid_container.add_child(entry_ui)
-		print("    [", i, "] ", entry["name"], " hinzugefügt")
-	
-	print("  GridContainer Children nach laden: ", grid_container.get_child_count())
-	
+		grid_container.add_child(entry_ui)	
 	# Stats aktualisieren
 	update_stats()
 

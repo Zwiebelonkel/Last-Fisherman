@@ -1,4 +1,4 @@
-[gd_scene load_steps=54 format=3 uid="uid://cx2sffjjdjuw5"]
+[gd_scene load_steps=55 format=3 uid="uid://cx2sffjjdjuw5"]
 
 [ext_resource type="Shader" uid="uid://dmg556n5nwodi" path="res://shader/pixelate.gdshader" id="1_1ns3k"]
 [ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="1_2phbr"]
@@ -10,6 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://cvllk03mhtybp" path="res://textures/723-normal.jpg" id="6_x537r"]
 [ext_resource type="PackedScene" uid="uid://be7bs5po2ukhi" path="res://scenes/FishBook.tscn" id="7_a7pbh"]
 [ext_resource type="Texture2D" uid="uid://d31603nl8y0gd" path="res://textures/Water_preview.jpgC878A51E-2B84-45CA-85CB-75E5BC88EEC8Large.jpg" id="7_cfq0f"]
+[ext_resource type="PackedScene" uid="uid://b08obrprd472u" path="res://scenes/OptionsControl.tscn" id="9_ye0jt"]
 [ext_resource type="Script" uid="uid://bymrcyid32xsp" path="res://scripts/line.gd" id="10_pjux3"]
 [ext_resource type="PackedScene" uid="uid://je70iqlm248a" path="res://scenes/CastPowerUI.tscn" id="11_7wwop"]
 [ext_resource type="PackedScene" uid="uid://dxxrhs12x2m2c" path="res://scenes/InventoryUI.tscn" id="11_pjux3"]
@@ -163,6 +164,8 @@ script/source = "extends Node3D
 @export var camera: Camera3D
 @export var fishing_location: String = \"lake\"
 @export var fishbook_ui: Control
+@export var options: Control
+
 
 @onready var anim: AnimationPlayer = $AnimationPlayer
 @onready var ripple_anim: AnimationPlayer = hook.get_node(\"AnimationPlayer\")
@@ -195,6 +198,8 @@ enum {
 }
 
 var state: int = STATE_IDLE
+
+var paused: bool = false
 
 # Cast Power Variables
 var cast_power: float = 0.0
@@ -239,6 +244,9 @@ func _ready() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+
+	if paused:
+		return
 	# 🆕 Rotation in beide Richtungen
 	if event.is_action_pressed(\"left\"):
 		rotate_camera_left()
@@ -350,6 +358,8 @@ func start_rotation() -> void:
 
 
 func _process(delta: float) -> void:
+	if Input.is_action_just_pressed(\"pause\"):
+		pauseMenu()
 	if state == STATE_ROTATING:
 		update_rotation(delta)
 	elif state == STATE_MINIGAME:
@@ -664,6 +674,16 @@ func trigger_splash_burst() -> void:
 	
 	if splash and state == STATE_MINIGAME:
 		splash.emitting = false
+	
+func pauseMenu():
+	print(paused)
+	paused = !paused
+	if paused:
+		options.show()        # ✅ Wenn pausiert, ZEIGE Menü
+		Engine.time_scale = 0  # ✅ Zeit anhalten
+	else:
+		options.hide()        # ✅ Wenn nicht pausiert, VERSTECKE Menü
+		Engine.time_scale = 1  # ✅ Zeit normal
 "
 
 [sub_resource type="Shader" id="Shader_muv0v"]
@@ -1333,6 +1353,9 @@ visible = false
 
 [node name="CastPowerUI" parent="UI" instance=ExtResource("11_7wwop")]
 
+[node name="OptionsControl" parent="UI" instance=ExtResource("9_ye0jt")]
+visible = false
+
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_cfq0f")
 
@@ -1340,7 +1363,7 @@ environment = SubResource("Environment_cfq0f")
 transform = Transform3D(-1, 0, -1.50996e-07, 0, 1, 0, 1.50996e-07, 0, -1, 0, 2.007, 0.0447942)
 script = ExtResource("1_ibiss")
 
-[node name="FishingRod" parent="PlayerCamera" node_paths=PackedStringArray("rod_tip", "hook", "splash", "waterplane", "catch_result_ui", "camera", "fishbook_ui", "inventory_ui") instance=ExtResource("1_echbf")]
+[node name="FishingRod" parent="PlayerCamera" node_paths=PackedStringArray("rod_tip", "hook", "splash", "waterplane", "catch_result_ui", "camera", "fishbook_ui", "options", "inventory_ui") instance=ExtResource("1_echbf")]
 transform = Transform3D(0.925417, -0.163176, -0.34202, 0.173648, 0.984808, 0, 0.336824, -0.0593912, 0.939693, 0.4, -0.40033, -1.03766)
 script = SubResource("GDScript_8wjpf")
 rod_tip = NodePath("RodMesh/RodTip")
@@ -1352,6 +1375,7 @@ rotation_speed = 300.0
 camera = NodePath("..")
 fishing_location = "lake"
 fishbook_ui = NodePath("../../UI/FishBook")
+options = NodePath("../../UI/OptionsControl")
 cast_power_ui_scene = ExtResource("11_7wwop")
 inventory_ui = NodePath("../../UI/InventoryUI")
 
@@ -1431,21 +1455,26 @@ surface_material_override/0 = SubResource("StandardMaterial3D_25dfr")
 [node name="bite" type="AudioStreamPlayer" parent="Audio"]
 stream = ExtResource("18_2phbr")
 volume_db = -2.811
+bus = &"SFX"
 
 [node name="cast" type="AudioStreamPlayer" parent="Audio"]
 stream = ExtResource("19_mkg2b")
+bus = &"SFX"
 
 [node name="success" type="AudioStreamPlayer" parent="Audio"]
 stream = ExtResource("20_1ns3k")
+bus = &"SFX"
 
 [node name="whoosh" type="AudioStreamPlayer" parent="Audio"]
 stream = ExtResource("21_a7pbh")
+bus = &"SFX"
 
 [node name="music" type="AudioStreamPlayer" parent="Audio"]
 stream = ExtResource("22_mkg2b")
 volume_db = -10.407
 pitch_scale = 1.1
 autoplay = true
+bus = &"Music"
 
 [node name="clouds" parent="." instance=ExtResource("24_a7pbh")]
 transform = Transform3D(-1.81, -2.73302e-07, 1.19464e-14, 0, -7.91176e-08, -1.81, 2.73302e-07, -1.81, 7.91176e-08, 0, 4.53567, 8.9877)

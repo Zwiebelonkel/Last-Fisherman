@@ -1,4 +1,4 @@
-[gd_scene load_steps=54 format=4 uid="uid://bwpkoys7chajb"]
+[gd_scene load_steps=55 format=4 uid="uid://bwpkoys7chajb"]
 
 [ext_resource type="Shader" uid="uid://dmg556n5nwodi" path="res://shader/pixelate.gdshader" id="1_qk11g"]
 [ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="2_rtjjv"]
@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://cdb3sodlv6np7" path="res://scenes/MoneyHUD.tscn" id="6_i37rq"]
 [ext_resource type="PackedScene" uid="uid://be7bs5po2ukhi" path="res://scenes/FishBook.tscn" id="7_skxsd"]
 [ext_resource type="PackedScene" uid="uid://je70iqlm248a" path="res://scenes/CastPowerUI.tscn" id="8_rxgvs"]
+[ext_resource type="PackedScene" uid="uid://b08obrprd472u" path="res://scenes/OptionsControl.tscn" id="9_qk11g"]
 [ext_resource type="Script" uid="uid://bl1xotduehieu" path="res://scripts/camera_sway.gd" id="10_11ck5"]
 [ext_resource type="PackedScene" uid="uid://b5ew1rfc8ow8g" path="res://scenes/fishingRod.tscn" id="11_c82cw"]
 [ext_resource type="Texture2D" uid="uid://cvllk03mhtybp" path="res://textures/723-normal.jpg" id="13_kyn5a"]
@@ -167,6 +168,8 @@ script/source = "extends Node3D
 @export var camera: Camera3D
 @export var fishing_location: String = \"sewer\"
 @export var fishbook_ui: Control
+@export var options: Control
+
 
 @onready var anim: AnimationPlayer = $AnimationPlayer
 @onready var ripple_anim: AnimationPlayer = hook.get_node(\"AnimationPlayer\")
@@ -199,6 +202,8 @@ enum {
 }
 
 var state: int = STATE_IDLE
+
+var paused: bool = false
 
 # Cast Power Variables
 var cast_power: float = 0.0
@@ -243,6 +248,9 @@ func _ready() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+
+	if paused:
+		return
 	# 🆕 Rotation in beide Richtungen
 	if event.is_action_pressed(\"left\"):
 		rotate_camera_left()
@@ -354,6 +362,8 @@ func start_rotation() -> void:
 
 
 func _process(delta: float) -> void:
+	if Input.is_action_just_pressed(\"pause\"):
+		pauseMenu()
 	if state == STATE_ROTATING:
 		update_rotation(delta)
 	elif state == STATE_MINIGAME:
@@ -668,6 +678,16 @@ func trigger_splash_burst() -> void:
 	
 	if splash and state == STATE_MINIGAME:
 		splash.emitting = false
+	
+func pauseMenu():
+	print(paused)
+	paused = !paused
+	if paused:
+		options.show()        # ✅ Wenn pausiert, ZEIGE Menü
+		Engine.time_scale = 0  # ✅ Zeit anhalten
+	else:
+		options.hide()        # ✅ Wenn nicht pausiert, VERSTECKE Menü
+		Engine.time_scale = 1  # ✅ Zeit normal
 "
 
 [sub_resource type="Shader" id="Shader_muv0v"]
@@ -1438,6 +1458,9 @@ visible = false
 
 [node name="CastPowerUI" parent="UI" instance=ExtResource("8_rxgvs")]
 
+[node name="OptionsControl" parent="UI" instance=ExtResource("9_qk11g")]
+visible = false
+
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_8tyyj")
 
@@ -1498,15 +1521,19 @@ transform = Transform3D(-0.190341, 0, 1.51307, 0, 1.525, 0, -1.51307, 0, -0.1903
 [node name="bite" type="AudioStreamPlayer" parent="Audio"]
 stream = ExtResource("19_aj5s8")
 volume_db = -2.811
+bus = &"SFX"
 
 [node name="cast" type="AudioStreamPlayer" parent="Audio"]
 stream = ExtResource("20_v8e37")
+bus = &"SFX"
 
 [node name="success" type="AudioStreamPlayer" parent="Audio"]
 stream = ExtResource("21_fko2s")
+bus = &"SFX"
 
 [node name="whoosh" type="AudioStreamPlayer" parent="Audio"]
 stream = ExtResource("22_aqbbn")
+bus = &"SFX"
 
 [node name="music" type="AudioStreamPlayer" parent="Audio"]
 stream = ExtResource("21_kqfxt")
