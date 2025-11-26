@@ -49,16 +49,19 @@ texture = ExtResource("2_ri3oc")
 [node name="NameLabel" type="Label" parent="VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "Name"
 
 [node name="RarityLabel" type="Label" parent="VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "Rarity"
 
 [node name="ValueLabel" type="Label" parent="VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "Value"
 
 [node name="MarginContainer2" type="MarginContainer" parent="VBoxContainer"]

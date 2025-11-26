@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://dxxrhs12x2m2c"]
+[gd_scene load_steps=4 format=3 uid="uid://dxxrhs12x2m2c"]
 
 [ext_resource type="Script" uid="uid://d3iohn7q1clid" path="res://scripts/InventoryUI.gd" id="1_wqexf"]
 [ext_resource type="StyleBox" uid="uid://c8rkdsvu78m67" path="res://materials/PanelCustom.tres" id="2_ju2k0"]
+[ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="3_l5txx"]
 
 [node name="InventoryUI" type="Control"]
 layout_mode = 3
@@ -36,6 +37,9 @@ theme_override_constants/margin_top = 5
 
 [node name="Label" type="Label" parent="PanelContainer/VBoxContainer"]
 layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_l5txx")
+theme_override_font_sizes/font_size = 31
 text = "Titel"
 horizontal_alignment = 1
 

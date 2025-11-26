@@ -1,0 +1,86 @@
+[gd_scene load_steps=4 format=3 uid="uid://cgevfj8vkjjqy"]
+
+[ext_resource type="Script" uid="uid://pib3m55dmyll" path="res://scripts/credits.gd" id="1_0bpdh"]
+[ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="1_2ckv8"]
+
+[sub_resource type="Theme" id="Theme_0ctdu"]
+default_font = ExtResource("1_2ckv8")
+
+[node name="Credits" type="Panel"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_0ctdu")
+script = ExtResource("1_0bpdh")
+
+[node name="VScrollBar" type="ScrollContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="VScrollBar"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VScrollBar/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 30
+
+[node name="Label" type="Label" parent="VScrollBar/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "Water shader 3D by Lesus
+https://godotshaders.com/shader/water-shader-3d-godot-4-3/"
+
+[node name="Label2" type="Label" parent="VScrollBar/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "Screen Warping by AivanWorld
+https://godotshaders.com/shader/screen-warping/"
+
+[node name="Label3" type="Label" parent="VScrollBar/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "The simplest outline shader (improved) by CountingClowns
+https://godotshaders.com/shader/the-simplest-outline-shader-improved/"
+
+[node name="Label4" type="Label" parent="VScrollBar/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "Redneck Character PSX Style by vinrax
+https://sketchfab.com/3d-models/redneck-character-psx-style-7b02de568d7c491b8be7bc50246789ad"
+
+[node name="Label5" type="Label" parent="VScrollBar/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "Lowpoly Berlin U-bahn Station by n-malmberg
+https://sketchfab.com/3d-models/lowpoly-berlin-u-bahn-station-2a02d3f2eccf4cd29bbaa1348787395e"
+
+[node name="Label6" type="Label" parent="VScrollBar/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "PSX Forest Asset Pack  by AkuVain
+https://skfb.ly/oJPOT"
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -31.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Back"
+
+[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]

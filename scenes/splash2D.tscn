@@ -1,0 +1,25 @@
+[gd_scene load_steps=2 format=3 uid="uid://bo0v8sskr3vwq"]
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_s8di1"]
+lifetime_randomness = 1.0
+particle_flag_disable_z = true
+inherit_velocity_ratio = 0.789
+direction = Vector3(0, -9.525, 0)
+spread = 180.0
+flatness = 0.174
+initial_velocity_max = 119.47
+gravity = Vector3(0, 98, 0)
+turbulence_enabled = true
+turbulence_noise_strength = 20.0
+turbulence_noise_speed_random = 4.0
+turbulence_influence_min = 0.0
+turbulence_influence_max = 0.02
+
+[node name="GPUParticles2D" type="GPUParticles2D"]
+emitting = false
+amount = 593
+lifetime = 1.11
+one_shot = true
+explosiveness = 1.0
+randomness = 1.0
+process_material = SubResource("ParticleProcessMaterial_s8di1")

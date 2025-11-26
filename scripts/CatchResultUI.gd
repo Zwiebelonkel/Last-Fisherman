@@ -5,6 +5,7 @@ extends PanelContainer
 @onready var fish_value: Label = $VBoxContainer/MarginContainer4/FishValue
 @onready var continue_button: Button = $VBoxContainer/ContinueButton
 @onready var anim: AnimationPlayer = $VBoxContainer/AnimationPlayer
+@onready var splash: GPUParticles2D = $Splash
 var current_fish: Dictionary
 
 func _ready():
@@ -14,6 +15,7 @@ func _ready():
 func show_fish(fish: Dictionary):
 	current_fish = fish
 	visible = true
+	splash.restart()
 	# Füllen
 	fish_icon.texture = _get_fish_icon(fish)
 	fish_name.text = fish["name"]
