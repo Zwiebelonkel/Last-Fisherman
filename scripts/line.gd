@@ -11,7 +11,7 @@ var shader_material: ShaderMaterial = ShaderMaterial.new()
 var hook_velocity: Vector3 = Vector3.ZERO
 var last_hook_pos: Vector3 = Vector3.ZERO
 var segments: int = 24
-var hang_factor: float = 0.3
+var hang_factor: float = 0.7
 var follow_factor: float = 0.05
 
 # Smoothing / Anti-Flicker
@@ -31,19 +31,24 @@ func _ready() -> void:
 	# Shader
 	var shader := Shader.new()
 	shader.code = """
-		shader_type spatial;
-		render_mode cull_front, unshaded;
-		
-		uniform vec3 color : source_color = vec3(0.05,0.05,0.05);
-		uniform float thickness : hint_range(0.0, 1.0, 0.01) = 0.01;
-		
-		void vertex() {
-			VERTEX += thickness * NORMAL;
-		}
-		
-		void fragment() {
-			ALBEDO = color;
-		}
+shader_type spatial;
+render_mode cull_front, unshaded;
+
+uniform vec3 color : source_color = vec3(1.0, 1.0, 1.0);
+uniform float thickness : hint_range(0.0, 1.0, 0.01) = 0.01;
+
+uniform vec3 glow_color : source_color = vec3(1.0, 0.5, 0.0);
+uniform float glow_strength : hint_range(0.0, 10.0, 0.1) = 20.0;
+
+void vertex() {
+	VERTEX += thickness * NORMAL;
+}
+
+void fragment() {
+	ALBEDO = color;
+	EMISSION = glow_color * glow_strength; // 🔥 hier entsteht das Glühen
+}
+
 	"""
 	
 	shader_material.shader = shader
