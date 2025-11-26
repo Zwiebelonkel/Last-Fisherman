@@ -1,9 +1,10 @@
-[gd_scene load_steps=18 format=3 uid="uid://dme4l6a6jg0g6"]
+[gd_scene load_steps=19 format=3 uid="uid://dme4l6a6jg0g6"]
 
 [ext_resource type="PackedScene" uid="uid://b5ew1rfc8ow8g" path="res://scenes/fishingRod.tscn" id="1_3qbwi"]
 [ext_resource type="Script" uid="uid://cl5fc0glwmnhs" path="res://scripts/UpgradeShop.gd" id="1_i2sg0"]
 [ext_resource type="Shader" uid="uid://imf547kyj0bj" path="res://shader/CRT.gdshader" id="2_nnl43"]
 [ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="3_ltjmg"]
+[ext_resource type="Script" uid="uid://bl1xotduehieu" path="res://scripts/camera_sway.gd" id="4_8sl8s"]
 [ext_resource type="AudioStream" uid="uid://jckhtkutmeot" path="res://sounds/shop.mp3" id="4_a5104"]
 [ext_resource type="AudioStream" uid="uid://cgv2wx0vgdw41" path="res://sounds/interact.mp3" id="5_ltjmg"]
 [ext_resource type="PackedScene" uid="uid://5eeohonkr6bu" path="res://textures/hillybilly.glb" id="7_pmnnn"]
@@ -12,14 +13,18 @@
 background_mode = 1
 background_energy_multiplier = 0.0
 glow_enabled = true
-glow_intensity = 2.13
+glow_intensity = 8.0
 glow_hdr_threshold = 1.66
-fog_enabled = true
 fog_light_color = Color(0, 0, 0, 1)
-fog_density = 0.2577
+fog_light_energy = 3.78
+fog_density = 0.138
 volumetric_fog_enabled = true
-volumetric_fog_density = 0.0
-volumetric_fog_albedo = Color(0, 0, 0, 1)
+volumetric_fog_density = 0.3471
+volumetric_fog_albedo = Color(0.244776, 0.244776, 0.244776, 1)
+volumetric_fog_emission_energy = 0.0
+volumetric_fog_gi_inject = 1.66
+volumetric_fog_anisotropy = -0.29
+volumetric_fog_ambient_inject = 0.3
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_nnl43"]
 shader = ExtResource("2_nnl43")
@@ -148,12 +153,16 @@ theme = SubResource("Theme_pmnnn")
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.10217)
+script = ExtResource("4_8sl8s")
 
 [node name="OmniLight3D" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.908624)
+visible = false
 light_color = Color(1, 1, 0.392157, 1)
 light_energy = 3.407
 light_volumetric_fog_energy = 0.575
+shadow_enabled = true
+shadow_blur = 2.12
 
 [node name="RodPreview" parent="." instance=ExtResource("1_3qbwi")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.005, -2.792)
@@ -289,6 +298,17 @@ light_energy = 16.0
 light_volumetric_fog_energy = 0.0
 omni_range = 0.046
 omni_attenuation = 3.185
+
+[node name="SpotLight3D" type="SpotLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1.19249e-08, 1, 0, -1, 1.19249e-08, 0, 2.03144, -2.67199)
+light_color = Color(1, 1, 0.435294, 1)
+light_energy = 16.0
+light_indirect_energy = 3.944
+light_volumetric_fog_energy = 14.336
+light_specular = 8.177
+shadow_enabled = true
+spot_range = 4.677
+spot_angle = 26.555
 
 [connection signal="pressed" from="UI/Panel/VBoxContainer/GripButton" to="." method="_on_GripButton_pressed"]
 [connection signal="pressed" from="UI/Panel/VBoxContainer/BaitButton" to="." method="_on_BaitButton_pressed"]

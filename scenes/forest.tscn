@@ -1,4 +1,4 @@
-[gd_scene load_steps=53 format=3 uid="uid://bru2npwxw6p10"]
+[gd_scene load_steps=55 format=3 uid="uid://bru2npwxw6p10"]
 
 [ext_resource type="Shader" uid="uid://dmg556n5nwodi" path="res://shader/pixelate.gdshader" id="1_di3lw"]
 [ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="2_8wf4g"]
@@ -20,6 +20,7 @@
 [ext_resource type="PackedScene" uid="uid://5eeohonkr6bu" path="res://textures/hillybilly.glb" id="17_o06ba"]
 [ext_resource type="AudioStream" uid="uid://esyv0p374c5j" path="res://sounds/bite.mp3" id="18_a8hxt"]
 [ext_resource type="AudioStream" uid="uid://cldy38iwm8ovi" path="res://sounds/cast.mp3" id="19_eomrh"]
+[ext_resource type="Texture2D" uid="uid://78m2uv71v8g" path="res://textures/868D2E8F-084A-43B2-89CA-409B706108C3.png" id="19_g34gq"]
 [ext_resource type="AudioStream" uid="uid://26m0pjkxve85" path="res://sounds/sucess.mp3" id="20_a88r6"]
 [ext_resource type="AudioStream" uid="uid://cmr6cded4l11v" path="res://sounds/whoosh.mp3" id="21_okwed"]
 [ext_resource type="AudioStream" uid="uid://he0cwfvqtp7v" path="res://sounds/beach.mp3" id="22_eos0w"]
@@ -1343,6 +1344,10 @@ emission_energy_multiplier = 16.0
 [sub_resource type="SphereMesh" id="SphereMesh_08o8g"]
 material = SubResource("StandardMaterial3D_kp0ql")
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_soql2"]
+shading_mode = 0
+albedo_texture = ExtResource("19_g34gq")
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lhlip"]
 albedo_color = Color(0.279936, 0.188314, 0.060554, 1)
 metallic_specular = 0.0
@@ -1532,10 +1537,13 @@ mesh = SubResource("SphereMesh_08o8g")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.52933, 0, 28.9893)
 
 [node name="Shop" parent="." instance=ExtResource("16_igjew")]
-transform = Transform3D(-3.12536e-08, 0, 0.715, 0, 0.715, 0, -0.715, 0, -3.12536e-08, -18.5039, -0.152334, -0.208801)
+transform = Transform3D(-3.12536e-08, 0, 0.715, 0, 0.715, 0, -0.715, 0, -3.12536e-08, -8.45807, -0.152334, -0.208801)
 
 [node name="hillybilly" parent="." instance=ExtResource("17_o06ba")]
-transform = Transform3D(-0.190341, 0, 1.51307, 0, 1.525, 0, -1.51307, 0, -0.190341, -18.9429, -0.424028, 0.672108)
+transform = Transform3D(-0.0750014, 0, 1.52315, 0, 1.525, 0, -1.52315, 0, -0.0750014, -8.69869, -0.424028, 0.731691)
+
+[node name="Object_34" parent="hillybilly/metarig/Skeleton3D" index="0"]
+surface_material_override/0 = SubResource("StandardMaterial3D_soql2")
 
 [node name="Audio" type="Node" parent="."]
 
@@ -1621,4 +1629,5 @@ transform = Transform3D(-0.173992, 0, -0.984747, 0, 1, 0, 0.984747, 0, -0.173992
 transform = Transform3D(0.495, 0, 0, 0, 1.01, 0, 0, 0, 0.105, 0.0924568, -2.07669, 82.8271)
 
 [editable path="PlayerCamera/FishingRod"]
+[editable path="hillybilly"]
 [editable path="lake"]
