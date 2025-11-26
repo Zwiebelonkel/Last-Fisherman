@@ -169,7 +169,7 @@ script/source = "extends Node3D
 @export var shop_scene_path: String = \"res://scenes/shop.tscn\"
 @export var rotation_speed: float = 2.0
 @export var camera: Camera3D
-@export var fishing_location: String = \"sewer\"
+@export var fishing_location: String = \"forest\"
 @export var fishbook_ui: Control
 @export var options: Control
 
@@ -222,6 +222,7 @@ var cast_power_speed: float = 3
 var max_cast_power: float = 1.0
 var min_distance: float = 2.0
 var max_distance: float = 8.0
+var last_cast_quality: float = 0.0  # Speichert die Qualität des letzten Wurfs
 
 # Minigame Variables
 var marker_pos: float = 0.0
@@ -596,6 +597,7 @@ func release_cast() -> void:
 		cast_power_ui.hide_power()
 	
 	var power_quality = 1.0 - abs(cast_power - 1.0)
+	last_cast_quality = power_quality  # Speichern für späteren Gebrauch
 	
 	print(\"Cast released with power: \", power_quality)
 	cast_line(power_quality)
@@ -725,11 +727,15 @@ func start_catch_minigame() -> void:
 
 	splash.emitting = true
 
-	current_fish = FishDB.get_random_from_list(FishDB.FISH_SEWER, Player.upgrade_bait)
+	# Cast-Qualität als Bonus für bessere Fische verwenden
+	var quality_bonus = int(last_cast_quality * 2)  # 0-2 zusätzliche Level
+	var effective_bait = Player.upgrade_bait + quality_bonus
+	
+	current_fish = FishDB.get_random_from_list(FishDB.FISH_FOREST, effective_bait)
 	var difficulty = FishDB.get_fish_difficulty(current_fish)
 	marker_speed = FishDB.get_marker_speed_for_fish(current_fish)
 	
-	print(\"Gefangen: \", current_fish[\"name\"], \" (Schwierigkeit: \", difficulty, \")\")
+	print(\"Gefangen: \", current_fish[\"name\"], \" (Schwierigkeit: \", difficulty, \", Cast-Qualität: \", last_cast_quality, \", Effektives Bait-Level: \", effective_bait, \")\")
 
 	catch_progress.value = 50.0
 	marker_pos = 0.0
@@ -766,12 +772,19 @@ func update_catch_minigame(delta: float) -> void:
 		var grip_multiplier := 1.0 + (Player.upgrade_grip - 1) * 0.05
 		catch_progress.value += 40.0 * grip_multiplier * delta
 		
-		if not splash.emitting:
-			trigger_splash_burst()
+		# Splash Particles immer am Hook spawnen wenn im Sweet Spot
+		if splash:
+			splash.global_position = hook.global_position
+			if not splash.emitting:
+				splash.emitting = true
 		
 		camera.start_screenshake(0.03,0.2)
 	else:
 		catch_progress.value = max(0.0, catch_progress.value - 25.0 * delta)
+		
+		# Splash stoppen wenn außerhalb des Sweet Spots
+		if splash and splash.emitting:
+			splash.emitting = false
 
 	if catch_progress.value >= 100.0:
 		end_catch_minigame(true)
@@ -1480,7 +1493,7 @@ waterplane = NodePath("../../WaterPlane")
 catch_result_ui = NodePath("../../UI/CatchResultUI")
 rotation_speed = 300.0
 camera = NodePath("..")
-fishing_location = "sewer"
+fishing_location = "forest"
 fishbook_ui = NodePath("../../UI/FishBook")
 options = NodePath("../../UI/OptionsControl")
 cast_power_ui_scene = ExtResource("8_u01n2")
