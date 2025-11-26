@@ -627,7 +627,9 @@ func cast_line(power: float = 1.0) -> void:
 	hook.position = Vector3(x, water_height, z)
 	hook.visible = true
 	hook_start_position = hook.global_position
-	hook_end_position = rod_tip.global_position
+	var min_z = min_distance
+	hook_end_position = rod_tip.global_position + rod_tip.global_transform.basis.z * min_z
+	hook_end_position.y = water_height
 
 	splash.position = Vector3(x, water_height, z)
 	splash.visible = true
