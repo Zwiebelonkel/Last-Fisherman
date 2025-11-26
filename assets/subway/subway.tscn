@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3 uid="uid://bvvfbbsylnidf"]
+
+[ext_resource type="PackedScene" uid="uid://calhjjvojxv17" path="res://assets/subway/scene.gltf" id="1_08cuj"]
+
+[node name="Node3D" type="Node3D"]
+
+[node name="Sketchfab_Scene" parent="." instance=ExtResource("1_08cuj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00390339, 0, -0.565084)
+
+[node name="Object_3" parent="Sketchfab_Scene/Sketchfab_model/berlin ubahn station-12-14_obj_cleaner_materialmerger_gles" index="1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 45.654, -1.01372e-14)
+visible = false
+
+[editable path="Sketchfab_Scene"]

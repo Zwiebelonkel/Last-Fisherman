@@ -16,7 +16,7 @@ func _ready():
 	icon = $VBoxContainer/MarginContainer/Icon
 	name_label = $VBoxContainer/NameLabel
 	rarity_label = $VBoxContainer/RarityLabel
-	value_label = $VBoxContainer/ValueLabel
+	value_label = $VBoxContainer/ValueLabel	
 	
 	# Debug
 	print("FishBookEntry._ready() - Nodes gefunden:")
