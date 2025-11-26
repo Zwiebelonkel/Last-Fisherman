@@ -59,6 +59,14 @@ script/source = "extends Node3D
 @export var fishbook_ui: Control
 @export var options: Control
 
+# 🆕 UI Buttons
+@export var journal_button: Button
+@export var inventory_button: Button
+@export var map_button: Button
+@export var left_button: Button
+@export var right_button: Button
+@export var interact_button: Button
+
 
 @onready var anim: AnimationPlayer = $AnimationPlayer
 @onready var ripple_anim: AnimationPlayer = hook.get_node(\"AnimationPlayer\")
@@ -108,16 +116,16 @@ var marker_slow_factor: float = 0.3
 var input_active: bool = false
 var current_fish: Dictionary = {}
 
-# 🆕 Erweiterte Rotation Variables (4 Richtungen)
-var current_rotation: float = 180.0  # Start bei Fishing
+# Erweiterte Rotation Variables (4 Richtungen)
+var current_rotation: float = 180.0
 var target_rotation: float = 180.0
 var is_rotating: bool = false
 
-# 🆕 Definierte Rotationspositionen
-const ROTATION_FISHING: float = 180.0  # Angelposition
-const ROTATION_SHOP: float = 90.0      # Shop
-const ROTATION_EMPTY_1: float = 0.0    # Leere Position
-const ROTATION_EMPTY_2: float = 270.0  # Leere Position
+# Definierte Rotationspositionen
+const ROTATION_FISHING: float = 180.0
+const ROTATION_SHOP: float = 90.0
+const ROTATION_EMPTY_1: float = 0.0
+const ROTATION_EMPTY_2: float = 270.0
 
 var hook_start_position: Vector3
 var hook_end_position: Vector3
@@ -134,13 +142,43 @@ func _ready() -> void:
 	if cast_power_ui_scene:
 		cast_power_ui = cast_power_ui_scene.instantiate()
 		add_child(cast_power_ui)
+	
+	# 🆕 Button-Signals verbinden
+	setup_buttons()
+
+
+# 🆕 Button Setup
+func setup_buttons() -> void:
+	if journal_button:
+		journal_button.pressed.connect(toggle_fishbook)
+	
+	if inventory_button:
+		inventory_button.pressed.connect(toggle_inventory)
+	
+	if map_button:
+		map_button.pressed.connect(open_map)
+	
+	if left_button:
+		left_button.pressed.connect(rotate_camera_left)
+	
+	if right_button:
+		right_button.pressed.connect(rotate_camera_right)
+	
+	if interact_button:
+		interact_button.pressed.connect(on_interact_pressed)
 
 
 func _unhandled_input(event: InputEvent) -> void:
-
+	# 🆕 ESC/Pause behandeln - IMMER als erstes prüfen
+	if event.is_action_released(\"pause\"):
+		handle_pause_input()
+		return
+	
+	# Während Pause keine anderen Inputs verarbeiten
 	if paused:
 		return
-	# 🆕 Rotation in beide Richtungen
+	
+	# Rotation in beide Richtungen
 	if event.is_action_pressed(\"left\"):
 		rotate_camera_left()
 		return
@@ -157,8 +195,12 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed(\"journal\"):
 		toggle_fishbook()
 		return
+	
+	if event.is_action_pressed(\"inventory_toggle\"):
+		toggle_inventory()
+		return
 
-	# 🆕 Shop betreten bei 90° (VOR der Rotation-Blockade!)
+	# Shop betreten bei 90° (VOR der Rotation-Blockade!)
 	if event.is_action_pressed(\"cast\") and abs(current_rotation - ROTATION_SHOP) < 1.0:
 		print(\"DEBUG: Versuche Shop zu betreten, State = \", state)
 		enter_shop()
@@ -175,7 +217,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		if event.is_action_released(\"cast\"):
 			input_active = false
 
-	# 🆕 Cast-Taste Handling je nach Position
+	# Cast-Taste Handling je nach Position
 	if event.is_action_pressed(\"cast\"):
 		print(\"DEBUG: current_rotation = \", current_rotation, \" | camera.rotation.y = \", rad_to_deg(camera.rotation.y))
 		
@@ -195,13 +237,100 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_released(\"cast\"):
 		if state == STATE_CHARGING:
 			release_cast()
-	
-	if event.is_action_pressed(\"inventory_toggle\"):
-		inventory_ui.toggle()
 
 
 # ---------------------------------------------------------
-# 🆕 4-RICHTUNGS ROTATION SYSTEM
+# 🆕 MENÜ-MANAGEMENT SYSTEM
+# ---------------------------------------------------------
+func handle_pause_input() -> void:
+	# Prüfe welche Menüs offen sind (Priorität: Fishbook > Inventory > Options)
+	
+	# 1. Wenn Fishbook offen ist, schließe es
+	if fishbook_ui and fishbook_ui.visible:
+		close_fishbook()
+		return
+	
+	# 2. Wenn Inventory offen ist, schließe es
+	if inventory_ui and inventory_ui.visible:
+		close_inventory()
+		return
+	
+	# 3. Wenn Options offen ist, schließe es
+	if options and options.visible:
+		close_options()
+		return
+	
+	# 4. Wenn alle zu sind, öffne Options
+	open_options()
+
+
+func toggle_fishbook() -> void:
+	if state == STATE_MINIGAME or state == STATE_BITE:
+		return
+	
+	if fishbook_ui.visible:
+		close_fishbook()
+	else:
+		open_fishbook()
+
+
+func toggle_inventory() -> void:
+	if inventory_ui.visible:
+		close_inventory()
+	else:
+		open_inventory()
+
+
+func open_fishbook() -> void:
+	# Schließe alle anderen Menüs
+	close_inventory()
+	close_options()
+	
+	fishbook_ui.visible = true
+	paused = true
+	Engine.time_scale = 0
+
+
+func close_fishbook() -> void:
+	fishbook_ui.visible = false
+	paused = false
+	Engine.time_scale = 1
+
+
+func open_inventory() -> void:
+	# Schließe alle anderen Menüs
+	close_fishbook()
+	close_options()
+	
+	inventory_ui.show()
+	paused = true
+	Engine.time_scale = 0
+
+
+func close_inventory() -> void:
+	inventory_ui.hide()
+	paused = false
+	Engine.time_scale = 1
+
+
+func open_options() -> void:
+	# Schließe alle anderen Menüs
+	close_fishbook()
+	close_inventory()
+	
+	options.show()
+	paused = true
+	Engine.time_scale = 0
+
+
+func close_options() -> void:
+	options.hide()
+	paused = false
+	Engine.time_scale = 1
+
+
+# ---------------------------------------------------------
+# 4-RICHTUNGS ROTATION SYSTEM
 # ---------------------------------------------------------
 func rotate_camera_left() -> void:
 	if is_rotating:
@@ -210,15 +339,15 @@ func rotate_camera_left() -> void:
 	whoosh_sound.play()
 	
 	# Im Uhrzeigersinn: 180 → 270 → 0 → 90 → 180
-	if current_rotation == ROTATION_FISHING:  # 180 → 270
+	if current_rotation == ROTATION_FISHING:
 		target_rotation = ROTATION_EMPTY_2
-	elif current_rotation == ROTATION_EMPTY_2:  # 270 → 0
+	elif current_rotation == ROTATION_EMPTY_2:
 		target_rotation = ROTATION_EMPTY_1
-	elif current_rotation == ROTATION_EMPTY_1:  # 0 → 90
+	elif current_rotation == ROTATION_EMPTY_1:
 		target_rotation = ROTATION_SHOP
-	elif current_rotation == ROTATION_SHOP:  # 90 → 180
+	elif current_rotation == ROTATION_SHOP:
 		target_rotation = ROTATION_FISHING
-	
+	reset_line()
 	start_rotation()
 
 
@@ -229,15 +358,15 @@ func rotate_camera_right() -> void:
 	whoosh_sound.play()
 	
 	# Gegen Uhrzeigersinn: 180 → 90 → 0 → 270 → 180
-	if current_rotation == ROTATION_FISHING:  # 180 → 90
+	if current_rotation == ROTATION_FISHING:
 		target_rotation = ROTATION_SHOP
-	elif current_rotation == ROTATION_SHOP:  # 90 → 0
+	elif current_rotation == ROTATION_SHOP:
 		target_rotation = ROTATION_EMPTY_1
-	elif current_rotation == ROTATION_EMPTY_1:  # 0 → 270
+	elif current_rotation == ROTATION_EMPTY_1:
 		target_rotation = ROTATION_EMPTY_2
-	elif current_rotation == ROTATION_EMPTY_2:  # 270 → 180
+	elif current_rotation == ROTATION_EMPTY_2:
 		target_rotation = ROTATION_FISHING
-	
+	reset_line()
 	start_rotation()
 
 
@@ -245,14 +374,11 @@ func start_rotation() -> void:
 	state = STATE_ROTATING
 	is_rotating = true
 	
-	# Fisch-Aktivitäten stoppen
 	if state == STATE_MINIGAME:
 		catch_ui.visible = false
 
 
 func _process(delta: float) -> void:
-	if Input.is_action_just_pressed(\"pause\"):
-		pauseMenu()
 	if state == STATE_ROTATING:
 		update_rotation(delta)
 	elif state == STATE_MINIGAME:
@@ -264,16 +390,13 @@ func _process(delta: float) -> void:
 func update_rotation(delta: float) -> void:
 	var rotation_step = rotation_speed * delta
 	
-	# 🆕 Normalisiere die Rotation für 360° Wrap-Around
 	var diff = target_rotation - current_rotation
 	
-	# Wenn Differenz > 180°, gehe in die andere Richtung
 	if diff > 180.0:
 		diff -= 360.0
 	elif diff < -180.0:
 		diff += 360.0
 	
-	# Bewege in die richtige Richtung
 	if abs(diff) < rotation_step:
 		current_rotation = target_rotation
 	elif diff > 0:
@@ -281,7 +404,6 @@ func update_rotation(delta: float) -> void:
 	else:
 		current_rotation -= rotation_step
 	
-	# Normalisiere current_rotation auf 0-360
 	if current_rotation >= 360.0:
 		current_rotation -= 360.0
 	elif current_rotation < 0.0:
@@ -290,22 +412,43 @@ func update_rotation(delta: float) -> void:
 	if camera:
 		camera.rotation.y = deg_to_rad(current_rotation)
 
-	# Rotation abgeschlossen
 	if abs(current_rotation - target_rotation) < 0.5:
 		current_rotation = target_rotation
 		is_rotating = false
 		
-		# 🆕 State basierend auf Position setzen
 		if current_rotation == ROTATION_FISHING:
-			state = STATE_IDLE  # Fischen erlaubt
+			state = STATE_IDLE
 		else:
-			state = STATE_ROTATING  # Keine Aktionen außer Drehen
+			state = STATE_ROTATING
 
 
 func enter_shop() -> void:
 	print(\"Betrete Shop!\")
 	Player.update_last_scene(\"res://scenes/city.tscn\")
 	get_tree().change_scene_to_file(\"res://scenes/shop_inside.tscn\")
+
+
+# 🆕 Button Handler Funktionen
+func open_map() -> void:
+	Player.update_last_scene(\"res://scenes/city.tscn\")
+	get_tree().change_scene_to_file(\"res://scenes/MapScene.tscn\")
+
+
+func on_interact_pressed() -> void:
+	# Shop betreten bei 90°
+	if abs(current_rotation - ROTATION_SHOP) < 1.0:
+		enter_shop()
+		return
+	
+	# Bei 180° (Fishing) -> Cast/Reel
+	if abs(current_rotation - ROTATION_FISHING) < 1.0:
+		match state:
+			STATE_IDLE:
+				start_charging_cast()
+			STATE_CHARGING:
+				release_cast()
+			STATE_CASTED, STATE_BITE:
+				reel_pressed()
 
 
 # ---------------------------------------------------------
@@ -408,6 +551,7 @@ func reset_line() -> void:
 	ui_bite_indicator.visible = false
 	anim.play(\"idle\")
 	emit_signal(\"line_visible\", false)
+	catch_ui.hide()
 
 
 # ---------------------------------------------------------
@@ -508,7 +652,6 @@ func update_catch_minigame(delta: float) -> void:
 		var grip_multiplier := 1.0 + (Player.upgrade_grip - 1) * 0.05
 		catch_progress.value += 40.0 * grip_multiplier * delta
 		
-		# 🆕 Splash-Effekt nur wenn nicht bereits aktiv
 		if not splash.emitting:
 			trigger_splash_burst()
 		
@@ -542,41 +685,16 @@ func end_catch_minigame(success: bool) -> void:
 	await reset_line()
 
 
-func toggle_fishbook():
-	if state == STATE_MINIGAME or state == STATE_BITE:
-		return
-	fishbook_ui.visible = not fishbook_ui.visible
-
-	if fishbook_ui.visible:
-		state = STATE_IDLE
-		ui_bite_indicator.visible = false
-		hook.visible = false
-		splash.visible = false
-		splash.emitting = false
-
-
-# 🆕 Splash Burst Funktion für zuverlässige Partikel-Emission
 func trigger_splash_burst() -> void:
 	if not splash:
 		return
 	
 	splash.emitting = true
 	
-	# Kurzer Burst, dann automatisch stoppen
 	await get_tree().create_timer(0.15).timeout
 	
 	if splash and state == STATE_MINIGAME:
 		splash.emitting = false
-	
-func pauseMenu():
-	print(paused)
-	paused = !paused
-	if paused:
-		options.show()        # ✅ Wenn pausiert, ZEIGE Menü
-		Engine.time_scale = 0  # ✅ Zeit anhalten
-	else:
-		options.hide()        # ✅ Wenn nicht pausiert, VERSTECKE Menü
-		Engine.time_scale = 1  # ✅ Zeit normal
 "
 
 [sub_resource type="Shader" id="Shader_dqb0a"]
