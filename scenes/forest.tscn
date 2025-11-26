@@ -220,8 +220,8 @@ var paused: bool = false
 var cast_power: float = 0.0
 var cast_power_speed: float = 3
 var max_cast_power: float = 1.0
-var min_distance: float = 2.0
-var max_distance: float = 8.0
+var min_distance: float = 3.0
+var max_distance: float = 20.0
 var last_cast_quality: float = 0.0  # Speichert die Qualität des letzten Wurfs
 
 # Minigame Variables
@@ -1510,7 +1510,7 @@ mesh = SubResource("PlaneMesh_bqum3")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0925, 5)
 
 [node name="Ripple" type="MeshInstance3D" parent="Hook"]
-transform = Transform3D(0.5, 0, 0, 0, -2.18557e-08, 0.5, 0, -0.5, -2.18557e-08, 0, -0.233042, 0.217663)
+transform = Transform3D(0.5, 0, 0, 0, -2.18557e-08, 0.5, 0, -0.5, -2.18557e-08, 0, -0.233042, 0.0437179)
 mesh = SubResource("QuadMesh_xqxf2")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Hook"]

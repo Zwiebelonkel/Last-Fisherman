@@ -221,8 +221,8 @@ var paused: bool = false
 var cast_power: float = 0.0
 var cast_power_speed: float = 3
 var max_cast_power: float = 1.0
-var min_distance: float = 2.0
-var max_distance: float = 8.0
+var min_distance: float = 20.0
+var max_distance: float = 70.0
 var last_cast_quality: float = 0.0  # Speichert die Qualität des letzten Wurfs
 
 # Minigame Variables
@@ -1488,6 +1488,7 @@ environment = SubResource("Environment_cfq0f")
 [node name="PlayerCamera" type="Camera3D" parent="."]
 transform = Transform3D(-1, 0, -1.50996e-07, 0, 1, 0, 1.50996e-07, 0, -1, 0, 2.007, 0.0447942)
 script = ExtResource("10_smrcg")
+sway_amount = 0.115
 
 [node name="FishingRod" parent="PlayerCamera" node_paths=PackedStringArray("rod_tip", "hook", "splash", "waterplane", "catch_result_ui", "camera", "fishbook_ui", "options", "inventory_ui") instance=ExtResource("11_y20ih")]
 transform = Transform3D(0.925417, -0.163176, -0.34202, 0.173648, 0.984808, 0, 0.336824, -0.0593912, 0.939693, 0.4, -0.40033, -1.03766)
@@ -1516,7 +1517,7 @@ mesh = SubResource("PlaneMesh_eank5")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0925, 5)
 
 [node name="Ripple" type="MeshInstance3D" parent="Hook"]
-transform = Transform3D(0.5, 0, 0, 0, -2.18557e-08, 0.5, 0, -0.5, -2.18557e-08, 0, -0.233042, 15.1203)
+transform = Transform3D(0.5, 0, 0, 0, -2.18557e-08, 0.5, 0, -0.5, -2.18557e-08, 0, -0.233042, 21.41)
 mesh = SubResource("QuadMesh_611at")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Hook"]
