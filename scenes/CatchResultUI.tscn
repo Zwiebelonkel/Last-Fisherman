@@ -1,36 +1,12 @@
-[gd_scene load_steps=14 format=3 uid="uid://cqtn78ty1fa7"]
+[gd_scene load_steps=11 format=3 uid="uid://cqtn78ty1fa7"]
 
 [ext_resource type="Script" uid="uid://dstq66nai8yi0" path="res://scripts/CatchResultUI.gd" id="1_dnped"]
 [ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="1_nuupr"]
 [ext_resource type="Texture2D" uid="uid://cdqevtqdy43fr" path="res://assets/fish/unknown.png" id="3_nuupr"]
-[ext_resource type="Shader" uid="uid://cba6yft4b3q2g" path="res://shader/2DShine.gdshader" id="3_nvhde"]
 [ext_resource type="PackedScene" uid="uid://bo0v8sskr3vwq" path="res://scenes/splash2D.tscn" id="5_e4ghr"]
 
 [sub_resource type="Theme" id="Theme_nvhde"]
 default_font = ExtResource("1_nuupr")
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_e4ghr"]
-bg_color = Color(0.133196, 0.133196, 0.133196, 0.709804)
-border_color = Color(0.650128, 0.650128, 0.650128, 1)
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
-shadow_color = Color(0, 0, 0, 0.172549)
-shadow_size = 15
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_ksy5q"]
-shader = ExtResource("3_nvhde")
-shader_parameter/Line_Smoothness = 0.045
-shader_parameter/Line_Width = 0.09
-shader_parameter/Brightness = -9.76
-shader_parameter/Rotation_deg = 30.0
-shader_parameter/Distortion = 1.418
-shader_parameter/Speed = 0.7
-shader_parameter/Position = 0.0
-shader_parameter/Position_Min = 0.25
-shader_parameter/Position_Max = 0.5
-shader_parameter/Alpha = 1.0
 
 [sub_resource type="Animation" id="Animation_nuupr"]
 resource_name = "pulse"
@@ -77,32 +53,46 @@ _data = {
 &"pop": SubResource("Animation_6707x")
 }
 
-[node name="CatchResultUI" type="PanelContainer"]
+[node name="CatchResultUI" type="Control"]
+layout_mode = 3
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -139.0
-offset_top = -96.0
-offset_right = 139.0
-offset_bottom = 96.0
+offset_left = -120.0
+offset_top = -150.0
+offset_right = 120.0
+offset_bottom = 112.0
 grow_horizontal = 2
 grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 theme = SubResource("Theme_nvhde")
-theme_override_styles/panel = SubResource("StyleBoxFlat_e4ghr")
 script = ExtResource("1_dnped")
 
 [node name="Splash" parent="." instance=ExtResource("5_e4ghr")]
-position = Vector2(137, 118)
+position = Vector2(111.58, 87.46)
 scale = Vector2(3.5, 3.5)
 
+[node name="Panel2" type="Panel" parent="."]
+layout_mode = 0
+offset_right = 240.0
+offset_bottom = 262.0
+
 [node name="Panel" type="Panel" parent="."]
-material = SubResource("ShaderMaterial_ksy5q")
 layout_mode = 2
+offset_right = 240.0
+offset_bottom = 262.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
+offset_right = 240.0
+offset_bottom = 262.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="VBoxContainer"]
 layout_mode = 2
@@ -122,7 +112,7 @@ theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
 [node name="FishIcon" type="TextureRect" parent="VBoxContainer/MarginContainer/PanelContainer/MarginContainer"]
-custom_minimum_size = Vector2(168.19, 114.4)
+custom_minimum_size = Vector2(188.405, 130.065)
 layout_direction = 1
 layout_mode = 2
 size_flags_horizontal = 4
@@ -169,6 +159,10 @@ layout_mode = 2
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "d"
 
-[node name="ContinueButton" type="Button" parent="VBoxContainer"]
+[node name="ContinueButton" type="Button" parent="."]
 layout_mode = 2
+offset_top = 239.0
+offset_right = 240.0
+offset_bottom = 262.0
+size_flags_vertical = 8
 text = "Continue"

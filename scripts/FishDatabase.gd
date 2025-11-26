@@ -50,15 +50,15 @@ var FISH_CITY = [
 ]
 
 var FISH_SEWER = [
-	{"name": "Schmutzgrundel",     "rarity": RARITY.NORMAL,        "base_value": 8,   "icon": "res://assets/fish/fish1.png"},
-	{"name": "Signalfänger",       "rarity": RARITY.NORMAL,        "base_value": 10,   "icon": "res://assets/fish/signal.png"},
+	{"name": "Kackwurst",     "rarity": RARITY.NORMAL,        "base_value": 8,   "icon": "res://assets/fish/kackwurst.png"},
+	{"name": "Forelle",       "rarity": RARITY.NORMAL,        "base_value": 10,   "icon": "res://assets/fish/signal.png"},
 	{"name": "Trümmerkabel-Fisch", "rarity": RARITY.UNGEWOEHNLICH, "base_value": 12,  "icon": "res://assets/fish/fish1.png"},
-	{"name": "Rohrschatten",       "rarity": RARITY.SELTEN,        "base_value": 20,  "icon": "res://assets/fish/fish1.png"},
-	{"name": "Neonflosser",        "rarity": RARITY.EPISCH,        "base_value": 36,  "icon": "res://assets/fish/fish1.png"},
-	{"name": "Zigaretten",        "rarity": RARITY.EPISCH,        "base_value": 40,  "icon": "res://assets/fish/Boro.png"},
+	{"name": "Teerfisch",       "rarity": RARITY.SELTEN,        "base_value": 20,  "icon": "res://assets/fish/fish1.png"},
+	{"name": "Mondfisch",        "rarity": RARITY.EPISCH,        "base_value": 36,  "icon": "res://assets/fish/fish1.png"},
+	{"name": "Katzenhai",        "rarity": RARITY.EPISCH,        "base_value": 40,  "icon": "res://assets/fish/Boro.png"},
 	{"name": "Führerschein",      "rarity": RARITY.LEGENDAER,     "base_value": 80,  "icon": "res://assets/fish/führerschein.png"},
-	{"name": "Stadtmythos",        "rarity": RARITY.EXOTISCH,      "base_value": 200, "icon": "res://assets/fish/fish1.png"},
-	{"name": "Leiche",             "rarity": RARITY.EXOTISCH,      "base_value": 0,   "icon": "res://assets/fish/corpse.png"}
+	{"name": "Wütende Scholle",        "rarity": RARITY.EXOTISCH,      "base_value": 200, "icon": "res://assets/fish/fish1.png"},
+	{"name": "Kondom",             "rarity": RARITY.EXOTISCH,      "base_value": 0,   "icon": "res://assets/fish/corpse.png"}
 ]
 
 var FISH_FOREST = [

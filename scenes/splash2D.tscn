@@ -1,4 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://bo0v8sskr3vwq"]
+[gd_scene load_steps=3 format=3 uid="uid://bo0v8sskr3vwq"]
+
+[ext_resource type="Texture2D" uid="uid://cdvwrtfpv1of2" path="res://assets/particles/dropletRare.png" id="1_ba10i"]
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_s8di1"]
 lifetime_randomness = 1.0
@@ -17,7 +19,8 @@ turbulence_influence_max = 0.02
 
 [node name="GPUParticles2D" type="GPUParticles2D"]
 emitting = false
-amount = 593
+amount = 673
+texture = ExtResource("1_ba10i")
 lifetime = 1.11
 one_shot = true
 explosiveness = 1.0

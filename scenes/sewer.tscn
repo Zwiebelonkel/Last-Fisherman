@@ -220,8 +220,8 @@ var paused: bool = false
 var cast_power: float = 0.0
 var cast_power_speed: float = 3
 var max_cast_power: float = 1.0
-var min_distance: float = 1.0
-var max_distance: float = 3.0
+var min_distance: float = 3.0
+var max_distance: float = 5.0
 var last_cast_quality: float = 0.0  # Speichert die Qualität des letzten Wurfs
 
 # Minigame Variables
