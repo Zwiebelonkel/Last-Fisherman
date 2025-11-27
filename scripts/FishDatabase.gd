@@ -125,7 +125,7 @@ var FISH_SEWER = [
 	{"name": "Wütende Scholle", "rarity": RARITY.EXOTISCH, "base_value": 200, "icon": "res://assets/fish/fish1.png",
 	 "description": "Hat valide Gründe für ihre Wut. Glaub mir."},
 	
-	{"name": "Kondom", "rarity": RARITY.EXOTISCH, "base_value": 8, "icon": "res://assets/fish/corpse.png",
+	{"name": "Kondom", "rarity": RARITY.EXOTISCH, "base_value": 8, "icon": "res://assets/fish/Kondom.png",
 	 "description": "Gebraucht. Wirf es zurück. WIRF. ES. ZURÜCK."}
 ]
 
@@ -145,7 +145,7 @@ var FISH_FOREST = [
 	{"name": "Neonflosser", "rarity": RARITY.EPISCH, "base_value": 45, "icon": "res://assets/fish/fish1.png",
 	 "description": "Elektrisierend. Wörtlich."},
 	
-	{"name": "Waldfresser", "rarity": RARITY.EPISCH, "base_value": 70, "icon": "res://assets/fish/Boro.png",
+	{"name": "Waldfresser", "rarity": RARITY.EPISCH, "base_value": 70, "icon": "res://assets/fish/Gutter.png",
 	 "description": "Vegetarier. Frisst buchstäblich den Wald. Irgendwie ironisch."},
 	
 	{"name": "Bambushai", "rarity": RARITY.LEGENDAER, "base_value": 100, "icon": "res://assets/fish/fish1.png",
