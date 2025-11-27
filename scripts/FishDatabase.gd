@@ -107,7 +107,7 @@ var FISH_SEWER = [
 	{"name": "Forelle", "rarity": RARITY.NORMAL, "base_value": 10, "icon": "res://assets/fish/signal.png",
 	 "description": "Hat schon bessere Tage gesehen. Und bessere Gewässer."},
 	
-	{"name": "Wels", "rarity": RARITY.UNGEWOEHNLICH, "base_value": 12, "icon": "res://assets/fish/fish1.png",
+	{"name": "Wels", "rarity": RARITY.UNGEWOEHNLICH, "base_value": 12, "icon": "res://assets/fish/Wels.png",
 	 "description": "Sieht aus wie dein Schnurrbart nach drei Wochen Quarantäne."},
 	
 	{"name": "Teerfisch", "rarity": RARITY.SELTEN, "base_value": 20, "icon": "res://assets/fish/fish1.png",
