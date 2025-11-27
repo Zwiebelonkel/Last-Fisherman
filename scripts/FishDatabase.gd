@@ -26,8 +26,10 @@ var RARITY_DATA = {
 # ===========================
 var FISH_LAKE = [
 	{"name": "Seetang",        "rarity": RARITY.NORMAL,        "base_value": 1,   "icon": "res://assets/fish/seetang.png"},
+	{"name": "Makrele",        "rarity": RARITY.NORMAL,        "base_value": 4,   "icon": "res://assets/fish/fish1.png"},
 	{"name": "Rotauge",        "rarity": RARITY.NORMAL,        "base_value": 5,   "icon": "res://assets/fish/fish1.png"},
 	{"name": "Barsch",         "rarity": RARITY.UNGEWOEHNLICH, "base_value": 8,   "icon": "res://assets/fish/fish2.png"},
+	{"name": "Thunfisch",         "rarity": RARITY.UNGEWOEHNLICH, "base_value": 10,   "icon": "res://assets/fish/fish2.png"},
 	{"name": "Hecht",          "rarity": RARITY.SELTEN,        "base_value": 15,  "icon": "res://assets/fish/fish3.png"},
 	{"name": "Zander",         "rarity": RARITY.EPISCH,        "base_value": 25,  "icon": "res://assets/fish/fish4.png"},
 	{"name": "Kaugummikarpfen",  "rarity": RARITY.EPISCH,        "base_value": 28,  "icon": "res://assets/fish/Kaugummi.png"},
@@ -40,8 +42,9 @@ var FISH_CITY = [
 	{"name": "Sand-Aal",     "rarity": RARITY.NORMAL,        "base_value": 6,   "icon": "res://assets/fish/Aal.png"},
 	{"name": "Signalfänger",       "rarity": RARITY.NORMAL,        "base_value": 7,   "icon": "res://assets/fish/signal.png"},
 	{"name": "Trümmerkabel-Fisch", "rarity": RARITY.UNGEWOEHNLICH, "base_value": 10,  "icon": "res://assets/fish/trümmer.png"},
-	{"name": "Diskusfisch",       "rarity": RARITY.SELTEN,        "base_value": 18,  "icon": "res://assets/fish/fish1.png"},
-	{"name": "Barakuda",       "rarity": RARITY.SELTEN,        "base_value": 25,  "icon": "res://assets/fish/baracuda.png"},
+	{"name": "Dorsch", "rarity": RARITY.UNGEWOEHNLICH, "base_value": 11,  "icon": "res://assets/fish/trümmer.png"},
+	{"name": "Diskusfisch",       "rarity": RARITY.SELTEN,        "base_value": 18,  "icon": "res://assets/fish/diskus.png"},
+	{"name": "Barrakuda",       "rarity": RARITY.SELTEN,        "base_value": 25,  "icon": "res://assets/fish/baracuda.png"},
 	{"name": "Neonflosser",        "rarity": RARITY.EPISCH,        "base_value": 30,  "icon": "res://assets/fish/Eel.png"},
 	{"name": "Zigaretten",        "rarity": RARITY.EPISCH,        "base_value": 35,  "icon": "res://assets/fish/Boro.png"},
 	{"name": "Altstadtgeist",      "rarity": RARITY.LEGENDAER,     "base_value": 55,  "icon": "res://assets/fish/fish1.png"},
@@ -63,8 +66,8 @@ var FISH_SEWER = [
 
 var FISH_FOREST = [
 	{"name": "Karpfen",     "rarity": RARITY.NORMAL,        "base_value": 10,   "icon": "res://assets/fish/fish1.png"},
-	{"name": "Signalfänger",       "rarity": RARITY.NORMAL,        "base_value": 15,   "icon": "res://assets/fish/signal.png"},
-	{"name": "Trümmerkabel-Fisch", "rarity": RARITY.UNGEWOEHNLICH, "base_value": 19,  "icon": "res://assets/fish/fish1.png"},
+	{"name": "Wels",       "rarity": RARITY.NORMAL,        "base_value": 15,   "icon": "res://assets/fish/signal.png"},
+	{"name": "Koi", "rarity": RARITY.UNGEWOEHNLICH, "base_value": 19,  "icon": "res://assets/fish/fish1.png"},
 	{"name": "Rohrschatten",       "rarity": RARITY.SELTEN,        "base_value": 27,  "icon": "res://assets/fish/fish1.png"},
 	{"name": "Neonflosser",        "rarity": RARITY.EPISCH,        "base_value": 45,  "icon": "res://assets/fish/fish1.png"},
 	{"name": "Zigaretten",        "rarity": RARITY.EPISCH,        "base_value": 70,  "icon": "res://assets/fish/Boro.png"},
