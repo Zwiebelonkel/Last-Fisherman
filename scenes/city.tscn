@@ -1456,7 +1456,7 @@ mesh = SubResource("PlaneMesh_qg23i")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.875422, 4.83257)
 
 [node name="Ripple" type="MeshInstance3D" parent="Hook"]
-transform = Transform3D(0.5, 0, 0, 0, -2.18557e-08, 0.5, 0, -0.5, -2.18557e-08, 0, 10.6269, 2.14998)
+transform = Transform3D(0.5, 0, 0, 0, -2.18557e-08, 0.5, 0, -0.5, -2.18557e-08, 0, 0, 0)
 mesh = SubResource("QuadMesh_611at")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Hook"]
