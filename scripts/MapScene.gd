@@ -129,10 +129,13 @@ func _on_submit_pressed() -> void:
 	passwordField.clear()
 	
 	if password == "money":
-		Player.add_money(1000000)
+		Player.add_money(1000000000000000)
 		password = ""
 	elif password == "fish":
 		Player._add_all_fish()
+		password = ""
+	elif password == "*":
+		Player.set_money(Player.money*100)
 		password = ""
 	else:
 		return

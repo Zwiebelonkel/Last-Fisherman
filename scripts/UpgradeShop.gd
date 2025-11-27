@@ -6,6 +6,7 @@ extends Node3D
 @onready var rod_preview: Node3D = $RodPreview
 @onready var music: AudioStreamPlayer = $Audio/music
 @onready var interact: AudioStreamPlayer = $Audio/interact
+@onready var splash: GPUParticles3D = $RodPreview/Splash
 
 
 var base_grip_cost := 50
@@ -41,6 +42,7 @@ func _on_GripButton_pressed():
 		Player.save_game()
 		interact.play()
 		update_ui()
+		splash.restart()
 
 func _on_BaitButton_pressed():
 	var bait_cost = calculate_cost(base_bait_cost, Player.upgrade_bait)
@@ -49,8 +51,9 @@ func _on_BaitButton_pressed():
 		Player.upgrade_bait += 1
 		Player.save_game()
 		interact.play()
-
 		update_ui()
+		splash.restart()
+
 
 func _on_LineButton_pressed():
 	var line_cost = calculate_cost(base_line_cost, Player.upgrade_line)
@@ -60,6 +63,8 @@ func _on_LineButton_pressed():
 		Player.save_game()
 		interact.play()
 		update_ui()
+		splash.restart()
+
 
 func _on_BackButton_pressed():
 	Player.go_to_last_scene()
