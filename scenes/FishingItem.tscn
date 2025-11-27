@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://daypp8rdpr4m6"]
 
-[ext_resource type="Texture2D" uid="uid://5bjxsmrb0phj" path="res://textures/NEURA_Logo.jpeg" id="1_pbt77"]
+[ext_resource type="Texture2D" uid="uid://betks3bpt551v" path="res://assets/fish/base.png" id="1_pbt77"]
 
 [node name="HBoxContainer" type="HBoxContainer"]
 anchors_preset = 15

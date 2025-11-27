@@ -28,7 +28,7 @@ var FISH_LAKE = [
 	{"name": "Seetang", "rarity": RARITY.NORMAL, "base_value": 1, "icon": "res://assets/fish/seetang.png",
 	 "description": "Technisch gesehen kein Fisch. Aber mach erstmal weiter."},
 	
-	{"name": "Makrele", "rarity": RARITY.NORMAL, "base_value": 4, "icon": "res://assets/fish/fish1.png",
+	{"name": "Makrele", "rarity": RARITY.NORMAL, "base_value": 4, "icon": "res://assets/fish/makrele.png",
 	 "description": "Der Toyota Corolla unter den Fischen. Zuverlässig langweilig."},
 	
 	{"name": "Rotauge", "rarity": RARITY.NORMAL, "base_value": 5, "icon": "res://assets/fish/fish1.png",
@@ -100,6 +100,9 @@ var FISH_CITY = [
 var FISH_SEWER = [
 	{"name": "Kackwurst", "rarity": RARITY.NORMAL, "base_value": 8, "icon": "res://assets/fish/kackwurst.png",
 	 "description": "Exakt das, wonach es aussieht. Verkauf es schnell."},
+	
+	{"name": "Sardine", "rarity": RARITY.NORMAL, "base_value": 9, "icon": "res://assets/fish/fish1.png",
+	 "description": "Möchte intensiv in eine DOse gepresst werden."},
 	
 	{"name": "Forelle", "rarity": RARITY.NORMAL, "base_value": 10, "icon": "res://assets/fish/signal.png",
 	 "description": "Hat schon bessere Tage gesehen. Und bessere Gewässer."},

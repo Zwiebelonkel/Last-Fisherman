@@ -76,6 +76,19 @@ func remove_fish(index: int) -> void:
 	if index >= 0 and index < fish_inventory.size():
 		fish_inventory.remove_at(index)
 		save_game()
+		
+func _add_all_fish() -> void:
+	for fish in FishDB.FISH_LAKE:
+		add_fish(fish)
+	for fish in FishDB.FISH_CITY:
+		add_fish(fish)
+	for fish in FishDB.FISH_SEWER:
+		add_fish(fish)
+	for fish in FishDB.FISH_FOREST:
+		add_fish(fish)
+	for fish in FishDB.FISH_DESERT:
+		add_fish(fish)
+
 
 func clear_inventory():
 	fish_inventory.clear()
@@ -96,7 +109,7 @@ func reset():
 	upgrade_bait = 1
 	upgrade_line = 1
 	last_scene = "res://scenes/MainScene.tscn"
-	fish_inventory.clear()
+	Inventory.clear_inventory()
 	caught_fish_species.clear()
 	unlocked_spots = {
 		"lake": true,

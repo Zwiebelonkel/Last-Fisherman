@@ -125,11 +125,14 @@ func _disconnect_all(btn: Button):
 
 func _on_submit_pressed() -> void:
 	var password
-	password = passwordField.get_line(0)
+	password = passwordField.text
 	passwordField.clear()
 	
-	if password == "fisher":
+	if password == "money":
 		Player.add_money(1000000)
+		password = ""
+	elif password == "fish":
+		Player._add_all_fish()
 		password = ""
 	else:
 		return

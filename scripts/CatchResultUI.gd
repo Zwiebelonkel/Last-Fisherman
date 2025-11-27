@@ -28,6 +28,11 @@ const SHINE_SHADER := preload("res://shader/2DShine.gdshader")
 func _ready() -> void: 
 	visible = false
 	continue_button.pressed.connect(_on_continue_pressed)
+	
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed("cast"):
+		_on_continue_pressed()
+		return
 
 
 func show_fish(fish: Dictionary) -> void:
