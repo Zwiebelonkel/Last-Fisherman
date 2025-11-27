@@ -23,8 +23,8 @@
 [ext_resource type="Texture2D" uid="uid://78m2uv71v8g" path="res://textures/868D2E8F-084A-43B2-89CA-409B706108C3.png" id="19_g34gq"]
 [ext_resource type="AudioStream" uid="uid://26m0pjkxve85" path="res://sounds/sucess.mp3" id="20_a88r6"]
 [ext_resource type="AudioStream" uid="uid://cmr6cded4l11v" path="res://sounds/whoosh.mp3" id="21_okwed"]
-[ext_resource type="AudioStream" uid="uid://he0cwfvqtp7v" path="res://sounds/beach.mp3" id="22_eos0w"]
 [ext_resource type="PackedScene" uid="uid://dguwyn5rc7uog" path="res://scenes/splash.tscn" id="23_7jawt"]
+[ext_resource type="AudioStream" uid="uid://5k0clft7ijfq" path="res://sounds/forest.mp3" id="24_g34gq"]
 [ext_resource type="PackedScene" uid="uid://cnx6x67gnieje" path="res://scenes/lake.glb" id="24_jyv4r"]
 [ext_resource type="Material" uid="uid://cj86wv7c01tef" path="res://materials/outlineWhite.tres" id="25_8wf4g"]
 [ext_resource type="PackedScene" uid="uid://bej6o0ysl85et" path="res://assets/rock.glb" id="27_37aet"]
@@ -1589,8 +1589,8 @@ stream = ExtResource("21_okwed")
 bus = &"SFX"
 
 [node name="music" type="AudioStreamPlayer" parent="Audio"]
-stream = ExtResource("22_eos0w")
-volume_db = -10.407
+stream = ExtResource("24_g34gq")
+volume_db = -3.587
 pitch_scale = 1.1
 autoplay = true
 bus = &"Music"
