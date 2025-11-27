@@ -400,8 +400,8 @@ func open_fishbook() -> void:
 	close_options()
 	
 	fishbook_ui.visible = true
-	paused = true
-	Engine.time_scale = 0
+	paused = false
+	Engine.time_scale = 1
 
 
 func close_fishbook() -> void:
@@ -416,8 +416,8 @@ func open_inventory() -> void:
 	close_options()
 	
 	inventory_ui.show()
-	paused = true
-	Engine.time_scale = 0
+	paused = false
+	Engine.time_scale = 1
 
 
 func close_inventory() -> void:
