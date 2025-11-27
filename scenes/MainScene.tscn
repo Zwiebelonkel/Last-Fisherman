@@ -622,12 +622,19 @@ func cast_line(power: float = 1.0) -> void:
 	if waterplane:
 		water_height = waterplane.global_position.y
 	
+	# Hook landet weit weg (Start Position)
 	hook.position = Vector3(x, water_height, z)
 	hook.visible = true
-	hook_start_position = hook.global_position
-	var min_z = min_distance
-	hook_end_position = rod_tip.global_position + rod_tip.global_transform.basis.z * min_z
-	hook_end_position.y = water_height
+	hook_start_position = hook.global_position  # Weit weg im Wasser
+	
+	# ✅ FIX: End Position ist bei min_distance (nicht ganz zur Angel!)
+	# Berechne Position bei min_distance in Richtung der Angel
+	var direction_to_rod = (rod_tip.global_position - hook.global_position).normalized()
+	direction_to_rod.y = 0  # Nur horizontale Bewegung
+	
+	# End Position = min_distance vor der Angel
+	hook_end_position = rod_tip.global_position - direction_to_rod * min_distance
+	hook_end_position.y = water_height  # Bleib auf Wasserhöhe
 
 	splash.position = Vector3(x, water_height, z)
 	splash.visible = true
@@ -744,9 +751,12 @@ func start_catch_minigame() -> void:
 
 func update_catch_minigame(delta: float) -> void:
 	var current_speed = marker_speed
-	var t := catch_progress.value / 100
+	
+	# ✅ FIX: Progress = 0% → Hook bleibt weit draußen (max_distance)
+	#         Progress = 100% → Hook kommt auf min_distance zur Angel
+	var t := catch_progress.value / 100.0
 	var new_pos := hook_start_position.lerp(hook_end_position, t)
-	new_pos.y = hook_start_position.y
+	new_pos.y = hook_start_position.y  # Bleib auf Wasserhöhe
 	hook.global_position = new_pos
 
 	if input_active:
@@ -790,7 +800,6 @@ func update_catch_minigame(delta: float) -> void:
 		end_catch_minigame(true)
 	elif catch_progress.value <= 0.0:
 		end_catch_minigame(false)
-
 
 func end_catch_minigame(success: bool) -> void:
 	camera.start_screenshake(0.4,0.3)
