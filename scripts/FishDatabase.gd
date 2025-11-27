@@ -39,8 +39,8 @@ var FISH_LAKE = [
 var FISH_CITY = [
 	{"name": "Sand-Aal",     "rarity": RARITY.NORMAL,        "base_value": 6,   "icon": "res://assets/fish/Aal.png"},
 	{"name": "Signalfänger",       "rarity": RARITY.NORMAL,        "base_value": 7,   "icon": "res://assets/fish/signal.png"},
-	{"name": "Trümmerkabel-Fisch", "rarity": RARITY.UNGEWOEHNLICH, "base_value": 10,  "icon": "res://assets/fish/fish1.png"},
-	{"name": "Rohrschatten",       "rarity": RARITY.SELTEN,        "base_value": 18,  "icon": "res://assets/fish/fish1.png"},
+	{"name": "Trümmerkabel-Fisch", "rarity": RARITY.UNGEWOEHNLICH, "base_value": 10,  "icon": "res://assets/fish/trümmer.png"},
+	{"name": "Diskusfisch",       "rarity": RARITY.SELTEN,        "base_value": 18,  "icon": "res://assets/fish/fish1.png"},
 	{"name": "Barakuda",       "rarity": RARITY.SELTEN,        "base_value": 25,  "icon": "res://assets/fish/baracuda.png"},
 	{"name": "Neonflosser",        "rarity": RARITY.EPISCH,        "base_value": 30,  "icon": "res://assets/fish/Eel.png"},
 	{"name": "Zigaretten",        "rarity": RARITY.EPISCH,        "base_value": 35,  "icon": "res://assets/fish/Boro.png"},
@@ -52,37 +52,37 @@ var FISH_CITY = [
 var FISH_SEWER = [
 	{"name": "Kackwurst",     "rarity": RARITY.NORMAL,        "base_value": 8,   "icon": "res://assets/fish/kackwurst.png"},
 	{"name": "Forelle",       "rarity": RARITY.NORMAL,        "base_value": 10,   "icon": "res://assets/fish/signal.png"},
-	{"name": "Trümmerkabel-Fisch", "rarity": RARITY.UNGEWOEHNLICH, "base_value": 12,  "icon": "res://assets/fish/fish1.png"},
+	{"name": "Wels",           "rarity": RARITY.UNGEWOEHNLICH, "base_value": 12,  "icon": "res://assets/fish/fish1.png"},
 	{"name": "Teerfisch",       "rarity": RARITY.SELTEN,        "base_value": 20,  "icon": "res://assets/fish/fish1.png"},
 	{"name": "Mondfisch",        "rarity": RARITY.EPISCH,        "base_value": 36,  "icon": "res://assets/fish/fish1.png"},
 	{"name": "Katzenhai",        "rarity": RARITY.EPISCH,        "base_value": 40,  "icon": "res://assets/fish/Boro.png"},
 	{"name": "Führerschein",      "rarity": RARITY.LEGENDAER,     "base_value": 80,  "icon": "res://assets/fish/führerschein.png"},
 	{"name": "Wütende Scholle",        "rarity": RARITY.EXOTISCH,      "base_value": 200, "icon": "res://assets/fish/fish1.png"},
-	{"name": "Kondom",             "rarity": RARITY.EXOTISCH,      "base_value": 0,   "icon": "res://assets/fish/corpse.png"}
+	{"name": "Kondom",             "rarity": RARITY.EXOTISCH,      "base_value": 8,   "icon": "res://assets/fish/corpse.png"}
 ]
 
 var FISH_FOREST = [
-	{"name": "Schmutzgrundel",     "rarity": RARITY.NORMAL,        "base_value": 8,   "icon": "res://assets/fish/fish1.png"},
-	{"name": "Signalfänger",       "rarity": RARITY.NORMAL,        "base_value": 10,   "icon": "res://assets/fish/signal.png"},
-	{"name": "Trümmerkabel-Fisch", "rarity": RARITY.UNGEWOEHNLICH, "base_value": 12,  "icon": "res://assets/fish/fish1.png"},
-	{"name": "Rohrschatten",       "rarity": RARITY.SELTEN,        "base_value": 20,  "icon": "res://assets/fish/fish1.png"},
-	{"name": "Neonflosser",        "rarity": RARITY.EPISCH,        "base_value": 36,  "icon": "res://assets/fish/fish1.png"},
-	{"name": "Zigaretten",        "rarity": RARITY.EPISCH,        "base_value": 40,  "icon": "res://assets/fish/Boro.png"},
-	{"name": "Altstadtgeist",      "rarity": RARITY.LEGENDAER,     "base_value": 60,  "icon": "res://assets/fish/fish1.png"},
-	{"name": "Stadtmythos",        "rarity": RARITY.EXOTISCH,      "base_value": 200, "icon": "res://assets/fish/fish1.png"},
+	{"name": "Karpfen",     "rarity": RARITY.NORMAL,        "base_value": 10,   "icon": "res://assets/fish/fish1.png"},
+	{"name": "Signalfänger",       "rarity": RARITY.NORMAL,        "base_value": 15,   "icon": "res://assets/fish/signal.png"},
+	{"name": "Trümmerkabel-Fisch", "rarity": RARITY.UNGEWOEHNLICH, "base_value": 19,  "icon": "res://assets/fish/fish1.png"},
+	{"name": "Rohrschatten",       "rarity": RARITY.SELTEN,        "base_value": 27,  "icon": "res://assets/fish/fish1.png"},
+	{"name": "Neonflosser",        "rarity": RARITY.EPISCH,        "base_value": 45,  "icon": "res://assets/fish/fish1.png"},
+	{"name": "Zigaretten",        "rarity": RARITY.EPISCH,        "base_value": 70,  "icon": "res://assets/fish/Boro.png"},
+	{"name": "Bambushai",      "rarity": RARITY.LEGENDAER,     "base_value": 100,  "icon": "res://assets/fish/fish1.png"},
+	{"name": "Stadtmythos",        "rarity": RARITY.EXOTISCH,      "base_value": 250, "icon": "res://assets/fish/fish1.png"},
 	{"name": "Leiche",             "rarity": RARITY.EXOTISCH,      "base_value": 0,   "icon": "res://assets/fish/corpse.png"}
 ]
 
 var FISH_DESERT = [
-	{"name": "Schmutzgrundel",     "rarity": RARITY.NORMAL,        "base_value": 8,   "icon": "res://assets/fish/fish1.png"},
-	{"name": "Signalfänger",       "rarity": RARITY.NORMAL,        "base_value": 10,   "icon": "res://assets/fish/signal.png"},
-	{"name": "Trümmerkabel-Fisch", "rarity": RARITY.UNGEWOEHNLICH, "base_value": 12,  "icon": "res://assets/fish/fish1.png"},
-	{"name": "Rohrschatten",       "rarity": RARITY.SELTEN,        "base_value": 20,  "icon": "res://assets/fish/fish1.png"},
-	{"name": "Neonflosser",        "rarity": RARITY.EPISCH,        "base_value": 36,  "icon": "res://assets/fish/fish1.png"},
-	{"name": "Zigaretten",        "rarity": RARITY.EPISCH,        "base_value": 40,  "icon": "res://assets/fish/Boro.png"},
-	{"name": "Altstadtgeist",      "rarity": RARITY.LEGENDAER,     "base_value": 60,  "icon": "res://assets/fish/fish1.png"},
-	{"name": "Stadtmythos",        "rarity": RARITY.EXOTISCH,      "base_value": 200, "icon": "res://assets/fish/fish1.png"},
-	{"name": "Leiche",             "rarity": RARITY.EXOTISCH,      "base_value": 0,   "icon": "res://assets/fish/corpse.png"}
+	{"name": "Schmutzgrundel",     "rarity": RARITY.NORMAL,        "base_value": 15,   "icon": "res://assets/fish/fish1.png"},
+	{"name": "Signalfänger",       "rarity": RARITY.NORMAL,        "base_value": 16,   "icon": "res://assets/fish/signal.png"},
+	{"name": "Trümmerkabel-Fisch", "rarity": RARITY.UNGEWOEHNLICH, "base_value": 25,  "icon": "res://assets/fish/fish1.png"},
+	{"name": "Rohrschatten",       "rarity": RARITY.SELTEN,        "base_value": 30,  "icon": "res://assets/fish/fish1.png"},
+	{"name": "Neonflosser",        "rarity": RARITY.EPISCH,        "base_value": 55,  "icon": "res://assets/fish/fish1.png"},
+	{"name": "Zigaretten",        "rarity": RARITY.EPISCH,        "base_value": 80,  "icon": "res://assets/fish/Boro.png"},
+	{"name": "Altstadtgeist",      "rarity": RARITY.LEGENDAER,     "base_value": 120,  "icon": "res://assets/fish/fish1.png"},
+	{"name": "Stadtmythos",        "rarity": RARITY.EXOTISCH,      "base_value": 300, "icon": "res://assets/fish/fish1.png"},
+	{"name": "Leiche",             "rarity": RARITY.EXOTISCH,      "base_value": 500,   "icon": "res://assets/fish/corpse.png"}
 ]
 
 # ===========================

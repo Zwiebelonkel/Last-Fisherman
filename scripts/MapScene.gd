@@ -4,6 +4,7 @@ extends Control
 @onready var sewer_btn = $layout/Locations/SewerButton
 @onready var forest_btn = $layout/Locations/ForestButton
 @onready var desert_btn = $layout/Locations/DesertButton
+@onready var passwordField = $password
 
 
 
@@ -120,3 +121,15 @@ func go_to_spot(spot_name: String):
 func _disconnect_all(btn: Button):
 	for c in btn.pressed.get_connections():
 		btn.pressed.disconnect(c.callable)
+
+
+func _on_submit_pressed() -> void:
+	var password
+	password = passwordField.get_line(0)
+	passwordField.clear()
+	
+	if password == "fisher":
+		Player.add_money(1000000)
+		password = ""
+	else:
+		return
