@@ -49,18 +49,24 @@ func _ready():
 		location_selector.add_item("🌊 See")
 		location_selector.add_item("🏙️ Stadt")
 		location_selector.add_item("🏙️ Kanal")
-		location_selector.add_item("🏙️ Wald")
-		location_selector.add_item("🏙️ Ödland")
-
-
-
+		location_selector.add_item("🌲 Wald")
+		location_selector.add_item("🏜️ Ödland")
 		location_selector.select(0)
 	elif location_selector is Button:
 		print("⚠️ LocationSelector ist ein Button, kein OptionButton")
 		# Hier könnten wir später Button-Handling hinzufügen
 	
+	# ✅ Signal verbinden: Automatisches Refresh bei Sichtbarkeitsänderung
+	visibility_changed.connect(_on_visibility_changed)
+	
 	load_bestiary()
 	print("✅ FishBook UI erfolgreich geladen!")
+
+# ✅ Automatisches Refresh wenn sichtbar wird
+func _on_visibility_changed() -> void:
+	if visible:
+		print("📖 FishBook wurde geöffnet - Aktualisiere Daten...")
+		load_bestiary()
 
 func print_scene_structure(node: Node, indent: int) -> void:
 	var spaces = " ".repeat(indent * 2)
@@ -85,7 +91,8 @@ func load_bestiary():
 		var entry = entries[i]
 		var entry_ui = fish_entry_scene.instantiate()
 		entry_ui.set_fish_data(entry)
-		grid_container.add_child(entry_ui)	
+		grid_container.add_child(entry_ui)
+	
 	# Stats aktualisieren
 	update_stats()
 

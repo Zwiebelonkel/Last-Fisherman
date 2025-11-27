@@ -11,3 +11,8 @@ shader_parameter/thickness = 0.01
 [resource]
 next_pass = SubResource("ShaderMaterial_jch1l")
 albedo_color = Color(0.326189, 0.158035, 4.81308e-08, 1)
+metallic_specular = 1.0
+roughness = 0.85
+rim = 0.0
+heightmap_scale = -2.791
+grow = true
