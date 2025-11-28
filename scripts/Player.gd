@@ -1,4 +1,5 @@
 extends Node
+
 # --- PLAYER DATA ---
 var money: int = 0
 var level: int = 1
@@ -7,24 +8,32 @@ var upgrade_grip: int = 1
 var upgrade_bait: int = 1
 var upgrade_line: int = 1
 var last_scene: String = "res://scenes/MainScene.tscn"
-var options: String = "res://scenes/OptionsCOntrol.tscn"
-var fish_inventory: Array = []  # Liste aller gefangenen Fische
-var caught_fish_species: Dictionary = {}  # Für das Fischbuch
+var options: String = "res://scenes/OptionsControl.tscn"
+
+var fish_inventory: Array = []
+var caught_fish_species: Dictionary = {}
+
+# 🆕 Biom-spezifische Fang-Zähler
+var catches_lake: int = 0
+var catches_city: int = 0
+var catches_sewer: int = 0
+var catches_forest: int = 0
+var catches_desert: int = 0
+
 var unlocked_spots = {
 	"lake": true,
 	"city": false,
 	"sewer": false,
 	"forest": false,
 	"desert": false,
-
 }
+
 var spot_prices = {
 	"lake": 0,
 	"city": 500,
 	"sewer": 1200,
 	"forest": 2000,
 	"desert": 4000
-
 }
 
 func _ready():
@@ -65,7 +74,6 @@ func add_fish(fish_data: Dictionary) -> void:
 	fish_inventory.append(fish_data)
 	print("Fisch ins Inventar hinzugefügt:", fish_data)
 	
-	# Fisch ins Fischbuch eintragen
 	if not caught_fish_species.has(fish_data["name"]):
 		caught_fish_species[fish_data["name"]] = true
 		print("🐟 Neue Fischart entdeckt:", fish_data["name"])
@@ -76,7 +84,7 @@ func remove_fish(index: int) -> void:
 	if index >= 0 and index < fish_inventory.size():
 		fish_inventory.remove_at(index)
 		save_game()
-		
+
 func _add_all_fish() -> void:
 	for fish in FishDB.FISH_LAKE:
 		add_fish(fish)
@@ -88,7 +96,6 @@ func _add_all_fish() -> void:
 		add_fish(fish)
 	for fish in FishDB.FISH_DESERT:
 		add_fish(fish)
-
 
 func clear_inventory():
 	fish_inventory.clear()
@@ -109,15 +116,22 @@ func reset():
 	upgrade_bait = 1
 	upgrade_line = 1
 	last_scene = "res://scenes/MainScene.tscn"
-	Inventory.clear_inventory()
+	fish_inventory.clear()
 	caught_fish_species.clear()
+	
+	# 🆕 Biom-Zähler zurücksetzen
+	catches_lake = 0
+	catches_city = 0
+	catches_sewer = 0
+	catches_forest = 0
+	catches_desert = 0
+	
 	unlocked_spots = {
 		"lake": true,
 		"city": false,
 		"sewer": false,
 		"forest": false,
 		"desert": false
-
 	}
 	save_game()
 
@@ -132,7 +146,13 @@ func save_game() -> void:
 		"last_scene": last_scene,
 		"fish_inventory": fish_inventory,
 		"unlocked_spots": unlocked_spots,
-		"caught_fish_species": caught_fish_species
+		"caught_fish_species": caught_fish_species,
+		# 🆕 Biom-Zähler speichern
+		"catches_lake": catches_lake,
+		"catches_city": catches_city,
+		"catches_sewer": catches_sewer,
+		"catches_forest": catches_forest,
+		"catches_desert": catches_desert
 	}
 	var file = FileAccess.open("user://savegame.dat", FileAccess.WRITE)
 	file.store_var(save_data)
@@ -142,6 +162,7 @@ func load_game() -> void:
 	if FileAccess.file_exists("user://savegame.dat"):
 		var file = FileAccess.open("user://savegame.dat", FileAccess.READ)
 		var save_data = file.get_var()
+		
 		money = save_data.get("money", 0)
 		level = save_data.get("level", 1)
 		xp = save_data.get("xp", 0)
@@ -152,7 +173,14 @@ func load_game() -> void:
 		fish_inventory = save_data.get("fish_inventory", [])
 		unlocked_spots = save_data.get("unlocked_spots", unlocked_spots)
 		caught_fish_species = save_data.get("caught_fish_species", {})
+		
+		# 🆕 Biom-Zähler laden
+		catches_lake = save_data.get("catches_lake", 0)
+		catches_city = save_data.get("catches_city", 0)
+		catches_sewer = save_data.get("catches_sewer", 0)
+		catches_forest = save_data.get("catches_forest", 0)
+		catches_desert = save_data.get("catches_desert", 0)
+		
 		print("Spiel geladen!")
 	else:
 		print("Keine Speicherdatei gefunden, starte neues Spiel")
-		

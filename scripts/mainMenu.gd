@@ -5,8 +5,8 @@ var optionsActive: bool = false
 
 
 func _on_button_pressed() -> void:
-	Player.update_last_scene("res://scenes/MainScene_City.tscn")
-	get_tree().change_scene_to_file("res://scenes/MainScene.tscn")
+	Player.update_last_scene("res://scenes/lake.tscn")
+	get_tree().change_scene_to_file("res://scenes/lake.tscn")
 
 
 func _on_reset_button_pressed() -> void:

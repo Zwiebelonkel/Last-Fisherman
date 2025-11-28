@@ -1,50 +1,50 @@
-[gd_scene load_steps=52 format=3 uid="uid://bnj4irwko1m1j"]
+[gd_scene load_steps=51 format=3 uid="uid://bnj4irwko1m1j"]
 
-[ext_resource type="Shader" uid="uid://dmg556n5nwodi" path="res://shader/pixelate.gdshader" id="1_kuao5"]
-[ext_resource type="Shader" uid="uid://bso2ewb2ieq7x" path="res://shader/warp.gdshader" id="1_tx5p3"]
-[ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="2_acjgc"]
-[ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="3_tx5p3"]
-[ext_resource type="PackedScene" uid="uid://cqtn78ty1fa7" path="res://scenes/CatchResultUI.tscn" id="4_lbf82"]
-[ext_resource type="PackedScene" uid="uid://dxxrhs12x2m2c" path="res://scenes/InventoryUI.tscn" id="5_bo4cb"]
-[ext_resource type="PackedScene" uid="uid://cdb3sodlv6np7" path="res://scenes/MoneyHUD.tscn" id="6_flfji"]
-[ext_resource type="PackedScene" uid="uid://be7bs5po2ukhi" path="res://scenes/FishBook.tscn" id="7_re5ia"]
-[ext_resource type="PackedScene" uid="uid://je70iqlm248a" path="res://scenes/CastPowerUI.tscn" id="8_8cl07"]
-[ext_resource type="PackedScene" uid="uid://b08obrprd472u" path="res://scenes/OptionsControl.tscn" id="9_it8te"]
-[ext_resource type="Script" uid="uid://bl1xotduehieu" path="res://scripts/camera_sway.gd" id="10_smrcg"]
-[ext_resource type="PackedScene" uid="uid://b5ew1rfc8ow8g" path="res://scenes/fishingRod.tscn" id="11_y20ih"]
-[ext_resource type="Texture2D" uid="uid://cvllk03mhtybp" path="res://textures/723-normal.jpg" id="12_tcwwm"]
-[ext_resource type="Texture2D" uid="uid://d31603nl8y0gd" path="res://textures/Water_preview.jpgC878A51E-2B84-45CA-85CB-75E5BC88EEC8Large.jpg" id="13_xyw1b"]
-[ext_resource type="Shader" uid="uid://cfsuhiaq15sgu" path="res://shader/outline.gdshader" id="14_6d2g4"]
-[ext_resource type="Script" uid="uid://bymrcyid32xsp" path="res://scripts/line.gd" id="15_wbcdt"]
-[ext_resource type="PackedScene" uid="uid://cfptx2e41wve1" path="res://scenes/shop.tscn" id="16_mabyp"]
-[ext_resource type="PackedScene" uid="uid://5eeohonkr6bu" path="res://textures/hillybilly.glb" id="17_hc2xf"]
-[ext_resource type="AudioStream" uid="uid://esyv0p374c5j" path="res://sounds/bite.mp3" id="18_yqxbp"]
-[ext_resource type="AudioStream" uid="uid://cldy38iwm8ovi" path="res://sounds/cast.mp3" id="19_uxuqp"]
-[ext_resource type="AudioStream" uid="uid://26m0pjkxve85" path="res://sounds/sucess.mp3" id="20_p58cv"]
-[ext_resource type="AudioStream" uid="uid://cmr6cded4l11v" path="res://sounds/whoosh.mp3" id="21_f6jba"]
-[ext_resource type="AudioStream" uid="uid://cwsg3mblt4ye6" path="res://sounds/desert.mp3" id="22_acjgc"]
-[ext_resource type="PackedScene" uid="uid://dguwyn5rc7uog" path="res://scenes/splash.tscn" id="23_73ipf"]
-[ext_resource type="PackedScene" uid="uid://bw4vof4oddwco" path="res://assets/ödland.glb" id="24_iho6p"]
-[ext_resource type="PackedScene" uid="uid://bej6o0ysl85et" path="res://assets/rock.glb" id="25_a4tue"]
-[ext_resource type="PackedScene" uid="uid://ckje0fw3pep83" path="res://assets/skyscaper.glb" id="26_acjgc"]
+[ext_resource type="Shader" uid="uid://bso2ewb2ieq7x" path="res://shader/warp.gdshader" id="1_bx3bc"]
+[ext_resource type="Shader" uid="uid://dmg556n5nwodi" path="res://shader/pixelate.gdshader" id="2_coccn"]
+[ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="3_b85h3"]
+[ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="4_l63c1"]
+[ext_resource type="PackedScene" uid="uid://cqtn78ty1fa7" path="res://scenes/CatchResultUI.tscn" id="5_7mv4c"]
+[ext_resource type="PackedScene" uid="uid://dxxrhs12x2m2c" path="res://scenes/InventoryUI.tscn" id="6_b5pwj"]
+[ext_resource type="PackedScene" uid="uid://cdb3sodlv6np7" path="res://scenes/MoneyHUD.tscn" id="7_ipyti"]
+[ext_resource type="PackedScene" uid="uid://be7bs5po2ukhi" path="res://scenes/FishBook.tscn" id="8_5rjud"]
+[ext_resource type="PackedScene" uid="uid://je70iqlm248a" path="res://scenes/CastPowerUI.tscn" id="9_30dv1"]
+[ext_resource type="PackedScene" uid="uid://b08obrprd472u" path="res://scenes/OptionsControl.tscn" id="10_6ei57"]
+[ext_resource type="Script" uid="uid://bl1xotduehieu" path="res://scripts/camera_sway.gd" id="11_dg22r"]
+[ext_resource type="PackedScene" uid="uid://b5ew1rfc8ow8g" path="res://scenes/fishingRod.tscn" id="12_rpygy"]
+[ext_resource type="Texture2D" uid="uid://cvllk03mhtybp" path="res://textures/723-normal.jpg" id="13_6uud1"]
+[ext_resource type="Texture2D" uid="uid://d31603nl8y0gd" path="res://textures/Water_preview.jpgC878A51E-2B84-45CA-85CB-75E5BC88EEC8Large.jpg" id="14_vfmnk"]
+[ext_resource type="Shader" uid="uid://cfsuhiaq15sgu" path="res://shader/outline.gdshader" id="15_xswjt"]
+[ext_resource type="Script" uid="uid://bymrcyid32xsp" path="res://scripts/line.gd" id="16_3pm2b"]
+[ext_resource type="PackedScene" uid="uid://cfptx2e41wve1" path="res://scenes/shop.tscn" id="17_b1qte"]
+[ext_resource type="PackedScene" uid="uid://5eeohonkr6bu" path="res://textures/hillybilly.glb" id="18_24sxy"]
+[ext_resource type="AudioStream" uid="uid://esyv0p374c5j" path="res://sounds/bite.mp3" id="19_bh10d"]
+[ext_resource type="AudioStream" uid="uid://cldy38iwm8ovi" path="res://sounds/cast.mp3" id="20_fimhr"]
+[ext_resource type="AudioStream" uid="uid://26m0pjkxve85" path="res://sounds/sucess.mp3" id="21_86mgg"]
+[ext_resource type="AudioStream" uid="uid://cmr6cded4l11v" path="res://sounds/whoosh.mp3" id="22_pih8u"]
+[ext_resource type="AudioStream" uid="uid://cwsg3mblt4ye6" path="res://sounds/desert.mp3" id="23_cym6y"]
+[ext_resource type="PackedScene" uid="uid://dguwyn5rc7uog" path="res://scenes/splash.tscn" id="24_3yq6h"]
+[ext_resource type="PackedScene" uid="uid://bw4vof4oddwco" path="res://assets/ödland.glb" id="25_007fo"]
+[ext_resource type="PackedScene" uid="uid://bej6o0ysl85et" path="res://assets/rock.glb" id="26_i2tj1"]
+[ext_resource type="PackedScene" uid="uid://ckje0fw3pep83" path="res://assets/skyscaper.glb" id="27_4hnxp"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_lbf82"]
-shader = ExtResource("1_tx5p3")
+shader = ExtResource("1_bx3bc")
 shader_parameter/warp_intensity = 0.019
 shader_parameter/time_scale = 0.655
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1wiy7"]
-shader = ExtResource("1_kuao5")
+shader = ExtResource("2_coccn")
 shader_parameter/pixel_size = 290.82
 
 [sub_resource type="Theme" id="Theme_25dfr"]
-default_font = ExtResource("3_tx5p3")
+default_font = ExtResource("4_l63c1")
 
 [sub_resource type="Theme" id="Theme_kjvyo"]
-default_font = ExtResource("3_tx5p3")
+default_font = ExtResource("4_l63c1")
 
 [sub_resource type="Theme" id="Theme_2phbr"]
-default_font = ExtResource("3_tx5p3")
+default_font = ExtResource("4_l63c1")
 
 [sub_resource type="Shader" id="Shader_kqfxt"]
 code = "shader_type sky;
@@ -157,684 +157,6 @@ volumetric_fog_enabled = true
 volumetric_fog_density = 0.0233
 volumetric_fog_length = 42.44
 volumetric_fog_ambient_inject = 0.2
-
-[sub_resource type="GDScript" id="GDScript_8wjpf"]
-script/source = "extends Node3D
-
-# NODE-REFERENCES
-@export var rod_tip: Node3D
-@export var hook: Node3D
-@export var splash: GPUParticles3D
-@export var waterplane: Node3D
-@export var catch_result_ui: Node
-@export var shop_scene_path: String = \"res://scenes/shop.tscn\"
-@export var rotation_speed: float = 2.0
-@export var camera: Camera3D
-@export var fishing_location: String = \"desert\"
-@export var fishbook_ui: Control
-@export var options: Control
-
-# 🆕 UI Buttons
-@export var journal_button: Button
-@export var inventory_button: Button
-@export var map_button: Button
-@export var left_button: Button
-@export var right_button: Button
-@export var interact_button: Button
-
-
-@onready var anim: AnimationPlayer = $AnimationPlayer
-@onready var ripple_anim: AnimationPlayer = hook.get_node(\"AnimationPlayer\")
-
-@onready var ui_bite_indicator: TextureRect = get_node(\"../../UI/BiteIndicator\")
-@onready var catch_ui: Control = get_node(\"../../UI/CatchUI\")
-@onready var bar_background: Control = catch_ui.get_node(\"BarBackground\")
-@onready var marker: Control = bar_background.get_node(\"Marker\")
-@onready var sweet_spot: Control = bar_background.get_node(\"SweetSpot\")
-@onready var catch_progress: ProgressBar = catch_ui.get_node(\"CatchProgress\")
-@onready var bite_sound: AudioStreamPlayer = get_node(\"../../Audio/bite\")
-@onready var cast_sound: AudioStreamPlayer = get_node(\"../../Audio/cast\")
-@onready var success_sound: AudioStreamPlayer = get_node(\"../../Audio/success\")
-@onready var whoosh_sound: AudioStreamPlayer = get_node(\"../../Audio/whoosh\")
-
-@export var cast_power_ui_scene: PackedScene
-var cast_power_ui: Control = null
-
-@export var inventory_ui: Node
-signal line_visible(visible: bool)
-
-# STATE MACHINE
-enum {
-	STATE_IDLE,
-	STATE_CHARGING,
-	STATE_CASTED,
-	STATE_BITE,
-	STATE_MINIGAME,
-	STATE_ROTATING
-}
-
-var state: int = STATE_IDLE
-
-var paused: bool = false
-
-# Cast Power Variables
-var cast_power: float = 0.0
-var cast_power_speed: float = 3
-var max_cast_power: float = 1.0
-var min_distance: float = 25
-var max_distance: float = 60
-var last_cast_quality: float = 0.0  # Speichert die Qualität des letzten Wurfs
-
-# Minigame Variables
-var marker_pos: float = 0.0
-var marker_speed: float = 350.0
-var marker_slow_factor: float = 0.3
-var input_active: bool = false
-var current_fish: Dictionary = {}
-
-# Erweiterte Rotation Variables (4 Richtungen)
-var current_rotation: float = 180.0
-var target_rotation: float = 180.0
-var is_rotating: bool = false
-
-# Definierte Rotationspositionen
-const ROTATION_FISHING: float = 180.0
-const ROTATION_SHOP: float = 90.0
-const ROTATION_EMPTY_1: float = 0.0
-const ROTATION_EMPTY_2: float = 270.0
-
-var hook_start_position: Vector3
-var hook_end_position: Vector3
-
-
-func _ready() -> void:
-	anim.play(\"idle\")
-	hook.visible = false
-	splash.visible = false
-	splash.emitting = false
-	ui_bite_indicator.visible = false
-	catch_ui.visible = false
-	
-	if cast_power_ui_scene:
-		cast_power_ui = cast_power_ui_scene.instantiate()
-		add_child(cast_power_ui)
-	
-	# 🆕 Button-Signals verbinden
-	setup_buttons()
-
-
-# 🆕 Button Setup
-func setup_buttons() -> void:
-	if journal_button:
-		journal_button.pressed.connect(toggle_fishbook)
-	
-	if inventory_button:
-		inventory_button.pressed.connect(toggle_inventory)
-	
-	if map_button:
-		map_button.pressed.connect(open_map)
-	
-	if left_button:
-		left_button.pressed.connect(rotate_camera_left)
-	
-	if right_button:
-		right_button.pressed.connect(rotate_camera_right)
-	
-	if interact_button:
-		interact_button.pressed.connect(on_interact_pressed)
-
-
-func _unhandled_input(event: InputEvent) -> void:
-	# 🆕 ESC/Pause behandeln - IMMER als erstes prüfen
-	if event.is_action_released(\"pause\"):
-		handle_pause_input()
-		return
-	
-	# Während Pause keine anderen Inputs verarbeiten
-	if paused:
-		return
-	
-	# Rotation in beide Richtungen
-	if event.is_action_pressed(\"left\"):
-		rotate_camera_left()
-		return
-	
-	if event.is_action_pressed(\"right\"):
-		rotate_camera_right()
-		return
-	
-	if event.is_action_pressed(\"map_open\"):
-		Player.update_last_scene(\"res://scenes/ödland.tscn\")
-		get_tree().change_scene_to_file(\"res://scenes/MapScene.tscn\")
-		return
-	
-	if event.is_action_pressed(\"journal\"):
-		toggle_fishbook()
-		return
-	
-	if event.is_action_pressed(\"inventory_toggle\"):
-		toggle_inventory()
-		return
-
-	# Shop betreten bei 90° (VOR der Rotation-Blockade!)
-	if event.is_action_pressed(\"cast\") and abs(current_rotation - ROTATION_SHOP) < 1.0:
-		print(\"DEBUG: Versuche Shop zu betreten, State = \", state)
-		enter_shop()
-		return
-
-	# Keine anderen Eingaben während Rotation
-	if state == STATE_ROTATING:
-		return
-
-	# Minigame Input
-	if state == STATE_MINIGAME:
-		if event.is_action_pressed(\"cast\"):
-			input_active = true
-		if event.is_action_released(\"cast\"):
-			input_active = false
-
-	# Cast-Taste Handling je nach Position
-	if event.is_action_pressed(\"cast\"):
-		print(\"DEBUG: current_rotation = \", current_rotation, \" | camera.rotation.y = \", rad_to_deg(camera.rotation.y))
-		
-		# Angeln nur bei 180°
-		if abs(current_rotation - ROTATION_FISHING) > 1.0:
-			print(\"Angeln nur bei 180° möglich! Aktuelle Rotation: \", current_rotation)
-			return
-		
-		match state:
-			STATE_IDLE:
-				start_charging_cast()
-			STATE_CASTED, STATE_BITE:
-				reel_pressed()
-			STATE_MINIGAME:
-				pass
-	
-	if event.is_action_released(\"cast\"):
-		if state == STATE_CHARGING:
-			release_cast()
-
-
-# ---------------------------------------------------------
-# 🆕 MENÜ-MANAGEMENT SYSTEM
-# ---------------------------------------------------------
-func handle_pause_input() -> void:
-	# Prüfe welche Menüs offen sind (Priorität: Fishbook > Inventory > Options)
-	
-	# 1. Wenn Fishbook offen ist, schließe es
-	if fishbook_ui and fishbook_ui.visible:
-		close_fishbook()
-		return
-	
-	# 2. Wenn Inventory offen ist, schließe es
-	if inventory_ui and inventory_ui.visible:
-		close_inventory()
-		return
-	
-	# 3. Wenn Options offen ist, schließe es
-	if options and options.visible:
-		close_options()
-		return
-	
-	# 4. Wenn alle zu sind, öffne Options
-	open_options()
-
-
-func toggle_fishbook() -> void:
-	if state == STATE_MINIGAME or state == STATE_BITE:
-		return
-	
-	if fishbook_ui.visible:
-		close_fishbook()
-	else:
-		open_fishbook()
-
-
-func toggle_inventory() -> void:
-	if inventory_ui.visible:
-		close_inventory()
-	else:
-		open_inventory()
-
-
-func open_fishbook() -> void:
-	# Schließe alle anderen Menüs
-	close_inventory()
-	close_options()
-	
-	fishbook_ui.visible = true
-	paused = false
-	Engine.time_scale = 1
-
-
-func close_fishbook() -> void:
-	fishbook_ui.visible = false
-	paused = false
-	Engine.time_scale = 1
-
-
-func open_inventory() -> void:
-	# Schließe alle anderen Menüs
-	close_fishbook()
-	close_options()
-	
-	inventory_ui.show()
-	paused = false
-	Engine.time_scale = 1
-
-
-func close_inventory() -> void:
-	inventory_ui.hide()
-	paused = false
-	Engine.time_scale = 1
-
-
-func open_options() -> void:
-	# Schließe alle anderen Menüs
-	close_fishbook()
-	close_inventory()
-	
-	options.show()
-	paused = true
-	Engine.time_scale = 0
-
-
-func close_options() -> void:
-	options.hide()
-	paused = false
-	Engine.time_scale = 1
-
-
-# ---------------------------------------------------------
-# 4-RICHTUNGS ROTATION SYSTEM
-# ---------------------------------------------------------
-func rotate_camera_left() -> void:
-	if is_rotating:
-		return
-	
-	whoosh_sound.play()
-	
-	# Im Uhrzeigersinn: 180 → 270 → 0 → 90 → 180
-	if current_rotation == ROTATION_FISHING:
-		target_rotation = ROTATION_EMPTY_2
-	elif current_rotation == ROTATION_EMPTY_2:
-		target_rotation = ROTATION_EMPTY_1
-	elif current_rotation == ROTATION_EMPTY_1:
-		target_rotation = ROTATION_SHOP
-	elif current_rotation == ROTATION_SHOP:
-		target_rotation = ROTATION_FISHING
-	reset_line()
-	start_rotation()
-
-
-func rotate_camera_right() -> void:
-	if is_rotating:
-		return
-	
-	whoosh_sound.play()
-	
-	# Gegen Uhrzeigersinn: 180 → 90 → 0 → 270 → 180
-	if current_rotation == ROTATION_FISHING:
-		target_rotation = ROTATION_SHOP
-	elif current_rotation == ROTATION_SHOP:
-		target_rotation = ROTATION_EMPTY_1
-	elif current_rotation == ROTATION_EMPTY_1:
-		target_rotation = ROTATION_EMPTY_2
-	elif current_rotation == ROTATION_EMPTY_2:
-		target_rotation = ROTATION_FISHING
-	reset_line()
-	start_rotation()
-
-
-func start_rotation() -> void:
-	state = STATE_ROTATING
-	is_rotating = true
-	
-	if state == STATE_MINIGAME:
-		catch_ui.visible = false
-
-
-func _process(delta: float) -> void:
-	if state == STATE_ROTATING:
-		update_rotation(delta)
-	elif state == STATE_MINIGAME:
-		update_catch_minigame(delta)
-	elif state == STATE_CHARGING:
-		update_cast_power(delta)
-
-
-func update_rotation(delta: float) -> void:
-	var rotation_step = rotation_speed * delta
-	
-	var diff = target_rotation - current_rotation
-	
-	if diff > 180.0:
-		diff -= 360.0
-	elif diff < -180.0:
-		diff += 360.0
-	
-	if abs(diff) < rotation_step:
-		current_rotation = target_rotation
-	elif diff > 0:
-		current_rotation += rotation_step
-	else:
-		current_rotation -= rotation_step
-	
-	if current_rotation >= 360.0:
-		current_rotation -= 360.0
-	elif current_rotation < 0.0:
-		current_rotation += 360.0
-
-	if camera:
-		camera.rotation.y = deg_to_rad(current_rotation)
-
-	if abs(current_rotation - target_rotation) < 0.5:
-		current_rotation = target_rotation
-		is_rotating = false
-		
-		if current_rotation == ROTATION_FISHING:
-			state = STATE_IDLE
-		else:
-			state = STATE_ROTATING
-
-
-func enter_shop() -> void:
-	print(\"Betrete Shop!\")
-	Player.update_last_scene(\"res://scenes/ödland.tscn\")
-	get_tree().change_scene_to_file(\"res://scenes/shop_inside.tscn\")
-
-
-# 🆕 Button Handler Funktionen
-func open_map() -> void:
-	Player.update_last_scene(\"res://scenes/ödland.tscn\")
-	get_tree().change_scene_to_file(\"res://scenes/MapScene.tscn\")
-
-
-func on_interact_pressed() -> void:
-	# Shop betreten bei 90°
-	if abs(current_rotation - ROTATION_SHOP) < 1.0:
-		enter_shop()
-		return
-	
-	# Bei 180° (Fishing) -> Cast/Reel
-	if abs(current_rotation - ROTATION_FISHING) < 1.0:
-		match state:
-			STATE_IDLE:
-				start_charging_cast()
-			STATE_CHARGING:
-				release_cast()
-			STATE_CASTED, STATE_BITE:
-				reel_pressed()
-
-
-# ---------------------------------------------------------
-# CAST CHARGING SYSTEM
-# ---------------------------------------------------------
-func start_charging_cast() -> void:
-	print(\"CHARGING CAST\")
-	state = STATE_CHARGING
-	cast_power = 0.0
-	
-	if cast_power_ui and cast_power_ui.has_method(\"show_power\"):
-		cast_power_ui.show_power(0.0)
-
-
-func update_cast_power(delta: float) -> void:
-	cast_power += cast_power_speed * delta
-	
-	if cast_power > max_cast_power:
-		cast_power = max_cast_power
-		cast_power_speed *= -1.0
-	elif cast_power < 0.0:
-		cast_power = 0.0
-		cast_power_speed *= -1.0
-	
-	if cast_power_ui and cast_power_ui.has_method(\"show_power\"):
-		cast_power_ui.show_power(cast_power)
-
-
-func release_cast() -> void:
-	if cast_power_ui and cast_power_ui.has_method(\"hide_power\"):
-		cast_power_ui.hide_power()
-	
-	var power_quality = 1.0 - abs(cast_power - 1.0)
-	last_cast_quality = power_quality  # Speichern für späteren Gebrauch
-	
-	print(\"Cast released with power: \", power_quality)
-	cast_line(power_quality)
-
-
-# ---------------------------------------------------------
-# CAST
-# ---------------------------------------------------------
-func cast_line(power: float = 1.0) -> void:
-	print(\"CAST with power: \", power)
-	cast_sound.play()
-	state = STATE_CASTED
-	ui_bite_indicator.visible = false
-
-	anim.play(\"cast\")
-	camera.start_screenshake(0.01,0.3)
-	await anim.animation_finished
-
-	var x = randf_range(-2.0, 2.0)
-	var distance = lerp(min_distance, max_distance, power)
-	var z = distance
-	
-	var water_height = 0.05
-	if waterplane:
-		water_height = waterplane.global_position.y
-	
-	# Hook landet weit weg (Start Position)
-	hook.position = Vector3(x, water_height, z)
-	hook.visible = true
-	hook_start_position = hook.global_position  # Weit weg im Wasser
-	
-	# ✅ FIX: End Position ist bei min_distance (nicht ganz zur Angel!)
-	# Berechne Position bei min_distance in Richtung der Angel
-	var direction_to_rod = (rod_tip.global_position - hook.global_position).normalized()
-	direction_to_rod.y = 0  # Nur horizontale Bewegung
-	
-	# End Position = min_distance vor der Angel
-	hook_end_position = rod_tip.global_position - direction_to_rod * min_distance
-	hook_end_position.y = water_height  # Bleib auf Wasserhöhe
-
-	splash.position = Vector3(x, water_height, z)
-	splash.visible = true
-	splash.emitting = true
-	splash.restart()
-
-	ripple_anim.play(\"ripple\")
-	anim.play(\"idle\")
-
-	start_bite_timer()
-	emit_signal(\"line_visible\", true)
-
-
-# ---------------------------------------------------------
-# REEL
-# ---------------------------------------------------------
-func reel_pressed() -> void:
-	match state:
-		STATE_CASTED:
-			print(\"Zu früh oder zu spät!\")
-			reset_line()
-
-		STATE_BITE:
-			print(\"BISS! Minispiel starten\")
-			ui_bite_indicator.visible = false
-			start_catch_minigame()
-
-
-func reset_line() -> void:
-	state = STATE_IDLE
-	anim.play(\"reel\")
-	await anim.animation_finished
-
-	hook.visible = false
-	splash.visible = false
-	splash.emitting = false
-	ui_bite_indicator.visible = false
-	anim.play(\"idle\")
-	emit_signal(\"line_visible\", false)
-	catch_ui.hide()
-
-
-# ---------------------------------------------------------
-# BITE TIMER
-# ---------------------------------------------------------
-func start_bite_timer() -> void:
-	var wait_time := randf_range(5, 20)
-	var modifier := 1.0 + (Player.upgrade_line - 1) * 0.35
-	wait_time /= modifier
-	print(\"Bite Timer gestartet: \", wait_time, \"s\")
-	await get_tree().create_timer(wait_time).timeout
-
-	if state != STATE_CASTED:
-		print(\"Bite Timer abgebrochen: state = \", state)
-		return
-
-	print(\"BITE READY!\")
-	state = STATE_BITE
-	show_bite_indicator()
-	start_bite_window()
-
-
-func start_bite_window() -> void:
-	var max_reaction_time := 2.0
-
-	await get_tree().create_timer(max_reaction_time).timeout
-
-	if state == STATE_BITE:
-		print(\"Zu langsam! Fisch hat wieder losgelassen.\")
-		ui_bite_indicator.visible = false
-		state = STATE_CASTED
-		start_bite_timer()
-
-
-func show_bite_indicator() -> void:
-	splash.restart()
-	bite_sound.play()
-	ui_bite_indicator.visible = true
-
-	while state == STATE_BITE:
-		ui_bite_indicator.modulate.a = 1.0
-		await get_tree().create_timer(0.2).timeout
-		if state != STATE_BITE:
-			break
-		ui_bite_indicator.modulate.a = 0.2
-		await get_tree().create_timer(0.2).timeout
-
-
-# ---------------------------------------------------------
-# CATCH MINIGAME
-# ---------------------------------------------------------
-func start_catch_minigame() -> void:
-	state = STATE_MINIGAME
-	catch_ui.visible = true
-	anim.play(\"fight\")
-	camera.start_screenshake(0.1,1)
-
-	splash.emitting = true
-
-	# Cast-Qualität als Bonus für bessere Fische verwenden
-	var quality_bonus = int(last_cast_quality * 2)  # 0-2 zusätzliche Level
-	var effective_bait = Player.upgrade_bait + quality_bonus
-	
-	current_fish = FishDB.get_random_from_list(FishDB.FISH_DESERT, effective_bait)
-	var difficulty = FishDB.get_fish_difficulty(current_fish)
-	marker_speed = FishDB.get_marker_speed_for_fish(current_fish)
-	
-	print(\"Gefangen: \", current_fish[\"name\"], \" (Schwierigkeit: \", difficulty, \", Cast-Qualität: \", last_cast_quality, \", Effektives Bait-Level: \", effective_bait, \")\")
-
-	catch_progress.value = 50.0
-	marker_pos = 0.0
-	marker.position.x = 0.0
-
-
-func update_catch_minigame(delta: float) -> void:
-	var current_speed = marker_speed
-	
-	# ✅ FIX: Progress = 0% → Hook bleibt weit draußen (max_distance)
-	#         Progress = 100% → Hook kommt auf min_distance zur Angel
-	var t := catch_progress.value / 100.0
-	var new_pos := hook_start_position.lerp(hook_end_position, t)
-	new_pos.y = hook_start_position.y  # Bleib auf Wasserhöhe
-	hook.global_position = new_pos
-
-	if input_active:
-		current_speed *= marker_slow_factor
-
-	marker_pos += current_speed * delta
-
-	var max_x := bar_background.size.x - marker.size.x
-
-	if marker_pos >= max_x:
-		marker_pos = max_x
-		marker_speed *= -1.0
-	elif marker_pos <= 0.0:
-		marker_pos = 0.0
-		marker_speed *= -1.0
-
-	marker.position.x = marker_pos
-
-	var in_spot := marker.position.x >= sweet_spot.position.x \\
-		and marker.position.x <= sweet_spot.position.x + sweet_spot.size.x
-
-	if in_spot:
-		var grip_multiplier := 1.0 + (Player.upgrade_grip - 1) * 0.05
-		catch_progress.value += 40.0 * grip_multiplier * delta
-		
-		# Splash Particles immer am Hook spawnen wenn im Sweet Spot
-		if splash:
-			splash.global_position = hook.global_position
-			if not splash.emitting:
-				splash.emitting = true
-		
-		camera.start_screenshake(0.03,0.2)
-	else:
-		catch_progress.value = max(0.0, catch_progress.value - 25.0 * delta)
-		
-		# Splash stoppen wenn außerhalb des Sweet Spots
-		if splash and splash.emitting:
-			splash.emitting = false
-
-	if catch_progress.value >= 100.0:
-		end_catch_minigame(true)
-	elif catch_progress.value <= 0.0:
-		end_catch_minigame(false)
-
-func end_catch_minigame(success: bool) -> void:
-	camera.start_screenshake(0.4,0.3)
-	if success:
-		var fish = current_fish
-		Inventory.add_fish(fish)
-		Player.caught_fish_species[fish[\"name\"]] = true
-		success_sound.play()
-
-		if catch_result_ui:
-			catch_result_ui.show_fish(fish)
-
-		print(\"Erfolgreich gefangen: \", fish[\"name\"])
-		Player.save_game()
-	else:
-		print(\"Fisch entwischt! (\", current_fish[\"name\"], \")\")
-
-	catch_ui.visible = false
-	await reset_line()
-
-
-func trigger_splash_burst() -> void:
-	if not splash:
-		return
-	
-	splash.emitting = true
-	
-	await get_tree().create_timer(0.15).timeout
-	
-	if splash and state == STATE_MINIGAME:
-		splash.emitting = false
-"
 
 [sub_resource type="Shader" id="Shader_muv0v"]
 code = "// The following shader is used in order to simulate a simple ocean using Gerstner waves.
@@ -1268,8 +590,8 @@ shader_parameter/uv_sampler_scale = 0.3
 shader_parameter/blend_factor = 0.795
 shader_parameter/perturbation_strength = 0.37
 shader_parameter/perturbation_time = 0.3
-shader_parameter/normalmap_a = ExtResource("12_tcwwm")
-shader_parameter/normalmap_b = ExtResource("13_xyw1b")
+shader_parameter/normalmap_a = ExtResource("13_6uud1")
+shader_parameter/normalmap_b = ExtResource("14_vfmnk")
 shader_parameter/caustics_intensity = 14.48
 shader_parameter/num_caustic_layers = 16.0
 shader_parameter/caustic_distortion_strength = 0.236
@@ -1282,7 +604,7 @@ size = Vector2(300, 300)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_8wjpf"]
 render_priority = 0
-shader = ExtResource("14_6d2g4")
+shader = ExtResource("15_xswjt")
 shader_parameter/color = Color(0, 0, 0, 1)
 shader_parameter/thickness = 0.05
 
@@ -1349,7 +671,7 @@ _data = {
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_0ehpd"]
 render_priority = 0
-shader = ExtResource("14_6d2g4")
+shader = ExtResource("15_xswjt")
 shader_parameter/color = Color(0, 0, 0, 1)
 shader_parameter/thickness = 0.01
 
@@ -1411,7 +733,7 @@ offset_right = 185.0
 offset_bottom = 185.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("2_acjgc")
+texture = ExtResource("3_b85h3")
 
 [node name="CatchUI" type="Control" parent="UI"]
 layout_mode = 3
@@ -1473,24 +795,24 @@ offset_bottom = 306.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="CatchResultUI" parent="UI" instance=ExtResource("4_lbf82")]
+[node name="CatchResultUI" parent="UI" instance=ExtResource("5_7mv4c")]
 offset_top = -197.0
 offset_bottom = 197.0
 
-[node name="InventoryUI" parent="UI" instance=ExtResource("5_bo4cb")]
+[node name="InventoryUI" parent="UI" instance=ExtResource("6_b5pwj")]
 theme = SubResource("Theme_kjvyo")
 
-[node name="MoneyHUD" parent="UI" instance=ExtResource("6_flfji")]
+[node name="MoneyHUD" parent="UI" instance=ExtResource("7_ipyti")]
 offset_right = 60.0
 offset_bottom = 43.0
 theme = SubResource("Theme_2phbr")
 
-[node name="FishBook" parent="UI" instance=ExtResource("7_re5ia")]
+[node name="FishBook" parent="UI" instance=ExtResource("8_5rjud")]
 visible = false
 
-[node name="CastPowerUI" parent="UI" instance=ExtResource("8_8cl07")]
+[node name="CastPowerUI" parent="UI" instance=ExtResource("9_30dv1")]
 
-[node name="OptionsControl" parent="UI" instance=ExtResource("9_it8te")]
+[node name="OptionsControl" parent="UI" instance=ExtResource("10_6ei57")]
 visible = false
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
@@ -1498,12 +820,11 @@ environment = SubResource("Environment_cfq0f")
 
 [node name="PlayerCamera" type="Camera3D" parent="."]
 transform = Transform3D(-1, 0, -1.50996e-07, 0, 1, 0, 1.50996e-07, 0, -1, 0, 2.007, 0.0447942)
-script = ExtResource("10_smrcg")
+script = ExtResource("11_dg22r")
 sway_amount = 0.115
 
-[node name="FishingRod" parent="PlayerCamera" node_paths=PackedStringArray("rod_tip", "hook", "splash", "waterplane", "catch_result_ui", "camera", "fishbook_ui", "options", "inventory_ui") instance=ExtResource("11_y20ih")]
+[node name="FishingRod" parent="PlayerCamera" node_paths=PackedStringArray("rod_tip", "hook", "splash", "waterplane", "catch_result_ui", "camera", "fishbook_ui", "options", "inventory_ui") instance=ExtResource("12_rpygy")]
 transform = Transform3D(0.925417, -0.163176, -0.34202, 0.173648, 0.984808, 0, 0.336824, -0.0593912, 0.939693, 0.4, -0.40033, -1.03766)
-script = SubResource("GDScript_8wjpf")
 rod_tip = NodePath("RodMesh/RodTip")
 hook = NodePath("../../Hook")
 splash = NodePath("../../Splash")
@@ -1511,10 +832,9 @@ waterplane = NodePath("../../WaterPlane")
 catch_result_ui = NodePath("../../UI/CatchResultUI")
 rotation_speed = 300.0
 camera = NodePath("..")
-fishing_location = "desert"
 fishbook_ui = NodePath("../../UI/FishBook")
 options = NodePath("../../UI/OptionsControl")
-cast_power_ui_scene = ExtResource("8_8cl07")
+cast_power_ui_scene = ExtResource("9_30dv1")
 inventory_ui = NodePath("../../UI/InventoryUI")
 
 [node name="RodMesh" parent="PlayerCamera/FishingRod" index="0"]
@@ -1555,7 +875,7 @@ sky_mode = 1
 [node name="Line" type="MeshInstance3D" parent="." node_paths=PackedStringArray("rod_tip", "hook", "fishing_script")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.319973, 1.53619, 0.170711)
 mesh = SubResource("CylinderMesh_pjux3")
-script = ExtResource("15_wbcdt")
+script = ExtResource("16_3pm2b")
 rod_tip = NodePath("../PlayerCamera/FishingRod/RodMesh/RodTip")
 hook = NodePath("../Hook")
 fishing_script = NodePath("../PlayerCamera/FishingRod")
@@ -1564,52 +884,52 @@ fishing_script = NodePath("../PlayerCamera/FishingRod")
 transform = Transform3D(101.89, 0, 0, 0, 101.89, 0, 0, 0, 101.89, 18.9142, 88.4997, 385.297)
 mesh = SubResource("SphereMesh_7r1ho")
 
-[node name="Shop" parent="." instance=ExtResource("16_mabyp")]
+[node name="Shop" parent="." instance=ExtResource("17_b1qte")]
 transform = Transform3D(-3.12536e-08, 0, 0.715, 0.183488, 0.691055, 8.02051e-09, -0.691055, 0.183488, -3.02069e-08, -2.74395, 0.284576, -0.208801)
 
-[node name="hillybilly" parent="." instance=ExtResource("17_hc2xf")]
+[node name="hillybilly" parent="." instance=ExtResource("18_24sxy")]
 transform = Transform3D(-0.190341, 0, 1.51307, 0.328081, 1.48872, 0.0412719, -1.47707, 0.330668, -0.185813, -3.27164, -0.849061, 0.365361)
 
 [node name="Audio" type="Node" parent="."]
 
 [node name="bite" type="AudioStreamPlayer" parent="Audio"]
-stream = ExtResource("18_yqxbp")
+stream = ExtResource("19_bh10d")
 volume_db = -2.811
 bus = &"SFX"
 
 [node name="cast" type="AudioStreamPlayer" parent="Audio"]
-stream = ExtResource("19_uxuqp")
+stream = ExtResource("20_fimhr")
 bus = &"SFX"
 
 [node name="success" type="AudioStreamPlayer" parent="Audio"]
-stream = ExtResource("20_p58cv")
+stream = ExtResource("21_86mgg")
 bus = &"SFX"
 
 [node name="whoosh" type="AudioStreamPlayer" parent="Audio"]
-stream = ExtResource("21_f6jba")
+stream = ExtResource("22_pih8u")
 bus = &"SFX"
 
 [node name="music" type="AudioStreamPlayer" parent="Audio"]
-stream = ExtResource("22_acjgc")
+stream = ExtResource("23_cym6y")
 volume_db = -2.735
 autoplay = true
 bus = &"Music"
 
-[node name="Splash" parent="." instance=ExtResource("23_73ipf")]
+[node name="Splash" parent="." instance=ExtResource("24_3yq6h")]
 
-[node name="ödland" parent="." instance=ExtResource("24_iho6p")]
+[node name="ödland" parent="." instance=ExtResource("25_007fo")]
 transform = Transform3D(0.0800075, 0, 0.996794, 0, 1, 0, -0.996794, 0, 0.0800075, 54.7656, -16.3662, -20.1391)
 
-[node name="ödland2" parent="." instance=ExtResource("24_iho6p")]
+[node name="ödland2" parent="." instance=ExtResource("25_007fo")]
 transform = Transform3D(0.0800075, 0, 0.996794, 0, 1, 0, -0.996794, 0, 0.0800075, 54.7656, -6.76015, 144.277)
 
-[node name="rock" parent="." instance=ExtResource("25_a4tue")]
+[node name="rock" parent="." instance=ExtResource("26_i2tj1")]
 transform = Transform3D(3.61, 0, 0, 0, 3.61, 0, 0, 0, 3.61, 34.6369, -11.2076, 37.7598)
 
-[node name="rock2" parent="." instance=ExtResource("25_a4tue")]
+[node name="rock2" parent="." instance=ExtResource("26_i2tj1")]
 transform = Transform3D(2.46045, 0, -2.64165, 0, 3.61, 0, 2.64165, 0, 2.46045, -16.9159, -11.4367, 14.9909)
 
-[node name="skyscaper" parent="." instance=ExtResource("26_acjgc")]
+[node name="skyscaper" parent="." instance=ExtResource("27_4hnxp")]
 transform = Transform3D(0.878719, -0.277194, 0.388609, 0.300839, 0.953675, 0, -0.370607, 0.116909, 0.921403, 66.4738, -12.1969, 68.7822)
 
 [editable path="PlayerCamera/FishingRod"]
