@@ -1376,7 +1376,7 @@ albedo_texture = ExtResource("19_g34gq")
 albedo_color = Color(0.279936, 0.188314, 0.060554, 1)
 metallic_specular = 0.0
 
-[node name="MainScene" type="Node3D"]
+[node name="MainScene2" type="Node3D"]
 
 [node name="Filter" type="CanvasLayer" parent="."]
 layer = 0

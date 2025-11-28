@@ -84,17 +84,17 @@ var FISH_CITY = [
 	{"name": "Zigaretten", "rarity": RARITY.EPISCH, "base_value": 35, "icon": "res://assets/fish/Boro.png",
 	 "description": "Marlboro Menthol. Seit 1987 im Wasser. Noch immer brennend aktuell."},
 	
-	{"name": "Altstadtgeist", "rarity": RARITY.LEGENDAER, "base_value": 55, "icon": "res://assets/fish/fish1.png",
+	{"name": "Altstadtgeist", "rarity": RARITY.LEGENDAER, "base_value": 55, "icon": "res://assets/fish/ghost.png",
 	 "description": "Erzählt dir Geschichten von früher. Alle langweilig."},
 	
-	{"name": "Stadtmythos", "rarity": RARITY.EXOTISCH, "base_value": 150, "icon": "res://assets/fish/fish1.png",
+	{"name": "Platzhalter", "rarity": RARITY.EXOTISCH, "base_value": 150, "icon": "res://assets/fish/unknown.png",
 	 "description": "Existiert eigentlich nicht. Trotzdem gefangen. Paradox!"},
 	
 	{"name": "Leiche", "rarity": RARITY.EXOTISCH, "base_value": 0, "icon": "res://assets/fish/corpse.png",
 	 "description": "Markus?! Bitte nicht..."},
 	
-	{"name": "Datenkrake", "rarity": RARITY.EXOTISCH, "base_value": 175, "icon": "res://assets/fish/corpse.png",
-	 "description": "Kennt deine Suchanfragen. Alle. Ja, auch die."}
+	{"name": "Datenkrake", "rarity": RARITY.EXOTISCH, "base_value": 175, "icon": "res://assets/fish/krake.png",
+	 "description": "Kennt deine Suchanfragen. Alle. Ja, auch die. Sicher das der Name richtig ist?"}
 ]
 
 var FISH_SEWER = [
@@ -110,7 +110,7 @@ var FISH_SEWER = [
 	{"name": "Wels", "rarity": RARITY.UNGEWOEHNLICH, "base_value": 12, "icon": "res://assets/fish/Wels.png",
 	 "description": "Sieht aus wie dein Schnurrbart nach drei Wochen Quarantäne."},
 	
-	{"name": "Teerfisch", "rarity": RARITY.SELTEN, "base_value": 20, "icon": "res://assets/fish/fish1.png",
+	{"name": "Teerfisch", "rarity": RARITY.SELTEN, "base_value": 20, "icon": "res://assets/fish/teerfisch.png",
 	 "description": "50% Fisch, 50% Industrieabfall, 100% unverdaulich."},
 	
 	{"name": "Mondfisch", "rarity": RARITY.EPISCH, "base_value": 36, "icon": "res://assets/fish/fish1.png",
@@ -130,10 +130,10 @@ var FISH_SEWER = [
 ]
 
 var FISH_FOREST = [
-	{"name": "Karpfen", "rarity": RARITY.NORMAL, "base_value": 10, "icon": "res://assets/fish/fish1.png",
+	{"name": "Karpfen", "rarity": RARITY.NORMAL, "base_value": 10, "icon": "res://assets/fish/Karpfen.png",
 	 "description": "Meditiert unter Wasser. Unc ist vegatarisch."},
 	
-	{"name": "Wels", "rarity": RARITY.NORMAL, "base_value": 15, "icon": "res://assets/fish/signal.png",
+	{"name": "Wels", "rarity": RARITY.NORMAL, "base_value": 15, "icon": "res://assets/fish/Wels.png",
 	 "description": "Der Bartwuchs ist legendär. Der Rest? Naja."},
 	
 	{"name": "Koi", "rarity": RARITY.UNGEWOEHNLICH, "base_value": 19, "icon": "res://assets/fish/fish1.png",
