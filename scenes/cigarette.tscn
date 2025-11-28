@@ -1,0 +1,68 @@
+[gd_scene load_steps=10 format=3 uid="uid://bw80sbvfcwe1p"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fixyv"]
+metallic_specular = 1.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_fixyv"]
+material = SubResource("StandardMaterial3D_fixyv")
+size = Vector3(0.02, 0.02, 0.165)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cpquw"]
+emission_enabled = true
+emission = Color(1, 0.321569, 0, 1)
+emission_energy_multiplier = 16.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_tqdhk"]
+material = SubResource("StandardMaterial3D_cpquw")
+size = Vector3(0.02, 0.02, 0.02)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gii23"]
+albedo_color = Color(1, 0.623529, 0, 1)
+emission = Color(1, 0.321569, 0, 1)
+emission_energy_multiplier = 16.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_f8ih2"]
+material = SubResource("StandardMaterial3D_gii23")
+size = Vector3(0.02, 0.02, 0.04)
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_fixyv"]
+lifetime_randomness = 1.0
+direction = Vector3(0, 1, 0)
+spread = 107.339
+gravity = Vector3(0, 0.05, 0)
+linear_accel_min = -0.100002
+linear_accel_max = 0.299998
+turbulence_enabled = true
+turbulence_noise_strength = 4.7
+turbulence_noise_scale = 4.994
+turbulence_noise_speed_random = 0.52
+turbulence_influence_min = 0.0
+turbulence_influence_max = 0.052
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tqdhk"]
+transparency = 1
+albedo_color = Color(0.703808, 0.703808, 0.703808, 0.290196)
+
+[sub_resource type="BoxMesh" id="BoxMesh_cpquw"]
+material = SubResource("StandardMaterial3D_tqdhk")
+size = Vector3(0.015, 0.015, 0.015)
+
+[node name="cigaratte" type="MeshInstance3D"]
+mesh = SubResource("BoxMesh_fixyv")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.0928409)
+mesh = SubResource("BoxMesh_tqdhk")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.102506)
+mesh = SubResource("BoxMesh_f8ih2")
+
+[node name="GPUParticles3D" type="GPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.0956775)
+amount = 18
+lifetime = 2.47
+explosiveness = 0.08
+randomness = 1.0
+process_material = SubResource("ParticleProcessMaterial_fixyv")
+draw_pass_1 = SubResource("BoxMesh_cpquw")

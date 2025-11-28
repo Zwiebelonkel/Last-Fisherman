@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://dvbb2cq3xo50n"
 path.s3tc="res://.godot/imported/Material_emissive.png-c236dc026a58bdd15f3fb33ee4d28a04.s3tc.ctex"
+path.etc2="res://.godot/imported/Material_emissive.png-c236dc026a58bdd15f3fb33ee4d28a04.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/subway/textures/Material_emissive.png"
-dest_files=["res://.godot/imported/Material_emissive.png-c236dc026a58bdd15f3fb33ee4d28a04.s3tc.ctex"]
+dest_files=["res://.godot/imported/Material_emissive.png-c236dc026a58bdd15f3fb33ee4d28a04.s3tc.ctex", "res://.godot/imported/Material_emissive.png-c236dc026a58bdd15f3fb33ee4d28a04.etc2.ctex"]
 
 [params]
 

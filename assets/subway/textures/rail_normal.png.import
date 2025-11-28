@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://bw12ay8v812xw"
 path.s3tc="res://.godot/imported/rail_normal.png-ac0896d1971a367f4a72491b0a29e6c3.s3tc.ctex"
+path.etc2="res://.godot/imported/rail_normal.png-ac0896d1971a367f4a72491b0a29e6c3.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/subway/textures/rail_normal.png"
-dest_files=["res://.godot/imported/rail_normal.png-ac0896d1971a367f4a72491b0a29e6c3.s3tc.ctex"]
+dest_files=["res://.godot/imported/rail_normal.png-ac0896d1971a367f4a72491b0a29e6c3.s3tc.ctex", "res://.godot/imported/rail_normal.png-ac0896d1971a367f4a72491b0a29e6c3.etc2.ctex"]
 
 [params]
 

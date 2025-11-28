@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://8mo7h08oaql"
 path.s3tc="res://.godot/imported/SIGNS_diffuse.png-ff527ad70e2948b4fb9d6c5d3e4fb3b8.s3tc.ctex"
+path.etc2="res://.godot/imported/SIGNS_diffuse.png-ff527ad70e2948b4fb9d6c5d3e4fb3b8.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/subway/textures/SIGNS_diffuse.png"
-dest_files=["res://.godot/imported/SIGNS_diffuse.png-ff527ad70e2948b4fb9d6c5d3e4fb3b8.s3tc.ctex"]
+dest_files=["res://.godot/imported/SIGNS_diffuse.png-ff527ad70e2948b4fb9d6c5d3e4fb3b8.s3tc.ctex", "res://.godot/imported/SIGNS_diffuse.png-ff527ad70e2948b4fb9d6c5d3e4fb3b8.etc2.ctex"]
 
 [params]
 

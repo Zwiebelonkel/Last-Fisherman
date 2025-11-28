@@ -4,8 +4,9 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://cdg1kpsphfxn0"
 path.s3tc="res://.godot/imported/lake_Ps1BushTexture.png-30ed3297e3df797e9f19db07f76b1e45.s3tc.ctex"
+path.etc2="res://.godot/imported/lake_Ps1BushTexture.png-30ed3297e3df797e9f19db07f76b1e45.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -15,7 +16,7 @@ generator_parameters={
 [deps]
 
 source_file="res://scenes/lake_Ps1BushTexture.png"
-dest_files=["res://.godot/imported/lake_Ps1BushTexture.png-30ed3297e3df797e9f19db07f76b1e45.s3tc.ctex"]
+dest_files=["res://.godot/imported/lake_Ps1BushTexture.png-30ed3297e3df797e9f19db07f76b1e45.s3tc.ctex", "res://.godot/imported/lake_Ps1BushTexture.png-30ed3297e3df797e9f19db07f76b1e45.etc2.ctex"]
 
 [params]
 

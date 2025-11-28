@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://depundogqasdh"
 path.s3tc="res://.godot/imported/checker.002_diffuse.png-09fd1e2cfef0ef78775806127f14568a.s3tc.ctex"
+path.etc2="res://.godot/imported/checker.002_diffuse.png-09fd1e2cfef0ef78775806127f14568a.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/subway/textures/checker.002_diffuse.png"
-dest_files=["res://.godot/imported/checker.002_diffuse.png-09fd1e2cfef0ef78775806127f14568a.s3tc.ctex"]
+dest_files=["res://.godot/imported/checker.002_diffuse.png-09fd1e2cfef0ef78775806127f14568a.s3tc.ctex", "res://.godot/imported/checker.002_diffuse.png-09fd1e2cfef0ef78775806127f14568a.etc2.ctex"]
 
 [params]
 

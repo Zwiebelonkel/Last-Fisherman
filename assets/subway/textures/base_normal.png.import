@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://ceui34yaob4ms"
 path.s3tc="res://.godot/imported/base_normal.png-d6049eee5a7b70402087a6033ffdc180.s3tc.ctex"
+path.etc2="res://.godot/imported/base_normal.png-d6049eee5a7b70402087a6033ffdc180.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/subway/textures/base_normal.png"
-dest_files=["res://.godot/imported/base_normal.png-d6049eee5a7b70402087a6033ffdc180.s3tc.ctex"]
+dest_files=["res://.godot/imported/base_normal.png-d6049eee5a7b70402087a6033ffdc180.s3tc.ctex", "res://.godot/imported/base_normal.png-d6049eee5a7b70402087a6033ffdc180.etc2.ctex"]
 
 [params]
 

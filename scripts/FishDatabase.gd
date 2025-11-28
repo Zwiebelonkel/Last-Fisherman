@@ -69,7 +69,7 @@ var FISH_CITY = [
 	{"name": "Trümmerkabel-Fisch", "rarity": RARITY.UNGEWOEHNLICH, "base_value": 10, "icon": "res://assets/fish/trümmer.png",
 	 "description": "Ernährt sich von HDMI-Kabeln und zerbrochenen Träumen."},
 	
-	{"name": "Dorsch", "rarity": RARITY.UNGEWOEHNLICH, "base_value": 11, "icon": "res://assets/fish/trümmer.png",
+	{"name": "Dorsch", "rarity": RARITY.UNGEWOEHNLICH, "base_value": 11, "icon": "res://assets/fish/dorsch.png",
 	 "description": "Heißt auch Kabeljau. Hat eine Identitätskrise."},
 	
 	{"name": "Diskusfisch", "rarity": RARITY.SELTEN, "base_value": 18, "icon": "res://assets/fish/diskus.png",
@@ -101,10 +101,10 @@ var FISH_SEWER = [
 	{"name": "Kackwurst", "rarity": RARITY.NORMAL, "base_value": 8, "icon": "res://assets/fish/kackwurst.png",
 	 "description": "Exakt das, wonach es aussieht. Verkauf es schnell."},
 	
-	{"name": "Sardine", "rarity": RARITY.NORMAL, "base_value": 9, "icon": "res://assets/fish/fish1.png",
-	 "description": "Möchte intensiv in eine DOse gepresst werden."},
+	{"name": "Sardine", "rarity": RARITY.NORMAL, "base_value": 9, "icon": "res://assets/fish/sardine.png",
+	 "description": "Möchte intensiv in eine Dose gepresst werden."},
 	
-	{"name": "Forelle", "rarity": RARITY.NORMAL, "base_value": 10, "icon": "res://assets/fish/signal.png",
+	{"name": "Forelle", "rarity": RARITY.NORMAL, "base_value": 10, "icon": "res://assets/fish/forelle.png",
 	 "description": "Hat schon bessere Tage gesehen. Und bessere Gewässer."},
 	
 	{"name": "Wels", "rarity": RARITY.UNGEWOEHNLICH, "base_value": 12, "icon": "res://assets/fish/Wels.png",
@@ -122,7 +122,7 @@ var FISH_SEWER = [
 	{"name": "Führerschein", "rarity": RARITY.LEGENDAER, "base_value": 80, "icon": "res://assets/fish/führerschein.png",
 	 "description": "Abgelaufen seit 2003. Gehörte vermutlich Rainer, 52."},
 	
-	{"name": "Wütende Scholle", "rarity": RARITY.EXOTISCH, "base_value": 200, "icon": "res://assets/fish/fish1.png",
+	{"name": "Wütende Scholle", "rarity": RARITY.EXOTISCH, "base_value": 200, "icon": "res://assets/fish/scholle.png",
 	 "description": "Hat valide Gründe für ihre Wut. Glaub mir."},
 	
 	{"name": "Kondom", "rarity": RARITY.EXOTISCH, "base_value": 8, "icon": "res://assets/fish/Kondom.png",

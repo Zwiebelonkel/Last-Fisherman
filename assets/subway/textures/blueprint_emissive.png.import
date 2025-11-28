@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://cnpychyyd8tf4"
 path.s3tc="res://.godot/imported/blueprint_emissive.png-2f5f0a39a32e49f56881e50b85936634.s3tc.ctex"
+path.etc2="res://.godot/imported/blueprint_emissive.png-2f5f0a39a32e49f56881e50b85936634.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/subway/textures/blueprint_emissive.png"
-dest_files=["res://.godot/imported/blueprint_emissive.png-2f5f0a39a32e49f56881e50b85936634.s3tc.ctex"]
+dest_files=["res://.godot/imported/blueprint_emissive.png-2f5f0a39a32e49f56881e50b85936634.s3tc.ctex", "res://.godot/imported/blueprint_emissive.png-2f5f0a39a32e49f56881e50b85936634.etc2.ctex"]
 
 [params]
 

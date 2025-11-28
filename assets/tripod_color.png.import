@@ -4,8 +4,9 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://bsecj25msdnr3"
 path.s3tc="res://.godot/imported/tripod_color.png-d84c0030beadc8ca69a22c64cb44ee4c.s3tc.ctex"
+path.etc2="res://.godot/imported/tripod_color.png-d84c0030beadc8ca69a22c64cb44ee4c.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -15,7 +16,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/tripod_color.png"
-dest_files=["res://.godot/imported/tripod_color.png-d84c0030beadc8ca69a22c64cb44ee4c.s3tc.ctex"]
+dest_files=["res://.godot/imported/tripod_color.png-d84c0030beadc8ca69a22c64cb44ee4c.s3tc.ctex", "res://.godot/imported/tripod_color.png-d84c0030beadc8ca69a22c64cb44ee4c.etc2.ctex"]
 
 [params]
 

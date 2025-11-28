@@ -4,8 +4,9 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://b3rwa4rvpm6wt"
 path.s3tc="res://.godot/imported/cigs_redSmoke.png-783188e2dcc0a7d1e6458a48dc8f409d.s3tc.ctex"
+path.etc2="res://.godot/imported/cigs_redSmoke.png-783188e2dcc0a7d1e6458a48dc8f409d.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -15,7 +16,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/cigs_redSmoke.png"
-dest_files=["res://.godot/imported/cigs_redSmoke.png-783188e2dcc0a7d1e6458a48dc8f409d.s3tc.ctex"]
+dest_files=["res://.godot/imported/cigs_redSmoke.png-783188e2dcc0a7d1e6458a48dc8f409d.s3tc.ctex", "res://.godot/imported/cigs_redSmoke.png-783188e2dcc0a7d1e6458a48dc8f409d.etc2.ctex"]
 
 [params]
 

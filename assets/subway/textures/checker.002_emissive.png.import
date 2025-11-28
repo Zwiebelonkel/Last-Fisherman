@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://cadpwpgkyhrud"
 path.s3tc="res://.godot/imported/checker.002_emissive.png-db4a1e155890a07ad085cf38ba17ca23.s3tc.ctex"
+path.etc2="res://.godot/imported/checker.002_emissive.png-db4a1e155890a07ad085cf38ba17ca23.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/subway/textures/checker.002_emissive.png"
-dest_files=["res://.godot/imported/checker.002_emissive.png-db4a1e155890a07ad085cf38ba17ca23.s3tc.ctex"]
+dest_files=["res://.godot/imported/checker.002_emissive.png-db4a1e155890a07ad085cf38ba17ca23.s3tc.ctex", "res://.godot/imported/checker.002_emissive.png-db4a1e155890a07ad085cf38ba17ca23.etc2.ctex"]
 
 [params]
 
