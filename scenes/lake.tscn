@@ -1013,7 +1013,10 @@ transform = Transform3D(0.809888, 0, 0.586584, 0, 1, 0, -0.586584, 0, 0.809888, 
 transform = Transform3D(-0.214954, 0, -0.000824433, 0, 0.35, 0, 0.00443134, 0, -0.0399915, 14.1822, 2.77085, -23.087)
 
 [node name="Explosion" parent="." instance=ExtResource("31_fl7px")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.12513, 0, 50.3674)
+transform = Transform3D(1.725, 0, 0, 0, 1.725, 0, 0, 0, 1.725, -7.12513, 0, 69.7789)
+visible = false
 
 [editable path="UI/Touch"]
 [editable path="PlayerCamera/FishingRod"]
+[editable path="Explosion"]
+[editable path="Explosion/Sketchfab_Scene"]

@@ -117,6 +117,7 @@ func reset():
 	upgrade_line = 1
 	last_scene = "res://scenes/MainScene.tscn"
 	fish_inventory.clear()
+	Inventory.clear_inventory()
 	caught_fish_species.clear()
 	
 	# 🆕 Biom-Zähler zurücksetzen

@@ -88,6 +88,7 @@ var current_fish_list: Array = []
 
 
 func _ready() -> void:
+	show_story_event()
 	anim.play("idle")
 	hook.visible = false
 	splash.visible = false
@@ -580,35 +581,17 @@ func handle_story_fish_caught(fish: Dictionary) -> void:
 	FishDB.emit_signal("story_fish_caught", fishing_location, fish)
 	
 	# Zeige Story Event
-	show_story_event(fish)
+	show_story_event()
 
 
 # 🆕 Story Event UI anzeigen
-func show_story_event(fish: Dictionary) -> void:
-	explosion.ani
-	if not story_event_panel:
-		print("⚠️ Kein story_event_panel zugewiesen!")
-		state = STATE_IDLE
-		return
+func show_story_event() -> void:
+	var ani = $"../../Explosion/Sketchfab_Scene/AnimationPlayer"
+	explosion.show()
+	ani.play("explosion")
+	camera.start_screenshake(0.3,6)
 	
-	# Event Panel vorbereiten
-	story_event_panel.visible = true
 	
-	# Setze Fischdaten (Labels, Icons, etc.)
-	var title_label = story_event_panel.get_node_or_null("Title")
-	if title_label:
-		title_label.text = fish["name"]
-	
-	var desc_label = story_event_panel.get_node_or_null("Description")
-	if desc_label:
-		desc_label.text = fish.get("description", "...")
-	
-	# Continue Button verbinden
-	var continue_btn = story_event_panel.get_node_or_null("ContinueButton")
-	if continue_btn:
-		if not continue_btn.is_connected("pressed", _on_story_event_continue):
-			continue_btn.pressed.connect(_on_story_event_continue)
-
 
 func _on_story_event_continue() -> void:
 	story_event_panel.visible = false
