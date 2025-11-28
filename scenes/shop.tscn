@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://cfptx2e41wve1"]
+[gd_scene load_steps=5 format=3 uid="uid://cfptx2e41wve1"]
 
 [ext_resource type="PackedScene" uid="uid://4pl6mlicypxk" path="res://textures/shop.glb" id="1_lx5au"]
 [ext_resource type="Material" uid="uid://cj86wv7c01tef" path="res://materials/outlineWhite.tres" id="2_xfvoa"]
 [ext_resource type="PackedScene" uid="uid://txuhvg248mds" path="res://assets/cigs.glb" id="3_1l46r"]
+[ext_resource type="PackedScene" uid="uid://82w5hgvqgb64" path="res://scenes/hillybilly.tscn" id="4_032fp"]
 
 [node name="Shop" type="Node3D"]
 
@@ -25,6 +26,9 @@ light_indirect_energy = 10.374
 light_volumetric_fog_energy = 5.202
 light_specular = 2.278
 spot_angle = 64.6875
+
+[node name="Hillybilly" parent="." instance=ExtResource("4_032fp")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.923214, 0, 0.724418)
 
 [editable path="shop"]
 [editable path="cigs"]

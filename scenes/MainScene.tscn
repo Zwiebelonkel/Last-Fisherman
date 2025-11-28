@@ -1,4 +1,4 @@
-[gd_scene load_steps=59 format=3 uid="uid://cx2sffjjdjuw5"]
+[gd_scene load_steps=58 format=3 uid="uid://cx2sffjjdjuw5"]
 
 [ext_resource type="Shader" uid="uid://dmg556n5nwodi" path="res://shader/pixelate.gdshader" id="1_1ns3k"]
 [ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="1_2phbr"]
@@ -20,7 +20,6 @@
 [ext_resource type="PackedScene" uid="uid://brmbdno888s38" path="res://assets/tree.glb" id="14_08o8g"]
 [ext_resource type="PackedScene" uid="uid://bw80sbvfcwe1p" path="res://scenes/cigarette.tscn" id="14_fto0a"]
 [ext_resource type="PackedScene" uid="uid://cfptx2e41wve1" path="res://scenes/shop.tscn" id="15_0cxu4"]
-[ext_resource type="PackedScene" uid="uid://5eeohonkr6bu" path="res://textures/hillybilly.glb" id="16_xnxdc"]
 [ext_resource type="AudioStream" uid="uid://esyv0p374c5j" path="res://sounds/bite.mp3" id="18_2phbr"]
 [ext_resource type="AudioStream" uid="uid://cldy38iwm8ovi" path="res://sounds/cast.mp3" id="19_mkg2b"]
 [ext_resource type="AudioStream" uid="uid://26m0pjkxve85" path="res://sounds/sucess.mp3" id="20_1ns3k"]
@@ -1615,8 +1614,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.40193, 0.164468, 2.28083)
 [node name="Shop" parent="." instance=ExtResource("15_0cxu4")]
 transform = Transform3D(-3.12536e-08, 0, 0.715, 0, 0.715, 0, -0.715, 0, -3.12536e-08, -2.74395, 0.673682, -0.208801)
 
-[node name="hillybilly" parent="." instance=ExtResource("16_xnxdc")]
-transform = Transform3D(-0.190341, 0, 1.51307, 0, 1.525, 0, -1.51307, 0, -0.190341, -3.27164, -0.424028, 0.672108)
+[node name="Hillybilly" parent="Shop" index="3"]
+transform = Transform3D(1, 0, 4.11909e-15, 0, 1, 0, -4.11909e-15, 0, 1, -1.33514, 0, 0.892961)
 
 [node name="Audio" type="Node" parent="."]
 
@@ -1702,3 +1701,6 @@ transform = Transform3D(-0.214954, 0, -0.000824433, 0, 0.35, 0, 0.00443134, 0, -
 
 [editable path="UI/Touch"]
 [editable path="PlayerCamera/FishingRod"]
+[editable path="Shop"]
+[editable path="Shop/shop"]
+[editable path="Shop/cigs"]

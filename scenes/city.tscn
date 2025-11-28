@@ -1,4 +1,4 @@
-[gd_scene load_steps=56 format=3 uid="uid://cvkrlt4ri1i2u"]
+[gd_scene load_steps=53 format=3 uid="uid://cvkrlt4ri1i2u"]
 
 [ext_resource type="Shader" uid="uid://dmg556n5nwodi" path="res://shader/pixelate.gdshader" id="1_f7b0s"]
 [ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="2_ikoiv"]
@@ -16,8 +16,6 @@
 [ext_resource type="Shader" uid="uid://cfsuhiaq15sgu" path="res://shader/outline.gdshader" id="12_h3250"]
 [ext_resource type="Script" uid="uid://bymrcyid32xsp" path="res://scripts/line.gd" id="13_my70f"]
 [ext_resource type="PackedScene" uid="uid://cfptx2e41wve1" path="res://scenes/shop.tscn" id="15_nmpot"]
-[ext_resource type="Texture2D" uid="uid://cw5ltmn3vtien" path="res://textures/hillybilly_redneck_mat_baseColor.png" id="15_yles7"]
-[ext_resource type="PackedScene" uid="uid://5eeohonkr6bu" path="res://textures/hillybilly.glb" id="16_hks51"]
 [ext_resource type="Shader" uid="uid://of02kbc2kqkw" path="res://shader/sky2.gdshader" id="17_agolw"]
 [ext_resource type="PackedScene" uid="uid://btgasvjdkp460" path="res://assets/hotel.glb" id="18_agolw"]
 [ext_resource type="PackedScene" uid="uid://ckje0fw3pep83" path="res://assets/skyscaper.glb" id="18_ibljb"]
@@ -1266,9 +1264,6 @@ disable_receive_shadows = true
 [sub_resource type="SphereMesh" id="SphereMesh_08o8g"]
 material = SubResource("StandardMaterial3D_kp0ql")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ibljb"]
-albedo_texture = ExtResource("15_yles7")
-
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ibljb"]
 shader = ExtResource("17_agolw")
 shader_parameter/use_directional_light = false
@@ -1495,12 +1490,8 @@ mesh = SubResource("SphereMesh_08o8g")
 [node name="Shop" parent="." instance=ExtResource("15_nmpot")]
 transform = Transform3D(-3.12536e-08, 0, 0.715, 0, 0.715, 0, -0.715, 0, -3.12536e-08, -7.28633, 10.317, -0.991175)
 
-[node name="hillybilly" parent="." instance=ExtResource("16_hks51")]
-transform = Transform3D(-0.190341, 0, 1.51307, 0, 1.525, 0, -1.51307, 0, -0.190341, -7.9344, 10.4905, 0.672108)
-
-[node name="Object_34" parent="hillybilly/metarig/Skeleton3D" index="0"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.627528, -0.770657, 0.0789409)
-surface_material_override/0 = SubResource("StandardMaterial3D_ibljb")
+[node name="Hillybilly" parent="Shop" index="3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.133, 0, 0.724)
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_agolw")
@@ -1650,7 +1641,9 @@ transform = Transform3D(-0.0550024, 0, 0.474281, 0, 1.765, 0, -0.998486, 0, -0.0
 surface_material_override/0 = SubResource("StandardMaterial3D_nmpot")
 
 [editable path="PlayerCamera/FishingRod"]
-[editable path="hillybilly"]
+[editable path="Shop"]
+[editable path="Shop/shop"]
+[editable path="Shop/cigs"]
 [editable path="hotel"]
 [editable path="hotel3"]
 [editable path="hotel4"]

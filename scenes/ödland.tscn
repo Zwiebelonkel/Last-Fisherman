@@ -1,4 +1,4 @@
-[gd_scene load_steps=52 format=3 uid="uid://bnj4irwko1m1j"]
+[gd_scene load_steps=51 format=3 uid="uid://bnj4irwko1m1j"]
 
 [ext_resource type="Shader" uid="uid://dmg556n5nwodi" path="res://shader/pixelate.gdshader" id="1_kuao5"]
 [ext_resource type="Shader" uid="uid://bso2ewb2ieq7x" path="res://shader/warp.gdshader" id="1_tx5p3"]
@@ -17,7 +17,6 @@
 [ext_resource type="Shader" uid="uid://cfsuhiaq15sgu" path="res://shader/outline.gdshader" id="14_6d2g4"]
 [ext_resource type="Script" uid="uid://bymrcyid32xsp" path="res://scripts/line.gd" id="15_wbcdt"]
 [ext_resource type="PackedScene" uid="uid://cfptx2e41wve1" path="res://scenes/shop.tscn" id="16_mabyp"]
-[ext_resource type="PackedScene" uid="uid://5eeohonkr6bu" path="res://textures/hillybilly.glb" id="17_hc2xf"]
 [ext_resource type="AudioStream" uid="uid://esyv0p374c5j" path="res://sounds/bite.mp3" id="18_yqxbp"]
 [ext_resource type="AudioStream" uid="uid://cldy38iwm8ovi" path="res://sounds/cast.mp3" id="19_uxuqp"]
 [ext_resource type="AudioStream" uid="uid://26m0pjkxve85" path="res://sounds/sucess.mp3" id="20_p58cv"]
@@ -1567,9 +1566,6 @@ mesh = SubResource("SphereMesh_7r1ho")
 [node name="Shop" parent="." instance=ExtResource("16_mabyp")]
 transform = Transform3D(-3.12536e-08, 0, 0.715, 0.183488, 0.691055, 8.02051e-09, -0.691055, 0.183488, -3.02069e-08, -2.74395, 0.284576, -0.208801)
 
-[node name="hillybilly" parent="." instance=ExtResource("17_hc2xf")]
-transform = Transform3D(-0.190341, 0, 1.51307, 0.328081, 1.48872, 0.0412719, -1.47707, 0.330668, -0.185813, -3.27164, -0.849061, 0.365361)
-
 [node name="Audio" type="Node" parent="."]
 
 [node name="bite" type="AudioStreamPlayer" parent="Audio"]
@@ -1613,3 +1609,6 @@ transform = Transform3D(2.46045, 0, -2.64165, 0, 3.61, 0, 2.64165, 0, 2.46045, -
 transform = Transform3D(0.878719, -0.277194, 0.388609, 0.300839, 0.953675, 0, -0.370607, 0.116909, 0.921403, 66.4738, -12.1969, 68.7822)
 
 [editable path="PlayerCamera/FishingRod"]
+[editable path="Shop"]
+[editable path="Shop/shop"]
+[editable path="Shop/cigs"]
