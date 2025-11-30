@@ -1,4 +1,4 @@
-[gd_scene load_steps=53 format=3 uid="uid://cvkrlt4ri1i2u"]
+[gd_scene load_steps=56 format=3 uid="uid://cvkrlt4ri1i2u"]
 
 [ext_resource type="Shader" uid="uid://dmg556n5nwodi" path="res://shader/pixelate.gdshader" id="1_f7b0s"]
 [ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="2_ikoiv"]
@@ -144,6 +144,8 @@ func _ready() -> void:
 	
 	# 🆕 Button-Signals verbinden
 	setup_buttons()
+	Player.biome_completed.connect(_on_biome_completed)
+
 
 
 # 🆕 Button Setup
@@ -165,6 +167,33 @@ func setup_buttons() -> void:
 	
 	if interact_button:
 		interact_button.pressed.connect(on_interact_pressed)
+		
+func _on_biome_completed(biome_name: String, reward: int) -> void:
+	print(\"🎉 Biom abgeschlossen: \", biome_name, \" | Belohnung: \", reward, \" Gold\")
+	
+	# Hier kannst du machen was du willst:
+	
+	# Beispiel 1: Spezielle Items freischalten
+	match biome_name:
+		\"lake\":
+			pass
+		
+		\"city\":
+			print(\"✨ Stadt-Köder freigeschaltet!\")
+			var ani : AnimationPlayer = $\"../../WaterPlane/AnimationTree\"
+			ani.play(\"flood\")
+		
+		\"sewer\":
+			print(\"✨ Giftresistenz erhalten!\")
+			# Player.add_ability(\"poison_resistance\")
+		
+		\"forest\":
+			print(\"✨ Waldgeist-Bonus aktiviert!\")
+			# Player.add_xp(1000)
+		
+		\"desert\":
+			print(\"✨ Alle Biome gemeistert - Geheimes Ende freigeschaltet!\")
+			# get_tree().change_scene_to_file(\"res://scenes/SecretEnding.tscn\")
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -691,7 +720,7 @@ func end_catch_minigame(success: bool) -> void:
 	camera.start_screenshake(0.4,0.3)
 	if success:
 		var fish = current_fish
-		Inventory.add_fish(fish)
+		Player.add_fish(fish)
 		Player.caught_fish_species[fish[\"name\"]] = true
 		success_sound.play()
 
@@ -1174,6 +1203,187 @@ material = SubResource("ShaderMaterial_k24pf")
 uv2_padding = 1.41
 size = Vector2(200, 200)
 
+[sub_resource type="Animation" id="Animation_h3250"]
+resource_name = "flood"
+length = 10.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 9.96667),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 8.93222, 91.1433), Vector3(0, 18.577, 91.708)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("../skyscaper:position")
+tracks/1/interp = 2
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 2.10072),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(1.78701, 0.983576, 64.0503), Vector3(1.787, -17.501, 64.05)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("../skyscaper:rotation")
+tracks/2/interp = 2
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 2.10072),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 1.15762, 0), Vector3(0, 1.15715, 1.02974)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("../hotel3:position")
+tracks/3/interp = 2
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 5.40184),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(-34.9223, 12.6676, 49.6451), Vector3(-34.922, -10.352, 49.645)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("../hotel3:rotation")
+tracks/4/interp = 2
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 5.40184),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(-0.177224, -1.79118, -0.0569869), Vector3(-0.640536, -1.79943, 0.21293)]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("../hotel:position")
+tracks/5/interp = 2
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(4.13713, 9.53897),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(21.7924, 1.86945, 49.6451), Vector3(21.792, -7.411, 49.645)]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("../hotel:rotation")
+tracks/6/interp = 2
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(4.13713, 9.53897),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(-0.177225, 1.88375, -0.0569868), Vector3(-0.413643, 1.75231, -0.0575959)]
+}
+
+[sub_resource type="Animation" id="Animation_my70f"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 8.93222, 91.1433)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("../skyscaper:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(1.78701, 0.983576, 64.0503)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("../skyscaper:rotation")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 1.15762, 0)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("../hotel3:position")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(-34.9223, 12.6676, 49.6451)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("../hotel3:rotation")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(-0.177224, -1.79118, -0.0569869)]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("../hotel:position")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(21.7924, 1.86945, 49.6451)]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("../hotel:rotation")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(-0.177225, 1.88375, -0.0569868)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_86b61"]
+_data = {
+&"RESET": SubResource("Animation_my70f"),
+&"flood": SubResource("Animation_h3250")
+}
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_8wjpf"]
 render_priority = 0
 shader = ExtResource("12_h3250")
@@ -1447,6 +1657,11 @@ transform = Transform3D(0.8, 0, 0, 0, 0.773459, 0.204357, 0, -0.204357, 0.773459
 transform = Transform3D(-1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0, 0, 1, 0, 8.93222, 91.1433)
 mesh = SubResource("PlaneMesh_qg23i")
 
+[node name="AnimationTree" type="AnimationPlayer" parent="WaterPlane"]
+libraries = {
+&"": SubResource("AnimationLibrary_86b61")
+}
+
 [node name="Hook" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.875422, 4.83257)
 
@@ -1497,7 +1712,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.133, 0, 0.724)
 environment = SubResource("Environment_agolw")
 
 [node name="hotel" parent="." instance=ExtResource("18_agolw")]
-transform = Transform3D(-0.297821, -0.184998, 0.936525, -0.0560639, 0.982739, 0.176298, -0.952974, 0, -0.303052, 21.7924, 1.86945, 49.6451)
+transform = Transform3D(-0.297821, -0.184998, 0.936525, -0.0560639, 0.982739, 0.176298, -0.952974, 1.22935e-07, -0.303052, 21.7924, 1.86945, 49.6451)
 
 [node name="Cube" parent="hotel" index="0"]
 transform = Transform3D(6.75741, 1.85016e-08, -2.38419e-07, 0, 22.171, -1.19209e-07, 1.19209e-07, 9.97467e-07, 6.75741, 0.409439, -7.1769, -1.2875)
@@ -1507,10 +1722,10 @@ transform = Transform3D(0, 3.34179, -4.81128e-08, 1.78814e-07, -2.98023e-08, -3.
 surface_material_override/0 = SubResource("StandardMaterial3D_agolw")
 
 [node name="hotel3" parent="." instance=ExtResource("18_agolw")]
-transform = Transform3D(-0.228044, 0.159304, -0.96053, -0.0560639, 0.982739, 0.176298, 0.972035, 0.0940547, -0.215176, -34.9223, 12.6676, 49.6451)
+transform = Transform3D(-0.228044, 0.159304, -0.96053, -0.0560639, 0.982739, 0.176298, 0.972035, 0.0940547, -0.215177, -34.9223, 12.6676, 49.6451)
 
 [node name="Cube" parent="hotel3" index="0"]
-transform = Transform3D(6.75741, 2.38419e-07, 0, 0, 22.171, 1.3411e-07, 0, 3.57628e-07, 6.75741, 0.409435, -7.1769, -1.2875)
+transform = Transform3D(6.75741, 0, 0, 0, 22.171, -1.09e-07, 0, 3.57628e-07, 6.75741, 0.409435, -7.1769, -1.2875)
 
 [node name="Text" parent="hotel3" index="1"]
 transform = Transform3D(0, 3.34179, -2.98023e-08, 1.41561e-07, 0, -3.34179, -3.34179, 2.38419e-07, -1.63913e-07, 6.15054, 4.88431, -12.5286)

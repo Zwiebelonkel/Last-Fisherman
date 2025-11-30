@@ -258,6 +258,7 @@ func _ready() -> void:
 		cast_power_ui = cast_power_ui_scene.instantiate()
 		add_child(cast_power_ui)
 	
+	Player.biome_completed.connect(_on_biome_completed)
 	# 🆕 Button-Signals verbinden
 	setup_buttons()
 
@@ -281,6 +282,31 @@ func setup_buttons() -> void:
 	
 	if interact_button:
 		interact_button.pressed.connect(on_interact_pressed)
+		
+func _on_biome_completed(biome_name: String, reward: int) -> void:
+	print(\"🎉 Biom abgeschlossen: \", biome_name, \" | Belohnung: \", reward, \" Gold\")
+	
+	# Hier kannst du machen was du willst:
+	
+	# Beispiel 1: Spezielle Items freischalten
+	match biome_name:
+		\"lake\":
+			pass
+		
+		\"city\":
+			pass
+		
+		\"sewer\":
+			print(\"✨ Sewer komplett!\")
+			# Player.add_ability(\"poison_resistance\")
+		
+		\"forest\":
+			print(\"✨ Waldgeist-Bonus aktiviert!\")
+			# Player.add_xp(1000)
+		
+		\"desert\":
+			print(\"✨ Alle Biome gemeistert - Geheimes Ende freigeschaltet!\")
+			# get_tree().change_scene_to_file(\"res://scenes/SecretEnding.tscn\")
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -807,7 +833,7 @@ func end_catch_minigame(success: bool) -> void:
 	camera.start_screenshake(0.4,0.3)
 	if success:
 		var fish = current_fish
-		Inventory.add_fish(fish)
+		Player.add_fish(fish)
 		Player.caught_fish_species[fish[\"name\"]] = true
 		success_sound.play()
 

@@ -5,7 +5,7 @@ uniform sampler2D cloud_sheet : source_color;
 uniform int frames = 5;
 uniform float speed = 0.1;
 uniform float frame_rate = 6.0;
-uniform float tiling = 3.0;  
+uniform float tiling = 3.0;
 uniform float gap = 0.2;     // <-- LEERRAUM zwischen Wiederholungen (0 = direkt nebeneinander)
 
 void fragment() {
