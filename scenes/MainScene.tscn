@@ -258,6 +258,7 @@ func _ready() -> void:
 	
 	# 🆕 Button-Signals verbinden
 	setup_buttons()
+	Player.biome_completed.connect(_on_biome_completed)
 
 
 # 🆕 Button Setup
@@ -280,6 +281,33 @@ func setup_buttons() -> void:
 	if interact_button:
 		interact_button.pressed.connect(on_interact_pressed)
 
+# 🆕 Wird aufgerufen wenn ein Biom komplett ist
+func _on_biome_completed(biome_name: String, reward: int) -> void:
+	print(\"🎉 Biom abgeschlossen: \", biome_name, \" | Belohnung: \", reward, \" Gold\")
+	
+	# Hier kannst du machen was du willst:
+	
+	# Beispiel 1: Spezielle Items freischalten
+	match biome_name:
+		\"lake\":
+			print(\"✨ Legendäre Angel freigeschaltet!\")
+			# Player.unlock_special_rod(\"legendary_lake_rod\")
+		
+		\"city\":
+			print(\"✨ Stadt-Köder freigeschaltet!\")
+			# Player.unlock_bait(\"city_special_bait\")
+		
+		\"sewer\":
+			print(\"✨ Giftresistenz erhalten!\")
+			# Player.add_ability(\"poison_resistance\")
+		
+		\"forest\":
+			print(\"✨ Waldgeist-Bonus aktiviert!\")
+			# Player.add_xp(1000)
+		
+		\"desert\":
+			print(\"✨ Alle Biome gemeistert - Geheimes Ende freigeschaltet!\")
+			# get_tree().change_scene_to_file(\"res://scenes/SecretEnding.tscn\")
 
 func _unhandled_input(event: InputEvent) -> void:
 	# 🆕 ESC/Pause behandeln - IMMER als erstes prüfen

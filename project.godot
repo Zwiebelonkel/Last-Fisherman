@@ -28,6 +28,7 @@ FishBook="*res://scripts/FishBook.gd"
 
 [display]
 
+window/size/mode=3
 window/stretch/mode="canvas_items"
 window/handheld/orientation=1
 

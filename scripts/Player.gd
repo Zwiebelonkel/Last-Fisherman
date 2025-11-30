@@ -1,4 +1,8 @@
 extends Node
+
+# 🆕 Signal für UI-Benachrichtigungen
+signal biome_completed(biome_name: String, reward: int)
+
 # --- PLAYER DATA ---
 var money: int = 0
 var level: int = 1
@@ -10,21 +14,30 @@ var last_scene: String = "res://scenes/MainScene.tscn"
 var options: String = "res://scenes/OptionsCOntrol.tscn"
 var fish_inventory: Array = []  # Liste aller gefangenen Fische
 var caught_fish_species: Dictionary = {}  # Für das Fischbuch
+
+# 🆕 Biom-Completion Tracking
+var completed_biomes: Dictionary = {
+	"lake": false,
+	"city": false,
+	"sewer": false,
+	"forest": false,
+	"desert": false
+}
+
 var unlocked_spots = {
 	"lake": true,
 	"city": false,
 	"sewer": false,
 	"forest": false,
 	"desert": false,
-
 }
+
 var spot_prices = {
 	"lake": 0,
 	"city": 500,
 	"sewer": 1200,
 	"forest": 2000,
 	"desert": 4000
-
 }
 
 func _ready():
@@ -69,8 +82,124 @@ func add_fish(fish_data: Dictionary) -> void:
 	if not caught_fish_species.has(fish_data["name"]):
 		caught_fish_species[fish_data["name"]] = true
 		print("🐟 Neue Fischart entdeckt:", fish_data["name"])
+		
+		# 🆕 Prüfe ob Biom jetzt komplett ist
+		check_biome_completion(fish_data)
 	
 	save_game()
+
+# 🆕 Prüft ob alle Fische eines Bioms gefangen wurden
+func check_biome_completion(fish_data: Dictionary) -> void:
+	# Finde heraus zu welchem Biom der Fisch gehört
+	var biome = get_fish_biome(fish_data["name"])
+	
+	if biome == "":
+		return  # Fisch gehört zu keinem bekannten Biom
+	
+	# Wenn Biom bereits als komplett markiert, nichts tun
+	if completed_biomes[biome]:
+		return
+	
+	# Hole alle Fische des Bioms
+	var biome_fish = get_biome_fish_list(biome)
+	
+	if biome_fish.is_empty():
+		return
+	
+	# Prüfe ob ALLE Fische gefangen wurden
+	var all_caught = true
+	for fish in biome_fish:
+		if not caught_fish_species.has(fish["name"]):
+			all_caught = false
+			break
+	
+	# Wenn alle gefangen: Event auslösen
+	if all_caught:
+		trigger_biome_completion_event(biome)
+
+# 🆕 Findet das Biom eines Fisches anhand des Namens
+func get_fish_biome(fish_name: String) -> String:
+	# Prüfe Lake
+	for fish in FishDB.FISH_LAKE:
+		if fish["name"] == fish_name:
+			return "lake"
+	
+	# Prüfe City
+	for fish in FishDB.FISH_CITY:
+		if fish["name"] == fish_name:
+			return "city"
+	
+	# Prüfe Sewer
+	for fish in FishDB.FISH_SEWER:
+		if fish["name"] == fish_name:
+			return "sewer"
+	
+	# Prüfe Forest
+	for fish in FishDB.FISH_FOREST:
+		if fish["name"] == fish_name:
+			return "forest"
+	
+	# Prüfe Desert
+	for fish in FishDB.FISH_DESERT:
+		if fish["name"] == fish_name:
+			return "desert"
+	
+	return ""  # Nicht gefunden
+
+# 🆕 Gibt die Fischliste eines Bioms zurück
+func get_biome_fish_list(biome: String) -> Array:
+	match biome:
+		"lake":
+			return FishDB.FISH_LAKE
+		"city":
+			return FishDB.FISH_CITY
+		"sewer":
+			return FishDB.FISH_SEWER
+		"forest":
+			return FishDB.FISH_FOREST
+		"desert":
+			return FishDB.FISH_DESERT
+		_:
+			return []
+
+# 🆕 Event wenn ein Biom komplett ist
+func trigger_biome_completion_event(biome: String) -> void:
+	completed_biomes[biome] = true
+	save_game()
+	
+	print("🎉 BIOM KOMPLETT: ", biome.to_upper(), " - Alle Fische gefangen!")
+	
+	var reward = 0
+	
+	# Hier kannst du verschiedene Events basierend auf dem Biom auslösen
+	match biome:
+		"lake":
+			print("✨ See-Meister! Belohnung: 500 Gold")
+			reward = 500
+			add_money(reward)
+		
+		"city":
+			print("✨ Stadt-Angler! Belohnung: 1000 Gold")
+			reward = 1000
+			add_money(reward)
+		
+		"sewer":
+			print("✨ Kanalisation-Eroberer! Belohnung: 1500 Gold")
+			reward = 1500
+			add_money(reward)
+		
+		"forest":
+			print("✨ Wald-Experte! Belohnung: 2000 Gold")
+			reward = 2000
+			add_money(reward)
+		
+		"desert":
+			print("✨ Wüsten-Legende! Belohnung: 3000 Gold")
+			reward = 3000
+			add_money(reward)
+	
+	# Signal aussenden für UI (kein Duplikat mehr!)
+	emit_signal("biome_completed", biome, reward)
 
 func remove_fish(index: int) -> void:
 	if index >= 0 and index < fish_inventory.size():
@@ -88,7 +217,6 @@ func _add_all_fish() -> void:
 		add_fish(fish)
 	for fish in FishDB.FISH_DESERT:
 		add_fish(fish)
-
 
 func clear_inventory():
 	fish_inventory.clear()
@@ -111,13 +239,19 @@ func reset():
 	last_scene = "res://scenes/MainScene.tscn"
 	Inventory.clear_inventory()
 	caught_fish_species.clear()
+	completed_biomes = {
+		"lake": false,
+		"city": false,
+		"sewer": false,
+		"forest": false,
+		"desert": false
+	}
 	unlocked_spots = {
 		"lake": true,
 		"city": false,
 		"sewer": false,
 		"forest": false,
 		"desert": false
-
 	}
 	save_game()
 
@@ -132,7 +266,8 @@ func save_game() -> void:
 		"last_scene": last_scene,
 		"fish_inventory": fish_inventory,
 		"unlocked_spots": unlocked_spots,
-		"caught_fish_species": caught_fish_species
+		"caught_fish_species": caught_fish_species,
+		"completed_biomes": completed_biomes  # 🆕 Speichern
 	}
 	var file = FileAccess.open("user://savegame.dat", FileAccess.WRITE)
 	file.store_var(save_data)
@@ -152,7 +287,7 @@ func load_game() -> void:
 		fish_inventory = save_data.get("fish_inventory", [])
 		unlocked_spots = save_data.get("unlocked_spots", unlocked_spots)
 		caught_fish_species = save_data.get("caught_fish_species", {})
+		completed_biomes = save_data.get("completed_biomes", completed_biomes)  # 🆕 Laden
 		print("Spiel geladen!")
 	else:
 		print("Keine Speicherdatei gefunden, starte neues Spiel")
-		

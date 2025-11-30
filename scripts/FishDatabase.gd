@@ -28,6 +28,9 @@ var FISH_LAKE = [
 	{"name": "Seetang", "rarity": RARITY.NORMAL, "base_value": 1, "icon": "res://assets/fish/seetang.png",
 	 "description": "Technisch gesehen kein Fisch. Aber mach erstmal weiter."},
 	
+	{"name": "test", "rarity": RARITY.NORMAL, "base_value": 1, "icon": "res://assets/fish/seetang.png",
+	 "description": "Technisch gesehen kein Fisch. Aber mach erstmal weiter."},
+	
 	{"name": "Makrele", "rarity": RARITY.NORMAL, "base_value": 4, "icon": "res://assets/fish/makrele.png",
 	 "description": "Der Toyota Corolla unter den Fischen. Zuverlässig langweilig."},
 	
