@@ -1,4 +1,4 @@
-[gd_scene load_steps=47 format=3 uid="uid://bwpkoys7chajb"]
+[gd_scene load_steps=51 format=3 uid="uid://bwpkoys7chajb"]
 
 [ext_resource type="Shader" uid="uid://dmg556n5nwodi" path="res://shader/pixelate.gdshader" id="1_kqfxt"]
 [ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="2_rtjjv"]
@@ -22,6 +22,7 @@
 [ext_resource type="AudioStream" uid="uid://26m0pjkxve85" path="res://sounds/sucess.mp3" id="21_fko2s"]
 [ext_resource type="AudioStream" uid="uid://ccc0156sditep" path="res://sounds/darkestCardsOutide.wav" id="21_kqfxt"]
 [ext_resource type="AudioStream" uid="uid://cmr6cded4l11v" path="res://sounds/whoosh.mp3" id="22_aqbbn"]
+[ext_resource type="AudioStream" uid="uid://dmngr2w2skv70" path="res://sounds/push.mp3" id="23_qk11g"]
 [ext_resource type="PackedScene" uid="uid://dguwyn5rc7uog" path="res://scenes/splash.tscn" id="24_kn4m2"]
 [ext_resource type="PackedScene" uid="uid://bvvfbbsylnidf" path="res://assets/subway/subway.tscn" id="24_kqfxt"]
 
@@ -298,6 +299,16 @@ func _on_biome_completed(biome_name: String, reward: int) -> void:
 		
 		\"sewer\":
 			print(\"✨ Sewer komplett!\")
+			var aniTrain: AnimationPlayer = $\"../../Node3D/Sketchfab_Scene/Sketchfab_model/berlin ubahn station-12-14_obj_cleaner_materialmerger_gles/Object_3/AnimationPlayer\"
+			var aniCamera: AnimationPlayer = $\"../AnimationPlayer\"
+			var sound: AudioStreamPlayer = $\"../../Audio/push\"
+			sound.play()
+			aniTrain.play(\"train\")
+			aniCamera.play(\"push\")
+			camera.start_screenshake(0.5,3)
+			await aniTrain.animation_finished
+			get_tree().change_scene_to_file(\"res://scenes/MapScene.tscn\")
+			
 			# Player.add_ability(\"poison_resistance\")
 		
 		\"forest\":
@@ -860,6 +871,67 @@ func trigger_splash_burst() -> void:
 	if splash and state == STATE_MINIGAME:
 		splash.emitting = false
 "
+
+[sub_resource type="Animation" id="Animation_kqfxt"]
+resource_name = "push"
+length = 10.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1.71487, 3, 7.25),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 2.007, 1.85558), Vector3(0, 2.057, 4.27), Vector3(0, 0.617, 6.07854), Vector3(0, 0.617, 6.07854)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:rotation")
+tracks/1/interp = 2
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5, 3),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0, -3.14159, 0), Vector3(0, -1.13272, 0.0925025), Vector3(0, -4.71239, 1.25664)]
+}
+
+[sub_resource type="Animation" id="Animation_qk11g"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 2.007, 1.85558)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, -3.14159, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_rtjjv"]
+_data = {
+&"RESET": SubResource("Animation_qk11g"),
+&"push": SubResource("Animation_kqfxt")
+}
 
 [sub_resource type="Shader" id="Shader_muv0v"]
 code = "// The following shader is used in order to simulate a simple ocean using Gerstner waves.
@@ -1504,7 +1576,7 @@ visible = false
 environment = SubResource("Environment_8tyyj")
 
 [node name="PlayerCamera" type="Camera3D" parent="."]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 2.007, 1.85558)
+transform = Transform3D(-1, 0, -1.50996e-07, 0, 1, 0, 1.50996e-07, 0, -1, 0, 2.007, 1.85558)
 script = ExtResource("10_11ck5")
 
 [node name="FishingRod" parent="PlayerCamera" node_paths=PackedStringArray("rod_tip", "hook", "splash", "waterplane", "catch_result_ui", "camera", "fishbook_ui", "options", "inventory_ui") instance=ExtResource("11_c82cw")]
@@ -1525,6 +1597,12 @@ inventory_ui = NodePath("../../UI/InventoryUI")
 
 [node name="RodMesh" parent="PlayerCamera/FishingRod" index="0"]
 transform = Transform3D(0.8, 0, 0, 0, 0.773459, 0.204357, 0, -0.204357, 0.773459, 0, 0, -0.0166266)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="PlayerCamera"]
+libraries = {
+&"": SubResource("AnimationLibrary_rtjjv")
+}
+speed_scale = 3.298
 
 [node name="WaterPlane" type="MeshInstance3D" parent="."]
 transform = Transform3D(-1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0, 0, 1, 0, 0.680026, 8.93399)
@@ -1581,10 +1659,23 @@ volume_db = 4.085
 autoplay = true
 bus = &"Music"
 
+[node name="push" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("23_qk11g")
+volume_db = 4.426
+bus = &"SFX"
+
 [node name="Splash" parent="." instance=ExtResource("24_kn4m2")]
 
 [node name="Node3D" parent="." instance=ExtResource("24_kqfxt")]
 transform = Transform3D(0.00425863, 0, 0.999991, 0, 1, 0, -0.999991, 0, 0.00425863, 1.28816, -0.459404, 6.44432)
+
+[node name="SpotLight3D" parent="Node3D/Sketchfab_Scene/Sketchfab_model/berlin ubahn station-12-14_obj_cleaner_materialmerger_gles/Object_3" index="1"]
+transform = Transform3D(1, 0, 0, 0, 1.19249e-08, 1, 0, -1, 1.19249e-08, -0.479115, 3.58507, 1.59235)
+light_color = Color(1, 1, 0.462745, 1)
+
+[node name="SpotLight3D2" parent="Node3D/Sketchfab_Scene/Sketchfab_model/berlin ubahn station-12-14_obj_cleaner_materialmerger_gles/Object_3" index="2"]
+transform = Transform3D(1, 0, 0, 0, 1.19249e-08, 1, 0, -1, 1.19249e-08, 0.873992, 3.58507, 1.59235)
+light_color = Color(1, 1, 0.462745, 1)
 
 [node name="Node3D2" parent="." instance=ExtResource("24_kqfxt")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -16.931, -0.534, -6.719)
@@ -1738,4 +1829,6 @@ omni_range = 0.046
 omni_attenuation = 3.185
 
 [editable path="PlayerCamera/FishingRod"]
+[editable path="Node3D"]
+[editable path="Node3D/Sketchfab_Scene"]
 [editable path="hillybilly2"]

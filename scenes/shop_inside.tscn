@@ -250,9 +250,11 @@ text = "Moeny"
 stream = ExtResource("4_a5104")
 volume_db = -4.684
 autoplay = true
+bus = &"Music"
 
 [node name="interact" type="AudioStreamPlayer" parent="Audio"]
 stream = ExtResource("5_ltjmg")
+bus = &"SFX"
 
 [node name="floor" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.6997, -2.44613)
