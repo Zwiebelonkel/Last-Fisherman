@@ -28,38 +28,35 @@ var FISH_LAKE = [
 	{"name": "Seetang", "rarity": RARITY.NORMAL, "base_value": 1, "icon": "res://assets/fish/seetang.png",
 	 "description": "Technisch gesehen kein Fisch. Aber mach erstmal weiter."},
 	
-	{"name": "test", "rarity": RARITY.NORMAL, "base_value": 1, "icon": "res://assets/fish/seetang.png",
-	 "description": "Technisch gesehen kein Fisch. Aber mach erstmal weiter."},
-	
-	{"name": "Makrele", "rarity": RARITY.NORMAL, "base_value": 4, "icon": "res://assets/fish/makrele.png",
-	 "description": "Der Toyota Corolla unter den Fischen. Zuverlässig langweilig."},
-	
-	{"name": "Rotauge", "rarity": RARITY.NORMAL, "base_value": 5, "icon": "res://assets/fish/fish1.png",
-	 "description": "Starrt dich vorwurfsvoll an. Hat wahrscheinlich Recht damit."},
-	
-	{"name": "Barsch", "rarity": RARITY.UNGEWOEHNLICH, "base_value": 8, "icon": "res://assets/fish/fish2.png",
-	 "description": "Etwas stacheliger als deine Ex, aber weniger giftig."},
-	
-	{"name": "Thunfisch", "rarity": RARITY.UNGEWOEHNLICH, "base_value": 10, "icon": "res://assets/fish/fish2.png",
-	 "description": "Keine Ahnung wie der hier gelandet ist... Der ist viel zu fett."},
-	
-	{"name": "Hecht", "rarity": RARITY.SELTEN, "base_value": 15, "icon": "res://assets/fish/fish3.png",
-	 "description": "Sieht aus wie ein Unterwasser-Torpedo mit Zahnarztphobie."},
-	
-	{"name": "Zander", "rarity": RARITY.EPISCH, "base_value": 25, "icon": "res://assets/fish/fish4.png",
-	 "description": "Der Hipster-Fisch. War schon cool, bevor es mainstream wurde."},
-	
-	{"name": "Kaugummikarpfen", "rarity": RARITY.EPISCH, "base_value": 28, "icon": "res://assets/fish/Kaugummi.png",
-	 "description": "Schmeckt nach Erdbeere und existenzieller Krise."},
-	
-	{"name": "Karpfenkönigin", "rarity": RARITY.LEGENDAER, "base_value": 40, "icon": "res://assets/fish/Prinzessinor.png",
-	 "description": "Erwartet, dass du kniest. Und das zu Recht."},
-	
-	{"name": "Geisterforelle", "rarity": RARITY.EXOTISCH, "base_value": 100, "icon": "res://assets/fish/fish6.png",
-	 "description": "Ist tot. Schwimmt trotzdem. Frag nicht."},
-	
-	{"name": "Plutonium", "rarity": RARITY.EXOTISCH, "base_value": 150, "icon": "res://assets/fish/Plutonium.png",
-	 "description": "Leuchtet im Dunkeln. FDA-Zulassung ausstehend. Nicht essbar"}
+	#{"name": "Makrele", "rarity": RARITY.NORMAL, "base_value": 4, "icon": "res://assets/fish/makrele.png",
+	 #"description": "Der Toyota Corolla unter den Fischen. Zuverlässig langweilig."},
+	#
+	#{"name": "Rotauge", "rarity": RARITY.NORMAL, "base_value": 5, "icon": "res://assets/fish/fish1.png",
+	 #"description": "Starrt dich vorwurfsvoll an. Hat wahrscheinlich Recht damit."},
+	#
+	#{"name": "Barsch", "rarity": RARITY.UNGEWOEHNLICH, "base_value": 8, "icon": "res://assets/fish/fish2.png",
+	 #"description": "Etwas stacheliger als deine Ex, aber weniger giftig."},
+	#
+	#{"name": "Thunfisch", "rarity": RARITY.UNGEWOEHNLICH, "base_value": 10, "icon": "res://assets/fish/fish2.png",
+	 #"description": "Keine Ahnung wie der hier gelandet ist... Der ist viel zu fett."},
+	#
+	#{"name": "Hecht", "rarity": RARITY.SELTEN, "base_value": 15, "icon": "res://assets/fish/fish3.png",
+	 #"description": "Sieht aus wie ein Unterwasser-Torpedo mit Zahnarztphobie."},
+	#
+	#{"name": "Zander", "rarity": RARITY.EPISCH, "base_value": 25, "icon": "res://assets/fish/fish4.png",
+	 #"description": "Der Hipster-Fisch. War schon cool, bevor es mainstream wurde."},
+	#
+	#{"name": "Kaugummikarpfen", "rarity": RARITY.EPISCH, "base_value": 28, "icon": "res://assets/fish/Kaugummi.png",
+	 #"description": "Schmeckt nach Erdbeere und existenzieller Krise."},
+	#
+	#{"name": "Karpfenkönigin", "rarity": RARITY.LEGENDAER, "base_value": 40, "icon": "res://assets/fish/Prinzessinor.png",
+	 #"description": "Erwartet, dass du kniest. Und das zu Recht."},
+	#
+	#{"name": "Geisterforelle", "rarity": RARITY.EXOTISCH, "base_value": 100, "icon": "res://assets/fish/fish6.png",
+	 #"description": "Ist tot. Schwimmt trotzdem. Frag nicht."},
+	#
+	#{"name": "Plutonium", "rarity": RARITY.EXOTISCH, "base_value": 150, "icon": "res://assets/fish/Plutonium.png",
+	 #"description": "Leuchtet im Dunkeln. FDA-Zulassung ausstehend. Nicht essbar"}
 ]
 
 var FISH_CITY = [

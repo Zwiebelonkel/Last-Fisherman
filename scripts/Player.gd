@@ -75,7 +75,7 @@ func go_to_last_scene() -> void:
 	get_tree().change_scene_to_file(last_scene)
 
 func add_fish(fish_data: Dictionary) -> void:
-	fish_inventory.append(fish_data)
+	Inventory.add_fish(fish_data)
 	print("Fisch ins Inventar hinzugefügt:", fish_data)
 	
 	# Fisch ins Fischbuch eintragen
@@ -84,37 +84,51 @@ func add_fish(fish_data: Dictionary) -> void:
 		print("🐟 Neue Fischart entdeckt:", fish_data["name"])
 		
 		# 🆕 Prüfe ob Biom jetzt komplett ist
+		print("DEBUG: Rufe check_biome_completion auf...")
 		check_biome_completion(fish_data)
+	else:
+		print("DEBUG: Fisch war bereits gefangen, kein Completion-Check")
 	
 	save_game()
 
 # 🆕 Prüft ob alle Fische eines Bioms gefangen wurden
 func check_biome_completion(fish_data: Dictionary) -> void:
+	print("DEBUG: check_biome_completion gestartet für:", fish_data["name"])
+	
 	# Finde heraus zu welchem Biom der Fisch gehört
 	var biome = get_fish_biome(fish_data["name"])
+	print("DEBUG: Biom gefunden:", biome)
 	
 	if biome == "":
+		print("DEBUG: Kein Biom gefunden - Abbruch")
 		return  # Fisch gehört zu keinem bekannten Biom
 	
 	# Wenn Biom bereits als komplett markiert, nichts tun
 	if completed_biomes[biome]:
+		print("DEBUG: Biom", biome, "ist bereits komplett - Abbruch")
 		return
 	
 	# Hole alle Fische des Bioms
 	var biome_fish = get_biome_fish_list(biome)
+	print("DEBUG: Anzahl Fische im Biom", biome, ":", biome_fish.size())
 	
 	if biome_fish.is_empty():
+		print("DEBUG: Biom-Liste ist leer - Abbruch")
 		return
 	
 	# Prüfe ob ALLE Fische gefangen wurden
 	var all_caught = true
 	for fish in biome_fish:
+		print("DEBUG: Prüfe Fisch:", fish["name"], "- Gefangen:", caught_fish_species.has(fish["name"]))
 		if not caught_fish_species.has(fish["name"]):
 			all_caught = false
 			break
 	
+	print("DEBUG: Alle Fische gefangen?", all_caught)
+	
 	# Wenn alle gefangen: Event auslösen
 	if all_caught:
+		print("DEBUG: Triggere Biom-Completion Event!")
 		trigger_biome_completion_event(biome)
 
 # 🆕 Findet das Biom eines Fisches anhand des Namens
@@ -219,6 +233,7 @@ func _add_all_fish() -> void:
 		add_fish(fish)
 
 func clear_inventory():
+	Inventory.clear_inventory()
 	fish_inventory.clear()
 	save_game()
 
