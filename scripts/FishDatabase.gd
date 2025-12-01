@@ -38,7 +38,7 @@ var FISH_LAKE = [
 	 "description": "Etwas stacheliger als deine Ex, aber weniger giftig.", "weight_min": 0.5, "weight_max": 1.5},
 	
 	{"name": "Thunfisch", "rarity": RARITY.UNGEWOEHNLICH, "base_value": 10, "icon": "res://assets/fish/tuna.png",
-	 "description": "Keine Ahnung wie der hier gelandet ist... Der ist viel zu fett.", "weight_min": 5.0, "weight_max": 15.0},
+	 "description": "Keine Ahnung wie der hier rein passt... Der ist viel zu fett.", "weight_min": 5.0, "weight_max": 15.0},
 	
 	{"name": "Hecht", "rarity": RARITY.SELTEN, "base_value": 15, "icon": "res://assets/fish/fish3.png",
 	 "description": "Sieht aus wie ein Unterwasser-Torpedo mit Zahnarztphobie.", "weight_min": 2.0, "weight_max": 6.0},
@@ -319,10 +319,10 @@ var FISH_FOREST = [
 	{"name": "Wels", "rarity": RARITY.NORMAL, "base_value": 15, "icon": "res://assets/fish/Wels.png",
 	 "description": "Der Bartwuchs ist legendär. Der Rest? Naja.", "weight_min": 5.0, "weight_max": 25.0},
 	
-	{"name": "Koi", "rarity": RARITY.UNGEWOEHNLICH, "base_value": 19, "icon": "res://assets/fish/fish1.png",
+	{"name": "Koi", "rarity": RARITY.UNGEWOEHNLICH, "base_value": 19, "icon": "res://assets/fish/koi.png",
 	 "description": "Kostet in Japan ein Vermögen. Hier? Mittwochsangebot.", "weight_min": 2.0, "weight_max": 8.0},
 	
-	{"name": "Rohrschatten", "rarity": RARITY.SELTEN, "base_value": 27, "icon": "res://assets/fish/fish1.png",
+	{"name": "Rohrschatten", "rarity": RARITY.SELTEN, "base_value": 27, "icon": "res://assets/fish/rohrschatten.png",
 	 "description": "Versteckt sich zwischen Schilf. Stealth Level 100.", "weight_min": 0.5, "weight_max": 2.0},
 	
 	{"name": "Angel", "rarity": RARITY.SELTEN, "base_value": 28, "icon": "res://assets/fish/angel.png",
@@ -334,13 +334,13 @@ var FISH_FOREST = [
 	{"name": "Waldfresser", "rarity": RARITY.EPISCH, "base_value": 70, "icon": "res://assets/fish/Gutter.png",
 	 "description": "Vegetarier. Frisst buchstäblich den Wald. Irgendwie ironisch.", "weight_min": 10.0, "weight_max": 30.0},
 	
-	{"name": "Bambushai", "rarity": RARITY.LEGENDAER, "base_value": 100, "icon": "res://assets/fish/fish1.png",
+	{"name": "Bambushai", "rarity": RARITY.LEGENDAER, "base_value": 100, "icon": "res://assets/fish/bambus.png",
 	 "description": "Ernährt sich von Bambus und innerer Ruhe.", "weight_min": 5.0, "weight_max": 15.0},
 	
-	{"name": "Wurzelfisch", "rarity": RARITY.EXOTISCH, "base_value": 250, "icon": "res://assets/fish/fish1.png",
+	{"name": "Wurzelfisch", "rarity": RARITY.EXOTISCH, "base_value": 250, "icon": "res://assets/fish/wurzelfisch.png",
 	 "description": "Halb Fisch, halb Baum, komplett verstörend.", "weight_min": 20.0, "weight_max": 50.0},
 	
-	{"name": "Leiche", "rarity": RARITY.EXOTISCH, "base_value": 0, "icon": "res://assets/fish/corpse.png",
+	{"name": "Markus", "rarity": RARITY.EXOTISCH, "base_value": 0, "icon": "res://assets/fish/corpse.png",
 	 "description": "Schon wieder? Ernsthaft?", "weight_min": 60.0, "weight_max": 90.0},
 #{"name": "Moosbarbe", "rarity": RARITY.NORMAL, "base_value": 12, "icon": "res://assets/fish/moosbarbe.png",
  #"description": "Hat mehr Moos am Körper als du im Portemonnaie.", "weight_min": 0.5, "weight_max": 1.5},
