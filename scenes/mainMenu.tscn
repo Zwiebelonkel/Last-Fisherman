@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=4 uid="uid://bw5el7n36awdr"]
+[gd_scene load_steps=33 format=4 uid="uid://bw5el7n36awdr"]
 
 [ext_resource type="Script" uid="uid://cslkhtib5limu" path="res://scripts/mainMenu.gd" id="1_tov5d"]
 [ext_resource type="Shader" uid="uid://dmg556n5nwodi" path="res://shader/pixelate.gdshader" id="2_vt84v"]
@@ -119,6 +119,68 @@ lightmap_size_hint = Vector2i(251, 1001)
 material = SubResource("ShaderMaterial_k24pf")
 uv2_padding = 1.41
 size = Vector2(200, 200)
+
+[sub_resource type="Animation" id="Animation_vt84v"]
+resource_name = "circle"
+length = 60.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:light_color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 30, 60),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(0.99552, 0.467887, 0.0444731, 1), Color(0.0187395, 0.22427, 0.266336, 1), Color(0.99552, 0.467887, 0.0444731, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:light_angular_distance")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 30, 60),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [13.64, 4.36, 13.64]
+}
+
+[sub_resource type="Animation" id="Animation_lam2r"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:light_color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(0.99552, 0.467887, 0.0444731, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:light_angular_distance")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [13.64]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_amia2"]
+_data = {
+&"RESET": SubResource("Animation_lam2r"),
+&"circle": SubResource("Animation_vt84v")
+}
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kp0ql"]
 emission_enabled = true
@@ -305,6 +367,11 @@ directional_shadow_split_3 = 0.268
 directional_shadow_fade_start = 0.507
 directional_shadow_max_distance = 83.4
 sky_mode = 1
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="DirectionalLight3D"]
+libraries = {
+&"": SubResource("AnimationLibrary_amia2")
+}
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
 transform = Transform3D(26.165, 0, 0, 0, 26.165, 0, 0, 0, 26.165, 0, 2.72752, 228.721)

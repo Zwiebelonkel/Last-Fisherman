@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://c65603pesggni"]
+[gd_scene load_steps=15 format=3 uid="uid://c65603pesggni"]
 
 [ext_resource type="Texture2D" uid="uid://d2l0f1gb3wn01" path="res://textures/map.png" id="1_er4uf"]
 [ext_resource type="Script" uid="uid://2ilivy1i0ehi" path="res://scripts/MapScene.gd" id="1_y2hrc"]
@@ -6,6 +6,8 @@
 [ext_resource type="AudioStream" uid="uid://wy4qclas0bhw" path="res://sounds/map.mp3" id="4_1ddn7"]
 [ext_resource type="Shader" uid="uid://bso2ewb2ieq7x" path="res://shader/warp.gdshader" id="4_bnqbi"]
 [ext_resource type="AudioStream" uid="uid://cgv2wx0vgdw41" path="res://sounds/interact.mp3" id="5_bnqbi"]
+[ext_resource type="Shader" uid="uid://cdivlr8xvrv5o" path="res://scenes/MapScene.gdshader" id="7_jqekx"]
+[ext_resource type="Texture2D" uid="uid://vb3jqd3mfkt0" path="res://assets/clouds.png" id="8_titcf"]
 
 [sub_resource type="Theme" id="Theme_j1nvq"]
 
@@ -29,6 +31,15 @@ shadow_size = 15
 shader = ExtResource("4_bnqbi")
 shader_parameter/warp_intensity = 0.022
 shader_parameter/time_scale = 2.338
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_titcf"]
+shader = ExtResource("7_jqekx")
+shader_parameter/cloud_sheet = ExtResource("8_titcf")
+shader_parameter/frames = 3
+shader_parameter/speed = 0.235
+shader_parameter/frame_rate = 1.0
+shader_parameter/tiling = 2.845
+shader_parameter/gap = 0.445
 
 [node name="MapScene" type="Control"]
 layout_mode = 3
@@ -112,7 +123,7 @@ offset_left = 358.0
 offset_top = 289.5
 offset_right = 404.0
 offset_bottom = 320.5
-text = "Sewer"
+text = "Subway"
 
 [node name="ForestButton" type="Button" parent="layout/Locations"]
 layout_mode = 0
@@ -270,5 +281,24 @@ offset_right = -74.0
 grow_horizontal = 0
 grow_vertical = 0
 placeholder_text = "password"
+
+[node name="Clouds" type="TextureRect" parent="."]
+material = SubResource("ShaderMaterial_titcf")
+layout_mode = 0
+offset_left = -3.0
+offset_top = -64.0
+offset_right = 1204.0
+offset_bottom = 140.0
+texture = ExtResource("8_titcf")
+
+[node name="Clouds2" type="TextureRect" parent="."]
+material = SubResource("ShaderMaterial_titcf")
+layout_mode = 0
+offset_left = -51.0
+offset_top = -51.0
+offset_right = 1187.0
+offset_bottom = 96.0
+texture = ExtResource("8_titcf")
+flip_h = true
 
 [connection signal="pressed" from="Button" to="." method="_on_submit_pressed"]

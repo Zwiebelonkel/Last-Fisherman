@@ -1,4 +1,4 @@
-[gd_scene load_steps=52 format=3 uid="uid://bru2npwxw6p10"]
+[gd_scene load_steps=56 format=3 uid="uid://bru2npwxw6p10"]
 
 [ext_resource type="Shader" uid="uid://dmg556n5nwodi" path="res://shader/pixelate.gdshader" id="1_di3lw"]
 [ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="2_8wf4g"]
@@ -27,6 +27,7 @@
 [ext_resource type="Material" uid="uid://cj86wv7c01tef" path="res://materials/outlineWhite.tres" id="25_8wf4g"]
 [ext_resource type="PackedScene" uid="uid://bej6o0ysl85et" path="res://assets/rock.glb" id="27_37aet"]
 [ext_resource type="PackedScene" uid="uid://bw4vof4oddwco" path="res://assets/ödland.glb" id="28_bjond"]
+[ext_resource type="PackedScene" uid="uid://b5t6amrp7aa7m" path="res://scenes/shark.tscn" id="28_g34gq"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_lvx2t"]
 shader = ExtResource("1_di3lw")
@@ -145,12 +146,14 @@ background_mode = 2
 background_energy_multiplier = 0.15
 sky = SubResource("Sky_x537r")
 glow_enabled = true
-glow_strength = 0.98
+glow_intensity = 1.06
+glow_strength = 0.42
 fog_light_color = Color(0.808262, 0.429746, 0.296975, 1)
 fog_light_energy = 0.0
 fog_sun_scatter = 1.0
 fog_sky_affect = 0.0
-volumetric_fog_density = 0.0184
+volumetric_fog_enabled = true
+volumetric_fog_density = 0.0171
 volumetric_fog_albedo = Color(0.812995, 0.875895, 1, 1)
 volumetric_fog_length = 42.44
 volumetric_fog_ambient_inject = 0.2
@@ -298,8 +301,15 @@ func _on_biome_completed(biome_name: String, reward: int) -> void:
 			pass
 		
 		\"forest\":
-			print(\"✨ Forest komplett!\")
-			# Player.add_xp(1000)
+			var shark : Node3D = $\"../../shark\"
+			var ani : AnimationPlayer = $\"../../shark/AnimationPlayer\"
+			
+			shark.show()
+			ani.play(\"attack\")
+			camera.start_screenshake(0.02,10)
+			await ani.animation_finished
+			open_map()
+			
 		
 		\"desert\":
 			print(\"✨ Alle Biome gemeistert - Geheimes Ende freigeschaltet!\")
@@ -1394,6 +1404,67 @@ material = SubResource("StandardMaterial3D_kp0ql")
 albedo_color = Color(0.279936, 0.188314, 0.060554, 1)
 metallic_specular = 0.0
 
+[sub_resource type="Animation" id="Animation_soql2"]
+resource_name = "attack"
+length = 10.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 3, 6.41, 6.89333, 9.5, 9.93333),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(0, -4.31979, 43.319), Vector3(0, -4.32, 15.699), Vector3(0, -6.05, 10.285), Vector3(0, -5.755, 13.765), Vector3(0, -5.755, 13.765), Vector3(0.2, 0.16, 5.922)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(9.5, 9.67903, 9.93333),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 3.14159, 0), Vector3(-0.315905, 3.14159, 0), Vector3(0.0915425, 3.14159, -1.38613e-08)]
+}
+
+[sub_resource type="Animation" id="Animation_u01n2"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, -4.31979, 43.319)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 3.14159, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_qu0hn"]
+_data = {
+&"RESET": SubResource("Animation_u01n2"),
+&"attack": SubResource("Animation_soql2")
+}
+
 [node name="MainScene2" type="Node3D"]
 
 [node name="Filter" type="CanvasLayer" parent="."]
@@ -1663,6 +1734,15 @@ transform = Transform3D(-0.173992, 0, -0.984747, 0, 1, 0, 0.984747, 0, -0.173992
 
 [node name="ödland" parent="." instance=ExtResource("28_bjond")]
 transform = Transform3D(0.495, 0, 0, 0, 1.01, 0, 0, 0, 0.105, 0.0924568, -2.07669, 82.8271)
+
+[node name="shark" parent="." instance=ExtResource("28_g34gq")]
+transform = Transform3D(-0.15, 0, 2.26494e-08, 0, 0.15, 0, -2.26494e-08, 0, -0.15, 0, -4.31979, 43.319)
+visible = false
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="shark"]
+libraries = {
+&"": SubResource("AnimationLibrary_qu0hn")
+}
 
 [editable path="PlayerCamera/FishingRod"]
 [editable path="Shop"]

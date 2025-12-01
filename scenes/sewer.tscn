@@ -307,7 +307,7 @@ func _on_biome_completed(biome_name: String, reward: int) -> void:
 			aniCamera.play(\"push\")
 			camera.start_screenshake(0.5,3)
 			await aniTrain.animation_finished
-			get_tree().change_scene_to_file(\"res://scenes/MapScene.tscn\")
+			open_map()
 			
 			# Player.add_ability(\"poison_resistance\")
 		

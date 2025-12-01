@@ -3,6 +3,10 @@ extends Node3D
 @export var options: Node
 var optionsActive: bool = false
 
+func _ready() -> void:
+	var ani : AnimationPlayer = $DirectionalLight3D/AnimationPlayer
+	ani.play("circle")
+
 
 func _on_button_pressed() -> void:
 	Player.update_last_scene("res://scenes/MainScene_City.tscn")

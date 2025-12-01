@@ -72,6 +72,18 @@ theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "PSX Forest Asset Pack  by AkuVain
 https://skfb.ly/oJPOT"
 
+[node name="Label7" type="Label" parent="VScrollBar/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "SharkBite 2's Shortfin Mako Shark  by AllThingsSaurus
+https://sketchfab.com/3d-models/sharkbite-2s-shortfin-mako-shark-bc2234b39f7843c4acb2ed06d51184d4"
+
+[node name="Label8" type="Label" parent="VScrollBar/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "Mushroom cloud low poly by Jimmy Johansson
+https://sketchfab.com/3d-models/mushroom-cloud-low-poly-7d37e0570a164eaba038594bf3d664f6"
+
 [node name="Button" type="Button" parent="."]
 layout_mode = 1
 anchors_preset = 12

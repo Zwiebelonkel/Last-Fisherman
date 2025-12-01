@@ -15,9 +15,8 @@ func _init():
 		"city": FishDB.FISH_CITY,
 		"sewer": FishDB.FISH_SEWER,
 		"forest": FishDB.FISH_FOREST,
-		"desert": FishDB.FISH_DESERT
-
-
+		"desert": FishDB.FISH_DESERT,
+		"insgesamt": FishDB.FISH_LAKE + FishDB.FISH_CITY + FishDB.FISH_SEWER + FishDB.FISH_FOREST + FishDB.FISH_DESERT
 	}
 
 # Prüft, ob ein Fisch bereits gefangen wurde

@@ -1,0 +1,42 @@
+[gd_scene load_steps=2 format=3 uid="uid://b5t6amrp7aa7m"]
+
+[ext_resource type="PackedScene" uid="uid://bqt5jpnxus11d" path="res://assets/fish/sharkbite_2s_shortfin_mako_shark.glb" id="1_8l5qy"]
+
+[node name="shark" type="Node3D"]
+
+[node name="Sketchfab_Scene" parent="." instance=ExtResource("1_8l5qy")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -192.779, -230.684, 406.941)
+
+[node name="SpotLight3D" type="SpotLight3D" parent="."]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 4.33625, 16.3449, 32.1857)
+light_color = Color(1, 0, 0, 1)
+light_energy = 16.0
+spot_range = 11.6249
+spot_angle = 16.4808
+
+[node name="SpotLight3D2" type="SpotLight3D" parent="."]
+transform = Transform3D(-1, 0, -8.74228e-08, -2.43183e-09, -0.999613, 0.0278169, -8.73889e-08, 0.0278169, 0.999613, 4.33625, 16.3449, 31.4105)
+visible = false
+light_color = Color(1, 0, 0, 1)
+light_energy = 16.0
+spot_range = 46.995
+spot_attenuation = -0.06
+spot_angle = 20.6
+
+[node name="SpotLight3D3" type="SpotLight3D" parent="."]
+transform = Transform3D(-1, 0, -8.74228e-08, -2.43183e-09, -0.999613, 0.0278169, -8.73889e-08, 0.0278169, 0.999613, -2.12294, 16.3449, 31.4105)
+visible = false
+light_color = Color(1, 0, 0, 1)
+light_energy = 16.0
+spot_range = 46.995
+spot_attenuation = -0.06
+spot_angle = 20.6
+
+[node name="SpotLight3D4" type="SpotLight3D" parent="."]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -2.12294, 16.3449, 32.3753)
+light_color = Color(1, 0, 0, 1)
+light_energy = 16.0
+spot_range = 11.6249
+spot_angle = 16.4808
+
+[editable path="Sketchfab_Scene"]
