@@ -37,7 +37,7 @@ var FISH_LAKE = [
 	{"name": "Barsch", "rarity": RARITY.UNGEWOEHNLICH, "base_value": 8, "icon": "res://assets/fish/fish2.png",
 	 "description": "Etwas stacheliger als deine Ex, aber weniger giftig.", "weight_min": 0.5, "weight_max": 1.5},
 	
-	{"name": "Thunfisch", "rarity": RARITY.UNGEWOEHNLICH, "base_value": 10, "icon": "res://assets/fish/fish2.png",
+	{"name": "Thunfisch", "rarity": RARITY.UNGEWOEHNLICH, "base_value": 10, "icon": "res://assets/fish/tuna.png",
 	 "description": "Keine Ahnung wie der hier gelandet ist... Der ist viel zu fett.", "weight_min": 5.0, "weight_max": 15.0},
 	
 	{"name": "Hecht", "rarity": RARITY.SELTEN, "base_value": 15, "icon": "res://assets/fish/fish3.png",
@@ -113,7 +113,7 @@ var FISH_SEWER = [
 	{"name": "Teerfisch", "rarity": RARITY.SELTEN, "base_value": 20, "icon": "res://assets/fish/teerfisch.png",
 	 "description": "50% Fisch, 50% Industrieabfall, 100% unverdaulich.", "weight_min": 2.0, "weight_max": 6.0},
 	
-	{"name": "Mondfisch", "rarity": RARITY.EPISCH, "base_value": 36, "icon": "res://assets/fish/fish1.png",
+	{"name": "Mondfisch", "rarity": RARITY.EPISCH, "base_value": 36, "icon": "res://assets/fish/mond.png",
 	 "description": "Hat die Form einer Vollmondnacht und den IQ eines Kieselsteins.", "weight_min": 200.0, "weight_max": 600.0},
 	
 	{"name": "Katzenhai", "rarity": RARITY.EPISCH, "base_value": 40, "icon": "res://assets/fish/Boro.png",

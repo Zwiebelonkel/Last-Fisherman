@@ -14,9 +14,7 @@ var fish_entry_scene = preload("res://scenes/FishBookEntry.tscn")
 var fish_book
 
 func _ready():
-	print("📖 FishBook UI Starting...")
-	print_scene_structure(self, 0)
-	
+
 	fish_book = load("res://scripts/FishBook.gd").new()
 	
 	# Versuche verschiedene Pfade
