@@ -7,6 +7,7 @@ var icon: TextureRect
 var name_label: Label
 var rarity_label: Label
 var value_label: Label
+var separator : HSeparator
 var fish_data: Dictionary = {}
 
 # 🎯 TOOLTIP
@@ -20,6 +21,7 @@ func _ready():
 	name_label = $VBoxContainer/NameLabel
 	rarity_label = $VBoxContainer/RarityLabel
 	value_label = $VBoxContainer/ValueLabel
+	separator = $VBoxContainer/VSeparator
 	
 	# Größe setzen
 	custom_minimum_size = Vector2(70, 90)
@@ -114,6 +116,7 @@ func update_display():
 		
 		rarity_label.text = rarity_data["name"]
 		rarity_label.modulate = rarity_color
+		separator.modulate = rarity_color
 		rarity_label.add_theme_font_size_override("font_size", 12)
 		
 		# 💰 VALUE
