@@ -49,6 +49,7 @@ theme_override_constants/margin_bottom = 10
 
 [node name="Icon" type="TextureRect" parent="VBoxContainer/MarginContainer"]
 material = SubResource("ShaderMaterial_iqtxn")
+custom_minimum_size = Vector2(128, 96)
 layout_mode = 2
 size_flags_horizontal = 0
 texture = ExtResource("2_ri3oc")

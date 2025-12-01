@@ -1,9 +1,9 @@
 extends Control
 
-@onready var fish_grid: GridContainer = $PanelContainer/VBoxContainer/ScrollContainer/FishGrid
+@onready var fish_grid: GridContainer = $PanelContainer/VBoxContainer/ScrollContainer/MarginContainer/FishGrid
 @onready var sell_button: Button = $PanelContainer/VBoxContainer/Button
 @onready var title: Label = $PanelContainer/VBoxContainer/Label
-@onready var total_value_label: Label = $PanelContainer/VBoxContainer/TotalValueLabel
+@onready var total_value_label: Label = $PanelContainer/VBoxContainer/TotalValue
 
 var item_scene := preload("res://scenes/FishingItem.tscn")
 var is_open := false
