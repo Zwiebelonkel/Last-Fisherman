@@ -1203,6 +1203,93 @@ material = SubResource("ShaderMaterial_k24pf")
 uv2_padding = 1.41
 size = Vector2(200, 200)
 
+[sub_resource type="Animation" id="Animation_my70f"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 8.93222, 91.1433)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("../skyscaper:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(1.78701, 0.983576, 64.0503)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("../skyscaper:rotation")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 1.15762, 0)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("../hotel3:position")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(-34.9223, 12.6676, 49.6451)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("../hotel3:rotation")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(-0.177224, -1.79118, -0.0569869)]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("../hotel:position")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(21.7924, 1.86945, 49.6451)]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("../hotel:rotation")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(-0.177225, 1.88375, -0.0569868)]
+}
+
 [sub_resource type="Animation" id="Animation_h3250"]
 resource_name = "flood"
 length = 10.0
@@ -1289,93 +1376,6 @@ tracks/6/keys = {
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector3(-0.177225, 1.88375, -0.0569868), Vector3(-0.413643, 1.75231, -0.0575959)]
-}
-
-[sub_resource type="Animation" id="Animation_my70f"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0, 8.93222, 91.1433)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("../skyscaper:position")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(1.78701, 0.983576, 64.0503)]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("../skyscaper:rotation")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0, 1.15762, 0)]
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("../hotel3:position")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(-34.9223, 12.6676, 49.6451)]
-}
-tracks/4/type = "value"
-tracks/4/imported = false
-tracks/4/enabled = true
-tracks/4/path = NodePath("../hotel3:rotation")
-tracks/4/interp = 1
-tracks/4/loop_wrap = true
-tracks/4/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(-0.177224, -1.79118, -0.0569869)]
-}
-tracks/5/type = "value"
-tracks/5/imported = false
-tracks/5/enabled = true
-tracks/5/path = NodePath("../hotel:position")
-tracks/5/interp = 1
-tracks/5/loop_wrap = true
-tracks/5/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(21.7924, 1.86945, 49.6451)]
-}
-tracks/6/type = "value"
-tracks/6/imported = false
-tracks/6/enabled = true
-tracks/6/path = NodePath("../hotel:rotation")
-tracks/6/interp = 1
-tracks/6/loop_wrap = true
-tracks/6/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(-0.177225, 1.88375, -0.0569868)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_86b61"]
@@ -1712,7 +1712,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.133, 0, 0.724)
 environment = SubResource("Environment_agolw")
 
 [node name="hotel" parent="." instance=ExtResource("18_agolw")]
-transform = Transform3D(-0.297821, -0.184998, 0.936525, -0.0560639, 0.982739, 0.176298, -0.952974, 1.22935e-07, -0.303052, 21.7924, 1.86945, 49.6451)
+transform = Transform3D(-0.297817, -0.184998, 0.936526, -0.0560638, 0.982739, 0.176299, -0.952975, -5.21541e-07, -0.303048, 21.7924, 1.86945, 49.6451)
 
 [node name="Cube" parent="hotel" index="0"]
 transform = Transform3D(6.75741, 1.85016e-08, -2.38419e-07, 0, 22.171, -1.19209e-07, 1.19209e-07, 9.97467e-07, 6.75741, 0.409439, -7.1769, -1.2875)
@@ -1722,7 +1722,7 @@ transform = Transform3D(0, 3.34179, -4.81128e-08, 1.78814e-07, -2.98023e-08, -3.
 surface_material_override/0 = SubResource("StandardMaterial3D_agolw")
 
 [node name="hotel3" parent="." instance=ExtResource("18_agolw")]
-transform = Transform3D(-0.228044, 0.159304, -0.96053, -0.0560639, 0.982739, 0.176298, 0.972035, 0.0940547, -0.215177, -34.9223, 12.6676, 49.6451)
+transform = Transform3D(-0.228047, 0.159304, -0.960529, -0.0560639, 0.982739, 0.176298, 0.972034, 0.0940553, -0.21518, -34.9223, 12.6676, 49.6451)
 
 [node name="Cube" parent="hotel3" index="0"]
 transform = Transform3D(6.75741, 0, 0, 0, 22.171, -1.09e-07, 0, 3.57628e-07, 6.75741, 0.409435, -7.1769, -1.2875)
@@ -1771,7 +1771,7 @@ spot_angle = 28.4266
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.64746, -11.8151, -4.89928)
 
 [node name="skyscaper" parent="." instance=ExtResource("18_ibljb")]
-transform = Transform3D(0.401516, 0, 0.915852, 0, 1, 0, -0.915852, 0, 0.401516, 1.78701, 0.983576, 64.0503)
+transform = Transform3D(0.40152, 0, 0.91585, 0, 1, 0, -0.91585, 0, 0.40152, 1.78701, 0.983576, 64.0503)
 
 [node name="OmniLight3D" type="OmniLight3D" parent="skyscaper"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.52985, 27.183, -4.93816)
