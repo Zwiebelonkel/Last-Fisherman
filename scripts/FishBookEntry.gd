@@ -11,7 +11,7 @@ var fish_data: Dictionary = {}
 
 # 🎯 TOOLTIP
 var tooltip_panel: PanelContainer
-var tooltip_label: RichTextLabel  # RichTextLabel statt Label!
+var tooltip_label: RichTextLabel
 var is_hovering: bool = false
 
 func _ready():
@@ -34,9 +34,9 @@ func create_tooltip():
 	# Tooltip Panel erstellen
 	tooltip_panel = PanelContainer.new()
 	tooltip_panel.visible = false
-	tooltip_panel.z_index = 1000  # Sehr hoher Z-Index
+	tooltip_panel.z_index = 1000
 	tooltip_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	tooltip_panel.top_level = true  # WICHTIG: Macht es unabhängig vom Parent
+	tooltip_panel.top_level = true
 	
 	# Style für Tooltip
 	var style_box = StyleBoxFlat.new()
@@ -63,28 +63,19 @@ func create_tooltip():
 	tooltip_label.scroll_active = false
 	tooltip_label.custom_minimum_size = Vector2(200, 0)
 	
-	# 🎨 SCHRIFTART ÄNDERN - Wähle eine Option:
-	
-	# OPTION 1: Custom Font laden (ersetze mit deinem Font-Pfad)
+	# Custom Font laden
 	var custom_font = load("res://fonts/VCR_OSD_MONO_1.001.ttf")
 	tooltip_label.add_theme_font_override("normal_font", custom_font)
 	tooltip_label.add_theme_font_override("bold_font", custom_font)
 	
-	# OPTION 2: System Font mit anderen Eigenschaften
-	# var font_variation = SystemFont.new()
-	# font_variation.font_names = ["Comic Sans MS", "Arial", "Helvetica"]  # Fallback-Liste
-	# tooltip_label.add_theme_font_override("normal_font", font_variation)
-	
-	# Font Größe und Farbe
-	#tooltip_label.add_theme_font_size_override("normal_font_size", 13)
-	#tooltip_label.add_theme_font_size_override("bold_font_size", 16)
+	# Font Farbe
 	tooltip_label.add_theme_color_override("default_color", Color(0.95, 0.95, 0.95))
 	
 	tooltip_panel.add_child(tooltip_label)
 	
-	# WICHTIG: Tooltip als CanvasLayer hinzufügen für oberste Ebene
+	# Tooltip als CanvasLayer hinzufügen
 	var canvas_layer = CanvasLayer.new()
-	canvas_layer.layer = 100  # Oberste Layer
+	canvas_layer.layer = 100
 	canvas_layer.add_child(tooltip_panel)
 	get_tree().root.add_child(canvas_layer)
 
@@ -115,18 +106,23 @@ func update_display():
 	name_label.text = display_name
 	name_label.add_theme_font_size_override("font_size", 14)
 	
-	# 🎨 RARITY & VALUE
+	# 🎨 RARITY & VALUE & RAHMEN
 	if fish_data.get("caught", false):
 		var rarity = fish_data["rarity"]
 		var rarity_data = FishDB.RARITY_DATA[rarity]
+		var rarity_color = rarity_data["color"]
+		
 		rarity_label.text = rarity_data["name"]
-		rarity_label.modulate = rarity_data["color"]
+		rarity_label.modulate = rarity_color
 		rarity_label.add_theme_font_size_override("font_size", 12)
 		
 		# 💰 VALUE
 		value_label.text = "💰 %d" % fish_data["base_value"]
 		value_label.add_theme_font_size_override("font_size", 11)
 		value_label.show()
+		
+		# 🎨 RAHMEN IN SELTENHEITS-FARBE
+		update_border_color(rarity_color)
 		
 		# Hintergrund hell
 		modulate = Color.WHITE
@@ -136,8 +132,28 @@ func update_display():
 		rarity_label.add_theme_font_size_override("font_size", 12)
 		value_label.hide()
 		
+		# 🎨 GRAUER RAHMEN für unbekannte Fische
+		update_border_color(Color.GRAY)
+		
 		# Hintergrund grau
 		modulate = Color(0.6, 0.6, 0.6)
+
+func update_border_color(color: Color):
+	# Erstelle neues StyleBoxFlat mit der gewünschten Border-Farbe
+	var style_box = StyleBoxFlat.new()
+	style_box.bg_color = Color(0.0980392, 0.0980392, 0.0980392, 0.572549)
+	style_box.border_width_left = 2
+	style_box.border_width_top = 2
+	style_box.border_width_right = 2
+	style_box.border_width_bottom = 2
+	style_box.border_color = color  # 🎨 Hier die Seltenheits-Farbe
+	style_box.corner_radius_top_left = 5
+	style_box.corner_radius_top_right = 5
+	style_box.corner_radius_bottom_right = 5
+	style_box.corner_radius_bottom_left = 5
+	style_box.corner_detail = 13
+	
+	add_theme_stylebox_override("panel", style_box)
 
 func _process(_delta):
 	# Tooltip Position aktualisieren wenn Maus sich bewegt
@@ -182,14 +198,13 @@ func _notification(what):
 
 func _on_mouse_entered():
 	if not fish_data.get("caught", false):
-		return  # Keine Tooltips für unbekannte Fische
+		return
 	
 	is_hovering = true
 	
-	# Beschreibung aus FishDB holen (falls nicht im fish_data vorhanden)
+	# Beschreibung aus FishDB holen
 	var description = fish_data.get("description", "")
 	
-	# Wenn keine Beschreibung vorhanden, versuche sie aus FishDB zu holen
 	if description == "":
 		description = get_description_from_fishdb()
 	
@@ -198,6 +213,16 @@ func _on_mouse_entered():
 	
 	# Name (groß und fett)
 	tooltip_text += "[b][font_size=16]%s[/font_size][/b]\n" % fish_data["name"]
+	
+	# Seltenheit und Wert
+	var rarity_data = FishDB.RARITY_DATA[fish_data["rarity"]]
+	tooltip_text += "[color=%s]%s[/color]" % [rarity_data["color"].to_html(), rarity_data["name"]]
+	tooltip_text += " • 💰 %d\n" % fish_data["base_value"]
+	
+	# Höchstes gefangenes Gewicht anzeigen
+	var max_weight = Player.get_max_caught_weight(fish_data["name"])
+	if max_weight > 0:
+		tooltip_text += "\n[color=#FFD700]⚖️ Rekord: %.2f kg[/color]\n" % max_weight
 	
 	# Beschreibung
 	if description != "":
@@ -210,7 +235,6 @@ func _on_mouse_entered():
 	update_tooltip_position()
 
 func get_description_from_fishdb() -> String:
-	# Durchsuche alle Fish-Listen in FishDB nach diesem Fisch
 	var fish_name = fish_data.get("name", "")
 	if fish_name == "":
 		return ""
@@ -236,7 +260,6 @@ func _on_mouse_exited():
 		tooltip_panel.visible = false
 
 func _exit_tree():
-	# Tooltip aufräumen (inkl. CanvasLayer)
 	if tooltip_panel and is_instance_valid(tooltip_panel):
 		var canvas_layer = tooltip_panel.get_parent()
 		if canvas_layer and is_instance_valid(canvas_layer):

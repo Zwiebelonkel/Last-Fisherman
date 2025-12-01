@@ -1,47 +1,120 @@
-[gd_scene load_steps=4 format=3 uid="uid://daypp8rdpr4m6"]
+[gd_scene load_steps=5 format=3 uid="uid://daypp8rdpr4m6"]
 
 [ext_resource type="Texture2D" uid="uid://betks3bpt551v" path="res://assets/fish/base.png" id="1_pbt77"]
 [ext_resource type="Shader" uid="uid://bstde7wsk0sgt" path="res://shader/icon.gdshader" id="1_q5v8g"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_card"]
+bg_color = Color(0.15, 0.15, 0.15, 0.9)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.4, 0.4, 0.4, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+shadow_color = Color(0, 0, 0, 0.5)
+shadow_size = 4
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_7s2vy"]
 shader = ExtResource("1_q5v8g")
 shader_parameter/shadow_offset = Vector2(0, -5)
 shader_parameter/shadow_color = Vector4(0, 0, 0, 0.5)
 
-[node name="HBoxContainer" type="HBoxContainer"]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="FishingItem" type="PanelContainer"]
+custom_minimum_size = Vector2(180, 220)
+theme_override_styles/panel = SubResource("StyleBoxFlat_card")
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="IconContainer" type="CenterContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/IconContainer"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
+theme_override_constants/margin_bottom = 5
 
-[node name="FishIcon" type="TextureRect" parent="."]
+[node name="FishIcon" type="TextureRect" parent="VBoxContainer/IconContainer/MarginContainer"]
 material = SubResource("ShaderMaterial_7s2vy")
+custom_minimum_size = Vector2(120, 80)
 layout_mode = 2
 texture = ExtResource("1_pbt77")
-expand_mode = 3
+expand_mode = 1
+stretch_mode = 5
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="InfoContainer" type="VBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
+theme_override_constants/separation = 4
 
-[node name="Name" type="Label" parent="VBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/InfoContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_right = 10
+
+[node name="Name" type="Label" parent="VBoxContainer/InfoContainer/MarginContainer"]
 layout_mode = 2
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 16
 text = "Name"
+horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="Rarity" type="Label" parent="VBoxContainer"]
+[node name="MarginContainer2" type="MarginContainer" parent="VBoxContainer/InfoContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_right = 10
+
+[node name="Rarity" type="Label" parent="VBoxContainer/InfoContainer/MarginContainer2"]
 layout_mode = 2
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 13
 text = "Rarity"
+horizontal_alignment = 1
 
-[node name="Value" type="Label" parent="."]
+[node name="Separator" type="HSeparator" parent="VBoxContainer/InfoContainer"]
 layout_mode = 2
+
+[node name="StatsContainer" type="HBoxContainer" parent="VBoxContainer/InfoContainer"]
+layout_mode = 2
+theme_override_constants/separation = 15
+alignment = 1
+
+[node name="MarginContainer3" type="MarginContainer" parent="VBoxContainer/InfoContainer/StatsContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+
+[node name="Weight" type="Label" parent="VBoxContainer/InfoContainer/StatsContainer/MarginContainer3"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.9, 1, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-text = "Value"
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/font_size = 12
+text = "⚖️ 0 kg"
+
+[node name="MarginContainer4" type="MarginContainer" parent="VBoxContainer/InfoContainer/StatsContainer"]
+layout_mode = 2
+theme_override_constants/margin_right = 5
+
+[node name="Value" type="Label" parent="VBoxContainer/InfoContainer/StatsContainer/MarginContainer4"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.3, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/font_size = 12
+text = "💰 0 €"
+
+[node name="MarginContainer5" type="MarginContainer" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_bottom = 5

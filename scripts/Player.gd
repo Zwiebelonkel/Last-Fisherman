@@ -12,8 +12,11 @@ var upgrade_bait: int = 1
 var upgrade_line: int = 1
 var last_scene: String = "res://scenes/MainScene.tscn"
 var options: String = "res://scenes/OptionsCOntrol.tscn"
-var fish_inventory: Array = []  # Liste aller gefangenen Fische
-var caught_fish_species: Dictionary = {}  # Für das Fischbuch
+var fish_inventory: Array = []
+var caught_fish_species: Dictionary = {}
+
+# 🆕 Gewichtsrekorde pro Fischart
+var fish_weight_records: Dictionary = {}  # {"Fischname": max_weight}
 
 # 🆕 Biom-Completion Tracking
 var completed_biomes: Dictionary = {
@@ -78,6 +81,10 @@ func add_fish(fish_data: Dictionary) -> void:
 	Inventory.add_fish(fish_data)
 	print("Fisch ins Inventar hinzugefügt:", fish_data)
 	
+	# 🆕 Gewichtsrekord aktualisieren
+	if fish_data.has("weight"):
+		update_weight_record(fish_data["name"], fish_data["weight"])
+	
 	# Fisch ins Fischbuch eintragen
 	if not caught_fish_species.has(fish_data["name"]):
 		caught_fish_species[fish_data["name"]] = true
@@ -91,6 +98,20 @@ func add_fish(fish_data: Dictionary) -> void:
 	
 	save_game()
 
+# 🆕 Gewichtsrekord aktualisieren
+func update_weight_record(fish_name: String, weight: float) -> void:
+	if not fish_weight_records.has(fish_name):
+		fish_weight_records[fish_name] = weight
+		print("🏆 Neuer Gewichtsrekord für %s: %.2f kg" % [fish_name, weight])
+	elif weight > fish_weight_records[fish_name]:
+		var old_record = fish_weight_records[fish_name]
+		fish_weight_records[fish_name] = weight
+		print("🏆 NEUER REKORD für %s: %.2f kg (vorher: %.2f kg)" % [fish_name, weight, old_record])
+
+# 🆕 Höchstes gefangenes Gewicht abrufen
+func get_max_caught_weight(fish_name: String) -> float:
+	return fish_weight_records.get(fish_name, 0.0)
+
 # 🆕 Prüft ob alle Fische eines Bioms gefangen wurden
 func check_biome_completion(fish_data: Dictionary) -> void:
 	print("DEBUG: check_biome_completion gestartet für:", fish_data["name"])
@@ -101,7 +122,7 @@ func check_biome_completion(fish_data: Dictionary) -> void:
 	
 	if biome == "":
 		print("DEBUG: Kein Biom gefunden - Abbruch")
-		return  # Fisch gehört zu keinem bekannten Biom
+		return
 	
 	# Wenn Biom bereits als komplett markiert, nichts tun
 	if completed_biomes[biome]:
@@ -133,32 +154,27 @@ func check_biome_completion(fish_data: Dictionary) -> void:
 
 # 🆕 Findet das Biom eines Fisches anhand des Namens
 func get_fish_biome(fish_name: String) -> String:
-	# Prüfe Lake
 	for fish in FishDB.FISH_LAKE:
 		if fish["name"] == fish_name:
 			return "lake"
 	
-	# Prüfe City
 	for fish in FishDB.FISH_CITY:
 		if fish["name"] == fish_name:
 			return "city"
 	
-	# Prüfe Sewer
 	for fish in FishDB.FISH_SEWER:
 		if fish["name"] == fish_name:
 			return "sewer"
 	
-	# Prüfe Forest
 	for fish in FishDB.FISH_FOREST:
 		if fish["name"] == fish_name:
 			return "forest"
 	
-	# Prüfe Desert
 	for fish in FishDB.FISH_DESERT:
 		if fish["name"] == fish_name:
 			return "desert"
 	
-	return ""  # Nicht gefunden
+	return ""
 
 # 🆕 Gibt die Fischliste eines Bioms zurück
 func get_biome_fish_list(biome: String) -> Array:
@@ -185,7 +201,6 @@ func trigger_biome_completion_event(biome: String) -> void:
 	
 	var reward = 0
 	
-	# Hier kannst du verschiedene Events basierend auf dem Biom auslösen
 	match biome:
 		"lake":
 			print("✨ See-Meister! Belohnung: 500 Gold")
@@ -212,7 +227,6 @@ func trigger_biome_completion_event(biome: String) -> void:
 			reward = 3000
 			add_money(reward)
 	
-	# Signal aussenden für UI (kein Duplikat mehr!)
 	emit_signal("biome_completed", biome, reward)
 
 func remove_fish(index: int) -> void:
@@ -254,6 +268,7 @@ func reset():
 	last_scene = "res://scenes/MainScene.tscn"
 	Inventory.clear_inventory()
 	caught_fish_species.clear()
+	fish_weight_records.clear()  # 🆕
 	completed_biomes = {
 		"lake": false,
 		"city": false,
@@ -282,7 +297,8 @@ func save_game() -> void:
 		"fish_inventory": fish_inventory,
 		"unlocked_spots": unlocked_spots,
 		"caught_fish_species": caught_fish_species,
-		"completed_biomes": completed_biomes  # 🆕 Speichern
+		"completed_biomes": completed_biomes,
+		"fish_weight_records": fish_weight_records  # 🆕
 	}
 	var file = FileAccess.open("user://savegame.dat", FileAccess.WRITE)
 	file.store_var(save_data)
@@ -302,7 +318,8 @@ func load_game() -> void:
 		fish_inventory = save_data.get("fish_inventory", [])
 		unlocked_spots = save_data.get("unlocked_spots", unlocked_spots)
 		caught_fish_species = save_data.get("caught_fish_species", {})
-		completed_biomes = save_data.get("completed_biomes", completed_biomes)  # 🆕 Laden
+		completed_biomes = save_data.get("completed_biomes", completed_biomes)
+		fish_weight_records = save_data.get("fish_weight_records", {})  # 🆕
 		print("Spiel geladen!")
 	else:
 		print("Keine Speicherdatei gefunden, starte neues Spiel")
