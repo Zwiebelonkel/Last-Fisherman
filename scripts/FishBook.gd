@@ -4,7 +4,6 @@ extends Node
 #  FISCHBUCH / BESTIARY MANAGER
 # ===========================
 
-
 # Alle verfügbaren Orte und ihre Fische
 var LOCATION_FISH = {}
 
@@ -16,20 +15,58 @@ func _init():
 		"sewer": FishDB.FISH_SEWER,
 		"forest": FishDB.FISH_FOREST,
 		"desert": FishDB.FISH_DESERT,
-		"insgesamt": FishDB.FISH_LAKE + FishDB.FISH_CITY + FishDB.FISH_SEWER + FishDB.FISH_FOREST + FishDB.FISH_DESERT
-	}
 
-# Prüft, ob ein Fisch bereits gefangen wurde
+		# SORTIERTE GESAMTLISTE
+		"insgesamt": _sort_fish_by_rarity(
+			FishDB.FISH_LAKE
+			+ FishDB.FISH_CITY
+			+ FishDB.FISH_SEWER
+			+ FishDB.FISH_FOREST
+			+ FishDB.FISH_DESERT
+		)
+	}
+	
+
+# ===========================
+#  SORTIERFUNKTION
+# ===========================
+# Sortiert Fische nach rarity → NORMAL oben, EXOTISCH unten
+func _sort_fish_by_rarity(fish_list: Array) -> Array:
+	var sorted = fish_list.duplicate()
+
+	sorted.sort_custom(func(a, b):
+		if a["rarity"] == b["rarity"]:
+			# Innerhalb gleicher rarity: Wert niedrig → hoch
+			return a["base_value"] < b["base_value"]
+		return a["rarity"] < b["rarity"]
+	)
+
+	return sorted
+
+
+
+
+# ===========================
+#  CAUGHT CHECK
+# ===========================
 func is_fish_caught(fish_name: String) -> bool:
 	return Player.caught_fish_species.get(fish_name, false)
 
-# Alle Fische für einen Ort abrufen
+
+
+# ===========================
+#  LOCATION FISHES
+# ===========================
 func get_fish_by_location(location: String) -> Array:
 	if LOCATION_FISH.has(location):
 		return LOCATION_FISH[location]
 	return []
 
-# Fischbuch-Einträge erstellen (mit ??? für unbekannte)
+
+
+# ===========================
+#  BESTIARY ENTRIES
+# ===========================
 func get_bestiary_entries(location: String) -> Array:
 	var entries = []
 	var fish_list = get_fish_by_location(location)
@@ -50,7 +87,11 @@ func get_bestiary_entries(location: String) -> Array:
 	
 	return entries
 
-# Statistiken für das Fischbuch
+
+
+# ===========================
+#  BESTIARY STATISTICS
+# ===========================
 func get_bestiary_stats(location: String) -> Dictionary:
 	var fish_list = get_fish_by_location(location)
 	var caught_count = 0
@@ -68,7 +109,11 @@ func get_bestiary_stats(location: String) -> Dictionary:
 		"completion": completion
 	}
 
-# Alle Fischarten und deren Status abrufen (Global)
+
+
+# ===========================
+#  ALL LOCATIONS STATS
+# ===========================
 func get_all_bestiary_stats() -> Dictionary:
 	var stats = {}
 	
@@ -77,7 +122,11 @@ func get_all_bestiary_stats() -> Dictionary:
 	
 	return stats
 
-# Reset für Debugging
+
+
+# ===========================
+#  RESET (DEBUG)
+# ===========================
 func reset_bestiary() -> void:
 	Player.caught_fish_species.clear()
 	Player.save_game()
