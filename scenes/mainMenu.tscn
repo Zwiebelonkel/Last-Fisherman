@@ -1,9 +1,10 @@
-[gd_scene load_steps=33 format=4 uid="uid://bw5el7n36awdr"]
+[gd_scene load_steps=34 format=4 uid="uid://bw5el7n36awdr"]
 
 [ext_resource type="Script" uid="uid://cslkhtib5limu" path="res://scripts/mainMenu.gd" id="1_tov5d"]
 [ext_resource type="Shader" uid="uid://dmg556n5nwodi" path="res://shader/pixelate.gdshader" id="2_vt84v"]
 [ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="3_jfr2g"]
 [ext_resource type="PackedScene" uid="uid://b08obrprd472u" path="res://scenes/OptionsControl.tscn" id="3_tov5d"]
+[ext_resource type="Texture2D" uid="uid://e7t33pnr13bp" path="res://textures/These-images-of-clouds-are-created-exclusively-using-Perlin-noise-It-simulates-the_Q320.jpg" id="6_lam2r"]
 [ext_resource type="Shader" uid="uid://b8mxoacu7poqc" path="res://shader/sky.gdshader" id="7_ewahu"]
 [ext_resource type="Material" uid="uid://cj86wv7c01tef" path="res://materials/outlineWhite.tres" id="10_lam2r"]
 [ext_resource type="Shader" uid="uid://c37jx2ebwp1a3" path="res://shader/shader_water.gdshader" id="10_tlicg"]
@@ -36,15 +37,16 @@ default_font = ExtResource("3_jfr2g")
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_cfq0f"]
 shader = ExtResource("7_ewahu")
 shader_parameter/use_directional_light = true
-shader_parameter/sun_color = Color(1, 1, 1, 1)
-shader_parameter/sun_energy = 15.0
-shader_parameter/cloud_color = Color(0.296, 0.402, 0.521, 1)
+shader_parameter/sun_color = Color(1, 0.360784, 0.0627451, 1)
+shader_parameter/sun_energy = 16.5
+shader_parameter/cloud_color = Color(0.843137, 0.329412, 0.0745098, 1)
 shader_parameter/cloud_density = 5.0
 shader_parameter/cloud_depth = 2.0
 shader_parameter/cloud_sag = 2.0
+shader_parameter/noise_texture = ExtResource("6_lam2r")
 shader_parameter/noise_tiling = Vector2(1, 1)
 shader_parameter/wind_speed = Vector2(0.5, 0.5)
-shader_parameter/ground_bottom_color = Color(0.2, 0.169, 0.133, 1)
+shader_parameter/ground_bottom_color = Color(0, 0, 0, 1)
 shader_parameter/ground_curve = 0.04
 shader_parameter/exposure = 1.0
 
@@ -54,13 +56,12 @@ radiance_size = 0
 
 [sub_resource type="Environment" id="Environment_cfq0f"]
 background_mode = 2
-background_energy_multiplier = 0.33
 sky = SubResource("Sky_x537r")
+ambient_light_color = Color(0.923835, 0.267105, 0.751523, 1)
 fog_light_color = Color(0.808262, 0.429746, 0.296975, 1)
 fog_light_energy = 0.0
 fog_sun_scatter = 1.0
 fog_sky_affect = 0.0
-volumetric_fog_enabled = true
 volumetric_fog_length = 42.44
 volumetric_fog_ambient_inject = 0.2
 
@@ -120,6 +121,33 @@ material = SubResource("ShaderMaterial_k24pf")
 uv2_padding = 1.41
 size = Vector2(200, 200)
 
+[sub_resource type="Animation" id="Animation_lam2r"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:light_color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(0.99552, 0.467887, 0.0444731, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:light_angular_distance")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [13.64]
+}
+
 [sub_resource type="Animation" id="Animation_vt84v"]
 resource_name = "circle"
 length = 60.0
@@ -147,33 +175,6 @@ tracks/1/keys = {
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
 "values": [13.64, 4.36, 13.64]
-}
-
-[sub_resource type="Animation" id="Animation_lam2r"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:light_color")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Color(0.99552, 0.467887, 0.0444731, 1)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath(".:light_angular_distance")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [13.64]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_amia2"]
