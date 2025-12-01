@@ -39,14 +39,15 @@ func show_fish(fish: Dictionary) -> void:
 	
 	# Prüfe ob Fisch neu ist (wurde bereits beim Generieren gesetzt)
 	var is_new_catch: bool = fish.get("is_new_catch", false)
-	var ani : AnimationPlayer = $NewLabel/AnimationPlayer
+	var aniLabel : AnimationPlayer = $NewLabel/AnimationPlayer
+	var aniFish: AnimationPlayer = $VBoxContainer/MarginContainer/PanelContainer/AnimationPlayer
 	
 	print("DEBUG NEW Label - Fisch:", fish["name"], "| Ist neu?", is_new_catch)
 	
 	# NEW Label anzeigen/verstecken
 	if new_label:
 		new_label.visible = is_new_catch
-		ani.play("idle")
+		aniLabel.play("idle")
 		print("DEBUG - NewLabel visible gesetzt auf:", is_new_catch)
 	else:
 		print("ERROR - NewLabel nicht gefunden!")
@@ -89,6 +90,16 @@ func show_fish(fish: Dictionary) -> void:
 	# Animation
 	if anim.has_animation("pop"):
 		anim.play("pop")
+	aniFish.play("pulse")
+	
+	var shadow_mat = ShaderMaterial.new() 
+	shadow_mat.shader = preload("res://shader/icon.gdshader")
+	shadow_mat.set_shader_parameter("shadow_offset", Vector2(0, -4.5))
+	shadow_mat.set_shader_parameter("shadow_color", Color(0, 0, 0, 0.7))
+
+	fish_icon.material = shadow_mat
+
+
 
 func _get_fish_icon(fish: Dictionary) -> Texture2D:
 	if fish.has("icon"):

@@ -47,10 +47,10 @@ func _ready():
 		location_selector.item_selected.connect(_on_location_changed)
 		location_selector.clear()
 		location_selector.add_item("🌊 See")
-		location_selector.add_item("🏙️ Stadt")
-		location_selector.add_item("🏙️ Kanal")
+		location_selector.add_item("🏢 Stadt")
+		location_selector.add_item("🐀 Kanal")
 		location_selector.add_item("🌲 Wald")
-		location_selector.add_item("🏜️ Ödland")
+		location_selector.add_item("🌵 Ödland")
 		location_selector.select(0)
 	elif location_selector is Button:
 		print("⚠️ LocationSelector ist ein Button, kein OptionButton")
