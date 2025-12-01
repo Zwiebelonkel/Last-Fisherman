@@ -138,6 +138,125 @@ layout_mode = 2
 text = "Fullscreen"
 script = ExtResource("4_tkc0w")
 
+[node name="Controls" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 179.595
+offset_top = -105.5
+offset_right = 489.595
+offset_bottom = 105.5
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_tkc0w")
+theme_override_styles/panel = SubResource("StyleBoxFlat_5683i")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Controls"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 19.0
+offset_top = 16.0
+offset_right = -19.0
+offset_bottom = -31.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 22
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Controls/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="Space" type="Label" parent="Controls/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "Spacebar"
+
+[node name="VSeparator" type="VSeparator" parent="Controls/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="Controls/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 10
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "Cast, Interact, Fight"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Controls/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="Space" type="Label" parent="Controls/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "Arrowkeys"
+
+[node name="VSeparator" type="VSeparator" parent="Controls/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="Controls/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 10
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "Turn around"
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="Controls/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="Space" type="Label" parent="Controls/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "I"
+
+[node name="VSeparator" type="VSeparator" parent="Controls/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="Controls/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 10
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "Inventory"
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="Controls/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="Space" type="Label" parent="Controls/VBoxContainer/HBoxContainer4"]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "J"
+
+[node name="VSeparator" type="VSeparator" parent="Controls/VBoxContainer/HBoxContainer4"]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="Controls/VBoxContainer/HBoxContainer4"]
+layout_mode = 2
+size_flags_horizontal = 10
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "Fischbuch"
+
+[node name="HBoxContainer5" type="HBoxContainer" parent="Controls/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="Space" type="Label" parent="Controls/VBoxContainer/HBoxContainer5"]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "M"
+
+[node name="VSeparator" type="VSeparator" parent="Controls/VBoxContainer/HBoxContainer5"]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="Controls/VBoxContainer/HBoxContainer5"]
+layout_mode = 2
+size_flags_horizontal = 10
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "Map"
+
 [connection signal="pressed" from="Panel/Back" to="." method="_on_menu_pressed"]
 [connection signal="value_changed" from="Panel/VBoxContainer/HBoxContainer/MusicControl" to="Panel/VBoxContainer/HBoxContainer/MusicControl" method="_on_value_changed"]
 [connection signal="value_changed" from="Panel/VBoxContainer/HBoxContainer2/SFXControl" to="Panel/VBoxContainer/HBoxContainer2/SFXControl" method="_on_value_changed"]
