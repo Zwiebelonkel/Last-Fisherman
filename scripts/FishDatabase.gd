@@ -328,7 +328,7 @@ var FISH_FOREST = [
 	{"name": "Angel", "rarity": RARITY.SELTEN, "base_value": 28, "icon": "res://assets/fish/angel.png",
 	 "description": "Schöne Angel! Oder ist das vielleicht doch eine Peitsche? Du kannst sie jedenfalls NICHT verwenden (auch wenn sie verzaubert wäre).", "weight_min": 0.8, "weight_max": 2.0},
 	
-	{"name": "Neonflosser", "rarity": RARITY.EPISCH, "base_value": 45, "icon": "res://assets/fish/fish1.png",
+	{"name": "Waldaal", "rarity": RARITY.EPISCH, "base_value": 45, "icon": "res://assets/fish/waldaal.png",
 	 "description": "Elektrisierend. Wörtlich.", "weight_min": 1.0, "weight_max": 3.0},
 	
 	{"name": "Waldfresser", "rarity": RARITY.EPISCH, "base_value": 70, "icon": "res://assets/fish/Gutter.png",
