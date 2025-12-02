@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://hc0kmggi4dfw"
-path="res://.godot/imported/Boro.png-ddeba0e4b32a6422e04484984708e811.ctex"
+uid="uid://c13cnrdxb4p6q"
+path="res://.godot/imported/glubschi.png-9ad38d857b47f8bb9b8ecb51aff30a85.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/fish/Boro.png"
-dest_files=["res://.godot/imported/Boro.png-ddeba0e4b32a6422e04484984708e811.ctex"]
+source_file="res://assets/fish/glubschi.png"
+dest_files=["res://.godot/imported/glubschi.png-9ad38d857b47f8bb9b8ecb51aff30a85.ctex"]
 
 [params]
 

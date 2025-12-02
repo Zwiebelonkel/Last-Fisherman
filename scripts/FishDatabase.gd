@@ -49,13 +49,16 @@ var FISH_LAKE = [
 	{"name": "Kaugummikarpfen", "rarity": RARITY.EPISCH, "base_value": 28, "icon": "res://assets/fish/Kaugummi.png",
 	 "description": "Schmeckt nach Erdbeere und existenzieller Krise.", "weight_min": 3.0, "weight_max": 8.0},
 	
+	{"name": "Glubschi", "rarity": RARITY.EPISCH, "base_value": 30, "icon": "res://assets/fish/glubschi.png",
+	 "description": "Seine Augen machen 95% seines Körpergewichts aus", "weight_min": 0.2, "weight_max": 0.8},
+	
 	{"name": "Karpfenkönigin", "rarity": RARITY.LEGENDAER, "base_value": 40, "icon": "res://assets/fish/Prinzessinor.png",
 	 "description": "Erwartet, dass du kniest. Und das zu Recht.", "weight_min": 8.0, "weight_max": 15.0},
 	
 	{"name": "Geisterforelle", "rarity": RARITY.EXOTISCH, "base_value": 100, "icon": "res://assets/fish/fish6.png",
 	 "description": "Ist tot. Schwimmt trotzdem. Frag nicht.", "weight_min": 0.5, "weight_max": 2.0},
 	
-	{"name": "Plutonium", "rarity": RARITY.EXOTISCH, "base_value": 150, "icon": "res://assets/fish/Plutonium.png",
+	{"name": "Plutonium", "rarity": RARITY.EXOTISCH, "base_value": 150, "icon": "res://assets/fish/plutonium.png",
 	 "description": "Leuchtet im Dunkeln. FDA-Zulassung ausstehend. Nicht essbar", "weight_min": 10.0, "weight_max": 25.0},
 #{"name": "Schlummerlachs", "rarity": RARITY.NORMAL, "base_value": 6, "icon": "res://assets/fish/schlummerlachs.png",
  #"description": "Schläft mehr als du am Montagmorgen.", "weight_min": 0.4, "weight_max": 1.2},

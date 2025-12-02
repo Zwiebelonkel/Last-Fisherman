@@ -1,0 +1,193 @@
+[gd_scene load_steps=6 format=3 uid="uid://cg8rbxtbp2jfr"]
+
+[ext_resource type="Script" uid="uid://r5al0h1otsbr" path="res://scripts/FishDetailPopup.gd" id="1_script"]
+[ext_resource type="Shader" uid="uid://bstde7wsk0sgt" path="res://shader/icon.gdshader" id="2_shader"]
+
+[sub_resource type="StyleBoxFlat" id="overlay_style"]
+bg_color = Color(0, 0, 0, 0.7)
+
+[sub_resource type="StyleBoxFlat" id="popup_style"]
+bg_color = Color(0.1, 0.1, 0.1, 0.95)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.8, 0.6, 0.2, 1)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+shadow_color = Color(0, 0, 0, 0.8)
+shadow_size = 10
+shadow_offset = Vector2(0, 5)
+
+[sub_resource type="ShaderMaterial" id="icon_shader"]
+shader = ExtResource("2_shader")
+shader_parameter/shadow_offset = Vector2(0, -8)
+shader_parameter/shadow_color = Vector4(0, 0, 0, 0.6)
+
+[node name="FishDetailPopup" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_script")
+
+[node name="Overlay" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("overlay_style")
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PopupPanel" type="PanelContainer" parent="CenterContainer"]
+custom_minimum_size = Vector2(600, 500)
+layout_mode = 2
+theme_override_styles/panel = SubResource("popup_style")
+
+[node name="MarginContainer" type="MarginContainer" parent="CenterContainer/PopupPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 30
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/PopupPanel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Header" type="HBoxContainer" parent="CenterContainer/PopupPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="IconContainer" type="CenterContainer" parent="CenterContainer/PopupPanel/MarginContainer/VBoxContainer/Header"]
+custom_minimum_size = Vector2(200, 150)
+layout_mode = 2
+
+[node name="FishIcon" type="TextureRect" parent="CenterContainer/PopupPanel/MarginContainer/VBoxContainer/Header/IconContainer"]
+material = SubResource("icon_shader")
+custom_minimum_size = Vector2(180, 130)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="InfoContainer" type="VBoxContainer" parent="CenterContainer/PopupPanel/MarginContainer/VBoxContainer/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 12
+
+[node name="FishName" type="Label" parent="CenterContainer/PopupPanel/MarginContainer/VBoxContainer/Header/InfoContainer"]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 3
+theme_override_constants/shadow_offset_y = 3
+theme_override_font_sizes/font_size = 28
+text = "Fischart"
+
+[node name="Rarity" type="Label" parent="CenterContainer/PopupPanel/MarginContainer/VBoxContainer/Header/InfoContainer"]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 18
+text = "Seltenheit"
+
+[node name="HSeparator" type="HSeparator" parent="CenterContainer/PopupPanel/MarginContainer/VBoxContainer/Header/InfoContainer"]
+layout_mode = 2
+
+[node name="StatsGrid" type="GridContainer" parent="CenterContainer/PopupPanel/MarginContainer/VBoxContainer/Header/InfoContainer"]
+layout_mode = 2
+theme_override_constants/h_separation = 20
+theme_override_constants/v_separation = 8
+columns = 2
+
+[node name="Label1" type="Label" parent="CenterContainer/PopupPanel/MarginContainer/VBoxContainer/Header/InfoContainer/StatsGrid"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+theme_override_font_sizes/font_size = 14
+text = "Basiswert:"
+
+[node name="Value" type="Label" parent="CenterContainer/PopupPanel/MarginContainer/VBoxContainer/Header/InfoContainer/StatsGrid"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.3, 1)
+theme_override_font_sizes/font_size = 14
+text = "💰 0"
+
+[node name="Label2" type="Label" parent="CenterContainer/PopupPanel/MarginContainer/VBoxContainer/Header/InfoContainer/StatsGrid"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+theme_override_font_sizes/font_size = 14
+text = "Gewicht (Rekord):"
+
+[node name="Weight" type="Label" parent="CenterContainer/PopupPanel/MarginContainer/VBoxContainer/Header/InfoContainer/StatsGrid"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.3, 0.9, 1, 1)
+theme_override_font_sizes/font_size = 14
+text = "⚖️ 0.00 kg"
+
+[node name="Label3" type="Label" parent="CenterContainer/PopupPanel/MarginContainer/VBoxContainer/Header/InfoContainer/StatsGrid"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+theme_override_font_sizes/font_size = 14
+text = "Gewicht (Bereich):"
+
+[node name="WeightRange" type="Label" parent="CenterContainer/PopupPanel/MarginContainer/VBoxContainer/Header/InfoContainer/StatsGrid"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
+theme_override_font_sizes/font_size = 14
+text = "0.0 - 0.0 kg"
+
+[node name="Label4" type="Label" parent="CenterContainer/PopupPanel/MarginContainer/VBoxContainer/Header/InfoContainer/StatsGrid"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+theme_override_font_sizes/font_size = 14
+text = "Gefangen:"
+
+[node name="CaughtCount" type="Label" parent="CenterContainer/PopupPanel/MarginContainer/VBoxContainer/Header/InfoContainer/StatsGrid"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.3, 1, 0.3, 1)
+theme_override_font_sizes/font_size = 14
+text = "🎣 0x"
+
+[node name="HSeparator2" type="HSeparator" parent="CenterContainer/PopupPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="DescriptionLabel" type="Label" parent="CenterContainer/PopupPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.6, 0.6, 1)
+theme_override_font_sizes/font_size = 12
+text = "BESCHREIBUNG:"
+
+[node name="Description" type="RichTextLabel" parent="CenterContainer/PopupPanel/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 120)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/default_color = Color(0.9, 0.9, 0.9, 1)
+theme_override_font_sizes/normal_font_size = 16
+bbcode_enabled = true
+text = "Beschreibung des Fisches..."
+fit_content = true
+scroll_active = false
+
+[node name="ButtonContainer" type="HBoxContainer" parent="CenterContainer/PopupPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="CloseButton" type="Button" parent="CenterContainer/PopupPanel/MarginContainer/VBoxContainer/ButtonContainer"]
+custom_minimum_size = Vector2(150, 50)
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Schließen"

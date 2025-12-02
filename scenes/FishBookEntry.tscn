@@ -5,81 +5,119 @@
 [ext_resource type="Texture2D" uid="uid://cdqevtqdy43fr" path="res://assets/fish/unknown.png" id="2_ri3oc"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ri3oc"]
-bg_color = Color(0.0980392, 0.0980392, 0.0980392, 0.572549)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(1, 1, 1, 1)
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
+bg_color = Color(0.12, 0.12, 0.12, 0.85)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.5, 0.5, 0.5, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
 corner_detail = 13
+shadow_size = 6
+shadow_offset = Vector2(0, 3)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_iqtxn"]
 shader = ExtResource("2_l54rb")
-shader_parameter/shadow_offset = Vector2(0, -4.42)
+shader_parameter/shadow_offset = Vector2(0, -5)
 shader_parameter/shadow_color = Vector4(0, 0, 0, 0.5)
 
 [node name="FishBookEntry" type="PanelContainer"]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -64.0
-offset_top = -20.0
-offset_right = -1024.0
-offset_bottom = -487.0
-grow_horizontal = 2
-grow_vertical = 2
+custom_minimum_size = Vector2(160, 240)
 theme_override_styles/panel = SubResource("StyleBoxFlat_ri3oc")
 script = ExtResource("1_so62u")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
-theme_override_constants/separation = 8
+mouse_filter = 2
+theme_override_constants/separation = 6
 
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer"]
+[node name="IconContainer" type="CenterContainer" parent="VBoxContainer"]
 layout_mode = 2
-size_flags_horizontal = 4
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
+mouse_filter = 2
 
-[node name="Icon" type="TextureRect" parent="VBoxContainer/MarginContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/IconContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 8
+
+[node name="Icon" type="TextureRect" parent="VBoxContainer/IconContainer/MarginContainer"]
 material = SubResource("ShaderMaterial_iqtxn")
-custom_minimum_size = Vector2(128, 96)
+custom_minimum_size = Vector2(120, 90)
 layout_mode = 2
-size_flags_horizontal = 0
 texture = ExtResource("2_ri3oc")
+expand_mode = 1
+stretch_mode = 5
 
-[node name="NameLabel" type="Label" parent="VBoxContainer"]
+[node name="QuestionOverlay" type="Label" parent="VBoxContainer/IconContainer/MarginContainer"]
+visible = false
 layout_mode = 2
-size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0.5, 0.5, 0.5, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-text = "Name"
+theme_override_constants/shadow_offset_x = 3
+theme_override_constants/shadow_offset_y = 3
+theme_override_font_sizes/font_size = 64
+text = "?"
+horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="VSeparator" type="HSeparator" parent="VBoxContainer"]
+[node name="InfoContainer" type="VBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 3
 
-[node name="RarityLabel" type="Label" parent="VBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/InfoContainer"]
 layout_mode = 2
-size_flags_horizontal = 4
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-text = "Rarity"
-
-[node name="ValueLabel" type="Label" parent="VBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 4
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-text = "Value"
-
-[node name="MarginContainer2" type="MarginContainer" parent="VBoxContainer"]
-layout_mode = 2
+theme_override_constants/margin_left = 10
 theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
+[node name="NameLabel" type="Label" parent="VBoxContainer/InfoContainer/MarginContainer"]
 layout_mode = 2
-theme_override_constants/margin_left = 190
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 15
+text = "Name"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="VSeparator" type="HSeparator" parent="VBoxContainer/InfoContainer"]
+layout_mode = 2
+
+[node name="StatsContainer" type="VBoxContainer" parent="VBoxContainer/InfoContainer"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="MarginContainer2" type="MarginContainer" parent="VBoxContainer/InfoContainer/StatsContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_right = 10
+
+[node name="RarityLabel" type="Label" parent="VBoxContainer/InfoContainer/StatsContainer/MarginContainer2"]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/font_size = 12
+text = "Rarity"
+horizontal_alignment = 1
+
+[node name="MarginContainer3" type="MarginContainer" parent="VBoxContainer/InfoContainer/StatsContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 8
+
+[node name="ValueLabel" type="Label" parent="VBoxContainer/InfoContainer/StatsContainer/MarginContainer3"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.3, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/font_size = 12
+text = "Value"
+horizontal_alignment = 1
