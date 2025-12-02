@@ -97,7 +97,8 @@ func get_full_fish_data(fish_name: String) -> Dictionary:
 		FishDB.FISH_CITY,
 		FishDB.FISH_SEWER,
 		FishDB.FISH_FOREST,
-		FishDB.FISH_DESERT
+		FishDB.FISH_DESERT,
+		FishDB.FISH_ICELAND
 	]
 	
 	for fish_list in all_lists:

@@ -27,7 +27,8 @@ var completed_biomes: Dictionary = {
 	"city": false,
 	"sewer": false,
 	"forest": false,
-	"desert": false
+	"desert": false,
+	"iceland": false,
 }
 
 var unlocked_spots = {
@@ -36,6 +37,7 @@ var unlocked_spots = {
 	"sewer": false,
 	"forest": false,
 	"desert": false,
+	"iceland": false,
 }
 
 var spot_prices = {
@@ -43,7 +45,8 @@ var spot_prices = {
 	"city": 500,
 	"sewer": 1200,
 	"forest": 2000,
-	"desert": 4000
+	"desert": 4000,
+	"iceland": 1000000,
 }
 
 func _ready():
@@ -187,6 +190,10 @@ func get_fish_biome(fish_name: String) -> String:
 	for fish in FishDB.FISH_DESERT:
 		if fish["name"] == fish_name:
 			return "desert"
+			
+	for fish in FishDB.FISH_ICELAND:
+		if fish["name"] == fish_name:
+			return "iceland"
 	
 	return ""
 
@@ -203,6 +210,8 @@ func get_biome_fish_list(biome: String) -> Array:
 			return FishDB.FISH_FOREST
 		"desert":
 			return FishDB.FISH_DESERT
+		"iceland":
+			return FishDB.FISH_ICELAND
 		_:
 			return []
 
@@ -240,6 +249,11 @@ func trigger_biome_completion_event(biome: String) -> void:
 			print("✨ Wüsten-Legende! Belohnung: 3000 Gold")
 			reward = 3000
 			add_money(reward)
+
+		"iceland":
+			print("✨ Eis-Legende! Belohnung: 4000 Gold")
+			reward = 4000
+			add_money(reward)
 	
 	emit_signal("biome_completed", biome, reward)
 
@@ -258,6 +272,8 @@ func _add_all_fish() -> void:
 	for fish in FishDB.FISH_FOREST:
 		add_fish(fish)
 	for fish in FishDB.FISH_DESERT:
+		add_fish(fish)
+	for fish in FishDB.FISH_ICELAND:
 		add_fish(fish)
 
 func clear_inventory():
@@ -289,14 +305,16 @@ func reset():
 		"city": false,
 		"sewer": false,
 		"forest": false,
-		"desert": false
+		"desert": false,
+		"iceland": false,
 	}
 	unlocked_spots = {
 		"lake": true,
 		"city": false,
 		"sewer": false,
 		"forest": false,
-		"desert": false
+		"desert": false,
+		"iceland": false,
 	}
 	save_game()
 

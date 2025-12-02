@@ -4,6 +4,7 @@ extends Control
 @onready var sewer_btn = $layout/Locations/SewerButton
 @onready var forest_btn = $layout/Locations/ForestButton
 @onready var desert_btn = $layout/Locations/DesertButton
+@onready var iceland_btn = $layout/Locations/IcelandButton
 @onready var passwordField = $password
 
 
@@ -24,6 +25,8 @@ func _ready():
 	assign_button(sewer_btn, "sewer")
 	assign_button(forest_btn, "forest")
 	assign_button(desert_btn, "desert")
+	assign_button(iceland_btn, "iceland")
+
 
 
 
@@ -95,6 +98,8 @@ func buy_spot(spot_name: String):
 	assign_button(sewer_btn, "sewer")
 	assign_button(forest_btn, "forest")
 	assign_button(desert_btn, "desert")
+	assign_button(iceland_btn, "iceland")
+
 
 
 
@@ -116,6 +121,9 @@ func go_to_spot(spot_name: String):
 		"desert":
 			Player.update_last_scene("res://scenes/ödland.tscn")
 			get_tree().change_scene_to_file("res://scenes/ödland.tscn")
+		"iceland":
+			Player.update_last_scene("res://scenes/iceland.tscn")
+			get_tree().change_scene_to_file("res://scenes/iceland.tscn")
 
 # Helferfunktion zum sicheren Trennen der Signale
 func _disconnect_all(btn: Button):

@@ -326,6 +326,44 @@ var FISH_DESERT = [
 	 "science_fact": "Gold kommt tatsächlich in Spuren im Meerwasser vor – nur leider nicht in Hai-Form."},
 ]
 
+var FISH_ICELAND = [
+	#{"name": "Schmutzgrundel", "rarity": RARITY.NORMAL, "base_value": 15, "icon": "res://assets/fish/schmutzgrundel.png",
+	 #"description": "Lebt im Dreck. Buchstäblich. Wie deine Ernährungsgewohnheiten.", "weight_min": 0.2, "weight_max": 0.8,
+	 #"science_fact": "Grundeln können in extrem trübem Wasser überleben und sind wahre Anpassungsmeister."},
+	#
+	#{"name": "Solarfänger", "rarity": RARITY.NORMAL, "base_value": 16, "icon": "res://assets/fish/solarfänger.png",
+	 #"description": "Lädt sich über Sonnenlicht auf. Tesla wäre neidisch.", "weight_min": 0.5, "weight_max": 1.5,
+	 #"science_fact": "Bestimmte Meeresorganismen nutzen tatsächlich Licht für chemische Prozesse – Bio-Solarzellen der Natur."},
+	#
+	#{"name": "Rostflosser", "rarity": RARITY.UNGEWOEHNLICH, "base_value": 25, "icon": "res://assets/fish/fish1.png",
+	 #"description": "Braucht dringend eine Tetanus-Impfung.", "weight_min": 1.0, "weight_max": 3.0,
+	 #"science_fact": "Rost ist im Wasser weit verbreitet – Eisenbakterien erzeugen ganze rot gefärbte Zonen."},
+	#
+	#{"name": "Sandstreifer", "rarity": RARITY.SELTEN, "base_value": 30, "icon": "res://assets/fish/fish1.png",
+	 #"description": "Getarnt wie ein Sandsturm. Mit Flossen.", "weight_min": 2.0, "weight_max": 6.0,
+	 #"science_fact": "Viele Wüstenfische – ja, die gibt es – leben in kurzzeitig wasserführenden Oasen oder Flussläufen."},
+	#
+	#{"name": "Aggresive Garnele", "rarity": RARITY.EPISCH, "base_value": 55, "icon": "res://assets/fish/garnele.png",
+	 #"description": "Winzig, aber verdammt wütend. Wie ein Chihuahua.", "weight_min": 0.1, "weight_max": 0.3,
+	 #"science_fact": "Knallkrebse erzeugen durch ihre Scheren Schockwellen, die Beute betäuben – kleine Wutpakete."},
+	#
+	#{"name": "Staubhai", "rarity": RARITY.EPISCH, "base_value": 80, "icon": "res://assets/fish/Boro.png",
+	 #"description": "Schwimmt durch Sand. Physik hat aufgegeben.", "weight_min": 10.0, "weight_max": 40.0,
+	 #"science_fact": "Einige Tiere bewegen sich tatsächlich wellenförmig durch Sand – ähnlich wie Fische im Wasser."},
+	#
+	#{"name": "Wasserfisch", "rarity": RARITY.LEGENDAER, "base_value": 120, "icon": "res://assets/fish/fish1.png",
+	 #"description": "Der einzige Fisch mit Wasser in der Wüste. Ein Held.", "weight_min": 1.0, "weight_max": 4.0,
+	 #"science_fact": "Wüstenseen können uralte Wasserkörper enthalten, die über Jahrtausende isoliert waren."},
+	#
+	#{"name": "Sonnenfragment", "rarity": RARITY.EXOTISCH, "base_value": 300, "icon": "res://assets/fish/sonne.png",
+	 #"description": "Ein Stück Sonne. Anfassen nicht empfohlen.", "weight_min": 50.0, "weight_max": 100.0,
+	 #"science_fact": "Sonnenlicht enthält Energie, die in Milliarden Jahren Fusionsprozessen entstand – heißer geht’s nicht."},
+	
+	{"name": "Megalodon", "rarity": RARITY.EXOTISCH, "base_value": 50000000 , "icon": "res://assets/fish/goldhai.png",
+	 "description": "Aus echtem Gold. Oder Messing. Vermutlich Messing.", "weight_min": 3000.0, "weight_max": 10000.0,
+	 "science_fact": "Yappi"},
+]
+
 
 # ===========================
 #  RANDOM FISH (BAIT UPGRADE)

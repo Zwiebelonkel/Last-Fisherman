@@ -1,8 +1,9 @@
-[gd_scene load_steps=15 format=3 uid="uid://c65603pesggni"]
+[gd_scene load_steps=18 format=3 uid="uid://c65603pesggni"]
 
-[ext_resource type="Texture2D" uid="uid://d2l0f1gb3wn01" path="res://textures/map.png" id="1_er4uf"]
 [ext_resource type="Script" uid="uid://2ilivy1i0ehi" path="res://scripts/MapScene.gd" id="1_y2hrc"]
 [ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="2_wikxs"]
+[ext_resource type="Texture2D" uid="uid://5olhq7vqrcxm" path="res://textures/map3.png" id="3_titcf"]
+[ext_resource type="Shader" uid="uid://dvw1ws30n3pg3" path="res://shader/2dwater.gdshader" id="3_yqupq"]
 [ext_resource type="AudioStream" uid="uid://wy4qclas0bhw" path="res://sounds/map.mp3" id="4_1ddn7"]
 [ext_resource type="Shader" uid="uid://bso2ewb2ieq7x" path="res://shader/warp.gdshader" id="4_bnqbi"]
 [ext_resource type="AudioStream" uid="uid://cgv2wx0vgdw41" path="res://sounds/interact.mp3" id="5_bnqbi"]
@@ -12,10 +13,24 @@
 [sub_resource type="Theme" id="Theme_j1nvq"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1ddn7"]
-bg_color = Color(0.0862745, 0.207843, 0.352941, 1)
+bg_color = Color(0.0862745, 0.34902, 0.580392, 1)
 
 [sub_resource type="Theme" id="Theme_bnqbi"]
 default_font = ExtResource("2_wikxs")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_w8wlc"]
+shader = ExtResource("3_yqupq")
+shader_parameter/edge_softness = 0.1
+shader_parameter/wave_strength = 0.652
+shader_parameter/wave_speed = 1.13
+shader_parameter/wave_scale = 2.19
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rv0pg"]
+shader = ExtResource("3_yqupq")
+shader_parameter/edge_softness = 0.2
+shader_parameter/wave_strength = 5.0
+shader_parameter/wave_speed = 1.0
+shader_parameter/wave_scale = 10.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bnqbi"]
 bg_color = Color(0.133196, 0.133196, 0.133196, 0.709804)
@@ -38,7 +53,7 @@ shader_parameter/cloud_sheet = ExtResource("8_titcf")
 shader_parameter/frames = 3
 shader_parameter/speed = 0.235
 shader_parameter/frame_rate = 1.0
-shader_parameter/tiling = 2.845
+shader_parameter/tiling = 4.525
 shader_parameter/gap = 0.445
 
 [node name="MapScene" type="Control"]
@@ -76,16 +91,18 @@ grow_vertical = 2
 theme = SubResource("Theme_bnqbi")
 
 [node name="MapImage" type="TextureRect" parent="layout"]
+material = SubResource("ShaderMaterial_w8wlc")
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("1_er4uf")
+texture = ExtResource("3_titcf")
 expand_mode = 1
 
 [node name="Locations" type="Control" parent="layout"]
+material = SubResource("ShaderMaterial_rv0pg")
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -100,37 +117,37 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = 27.0
-offset_top = -117.0
-offset_right = 72.0
-offset_bottom = -86.0
+offset_left = -147.0
+offset_top = 121.0
+offset_right = -101.0
+offset_bottom = 152.0
 grow_horizontal = 2
 grow_vertical = 2
-text = "Lake"
+text = "Beach"
 
 [node name="CityButton" type="Button" parent="layout/Locations"]
 layout_mode = 0
-offset_left = 117.5
-offset_top = 250.5
-offset_right = 155.5
-offset_bottom = 281.5
+offset_left = 168.0
+offset_top = 167.5
+offset_right = 214.0
+offset_bottom = 198.5
 text = "City
 "
 
 [node name="SewerButton" type="Button" parent="layout/Locations"]
 layout_mode = 0
-offset_left = 358.0
-offset_top = 289.5
-offset_right = 404.0
-offset_bottom = 320.5
+offset_left = 287.0
+offset_top = 200.5
+offset_right = 352.0
+offset_bottom = 231.5
 text = "Subway"
 
 [node name="ForestButton" type="Button" parent="layout/Locations"]
 layout_mode = 0
-offset_left = 175.0
-offset_top = 149.5
-offset_right = 230.0
-offset_bottom = 180.5
+offset_left = 181.0
+offset_top = 69.5
+offset_right = 246.0
+offset_bottom = 100.5
 text = "Forest"
 
 [node name="DesertButton" type="Button" parent="layout/Locations"]
@@ -140,13 +157,21 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -84.0
-offset_top = 76.0
-offset_right = -19.0
-offset_bottom = 107.0
+offset_left = 136.0
+offset_top = -81.0
+offset_right = 201.0
+offset_bottom = -50.0
 grow_horizontal = 2
 grow_vertical = 2
 text = "Desert"
+
+[node name="IcelandButton" type="Button" parent="layout/Locations"]
+layout_mode = 0
+offset_left = 372.0
+offset_top = 68.5
+offset_right = 446.0
+offset_bottom = 99.5
+text = "Iceland"
 
 [node name="Popup" type="Panel" parent="layout"]
 layout_mode = 0
@@ -294,10 +319,10 @@ texture = ExtResource("8_titcf")
 [node name="Clouds2" type="TextureRect" parent="."]
 material = SubResource("ShaderMaterial_titcf")
 layout_mode = 0
-offset_left = -51.0
-offset_top = -51.0
-offset_right = 1187.0
-offset_bottom = 96.0
+offset_left = -54.0
+offset_top = -4.0
+offset_right = 1184.0
+offset_bottom = 143.0
 texture = ExtResource("8_titcf")
 flip_h = true
 

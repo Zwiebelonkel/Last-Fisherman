@@ -15,6 +15,7 @@ func _init():
 		"sewer": FishDB.FISH_SEWER,
 		"forest": FishDB.FISH_FOREST,
 		"desert": FishDB.FISH_DESERT,
+		"iceland": FishDB.FISH_ICELAND,
 
 		# SORTIERTE GESAMTLISTE
 		"insgesamt": _sort_fish_by_rarity(
@@ -23,6 +24,7 @@ func _init():
 			+ FishDB.FISH_SEWER
 			+ FishDB.FISH_FOREST
 			+ FishDB.FISH_DESERT
+			+ FishDB.FISH_ICELAND
 		)
 	}
 	

@@ -9,7 +9,7 @@ func _ready() -> void:
 
 
 func _on_button_pressed() -> void:
-	Player.update_last_scene("res://scenes/MainScene_City.tscn")
+	Player.update_last_scene("res://scenes/MainScene.tscn")
 	get_tree().change_scene_to_file("res://scenes/MainScene.tscn")
 
 
