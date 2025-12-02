@@ -149,378 +149,183 @@ var FISH_LAKE = [
 
 var FISH_CITY = [
 	{"name": "Sand-Aal", "rarity": RARITY.NORMAL, "base_value": 6, "icon": "res://assets/fish/Aal.png",
-	 "description": "Schlüpfriger als ein Politiker im Wahlkampf.", "weight_min": 0.4, "weight_max": 1.2},
+	 "description": "Schlüpfriger als ein Politiker im Wahlkampf.", "weight_min": 0.4, "weight_max": 1.2,
+	 "science_fact": "Aale können über ihre Haut Sauerstoff aufnehmen – praktisch, wenn man in Schadensbegrenzung leben muss."},
 	
 	{"name": "Signalfänger", "rarity": RARITY.NORMAL, "base_value": 7, "icon": "res://assets/fish/signal.png",
-	 "description": "Hat besseren Empfang als dein Handy. Niemand mag den Bastard", "weight_min": 0.2, "weight_max": 0.5},
+	 "description": "Hat besseren Empfang als dein Handy. Niemand mag den Bastard", "weight_min": 0.2, "weight_max": 0.5,
+	 "science_fact": "Viele Fische besitzen Elektrorezeptoren, mit denen sie elektrische Felder wahrnehmen – sozusagen eingebaute Antennen."},
 	
 	{"name": "Trümmerkabel-Fisch", "rarity": RARITY.UNGEWOEHNLICH, "base_value": 10, "icon": "res://assets/fish/trümmer.png",
-	 "description": "Ernährt sich von HDMI-Kabeln und zerbrochenen Träumen.", "weight_min": 1.0, "weight_max": 3.0},
+	 "description": "Ernährt sich von HDMI-Kabeln und zerbrochenen Träumen.", "weight_min": 1.0, "weight_max": 3.0,
+	 "science_fact": "Metallverschlingende Organismen existieren wirklich – bestimmte Bakterien nutzen Metallionen wie Nährstoffe."},
 	
 	{"name": "Dorsch", "rarity": RARITY.UNGEWOEHNLICH, "base_value": 11, "icon": "res://assets/fish/dorsch.png",
-	 "description": "Heißt auch Kabeljau. Hat eine Identitätskrise.", "weight_min": 2.0, "weight_max": 5.0},
+	 "description": "Heißt auch Kabeljau. Hat eine Identitätskrise.", "weight_min": 2.0, "weight_max": 5.0,
+	 "science_fact": "Dorsche verändern ihr Wanderverhalten abhängig von Wassertemperaturen – ziemlich sensibel für so einen Brocken."},
 	
 	{"name": "Diskusfisch", "rarity": RARITY.SELTEN, "base_value": 18, "icon": "res://assets/fish/diskus.png",
-	 "description": "Flach wie deine Ausreden, aber deutlich bunter.", "weight_min": 0.3, "weight_max": 1.0},
+	 "description": "Flach wie deine Ausreden, aber deutlich bunter.", "weight_min": 0.3, "weight_max": 1.0,
+	 "science_fact": "Diskusfische füttern ihren Nachwuchs mit einer speziellen Schleimschicht – quasi Stillen für Fische."},
 	
 	{"name": "Barrakuda", "rarity": RARITY.SELTEN, "base_value": 25, "icon": "res://assets/fish/baracuda.png",
-	 "description": "Schwimmt schneller als du vor Verantwortung fliehst.", "weight_min": 3.0, "weight_max": 10.0},
+	 "description": "Schwimmt schneller als du vor Verantwortung fliehst.", "weight_min": 3.0, "weight_max": 10.0,
+	 "science_fact": "Barrakudas erreichen dank Muskelzusammensetzung und Körperform extreme Beschleunigung in Sekundenbruchteilen."},
 	
 	{"name": "Neonflosser", "rarity": RARITY.EPISCH, "base_value": 30, "icon": "res://assets/fish/Eel.png",
-	 "description": "Sieht aus wie ein Rave im Aquarium.", "weight_min": 1.0, "weight_max": 2.5},
+	 "description": "Sieht aus wie ein Rave im Aquarium.", "weight_min": 1.0, "weight_max": 2.5,
+	 "science_fact": "Biolumineszenz bei Fischen entsteht häufig durch symbiotische Bakterien – Natur, die Party macht."},
 	
 	{"name": "Zigaretten", "rarity": RARITY.EPISCH, "base_value": 35, "icon": "res://assets/fish/Boro.png",
-	 "description": "Marlboro Menthol. Seit 1987 im Wasser. Noch immer brennend aktuell.", "weight_min": 0.02, "weight_max": 0.05},
+	 "description": "Marlboro Menthol. Seit 1987 im Wasser. Noch immer brennend aktuell.", "weight_min": 0.02, "weight_max": 0.05,
+	 "science_fact": "Zigarettenfilter bestehen aus Zelluloseacetat – sie zersetzen sich extrem langsam und verschmutzen Gewässer über Jahrzehnte."},
 	
 	{"name": "Altstadtgeist", "rarity": RARITY.LEGENDAER, "base_value": 55, "icon": "res://assets/fish/ghost.png",
-	 "description": "Erzählt dir Geschichten von früher. Alle langweilig.", "weight_min": 0.1, "weight_max": 0.5},
+	 "description": "Erzählt dir Geschichten von früher. Alle langweilig.", "weight_min": 0.1, "weight_max": 0.5,
+	 "science_fact": "Viele Tiefseefische nutzen transparente Gewebe, um unsichtbar zu wirken – quasi biologische Tarnkappen."},
 	
 	{"name": "Platzhalter", "rarity": RARITY.EXOTISCH, "base_value": 150, "icon": "res://assets/fish/unknown.png",
-	 "description": "Existiert eigentlich nicht. Trotzdem gefangen. Paradox!", "weight_min": 0.0, "weight_max": 0.0},
+	 "description": "Existiert eigentlich nicht. Trotzdem gefangen. Paradox!", "weight_min": 0.0, "weight_max": 0.0,
+	 "science_fact": "In der Biologie gibt es ‚Placeholder species‘, wenn Forscher eine Art vermuten, aber noch nicht belegt haben."},
 	
 	{"name": "Leiche", "rarity": RARITY.EXOTISCH, "base_value": 0, "icon": "res://assets/fish/corpse.png",
-	 "description": "Markus?! Bitte nicht...", "weight_min": 60.0, "weight_max": 90.0},
+	 "description": "Markus?! Bitte nicht...", "weight_min": 60.0, "weight_max": 90.0,
+	 "science_fact": "Im Wasser sinken Körper erst ab, steigen dann durch Gasbildung wieder auf – makaber, aber wissenschaftlich korrekt."},
 	
 	{"name": "Datenkrake", "rarity": RARITY.EXOTISCH, "base_value": 175, "icon": "res://assets/fish/krake.png",
-	 "description": "Kennt deine Suchanfragen. Alle. Ja, auch die. Sicher das der Name richtig ist?", "weight_min": 10.0, "weight_max": 30.0},
-#{"name": "U-Bahn-Guppy", "rarity": RARITY.NORMAL, "base_value": 7, "icon": "res://assets/fish/u_bahn_guppy.png",
- #"description": "Kommt immer zu spät. Selbst im Wasser.", "weight_min": 0.2, "weight_max": 0.6},
-#
-#{"name": "Kiezkrümmer", "rarity": RARITY.NORMAL, "base_value": 6, "icon": "res://assets/fish/kiezkruemmer.png",
- #"description": "Riecht nach Bier und Verzweiflung.", "weight_min": 0.3, "weight_max": 1.0},
-#
-#{"name": "Pfandflosser", "rarity": RARITY.NORMAL, "base_value": 8, "icon": "res://assets/fish/pfandflosser.png",
- #"description": "Sammelt Flaschen. Auch unter Wasser.", "weight_min": 0.1, "weight_max": 0.4},
-#
-#{"name": "Laternenleuchte", "rarity": RARITY.UNGEWOEHNLICH, "base_value": 12, "icon": "res://assets/fish/laternenleuchte.png",
- #"description": "Leuchtet heller als die ganze Straße.", "weight_min": 0.4, "weight_max": 1.0},
-#
-#{"name": "Asphaltkriecher", "rarity": RARITY.UNGEWOEHNLICH, "base_value": 13, "icon": "res://assets/fish/asphaltkriecher.png",
- #"description": "Wurde offenbar auf einer Straße geboren.", "weight_min": 1.0, "weight_max": 2.5},
-#
-#{"name": "Taschenratte", "rarity": RARITY.UNGEWOEHNLICH, "base_value": 14, "icon": "res://assets/fish/taschenratte.png",
- #"description": "Lebt in Taschen und frisst Kaugummis.", "weight_min": 0.6, "weight_max": 1.5},
-#
-#{"name": "Gullygeist", "rarity": RARITY.SELTEN, "base_value": 20, "icon": "res://assets/fish/gullygeist.png",
- #"description": "Spukt in Abflussgittern. Du wolltest ihn nicht finden.", "weight_min": 0.2, "weight_max": 0.7},
-#
-#{"name": "Antennenschleicher", "rarity": RARITY.SELTEN, "base_value": 22, "icon": "res://assets/fish/antennenschleicher.png",
- #"description": "Bringt HD-Empfang. In SD-Qualität.", "weight_min": 0.5, "weight_max": 1.2},
-#
-#{"name": "Parkbankhecht", "rarity": RARITY.SELTEN, "base_value": 19, "icon": "res://assets/fish/parkbankhecht.png",
- #"description": "Wurde zuletzt mit einer Bierdose gesehen.", "weight_min": 1.0, "weight_max": 4.0},
-#
-#{"name": "Ampelrochen", "rarity": RARITY.EPISCH, "base_value": 32, "icon": "res://assets/fish/ampelrochen.png",
- #"description": "Wechselt Farben — aber nur auf Rot.", "weight_min": 2.0, "weight_max": 4.0},
-#
-#{"name": "Stromkasten-Lurker", "rarity": RARITY.EPISCH, "base_value": 34, "icon": "res://assets/fish/stromlurker.png",
- #"description": "Hat mehr Volt als du Entscheidungen im Leben.", "weight_min": 1.0, "weight_max": 3.0},
-#
-#{"name": "Graffiti-Barsch", "rarity": RARITY.EPISCH, "base_value": 37, "icon": "res://assets/fish/graffiti_barsch.png",
- #"description": "Besprüht Wände. Unter Wasser. Fragt nicht.", "weight_min": 0.8, "weight_max": 2.0},
-#
-#{"name": "Neon-Stadthai", "rarity": RARITY.LEGENDAER, "base_value": 60, "icon": "res://assets/fish/neon_stadthai.png",
- #"description": "Leuchtet wie Reklametafeln um 03:00 Uhr.", "weight_min": 4.0, "weight_max": 12.0},
-#
-#{"name": "Kellerkönig", "rarity": RARITY.LEGENDAER, "base_value": 70, "icon": "res://assets/fish/kellerkoenig.png",
- #"description": "Regiert feuchte Kellerräume mit eiserner Flosse.", "weight_min": 3.0, "weight_max": 7.0},
-#
-#{"name": "Drehkreuz-Schuppe", "rarity": RARITY.LEGENDAER, "base_value": 65, "icon": "res://assets/fish/drehkreuz.png",
- #"description": "Lässt dich nur durch, wenn du gültig entwertet bist.", "weight_min": 2.0, "weight_max": 6.0},
-#
-#{"name": "Internetabfallfisch", "rarity": RARITY.EXOTISCH, "base_value": 180, "icon": "res://assets/fish/internetmuell.png",
- #"description": "Lebt von Memes. Sehr toxisch.", "weight_min": 0.5, "weight_max": 1.5},
-#
-#{"name": "Serverkrake", "rarity": RARITY.EXOTISCH, "base_value": 220, "icon": "res://assets/fish/serverkrake.png",
- #"description": "Betreibt sein eigenes Rechenzentrum.", "weight_min": 10.0, "weight_max": 25.0},
-#
-#{"name": "Nachbarschaftsdämon", "rarity": RARITY.EXOTISCH, "base_value": 260, "icon": "res://assets/fish/nachbar.png",
- #"description": "Beobachtet dich. Immer. Unangenehm.", "weight_min": 1.0, "weight_max": 3.0},
-#
-#{"name": "Flutlichtfresser", "rarity": RARITY.EXOTISCH, "base_value": 300, "icon": "res://assets/fish/flutlicht.png",
- #"description": "Frisst Lampen und strahlt dann selber.", "weight_min": 5.0, "weight_max": 15.0},
-#
-#{"name": "Betrunkener Aal", "rarity": RARITY.EXOTISCH, "base_value": 140, "icon": "res://assets/fish/betrunken_aal.png",
- #"description": "Weiß selbst nicht, wie er hier gelandet ist.", "weight_min": 0.5, "weight_max": 2.0}
-
+	 "description": "Kennt deine Suchanfragen. Alle. Ja, auch die. Sicher das der Name richtig ist?", "weight_min": 10.0, "weight_max": 30.0,
+	 "science_fact": "Oktopusse besitzen eines der komplexesten Nervensysteme aller Wirbellosen – acht Arme, achtmal so viel Chaos."},
 ]
+
 
 var FISH_SEWER = [
 	{"name": "Kackwurst", "rarity": RARITY.NORMAL, "base_value": 8, "icon": "res://assets/fish/kackwurst.png",
-	 "description": "Exakt das, wonach es aussieht. Verkauf es schnell.", "weight_min": 0.1, "weight_max": 0.4},
+	 "description": "Exakt das, wonach es aussieht. Verkauf es schnell.", "weight_min": 0.1, "weight_max": 0.4,
+	 "science_fact": "Organische Abfälle werden im Wasser von Mikroorganismen zersetzt – nicht schön, aber effizient."},
 	
 	{"name": "Sardine", "rarity": RARITY.NORMAL, "base_value": 9, "icon": "res://assets/fish/sardine.png",
-	 "description": "Möchte intensiv in eine Dose gepresst werden.", "weight_min": 0.05, "weight_max": 0.2},
+	 "description": "Möchte intensiv in eine Dose gepresst werden.", "weight_min": 0.05, "weight_max": 0.2,
+	 "science_fact": "Sardinen bilden riesige Schwärme zur Abschreckung von Räubern – Sicherheit durch Masse."},
 	
 	{"name": "Forelle", "rarity": RARITY.NORMAL, "base_value": 10, "icon": "res://assets/fish/forelle.png",
-	 "description": "Hat schon bessere Tage gesehen. Und bessere Gewässer.", "weight_min": 0.3, "weight_max": 1.5},
+	 "description": "Hat schon bessere Tage gesehen. Und bessere Gewässer.", "weight_min": 0.3, "weight_max": 1.5,
+	 "science_fact": "Forellen benötigen extrem sauberes, sauerstoffreiches Wasser – Abwasser ist eher… suboptimal."},
 	
 	{"name": "Wels", "rarity": RARITY.UNGEWOEHNLICH, "base_value": 12, "icon": "res://assets/fish/Wels.png",
-	 "description": "Sieht aus wie dein Schnurrbart nach drei Wochen Quarantäne.", "weight_min": 5.0, "weight_max": 20.0},
+	 "description": "Sieht aus wie dein Schnurrbart nach drei Wochen Quarantäne.", "weight_min": 5.0, "weight_max": 20.0,
+	 "science_fact": "Welse nutzen Barteln als Tast- und Geruchsorgane, ideal für dunkle oder schlammige Gewässer."},
 	
 	{"name": "Teerfisch", "rarity": RARITY.SELTEN, "base_value": 20, "icon": "res://assets/fish/teerfisch.png",
-	 "description": "50% Fisch, 50% Industrieabfall, 100% unverdaulich.", "weight_min": 2.0, "weight_max": 6.0},
+	 "description": "50% Fisch, 50% Industrieabfall, 100% unverdaulich.", "weight_min": 2.0, "weight_max": 6.0,
+	 "science_fact": "Viele Schadstoffe binden sich an Fettgewebe von Fischen – Bioakkumulation lässt grüßen."},
 	
 	{"name": "Mondfisch", "rarity": RARITY.EPISCH, "base_value": 36, "icon": "res://assets/fish/mond.png",
-	 "description": "Hat die Form einer Vollmondnacht und den IQ eines Kieselsteins.", "weight_min": 200.0, "weight_max": 600.0},
+	 "description": "Hat die Form einer Vollmondnacht und den IQ eines Kieselsteins.", "weight_min": 200.0, "weight_max": 600.0,
+	 "science_fact": "Mondfische sind die schwersten Knochenfische der Welt – trotz ihres… kreativen Designs."},
 	
 	{"name": "Katzenhai", "rarity": RARITY.EPISCH, "base_value": 40, "icon": "res://assets/fish/Boro.png",
-	 "description": "Miaut unter Wasser. Wissenschaft kann es nicht erklären.", "weight_min": 3.0, "weight_max": 8.0},
+	 "description": "Miaut unter Wasser. Wissenschaft kann es nicht erklären.", "weight_min": 3.0, "weight_max": 8.0,
+	 "science_fact": "Katzenhaie besitzen leuchtende Muster, die sie im Dunkeln sichtbar machen – biologische Partybeleuchtung."},
 	
 	{"name": "Führerschein", "rarity": RARITY.LEGENDAER, "base_value": 80, "icon": "res://assets/fish/führerschein.png",
-	 "description": "Abgelaufen seit 2003. Gehörte vermutlich Rainer, 52.", "weight_min": 0.005, "weight_max": 0.01},
+	 "description": "Abgelaufen seit 2003. Gehörte vermutlich Rainer, 52.", "weight_min": 0.005, "weight_max": 0.01,
+	 "science_fact": "Plastikkarten zerfallen im Wasser extrem langsam – Mikroplastik ahoi."},
 	
 	{"name": "Bilderbuchfisch", "rarity": RARITY.LEGENDAER, "base_value": 90, "icon": "res://assets/fish/Rainbowi.png",
-	 "description": "Die einzige Hoffnung in diesem Drecksloch.", "weight_min": 1.0, "weight_max": 10.0},
+	 "description": "Die einzige Hoffnung in diesem Drecksloch.", "weight_min": 1.0, "weight_max": 10.0,
+	 "science_fact": "Viele Zierfische werden durch gezielte Züchtung farbintensiver – quasi Kunstwerke mit Kiemen."},
 	
 	{"name": "Wütende Scholle", "rarity": RARITY.EXOTISCH, "base_value": 200, "icon": "res://assets/fish/scholle.png",
-	 "description": "Hat valide Gründe für ihre Wut. Glaub mir.", "weight_min": 1.0, "weight_max": 3.0},
+	 "description": "Hat valide Gründe für ihre Wut. Glaub mir.", "weight_min": 1.0, "weight_max": 3.0,
+	 "science_fact": "Schollen wandern während des Wachstums – und ihre Augen wandern gleich mit."},
 	
 	{"name": "Kondom", "rarity": RARITY.EXOTISCH, "base_value": 8, "icon": "res://assets/fish/Kondom.png",
-	 "description": "Gebraucht. Wirf es zurück. WIRF. ES. ZURÜCK.", "weight_min": 0.005, "weight_max": 0.02},
-#{"name": "Rattenlachs", "rarity": RARITY.NORMAL, "base_value": 9, "icon": "res://assets/fish/rattenlachs.png",
- #"description": "Halb Lachs, halb Ratte, komplett fragwürdig.", "weight_min": 0.3, "weight_max": 1.0},
-#
-#{"name": "Schleimschupper", "rarity": RARITY.NORMAL, "base_value": 8, "icon": "res://assets/fish/schleimschuppe.png",
- #"description": "Glitschig. Sehr glitschig. Zu glitschig.", "weight_min": 0.2, "weight_max": 0.5},
-#
-#{"name": "Pfützling", "rarity": RARITY.NORMAL, "base_value": 7, "icon": "res://assets/fish/pfuetzling.png",
- #"description": "Winziges Wesen aus reiner Enttäuschung.", "weight_min": 0.05, "weight_max": 0.15},
-#
-#{"name": "Abflusskabel", "rarity": RARITY.UNGEWOEHNLICH, "base_value": 12, "icon": "res://assets/fish/abflusskabel.png",
- #"description": "Hat sich in der Kanalisation verlaufen. Seit 1999.", "weight_min": 0.8, "weight_max": 2.0},
-#
-#{"name": "Schrubbfisch", "rarity": RARITY.UNGEWOEHNLICH, "base_value": 13, "icon": "res://assets/fish/schrubb.png",
- #"description": "Putzt den Boden. Ungefragt.", "weight_min": 1.5, "weight_max": 3.0},
-#
-#{"name": "Hygienekarpfen", "rarity": RARITY.UNGEWOEHNLICH, "base_value": 11, "icon": "res://assets/fish/hygienef.png",
- #"description": "Trägt immer zwei Masken. Aus Prinzip.", "weight_min": 0.6, "weight_max": 1.8},
-#
-#{"name": "Biohazard-Barsch", "rarity": RARITY.SELTEN, "base_value": 22, "icon": "res://assets/fish/biohazard.png",
- #"description": "Bei Kontakt bitte sofort den Arzt rufen.", "weight_min": 1.0, "weight_max": 2.5},
-#
-#{"name": "Latrinenrochen", "rarity": RARITY.SELTEN, "base_value": 25, "icon": "res://assets/fish/latrine.png",
- #"description": "Fliegt flach — riecht stark.", "weight_min": 3.0, "weight_max": 6.0},
-#
-#{"name": "Zementfresser", "rarity": RARITY.SELTEN, "base_value": 21, "icon": "res://assets/fish/zementfresser.png",
- #"description": "Knabbert Beton wie Chips.", "weight_min": 4.0, "weight_max": 8.0},
-#
-#{"name": "Schachtkobold", "rarity": RARITY.EPISCH, "base_value": 40, "icon": "res://assets/fish/schachtkobold.png",
- #"description": "Lebt in Schächten und lacht sehr ungesund.", "weight_min": 1.0, "weight_max": 2.0},
-#
-#{"name": "Industrieaal", "rarity": RARITY.EPISCH, "base_value": 38, "icon": "res://assets/fish/industrieaal.png",
- #"description": "Besteht zu 70% aus Motoröl.", "weight_min": 3.0, "weight_max": 7.0},
-#
-#{"name": "Schmutzstachel", "rarity": RARITY.EPISCH, "base_value": 36, "icon": "res://assets/fish/schmutzstachel.png",
- #"description": "Hat einen Stachel aus purem Nihilismus.", "weight_min": 2.0, "weight_max": 5.0},
-#
-#{"name": "Kanalrattenkönig", "rarity": RARITY.LEGENDAER, "base_value": 70, "icon": "res://assets/fish/rattenkoenig.png",
- #"description": "Regiert die Unterwelt. Wortwörtlich.", "weight_min": 4.0, "weight_max": 10.0},
-#
-#{"name": "Schlicksirene", "rarity": RARITY.LEGENDAER, "base_value": 80, "icon": "res://assets/fish/schlicksirene.png",
- #"description": "Singt schön. Riecht weniger schön.", "weight_min": 0.5, "weight_max": 1.5},
-#
-#{"name": "Betonengel", "rarity": RARITY.LEGENDAER, "base_value": 85, "icon": "res://assets/fish/betonengel.png",
- #"description": "Hart wie Stein. Nett wie Oma.", "weight_min": 10.0, "weight_max": 20.0},
-#
-#{"name": "Abflussdämon", "rarity": RARITY.EXOTISCH, "base_value": 200, "icon": "res://assets/fish/abflussdaemon.png",
- #"description": "Steigt auf, wenn du dreimal fluchst.", "weight_min": 0.4, "weight_max": 1.0},
-#
-#{"name": "Röhrenwyrm", "rarity": RARITY.EXOTISCH, "base_value": 240, "icon": "res://assets/fish/roehrenwyrm.png",
- #"description": "Altes Wesen. Mag Rohre. Nur Rohre.", "weight_min": 8.0, "weight_max": 18.0},
-#
-#{"name": "Giftgrützer", "rarity": RARITY.EXOTISCH, "base_value": 250, "icon": "res://assets/fish/giftgruetz.png",
- #"description": "Leuchtet grün. Sollte es nicht.", "weight_min": 1.0, "weight_max": 3.0},
-#
-#{"name": "Klopapier-Schlange", "rarity": RARITY.EXOTISCH, "base_value": 120, "icon": "res://assets/fish/klopapier.png",
- #"description": "Tauchte 2020 das erste Mal auf.", "weight_min": 0.2, "weight_max": 0.6},
-#
-#{"name": "Verdorbener Traum", "rarity": RARITY.EXOTISCH, "base_value": 300, "icon": "res://assets/fish/traum.png",
- #"description": "Manifestation deiner Lebensentscheidungen.", "weight_min": 0.1, "weight_max": 0.3}
-
+	 "description": "Gebraucht. Wirf es zurück. WIRF. ES. ZURÜCK.", "weight_min": 0.005, "weight_max": 0.02,
+	 "science_fact": "Latex zerfällt im Wasser sehr langsam und kann Tiere gefährlich verwickeln – bitte kein Souvenir."},
 ]
+
 
 var FISH_FOREST = [
 	{"name": "Karpfen", "rarity": RARITY.NORMAL, "base_value": 10, "icon": "res://assets/fish/Karpfen.png",
-	 "description": "Meditiert unter Wasser. Unc ist vegatarisch.", "weight_min": 3.0, "weight_max": 10.0},
+	 "description": "Meditiert unter Wasser. Unc ist vegatarisch.", "weight_min": 3.0, "weight_max": 10.0,
+	 "science_fact": "Karpfen können Geräusche unterscheiden und sogar auf Futtergeräusche konditioniert werden."},
 	
 	{"name": "Wels", "rarity": RARITY.NORMAL, "base_value": 15, "icon": "res://assets/fish/Wels.png",
-	 "description": "Der Bartwuchs ist legendär. Der Rest? Naja.", "weight_min": 5.0, "weight_max": 25.0},
+	 "description": "Der Bartwuchs ist legendär. Der Rest? Naja.", "weight_min": 5.0, "weight_max": 25.0,
+	 "science_fact": "Welse können elektrische Felder wahrnehmen – ein Vorteil in trüben Gewässern."},
 	
 	{"name": "Koi", "rarity": RARITY.UNGEWOEHNLICH, "base_value": 19, "icon": "res://assets/fish/koi.png",
-	 "description": "Kostet in Japan ein Vermögen. Hier? Mittwochsangebot.", "weight_min": 2.0, "weight_max": 8.0},
+	 "description": "Kostet in Japan ein Vermögen. Hier? Mittwochsangebot.", "weight_min": 2.0, "weight_max": 8.0,
+	 "science_fact": "Koi können über 50 Jahre alt werden – manche sogar über 200 laut historischen Aufzeichnungen."},
 	
 	{"name": "Rohrschatten", "rarity": RARITY.SELTEN, "base_value": 27, "icon": "res://assets/fish/rohrschatten.png",
-	 "description": "Versteckt sich zwischen Schilf. Stealth Level 100.", "weight_min": 0.5, "weight_max": 2.0},
+	 "description": "Versteckt sich zwischen Schilf. Stealth Level 100.", "weight_min": 0.5, "weight_max": 2.0,
+	 "science_fact": "Viele Süßwasserfische nutzen Vegetation als Tarnung, um Räubern zu entkommen – natürliche Camouflage."},
 	
 	{"name": "Angel", "rarity": RARITY.SELTEN, "base_value": 28, "icon": "res://assets/fish/angel.png",
-	 "description": "Schöne Angel! Oder ist das vielleicht doch eine Peitsche? Du kannst sie jedenfalls NICHT verwenden (auch wenn sie verzaubert wäre).", "weight_min": 0.8, "weight_max": 2.0},
+	 "description": "Schöne Angel! Oder ist das vielleicht doch eine Peitsche? Du kannst sie jedenfalls NICHT verwenden (auch wenn sie verzaubert wäre).", "weight_min": 0.8, "weight_max": 2.0,
+	 "science_fact": "Angelhaken wurden historisch aus Knochen, Holz oder Muschelschalen gefertigt – MacGyver wäre stolz."},
 	
 	{"name": "Waldaal", "rarity": RARITY.EPISCH, "base_value": 45, "icon": "res://assets/fish/waldaal.png",
-	 "description": "Elektrisierend. Wörtlich.", "weight_min": 1.0, "weight_max": 3.0},
+	 "description": "Elektrisierend. Wörtlich.", "weight_min": 1.0, "weight_max": 3.0,
+	 "science_fact": "Elektrische Aale können Stromstöße von über 600 Volt erzeugen – Naturgewalten im Mini-Format."},
 	
 	{"name": "Waldfresser", "rarity": RARITY.EPISCH, "base_value": 70, "icon": "res://assets/fish/Gutter.png",
-	 "description": "Vegetarier. Frisst buchstäblich den Wald. Irgendwie ironisch.", "weight_min": 10.0, "weight_max": 30.0},
+	 "description": "Vegetarier. Frisst buchstäblich den Wald. Irgendwie ironisch.", "weight_min": 10.0, "weight_max": 30.0,
+	 "science_fact": "Holzfresser gibt es wirklich: Manche Welse ernähren sich von Treibholz und Mikroorganismen darauf."},
 	
 	{"name": "Bambushai", "rarity": RARITY.LEGENDAER, "base_value": 100, "icon": "res://assets/fish/bambus.png",
-	 "description": "Ernährt sich von Bambus und innerer Ruhe.", "weight_min": 5.0, "weight_max": 15.0},
+	 "description": "Ernährt sich von Bambus und innerer Ruhe.", "weight_min": 5.0, "weight_max": 15.0,
+	 "science_fact": "Einige Haiarten können kurze Strecken an Land zurücklegen, indem sie ihre Flossen als Stützen verwenden."},
 	
 	{"name": "Wurzelfisch", "rarity": RARITY.EXOTISCH, "base_value": 250, "icon": "res://assets/fish/wurzelfisch.png",
-	 "description": "Halb Fisch, halb Baum, komplett verstörend.", "weight_min": 20.0, "weight_max": 50.0},
+	 "description": "Halb Fisch, halb Baum, komplett verstörend.", "weight_min": 20.0, "weight_max": 50.0,
+	 "science_fact": "Einige Fischarten leben in symbiotischen Beziehungen mit Pflanzen – z. B. schützen Wurzeln Laichplätze."},
 	
 	{"name": "Markus", "rarity": RARITY.EXOTISCH, "base_value": 0, "icon": "res://assets/fish/corpse.png",
-	 "description": "Schon wieder? Ernsthaft?", "weight_min": 60.0, "weight_max": 90.0},
-#{"name": "Moosbarbe", "rarity": RARITY.NORMAL, "base_value": 12, "icon": "res://assets/fish/moosbarbe.png",
- #"description": "Hat mehr Moos am Körper als du im Portemonnaie.", "weight_min": 0.5, "weight_max": 1.5},
-#
-#{"name": "Waldmolchling", "rarity": RARITY.NORMAL, "base_value": 11, "icon": "res://assets/fish/waldmolch.png",
- #"description": "Technisch kein Fisch. Tut aber so.", "weight_min": 0.1, "weight_max": 0.4},
-#
-#{"name": "Zapfenfisch", "rarity": RARITY.NORMAL, "base_value": 13, "icon": "res://assets/fish/zapfenfisch.png",
- #"description": "Tarnung 10/10. Sieht aus wie ein Tannenzapfen.", "weight_min": 0.3, "weight_max": 0.9},
-#
-#{"name": "Wurzelschnapper", "rarity": RARITY.UNGEWOEHNLICH, "base_value": 17, "icon": "res://assets/fish/wurzelschnapper.png",
- #"description": "Knabbert an Bäumen. Hat Geschmack.", "weight_min": 1.0, "weight_max": 3.0},
-#
-#{"name": "Borkenfinne", "rarity": RARITY.UNGEWOEHNLICH, "base_value": 18, "icon": "res://assets/fish/borkenfinne.png",
- #"description": "Halb Fisch, halb Baumrinde.", "weight_min": 0.8, "weight_max": 2.0},
-#
-#{"name": "Pilzglimmer", "rarity": RARITY.UNGEWOEHNLICH, "base_value": 16, "icon": "res://assets/fish/pilzglimmer.png",
- #"description": "Leuchtet wie ein Pilztrip. Behauptet, essbar zu sein.", "weight_min": 0.2, "weight_max": 0.8},
-#
-#{"name": "Astläufer", "rarity": RARITY.SELTEN, "base_value": 28, "icon": "res://assets/fish/astlaeufer.png",
- #"description": "Kann klettern. Fängt dich eher als du ihn.", "weight_min": 0.6, "weight_max": 2.0},
-#
-#{"name": "Naddelwels", "rarity": RARITY.SELTEN, "base_value": 30, "icon": "res://assets/fish/naddelwels.png",
- #"description": "Verschwindet im Dickicht. Und in deinen Träumen.", "weight_min": 2.0, "weight_max": 5.0},
-#
-#{"name": "Farnschuppe", "rarity": RARITY.SELTEN, "base_value": 26, "icon": "res://assets/fish/farnschuppe.png",
- #"description": "Verschmilzt fast mit Pflanzen. Fast.", "weight_min": 0.4, "weight_max": 1.2},
-#
-#{"name": "Klangfisch", "rarity": RARITY.EPISCH, "base_value": 48, "icon": "res://assets/fish/klangfisch.png",
- #"description": "Macht Geräusche wie Waldgeister. Oder dein Magen.", "weight_min": 1.0, "weight_max": 3.0},
-#
-#{"name": "Waldschleicher", "rarity": RARITY.EPISCH, "base_value": 52, "icon": "res://assets/fish/waldschleicher.png",
- #"description": "Siehst du nicht. Fängt dich trotzdem.", "weight_min": 2.0, "weight_max": 4.0},
-#
-#{"name": "Moonsprout", "rarity": RARITY.EPISCH, "base_value": 55, "icon": "res://assets/fish/moonsprout.png",
- #"description": "Wächst bei Mondlicht. Und flüstert komische Sachen.", "weight_min": 0.5, "weight_max": 1.5},
-#
-#{"name": "Wipfelhai", "rarity": RARITY.LEGENDAER, "base_value": 95, "icon": "res://assets/fish/wipfelhai.png",
- #"description": "Lebt angeblich in Baumwipfeln. Logik egal.", "weight_min": 3.0, "weight_max": 10.0},
-#
-#{"name": "Stumpfdrache", "rarity": RARITY.LEGENDAER, "base_value": 100, "icon": "res://assets/fish/stumpfdrache.png",
- #"description": "Mini-Drache, maximal nervig.", "weight_min": 2.0, "weight_max": 6.0},
-#
-#{"name": "Hainwächter", "rarity": RARITY.LEGENDAER, "base_value": 110, "icon": "res://assets/fish/hainwaechter.png",
- #"description": "Beschützt den Wald. Hält dich aber nicht davon ab, ihn zu fangen.", "weight_min": 4.0, "weight_max": 12.0},
-#
-#{"name": "Wurzelkoloss", "rarity": RARITY.EXOTISCH, "base_value": 260, "icon": "res://assets/fish/wurzelkoloss.png",
- #"description": "Ein Baum, ein Fisch und eine Identitätskrise.", "weight_min": 20.0, "weight_max": 40.0},
-#
-#{"name": "Waldflamme", "rarity": RARITY.EXOTISCH, "base_value": 230, "icon": "res://assets/fish/waldflamme.png",
- #"description": "Brennt unter Wasser. Weil Magie. Oder Bug.", "weight_min": 1.0, "weight_max": 3.0},
-#
-#{"name": "Götterfarnling", "rarity": RARITY.EXOTISCH, "base_value": 280, "icon": "res://assets/fish/goetterfarn.png",
- #"description": "Wurde von einem Waldgott gesegnet. Nicht von einem guten.", "weight_min": 0.3, "weight_max": 1.0},
-#
-#{"name": "Baumschreck", "rarity": RARITY.EXOTISCH, "base_value": 300, "icon": "res://assets/fish/baumschreck.png",
- #"description": "Würde dich gern essen. Hat aber keine Hände.", "weight_min": 5.0, "weight_max": 15.0},
-#
-#{"name": "Waldfehler_001", "rarity": RARITY.EXOTISCH, "base_value": 350, "icon": "res://assets/fish/error_forest.png",
- #"description": "Ein Fehler im Waldsystem. Bitte neu starten.", "weight_min": 0.0, "weight_max": 0.0}
-
-
+	 "description": "Schon wieder? Ernsthaft?", "weight_min": 60.0, "weight_max": 90.0,
+	 "science_fact": "Verwesungsprozesse im Wasser laufen langsamer ab, da weniger Sauerstoff vorhanden ist – gruselig effizient."},
 ]
+
 
 var FISH_DESERT = [
 	{"name": "Schmutzgrundel", "rarity": RARITY.NORMAL, "base_value": 15, "icon": "res://assets/fish/schmutzgrundel.png",
-	 "description": "Lebt im Dreck. Buchstäblich. Wie deine Ernährungsgewohnheiten.", "weight_min": 0.2, "weight_max": 0.8},
+	 "description": "Lebt im Dreck. Buchstäblich. Wie deine Ernährungsgewohnheiten.", "weight_min": 0.2, "weight_max": 0.8,
+	 "science_fact": "Grundeln können in extrem trübem Wasser überleben und sind wahre Anpassungsmeister."},
 	
 	{"name": "Solarfänger", "rarity": RARITY.NORMAL, "base_value": 16, "icon": "res://assets/fish/solarfänger.png",
-	 "description": "Lädt sich über Sonnenlicht auf. Tesla wäre neidisch.", "weight_min": 0.5, "weight_max": 1.5},
+	 "description": "Lädt sich über Sonnenlicht auf. Tesla wäre neidisch.", "weight_min": 0.5, "weight_max": 1.5,
+	 "science_fact": "Bestimmte Meeresorganismen nutzen tatsächlich Licht für chemische Prozesse – Bio-Solarzellen der Natur."},
 	
 	{"name": "Rostflosser", "rarity": RARITY.UNGEWOEHNLICH, "base_value": 25, "icon": "res://assets/fish/fish1.png",
-	 "description": "Braucht dringend eine Tetanus-Impfung.", "weight_min": 1.0, "weight_max": 3.0},
+	 "description": "Braucht dringend eine Tetanus-Impfung.", "weight_min": 1.0, "weight_max": 3.0,
+	 "science_fact": "Rost ist im Wasser weit verbreitet – Eisenbakterien erzeugen ganze rot gefärbte Zonen."},
 	
 	{"name": "Sandstreifer", "rarity": RARITY.SELTEN, "base_value": 30, "icon": "res://assets/fish/fish1.png",
-	 "description": "Getarnt wie ein Sandsturm. Mit Flossen.", "weight_min": 2.0, "weight_max": 6.0},
+	 "description": "Getarnt wie ein Sandsturm. Mit Flossen.", "weight_min": 2.0, "weight_max": 6.0,
+	 "science_fact": "Viele Wüstenfische – ja, die gibt es – leben in kurzzeitig wasserführenden Oasen oder Flussläufen."},
 	
 	{"name": "Aggresive Garnele", "rarity": RARITY.EPISCH, "base_value": 55, "icon": "res://assets/fish/garnele.png",
-	 "description": "Winzig, aber verdammt wütend. Wie ein Chihuahua.", "weight_min": 0.1, "weight_max": 0.3},
+	 "description": "Winzig, aber verdammt wütend. Wie ein Chihuahua.", "weight_min": 0.1, "weight_max": 0.3,
+	 "science_fact": "Knallkrebse erzeugen durch ihre Scheren Schockwellen, die Beute betäuben – kleine Wutpakete."},
 	
 	{"name": "Staubhai", "rarity": RARITY.EPISCH, "base_value": 80, "icon": "res://assets/fish/Boro.png",
-	 "description": "Schwimmt durch Sand. Physik hat aufgegeben.", "weight_min": 10.0, "weight_max": 40.0},
+	 "description": "Schwimmt durch Sand. Physik hat aufgegeben.", "weight_min": 10.0, "weight_max": 40.0,
+	 "science_fact": "Einige Tiere bewegen sich tatsächlich wellenförmig durch Sand – ähnlich wie Fische im Wasser."},
 	
 	{"name": "Wasserfisch", "rarity": RARITY.LEGENDAER, "base_value": 120, "icon": "res://assets/fish/fish1.png",
-	 "description": "Der einzige Fisch mit Wasser in der Wüste. Ein Held.", "weight_min": 1.0, "weight_max": 4.0},
+	 "description": "Der einzige Fisch mit Wasser in der Wüste. Ein Held.", "weight_min": 1.0, "weight_max": 4.0,
+	 "science_fact": "Wüstenseen können uralte Wasserkörper enthalten, die über Jahrtausende isoliert waren."},
 	
 	{"name": "Sonnenfragment", "rarity": RARITY.EXOTISCH, "base_value": 300, "icon": "res://assets/fish/fish1.png",
-	 "description": "Ein Stück Sonne. Anfassen nicht empfohlen.", "weight_min": 50.0, "weight_max": 100.0},
+	 "description": "Ein Stück Sonne. Anfassen nicht empfohlen.", "weight_min": 50.0, "weight_max": 100.0,
+	 "science_fact": "Sonnenlicht enthält Energie, die in Milliarden Jahren Fusionsprozessen entstand – heißer geht’s nicht."},
 	
 	{"name": "Goldhai", "rarity": RARITY.EXOTISCH, "base_value": 500, "icon": "res://assets/fish/corpse.png",
-	 "description": "Aus echtem Gold. Oder Messing. Vermutlich Messing.", "weight_min": 20.0, "weight_max": 80.0},
-#{"name": "Staubgrundel", "rarity": RARITY.NORMAL, "base_value": 17, "icon": "res://assets/fish/staubgrundel.png",
- #"description": "Atmet Staub. Hält länger durch als du.", "weight_min": 0.2, "weight_max": 0.7},
-#
-#{"name": "Dünenflosse", "rarity": RARITY.NORMAL, "base_value": 16, "icon": "res://assets/fish/duenenflosse.png",
- #"description": "Surft über Sandwellen. Voll der Pro.", "weight_min": 0.3, "weight_max": 1.0},
-#
-#{"name": "Kieselschupper", "rarity": RARITY.NORMAL, "base_value": 18, "icon": "res://assets/fish/kieselschupper.png",
- #"description": "Sieht aus wie ein überambitionierter Stein.", "weight_min": 0.2, "weight_max": 0.8},
-#
-#{"name": "Oasenpicker", "rarity": RARITY.UNGEWOEHNLICH, "base_value": 24, "icon": "res://assets/fish/oasenpicker.png",
- #"description": "Findet jede Oase. Du eher nicht.", "weight_min": 0.5, "weight_max": 1.5},
-#
-#{"name": "Sandglimmer", "rarity": RARITY.UNGEWOEHNLICH, "base_value": 23, "icon": "res://assets/fish/sandglimmer.png",
- #"description": "Glitzert gefährlich verführerisch.", "weight_min": 0.3, "weight_max": 1.2},
-#
-#{"name": "Kakteenfinne", "rarity": RARITY.UNGEWOEHNLICH, "base_value": 26, "icon": "res://assets/fish/kakteenfinne.png",
- #"description": "Stacheliger als dein Humor.", "weight_min": 0.8, "weight_max": 2.0},
-#
-#{"name": "Sandbohrer", "rarity": RARITY.SELTEN, "base_value": 32, "icon": "res://assets/fish/sandbohrer.png",
- #"description": "Bohrt sich durch Sand wie du durch Probleme.", "weight_min": 2.0, "weight_max": 6.0},
-#
-#{"name": "Schimmergecko", "rarity": RARITY.SELTEN, "base_value": 29, "icon": "res://assets/fish/schimmergecko.png",
- #"description": "Wahrscheinlich gar kein Fisch… aber er glitzert!", "weight_min": 0.1, "weight_max": 0.4},
-#
-#{"name": "Kupferstaubfisch", "rarity": RARITY.SELTEN, "base_value": 35, "icon": "res://assets/fish/kupferstaub.png",
- #"description": "Schmeckt metallisch. Riecht metallischer.", "weight_min": 1.0, "weight_max": 3.0},
-#
-#{"name": "Hitzeschuppe", "rarity": RARITY.EPISCH, "base_value": 58, "icon": "res://assets/fish/hitzeschuppe.png",
- #"description": "Zu heiß zum Anfassen. Wortwörtlich.", "weight_min": 0.5, "weight_max": 1.2},
-#
-#{"name": "Quarzflosser", "rarity": RARITY.EPISCH, "base_value": 62, "icon": "res://assets/fish/quarzflosser.png",
- #"description": "Durchsichtiger als deine Ausreden.", "weight_min": 2.0, "weight_max": 5.0},
-#
-#{"name": "Sandstachelhai", "rarity": RARITY.EPISCH, "base_value": 70, "icon": "res://assets/fish/sandstachel.png",
- #"description": "Hat dieselbe Persönlichkeit wie ein Kaktus.", "weight_min": 5.0, "weight_max": 15.0},
-#
-#{"name": "Wüstenfürst", "rarity": RARITY.LEGENDAER, "base_value": 110, "icon": "res://assets/fish/wuestenfuerst.png",
- #"description": "Beherrscht den Sand. Und jetzt deinen Eimer.", "weight_min": 3.0, "weight_max": 8.0},
-#
-#{"name": "Sandwolf", "rarity": RARITY.LEGENDAER, "base_value": 120, "icon": "res://assets/fish/sandwolf.png",
- #"description": "Heult nicht den Mond an. Er heult dich an.", "weight_min": 2.0, "weight_max": 6.0},
-#
-#{"name": "Mineralienmole", "rarity": RARITY.LEGENDAER, "base_value": 115, "icon": "res://assets/fish/mineralmole.png",
- #"description": "Wühlt wie verrückt. Auch unter Wasser nicht besser.", "weight_min": 4.0, "weight_max": 10.0},
-#
-#{"name": "Phasensplitter", "rarity": RARITY.EXOTISCH, "base_value": 280, "icon": "res://assets/fish/phasensplitter.png",
- #"description": "Existiert in drei Realitäten gleichzeitig.", "weight_min": 1.0, "weight_max": 3.0},
-#
-#{"name": "Wüstengottesanbeter", "rarity": RARITY.EXOTISCH, "base_value": 300, "icon": "res://assets/fish/wuestenbeter.png",
- #"description": "Betet für deinen Tod. Nett.", "weight_min": 0.2, "weight_max": 0.6},
-#
-#{"name": "Glasfresser", "rarity": RARITY.EXOTISCH, "base_value": 320, "icon": "res://assets/fish/glasfresser.png",
- #"description": "Frisst Glas. Und deine Hoffnung.", "weight_min": 5.0, "weight_max": 12.0},
-#
-#{"name": "Solarbrüller", "rarity": RARITY.EXOTISCH, "base_value": 350, "icon": "res://assets/fish/solarbrueller.png",
- #"description": "Brüllt in die Sonne. Die Sonne brüllt zurück.", "weight_min": 8.0, "weight_max": 20.0},
-#
-#{"name": "Sandfehler_002", "rarity": RARITY.EXOTISCH, "base_value": 400, "icon": "res://assets/fish/error_desert.png",
- #"description": "Fehlerhafte Wüstensimulation entdeckt.", "weight_min": 0.0, "weight_max": 0.0}
-
+	 "description": "Aus echtem Gold. Oder Messing. Vermutlich Messing.", "weight_min": 20.0, "weight_max": 80.0,
+	 "science_fact": "Gold kommt tatsächlich in Spuren im Meerwasser vor – nur leider nicht in Hai-Form."},
 ]
+
 
 # ===========================
 #  RANDOM FISH (BAIT UPGRADE)

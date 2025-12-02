@@ -77,7 +77,7 @@ func show_fish_details(fish: Dictionary):
 	var full_description = "[color=#CCCCCC]%s[/color]" % description
 	
 	if science_fact != "":
-		full_description += "\n\n[color=#88DDFF]📚 Wissenschaft:[/color]\n[color=#AACCEE]%s[/color]" % science_fact
+		full_description += "\n\n[color=#88DDFF][/color]\n[color=#AACCEE]%s[/color]" % science_fact
 	
 	description_text.text = full_description
 	
