@@ -95,8 +95,8 @@ func refresh() -> void:
 		total_value += value
 		
 		# 🎭 Hover-Effekt hinzufügen
-		item.mouse_entered.connect(_on_item_hover.bind(item, true))
-		item.mouse_exited.connect(_on_item_hover.bind(item, false))
+		#item.mouse_entered.connect(_on_item_hover.bind(item, true))
+		#item.mouse_exited.connect(_on_item_hover.bind(item, false))
 		
 		# 🗑️ Rechtsklick zum Verkaufen
 		item.gui_input.connect(_on_item_clicked.bind(i))
@@ -122,15 +122,15 @@ func refresh() -> void:
 		sell_button.text = "Keine Fische zum Verkaufen"
 		sell_button.disabled = true
 
-func _on_item_hover(item: PanelContainer, is_hovering: bool) -> void:
-	# Hover-Effekt: Karte hebt sich leicht an
-	var tween = create_tween()
-	if is_hovering:
-		tween.tween_property(item, "scale", Vector2(1.05, 1.05), 0.15)
-		item.z_index = 10
-	else:
-		tween.tween_property(item, "scale", Vector2(1.0, 1.0), 0.15)
-		item.z_index = 0
+#func _on_item_hover(item: PanelContainer, is_hovering: bool) -> void:
+	## Hover-Effekt: Karte hebt sich leicht an
+	#var tween = create_tween()
+	#if is_hovering:
+		#tween.tween_property(item, "", Vector2(1.05, 1.05), 0.15)
+		#item.z_index = 10
+	#else:
+		#tween.tween_property(item, "scale", Vector2(1.0, 1.0), 0.15)
+		#item.z_index = 0
 
 func _on_item_clicked(event: InputEvent, index: int) -> void:
 	if event is InputEventMouseButton and event.pressed:

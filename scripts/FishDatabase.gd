@@ -317,12 +317,12 @@ var FISH_DESERT = [
 	 "description": "Der einzige Fisch mit Wasser in der Wüste. Ein Held.", "weight_min": 1.0, "weight_max": 4.0,
 	 "science_fact": "Wüstenseen können uralte Wasserkörper enthalten, die über Jahrtausende isoliert waren."},
 	
-	{"name": "Sonnenfragment", "rarity": RARITY.EXOTISCH, "base_value": 300, "icon": "res://assets/fish/fish1.png",
+	{"name": "Sonnenfragment", "rarity": RARITY.EXOTISCH, "base_value": 300, "icon": "res://assets/fish/sonne.png",
 	 "description": "Ein Stück Sonne. Anfassen nicht empfohlen.", "weight_min": 50.0, "weight_max": 100.0,
 	 "science_fact": "Sonnenlicht enthält Energie, die in Milliarden Jahren Fusionsprozessen entstand – heißer geht’s nicht."},
 	
-	{"name": "Goldhai", "rarity": RARITY.EXOTISCH, "base_value": 500, "icon": "res://assets/fish/corpse.png",
-	 "description": "Aus echtem Gold. Oder Messing. Vermutlich Messing.", "weight_min": 20.0, "weight_max": 80.0,
+	{"name": "Goldhai", "rarity": RARITY.EXOTISCH, "base_value": 500, "icon": "res://assets/fish/goldhai.png",
+	 "description": "Aus echtem Gold. Oder Messing. Vermutlich Messing.", "weight_min": 300.0, "weight_max": 1000.0,
 	 "science_fact": "Gold kommt tatsächlich in Spuren im Meerwasser vor – nur leider nicht in Hai-Form."},
 ]
 

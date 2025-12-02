@@ -25,12 +25,17 @@ shader_parameter/shadow_offset = Vector2(0, -5)
 shader_parameter/shadow_color = Vector4(0, 0, 0, 0.5)
 
 [node name="FishBookEntry" type="PanelContainer"]
-custom_minimum_size = Vector2(160, 240)
+custom_minimum_size = Vector2(160, 190)
+offset_right = 160.0
+offset_bottom = 198.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
 theme_override_styles/panel = SubResource("StyleBoxFlat_ri3oc")
 script = ExtResource("1_so62u")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
+size_flags_vertical = 0
 mouse_filter = 2
 theme_override_constants/separation = 6
 
@@ -47,7 +52,7 @@ theme_override_constants/margin_bottom = 8
 
 [node name="Icon" type="TextureRect" parent="VBoxContainer/IconContainer/MarginContainer"]
 material = SubResource("ShaderMaterial_iqtxn")
-custom_minimum_size = Vector2(120, 90)
+custom_minimum_size = Vector2(100, 90)
 layout_mode = 2
 texture = ExtResource("2_ri3oc")
 expand_mode = 1

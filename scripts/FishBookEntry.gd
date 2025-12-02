@@ -26,7 +26,7 @@ func _ready():
 	separator = $VBoxContainer/InfoContainer/VSeparator
 	
 	# Größe setzen
-	custom_minimum_size = Vector2(160, 240)
+	custom_minimum_size = Vector2(160, 190)
 	
 	# Mouse Filter
 	mouse_filter = Control.MOUSE_FILTER_STOP
