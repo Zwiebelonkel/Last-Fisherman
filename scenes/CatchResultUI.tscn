@@ -1,12 +1,42 @@
-[gd_scene load_steps=15 format=3 uid="uid://cqtn78ty1fa7"]
+[gd_scene load_steps=17 format=3 uid="uid://cqtn78ty1fa7"]
 
 [ext_resource type="Script" uid="uid://dstq66nai8yi0" path="res://scripts/CatchResultUI.gd" id="1_dnped"]
 [ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="1_nuupr"]
 [ext_resource type="Texture2D" uid="uid://cdqevtqdy43fr" path="res://assets/fish/unknown.png" id="3_nuupr"]
+[ext_resource type="Shader" uid="uid://bstde7wsk0sgt" path="res://shader/icon.gdshader" id="4_e4ghr"]
 [ext_resource type="PackedScene" uid="uid://bo0v8sskr3vwq" path="res://scenes/splash2D.tscn" id="5_e4ghr"]
 
 [sub_resource type="Theme" id="Theme_nvhde"]
 default_font = ExtResource("1_nuupr")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ksy5q"]
+shader = ExtResource("4_e4ghr")
+shader_parameter/shadow_offset = Vector2(0, -4)
+shader_parameter/shadow_color = Vector4(0, 0, 0, 0.5)
+shader_parameter/bobbing_amplitude = 0.44
+shader_parameter/bobbing_speed = 2.0
+shader_parameter/enable_bobbing = true
+shader_parameter/sway_amplitude = 3.0
+shader_parameter/sway_speed = 1.5
+shader_parameter/enable_sway = false
+shader_parameter/pulse_amount = 0.1
+shader_parameter/pulse_speed = 3.0
+shader_parameter/enable_pulse = false
+
+[sub_resource type="Animation" id="Animation_ksy5q"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../../../..:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
 
 [sub_resource type="Animation" id="Animation_nuupr"]
 resource_name = "pulse"
@@ -23,21 +53,6 @@ tracks/0/keys = {
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(0, 4.785), Vector2(0, 0)]
-}
-
-[sub_resource type="Animation" id="Animation_ksy5q"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("../../../..:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(0, 0)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_nvhde"]
@@ -83,6 +98,21 @@ _data = {
 &"pop": SubResource("Animation_6707x")
 }
 
+[sub_resource type="Animation" id="Animation_e4ghr"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(191, 2)]
+}
+
 [sub_resource type="Animation" id="Animation_nvhde"]
 resource_name = "idle"
 length = 2.0
@@ -98,21 +128,6 @@ tracks/0/keys = {
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
 "values": [Vector2(191, 2), Vector2(191, -6.055), Vector2(191, 2)]
-}
-
-[sub_resource type="Animation" id="Animation_e4ghr"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(191, 2)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_ksy5q"]
@@ -181,6 +196,7 @@ theme_override_constants/margin_bottom = 10
 
 [node name="FishIcon" type="TextureRect" parent="VBoxContainer/MarginContainer/PanelContainer/MarginContainer"]
 texture_filter = 1
+material = SubResource("ShaderMaterial_ksy5q")
 custom_minimum_size = Vector2(188.405, 130.065)
 layout_mode = 2
 size_flags_horizontal = 4

@@ -1,0 +1,29 @@
+[gd_scene load_steps=3 format=3 uid="uid://dmxhsw3wbsr0t"]
+
+[ext_resource type="Script" uid="uid://beedsasdycbee" path="res://scripts/Rotating3DFishIcon.gd" id="1_script"]
+
+[sub_resource type="Environment" id="Environment_8ucgw"]
+background_energy_multiplier = 0.0
+
+[node name="Rotating3DFishIcon" type="SubViewportContainer"]
+custom_minimum_size = Vector2(200, 150)
+stretch = true
+script = ExtResource("1_script")
+
+[node name="SubViewport" type="SubViewport" parent="."]
+transparent_bg = true
+handle_input_locally = false
+size = Vector2i(200, 150)
+render_target_update_mode = 4
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="SubViewport"]
+environment = SubResource("Environment_8ucgw")
+
+[node name="Camera3D" type="Camera3D" parent="SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.01042)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="SubViewport"]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="SubViewport"]
+transform = Transform3D(0.707107, -0.5, 0.5, 0, 0.707107, 0.707107, -0.707107, -0.5, 0.5, 0, 0, 0)
+light_energy = 1.2

@@ -15,6 +15,7 @@ var fish_detail_popup_scene  # Wird in _ready() geladen
 var fish_book
 var detail_popup: Control
 
+
 func _ready():
 	fish_book = load("res://scripts/FishBook.gd").new()
 	
@@ -239,3 +240,7 @@ func _input(event):
 		if get_parent().has_method("toggle_bestiary"):
 			get_parent().toggle_bestiary()
 		get_tree().root.set_input_as_handled()
+
+
+func _on_close_pressed() -> void:
+	hide()

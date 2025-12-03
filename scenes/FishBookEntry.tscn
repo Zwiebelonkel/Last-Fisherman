@@ -23,6 +23,15 @@ shadow_offset = Vector2(0, 3)
 shader = ExtResource("2_l54rb")
 shader_parameter/shadow_offset = Vector2(0, -5)
 shader_parameter/shadow_color = Vector4(0, 0, 0, 0.5)
+shader_parameter/bobbing_amplitude = 1.135
+shader_parameter/bobbing_speed = 2.0
+shader_parameter/enable_bobbing = true
+shader_parameter/sway_amplitude = 3.0
+shader_parameter/sway_speed = 1.5
+shader_parameter/enable_sway = false
+shader_parameter/pulse_amount = 0.015
+shader_parameter/pulse_speed = 3.0
+shader_parameter/enable_pulse = true
 
 [node name="FishBookEntry" type="PanelContainer"]
 custom_minimum_size = Vector2(160, 190)
