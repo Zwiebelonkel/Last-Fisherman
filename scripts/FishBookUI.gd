@@ -153,28 +153,28 @@ func load_bestiary():
 		tween.tween_property(entry_ui, "scale", Vector2(1.0, 1.0), 0.3).set_delay(i * 0.03).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 		
 		 #🎭 Hover-Effekt hinzufügen
-		entry_ui.mouse_entered.connect(_on_entry_hover.bind(entry_ui, true))
-		entry_ui.mouse_exited.connect(_on_entry_hover.bind(entry_ui, false))
+		#entry_ui.mouse_entered.connect(_on_entry_hover.bind(entry_ui, true))
+		#entry_ui.mouse_exited.connect(_on_entry_hover.bind(entry_ui, false))
 	
 	# Stats aktualisieren
 	update_stats()
 
-func _on_entry_hover(entry: PanelContainer, is_hovering: bool) -> void:
-	# Nur für gefangene Fische
-	if not entry.fish_data.get("caught", false):
-		return
-	
-	var tween = create_tween()
-	
-	var start_pos = entry.position
-	var target_pos = start_pos + Vector2(0, -6)  # 6px nach oben
-	
-	if is_hovering:
-		entry.z_index = 10
-		tween.tween_property(entry, "position", target_pos, 0.05).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
-	else:
-		entry.z_index = 0
-		tween.tween_property(entry, "position", entry.position + Vector2(0, 6), 0.05).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+#func _on_entry_hover(entry: PanelContainer, is_hovering: bool) -> void:
+	## Nur für gefangene Fische
+	#if not entry.fish_data.get("caught", false):
+		#return
+	#
+	#var tween = create_tween()
+	#
+	#var start_pos = entry.position
+	#var target_pos = start_pos + Vector2(0, -6)  # 6px nach oben
+	#
+	#if is_hovering:
+		#entry.z_index = 10
+		#tween.tween_property(entry, "position", target_pos, 0.05).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	#else:
+		#entry.z_index = 0
+		#tween.tween_property(entry, "position", entry.position + Vector2(0, 6), 0.05).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
 
 func update_stats():
 	var stats = fish_book.get_bestiary_stats(current_location)

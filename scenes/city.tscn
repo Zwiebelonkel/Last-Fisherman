@@ -1672,6 +1672,7 @@ visible = false
 visible = false
 
 [node name="Touch" parent="UI" instance=ExtResource("10_my70f")]
+visible = false
 
 [node name="PlayerCamera" type="Camera3D" parent="."]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 12.867, 0.0447942)

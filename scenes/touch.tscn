@@ -18,48 +18,50 @@ mouse_filter = 2
 
 [node name="TopLeftPanel" type="PanelContainer" parent="."]
 layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -50.0
-offset_bottom = 192.0
-grow_horizontal = 0
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -108.5
+offset_right = 108.5
+offset_bottom = 55.0
+grow_horizontal = 2
 mouse_filter = 1
 theme_override_styles/panel = SubResource("StyleBoxEmpty_620u5")
 
 [node name="MarginContainer" type="MarginContainer" parent="TopLeftPanel"]
 layout_mode = 2
-theme_override_constants/margin_top = 5
-theme_override_constants/margin_right = 5
+theme_override_constants/margin_top = 10
 
-[node name="VBoxContainer" type="VBoxContainer" parent="TopLeftPanel/MarginContainer"]
+[node name="VBoxContainer" type="HBoxContainer" parent="TopLeftPanel/MarginContainer"]
 layout_mode = 2
+theme_override_constants/separation = 50
 
 [node name="JournalButton" type="Button" parent="TopLeftPanel/MarginContainer/VBoxContainer"]
-custom_minimum_size = Vector2(50, 45)
+custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
 theme_override_fonts/font = ExtResource("1_iac43")
 text = "📖"
 
 [node name="InventoryButton" type="Button" parent="TopLeftPanel/MarginContainer/VBoxContainer"]
-custom_minimum_size = Vector2(50, 45)
+custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
 theme_override_fonts/font = ExtResource("1_iac43")
 text = "🎒"
 
 [node name="MapButton" type="Button" parent="TopLeftPanel/MarginContainer/VBoxContainer"]
-custom_minimum_size = Vector2(50, 45)
+custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
 theme_override_fonts/font = ExtResource("1_iac43")
 text = "🗺️"
 
 [node name="SettingsButton" type="Button" parent="TopLeftPanel/MarginContainer/VBoxContainer"]
-custom_minimum_size = Vector2(50, 45)
+custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
 theme_override_fonts/font = ExtResource("1_iac43")
 text = "⚙️"
 
 [node name="InteractButton" type="Button" parent="."]
+visible = false
 custom_minimum_size = Vector2(100, 70)
 layout_mode = 1
 anchors_preset = 8
@@ -78,6 +80,7 @@ theme_override_fonts/font = ExtResource("1_iac43")
 text = "CAST"
 
 [node name="BottomCenterPanel" type="PanelContainer" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = 12
 anchor_top = 1.0
