@@ -1,4 +1,4 @@
-[gd_scene load_steps=51 format=3 uid="uid://bwpkoys7chajb"]
+[gd_scene load_steps=52 format=3 uid="uid://bwpkoys7chajb"]
 
 [ext_resource type="Shader" uid="uid://dmg556n5nwodi" path="res://shader/pixelate.gdshader" id="1_kqfxt"]
 [ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="2_rtjjv"]
@@ -10,6 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://je70iqlm248a" path="res://scenes/CastPowerUI.tscn" id="8_rxgvs"]
 [ext_resource type="PackedScene" uid="uid://b08obrprd472u" path="res://scenes/OptionsControl.tscn" id="9_qk11g"]
 [ext_resource type="Script" uid="uid://bl1xotduehieu" path="res://scripts/camera_sway.gd" id="10_11ck5"]
+[ext_resource type="PackedScene" uid="uid://xt7f7m4i2iwi" path="res://scenes/touch.tscn" id="10_rtjjv"]
 [ext_resource type="PackedScene" uid="uid://b5ew1rfc8ow8g" path="res://scenes/fishingRod.tscn" id="11_c82cw"]
 [ext_resource type="Texture2D" uid="uid://cvllk03mhtybp" path="res://textures/723-normal.jpg" id="13_kyn5a"]
 [ext_resource type="Texture2D" uid="uid://d31603nl8y0gd" path="res://textures/Water_preview.jpgC878A51E-2B84-45CA-85CB-75E5BC88EEC8Large.jpg" id="14_2n20e"]
@@ -181,6 +182,7 @@ script/source = "extends Node3D
 @export var left_button: Button
 @export var right_button: Button
 @export var interact_button: Button
+@export var settings_button: Button
 
 
 @onready var anim: AnimationPlayer = $AnimationPlayer
@@ -264,6 +266,7 @@ func _ready() -> void:
 	setup_buttons()
 
 
+
 # 🆕 Button Setup
 func setup_buttons() -> void:
 	if journal_button:
@@ -282,7 +285,44 @@ func setup_buttons() -> void:
 		right_button.pressed.connect(rotate_camera_right)
 	
 	if interact_button:
-		interact_button.pressed.connect(on_interact_pressed)
+		# 🆕 WICHTIG: Für Halten von Buttons brauchen wir down/up Signals
+		interact_button.button_down.connect(_on_interact_button_down)
+		interact_button.button_up.connect(_on_interact_button_up)
+		
+	if settings_button:
+		settings_button.pressed.connect(handle_pause_input)
+
+
+# 🆕 Interact Button - DOWN (Halten simulieren)
+func _on_interact_button_down() -> void:
+	# Shop betreten bei 90°
+	if abs(current_rotation - ROTATION_SHOP) < 1.0:
+		enter_shop()
+		return
+	
+	# Bei 180° (Fishing)
+	if abs(current_rotation - ROTATION_FISHING) < 1.0:
+		match state:
+			STATE_IDLE:
+				start_charging_cast()
+			STATE_CHARGING:
+				# Halten des Buttons = weiter halten zum Laden
+				pass
+			STATE_CASTED, STATE_BITE:
+				reel_pressed()
+			STATE_MINIGAME:
+				input_active = true
+
+
+# 🆕 Interact Button - UP (Loslassen)
+func _on_interact_button_up() -> void:
+	# Bei 180° (Fishing)
+	if abs(current_rotation - ROTATION_FISHING) < 1.0:
+		match state:
+			STATE_CHARGING:
+				release_cast()
+			STATE_MINIGAME:
+				input_active = false
 		
 func _on_biome_completed(biome_name: String, reward: int) -> void:
 	print(\"🎉 Biom abgeschlossen: \", biome_name, \" | Belohnung: \", reward, \" Gold\")
@@ -1572,6 +1612,8 @@ visible = false
 [node name="OptionsControl" parent="UI" instance=ExtResource("9_qk11g")]
 visible = false
 
+[node name="Touch" parent="UI" instance=ExtResource("10_rtjjv")]
+
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_8tyyj")
 
@@ -1579,7 +1621,7 @@ environment = SubResource("Environment_8tyyj")
 transform = Transform3D(-1, 0, -2.53518e-06, 0, 1, 0, 2.53518e-06, 0, -1, 0, 2.007, 1.85558)
 script = ExtResource("10_11ck5")
 
-[node name="FishingRod" parent="PlayerCamera" node_paths=PackedStringArray("rod_tip", "hook", "splash", "waterplane", "catch_result_ui", "camera", "fishbook_ui", "options", "inventory_ui") instance=ExtResource("11_c82cw")]
+[node name="FishingRod" parent="PlayerCamera" node_paths=PackedStringArray("rod_tip", "hook", "splash", "waterplane", "catch_result_ui", "camera", "fishbook_ui", "options", "journal_button", "inventory_button", "map_button", "left_button", "right_button", "interact_button", "settings_button", "inventory_ui") instance=ExtResource("11_c82cw")]
 transform = Transform3D(0.925417, -0.163176, -0.34202, 0.173648, 0.984808, 0, 0.336824, -0.0593912, 0.939693, 0.4, -0.40033, -1.03766)
 script = SubResource("GDScript_qk11g")
 rod_tip = NodePath("RodMesh/RodTip")
@@ -1592,6 +1634,13 @@ camera = NodePath("..")
 fishing_location = "sewer"
 fishbook_ui = NodePath("../../UI/FishBook")
 options = NodePath("../../UI/OptionsControl")
+journal_button = NodePath("../../UI/Touch/TopLeftPanel/MarginContainer/VBoxContainer/JournalButton")
+inventory_button = NodePath("../../UI/Touch/TopLeftPanel/MarginContainer/VBoxContainer/InventoryButton")
+map_button = NodePath("../../UI/Touch/TopLeftPanel/MarginContainer/VBoxContainer/MapButton")
+left_button = NodePath("../../UI/Touch/BottomCenterPanel/HBoxContainer/LeftButton")
+right_button = NodePath("../../UI/Touch/BottomCenterPanel/HBoxContainer/RightButton")
+interact_button = NodePath("../../UI/Touch/InteractButton")
+settings_button = NodePath("../../UI/Touch/TopLeftPanel/MarginContainer/VBoxContainer/SettingsButton")
 cast_power_ui_scene = ExtResource("8_rxgvs")
 inventory_ui = NodePath("../../UI/InventoryUI")
 
@@ -1820,6 +1869,7 @@ light_specular = 16.0
 omni_range = 0.046
 omni_attenuation = 3.185
 
+[editable path="UI/Touch"]
 [editable path="PlayerCamera/FishingRod"]
 [editable path="Node3D"]
 [editable path="Node3D/Sketchfab_Scene"]
