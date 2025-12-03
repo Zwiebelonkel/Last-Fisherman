@@ -1,4 +1,11 @@
-[gd_scene format=3 uid="uid://xt7f7m4i2iwi"]
+[gd_scene load_steps=4 format=3 uid="uid://xt7f7m4i2iwi"]
+
+[ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="1_iac43"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_620u5"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_620u5"]
+bg_color = Color(0.152941, 0.152941, 0.152941, 0)
 
 [node name="Touch" type="Control"]
 layout_mode = 3
@@ -7,50 +14,97 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="TopLeftPanel" type="PanelContainer" parent="."]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -83.0
-offset_bottom = 66.0
+offset_left = -50.0
+offset_bottom = 192.0
 grow_horizontal = 0
+mouse_filter = 1
+theme_override_styles/panel = SubResource("StyleBoxEmpty_620u5")
 
-[node name="JournalButton" type="Button" parent="VBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="TopLeftPanel"]
 layout_mode = 2
-text = "Journal"
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
 
-[node name="InventoryButton" type="Button" parent="VBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="TopLeftPanel/MarginContainer"]
 layout_mode = 2
-text = "Inventory"
 
-[node name="MapButton" type="Button" parent="VBoxContainer"]
+[node name="JournalButton" type="Button" parent="TopLeftPanel/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(50, 45)
 layout_mode = 2
-text = "Map"
+theme_override_fonts/font = ExtResource("1_iac43")
+text = "📖"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
+[node name="InventoryButton" type="Button" parent="TopLeftPanel/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(50, 45)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_iac43")
+text = "🎒"
+
+[node name="MapButton" type="Button" parent="TopLeftPanel/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(50, 45)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_iac43")
+text = "🗺️"
+
+[node name="SettingsButton" type="Button" parent="TopLeftPanel/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(50, 45)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_iac43")
+text = "⚙️"
+
+[node name="InteractButton" type="Button" parent="."]
+custom_minimum_size = Vector2(100, 70)
 layout_mode = 1
-anchors_preset = 7
+anchors_preset = 8
 anchor_left = 0.5
-anchor_top = 1.0
+anchor_top = 0.5
 anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 337.0
+offset_top = 72.0
+offset_right = 437.0
+offset_bottom = 142.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/outline_size = 10
+theme_override_fonts/font = ExtResource("1_iac43")
+text = "CAST"
+
+[node name="BottomCenterPanel" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -367.0
-offset_top = -54.0
-offset_right = 368.0
+offset_top = -165.0
 grow_horizontal = 2
 grow_vertical = 0
-theme_override_constants/separation = 310
+mouse_filter = 1
+theme_override_styles/panel = SubResource("StyleBoxFlat_620u5")
 
-[node name="LeftButton" type="Button" parent="HBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="BottomCenterPanel"]
 layout_mode = 2
-text = "<-"
+size_flags_vertical = 4
+theme_override_constants/separation = 675
+alignment = 1
 
-[node name="InteractButton" type="Button" parent="HBoxContainer"]
+[node name="LeftButton" type="Button" parent="BottomCenterPanel/HBoxContainer"]
+custom_minimum_size = Vector2(60, 60)
 layout_mode = 2
-text = "Interact"
+theme_override_constants/outline_size = 10
+theme_override_fonts/font = ExtResource("1_iac43")
+text = "<"
 
-[node name="RightButton" type="Button" parent="HBoxContainer"]
+[node name="RightButton" type="Button" parent="BottomCenterPanel/HBoxContainer"]
+custom_minimum_size = Vector2(60, 60)
 layout_mode = 2
-text = "->"
+theme_override_constants/outline_size = 10
+theme_override_fonts/font = ExtResource("1_iac43")
+text = ">"

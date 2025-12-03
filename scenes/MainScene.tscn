@@ -180,6 +180,7 @@ script/source = "extends Node3D
 @export var left_button: Button
 @export var right_button: Button
 @export var interact_button: Button
+@export var settings_button: Button  # <-- Exportvariable hinzufügen
 
 
 @onready var anim: AnimationPlayer = $AnimationPlayer
@@ -283,7 +284,44 @@ func setup_buttons() -> void:
 		right_button.pressed.connect(rotate_camera_right)
 	
 	if interact_button:
-		interact_button.pressed.connect(on_interact_pressed)
+		# 🆕 WICHTIG: Für Halten von Buttons brauchen wir down/up Signals
+		interact_button.button_down.connect(_on_interact_button_down)
+		interact_button.button_up.connect(_on_interact_button_up)
+		
+	if settings_button:
+		settings_button.pressed.connect(handle_pause_input)
+
+
+# 🆕 Interact Button - DOWN (Halten simulieren)
+func _on_interact_button_down() -> void:
+	# Shop betreten bei 90°
+	if abs(current_rotation - ROTATION_SHOP) < 1.0:
+		enter_shop()
+		return
+	
+	# Bei 180° (Fishing)
+	if abs(current_rotation - ROTATION_FISHING) < 1.0:
+		match state:
+			STATE_IDLE:
+				start_charging_cast()
+			STATE_CHARGING:
+				# Halten des Buttons = weiter halten zum Laden
+				pass
+			STATE_CASTED, STATE_BITE:
+				reel_pressed()
+			STATE_MINIGAME:
+				input_active = true
+
+
+# 🆕 Interact Button - UP (Loslassen)
+func _on_interact_button_up() -> void:
+	# Bei 180° (Fishing)
+	if abs(current_rotation - ROTATION_FISHING) < 1.0:
+		match state:
+			STATE_CHARGING:
+				release_cast()
+			STATE_MINIGAME:
+				input_active = false
 
 # 🆕 Wird aufgerufen wenn ein Biom komplett ist
 func _on_biome_completed(biome_name: String, reward: int) -> void:
@@ -1666,7 +1704,6 @@ transform = Transform3D(-0.260732, 0, 0.248231, 0, 0.36, 0, -0.248231, 0, -0.260
 transform = Transform3D(-0.391098, 0, 0.372347, 0, 0.54, 0, -0.372347, 0, -0.391098, 33.8869, 9.08063, -4.52298)
 
 [node name="Touch" parent="UI" instance=ExtResource("11_r3sjc")]
-visible = false
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_cfq0f")
@@ -1675,7 +1712,7 @@ environment = SubResource("Environment_cfq0f")
 transform = Transform3D(-1, 0, -1.50996e-07, 0, 1, 0, 1.50996e-07, 0, -1, 0, 2.007, 0.0447942)
 script = ExtResource("1_ibiss")
 
-[node name="FishingRod" parent="PlayerCamera" node_paths=PackedStringArray("rod_tip", "hook", "splash", "waterplane", "catch_result_ui", "camera", "fishbook_ui", "options", "explosion", "journal_button", "inventory_button", "map_button", "left_button", "right_button", "interact_button", "inventory_ui") instance=ExtResource("1_echbf")]
+[node name="FishingRod" parent="PlayerCamera" node_paths=PackedStringArray("rod_tip", "hook", "splash", "waterplane", "catch_result_ui", "camera", "fishbook_ui", "options", "explosion", "journal_button", "inventory_button", "map_button", "left_button", "right_button", "interact_button", "settings_button", "inventory_ui") instance=ExtResource("1_echbf")]
 transform = Transform3D(0.925417, -0.163176, -0.34202, 0.173648, 0.984808, 0, 0.336824, -0.0593912, 0.939693, 0.4, -0.40033, -1.03766)
 script = SubResource("GDScript_8wjpf")
 rod_tip = NodePath("RodMesh/RodTip")
@@ -1689,12 +1726,13 @@ fishing_location = "lake"
 fishbook_ui = NodePath("../../UI/FishBook")
 options = NodePath("../../UI/OptionsControl")
 explosion = NodePath("../../Explosion")
-journal_button = NodePath("../../UI/Touch/VBoxContainer/JournalButton")
-inventory_button = NodePath("../../UI/Touch/VBoxContainer/InventoryButton")
-map_button = NodePath("../../UI/Touch/VBoxContainer/MapButton")
-left_button = NodePath("../../UI/Touch/HBoxContainer/LeftButton")
-right_button = NodePath("../../UI/Touch/HBoxContainer/RightButton")
-interact_button = NodePath("../../UI/Touch/HBoxContainer/InteractButton")
+journal_button = NodePath("../../UI/Touch/TopLeftPanel/MarginContainer/VBoxContainer/JournalButton")
+inventory_button = NodePath("../../UI/Touch/TopLeftPanel/MarginContainer/VBoxContainer/InventoryButton")
+map_button = NodePath("../../UI/Touch/TopLeftPanel/MarginContainer/VBoxContainer/MapButton")
+left_button = NodePath("../../UI/Touch/BottomCenterPanel/HBoxContainer/LeftButton")
+right_button = NodePath("../../UI/Touch/BottomCenterPanel/HBoxContainer/RightButton")
+interact_button = NodePath("../../UI/Touch/InteractButton")
+settings_button = NodePath("../../UI/Touch/TopLeftPanel/MarginContainer/VBoxContainer/SettingsButton")
 cast_power_ui_scene = ExtResource("11_7wwop")
 inventory_ui = NodePath("../../UI/InventoryUI")
 
