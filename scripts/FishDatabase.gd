@@ -223,7 +223,7 @@ var FISH_SEWER = [
 	 "description": "Hat die Form einer Vollmondnacht und den IQ eines Kieselsteins.", "weight_min": 200.0, "weight_max": 600.0,
 	 "science_fact": "Mondfische sind die schwersten Knochenfische der Welt – trotz ihres… kreativen Designs."},
 	
-	{"name": "Katzenhai", "rarity": RARITY.EPISCH, "base_value": 40, "icon": "res://assets/fish/Boro.png",
+	{"name": "Katzenhai", "rarity": RARITY.EPISCH, "base_value": 40, "icon": "res://assets/fish/katzenhai .png",
 	 "description": "Miaut unter Wasser. Wissenschaft kann es nicht erklären.", "weight_min": 3.0, "weight_max": 8.0,
 	 "science_fact": "Katzenhaie besitzen leuchtende Muster, die sie im Dunkeln sichtbar machen – biologische Partybeleuchtung."},
 	
