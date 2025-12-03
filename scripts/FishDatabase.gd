@@ -184,6 +184,11 @@ var FISH_CITY = [
 	 "description": "Erzählt dir Geschichten von früher. Alle langweilig.", "weight_min": 0.1, "weight_max": 0.5,
 	 "science_fact": "Viele Tiefseefische nutzen transparente Gewebe, um unsichtbar zu wirken – quasi biologische Tarnkappen."},
 	
+	{"name": "Bullenhai", "rarity": RARITY.LEGENDAER, "base_value": 65, "icon": "res://assets/fish/bullenhai.png",
+	 "description": "Sehr bulliger Hai. Ein Bullenhai eben.", "weight_min": 30.0, "weight_max": 300.0,
+	 "science_fact": "Bullenhaie sind bekannt für ihre Fähigkeit, sowohl im Salzwasser als auch in Süßwasser zu leben und bis zu 3,5 Meter lang zu werden
+. Sie haben eine der stärksten Beißkräfte aller Haie und werden oft als gefährlich eingestuft, wobei ihr Name von ihrem bulligen Körperbau und ihrem aggressiven Verhalten herrührt."},
+	
 	{"name": "Platzhalter", "rarity": RARITY.EXOTISCH, "base_value": 150, "icon": "res://assets/fish/unknown.png",
 	 "description": "Existiert eigentlich nicht. Trotzdem gefangen. Paradox!", "weight_min": 0.0, "weight_max": 0.0,
 	 "science_fact": "In der Biologie gibt es ‚Placeholder species‘, wenn Forscher eine Art vermuten, aber noch nicht belegt haben."},
@@ -223,7 +228,7 @@ var FISH_SEWER = [
 	 "description": "Hat die Form einer Vollmondnacht und den IQ eines Kieselsteins.", "weight_min": 200.0, "weight_max": 600.0,
 	 "science_fact": "Mondfische sind die schwersten Knochenfische der Welt – trotz ihres… kreativen Designs."},
 	
-	{"name": "Katzenhai", "rarity": RARITY.EPISCH, "base_value": 40, "icon": "res://assets/fish/katzenhai .png",
+	{"name": "Katzenhai", "rarity": RARITY.EPISCH, "base_value": 40, "icon": "res://assets/fish/katzenhai.png",
 	 "description": "Miaut unter Wasser. Wissenschaft kann es nicht erklären.", "weight_min": 3.0, "weight_max": 8.0,
 	 "science_fact": "Katzenhaie besitzen leuchtende Muster, die sie im Dunkeln sichtbar machen – biologische Partybeleuchtung."},
 	
@@ -359,7 +364,7 @@ var FISH_ICELAND = [
 	 #"description": "Ein Stück Sonne. Anfassen nicht empfohlen.", "weight_min": 50.0, "weight_max": 100.0,
 	 #"science_fact": "Sonnenlicht enthält Energie, die in Milliarden Jahren Fusionsprozessen entstand – heißer geht’s nicht."},
 	
-	{"name": "Megalodon", "rarity": RARITY.EXOTISCH, "base_value": 50000000 , "icon": "res://assets/fish/goldhai.png",
+	{"name": "Megalodon", "rarity": RARITY.EXOTISCH, "base_value": 50000000 , "icon": "res://assets/fish/megalodon.png",
 	 "description": "Aus echtem Gold. Oder Messing. Vermutlich Messing.", "weight_min": 3000.0, "weight_max": 10000.0,
 	 "science_fact": "Yappi"},
 ]
