@@ -175,3 +175,7 @@ func _on_sell_all_pressed() -> void:
 	print("💰 Alle %d Fische verkauft für: %d €" % [fish_count, money])
 	
 	refresh()
+
+
+func _on_close_pressed() -> void:
+	toggle()
