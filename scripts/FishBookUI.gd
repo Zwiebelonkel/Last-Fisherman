@@ -74,7 +74,7 @@ func _ready():
 		location_selector.add_item("🐀 Kanal")
 		location_selector.add_item("🌲 Wald")
 		location_selector.add_item("🌵 Ödland")
-		location_selector.add_item("🌵 Eisland")
+		location_selector.add_item("❄️ Eisland")
 		location_selector.add_item("🌍 Alle")
 		location_selector.select(0)
 	
@@ -212,7 +212,7 @@ func update_stats():
 		"desert":
 			title_label.text = "📖 Fischbuch - 🌵 Ödland"
 		"iceland":
-			title_label.text = "📖 Fischbuch - 🌵 Eisland"
+			title_label.text = "📖 Fischbuch - ❄️ Eisland"
 		"insgesamt":
 			title_label.text = "📖 Fischbuch - 🌍 Alle Gebiete"
 
