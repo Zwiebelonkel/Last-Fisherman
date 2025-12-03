@@ -73,6 +73,10 @@ func show_fish(fish: Dictionary) -> void:
 	# NEW Label anzeigen/verstecken
 	if new_label:
 		new_label.visible = is_new_catch
+		
+		if is_new_catch:
+			Player.add_money(100)
+
 		if is_new_catch and ani_label and ani_label.has_animation("idle"):
 			ani_label.play("idle")
 	
