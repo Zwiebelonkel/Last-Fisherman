@@ -3,6 +3,9 @@ extends Node
 # 🆕 Signal für UI-Benachrichtigungen
 signal biome_completed(biome_name: String, reward: int)
 
+# 🆕 Touch-Button Referenz
+var touch_buttons: Node = null
+
 # --- PLAYER DATA ---
 var money: int = 0
 var level: int = 1
@@ -14,6 +17,14 @@ var last_scene: String = "res://scenes/MainScene.tscn"
 var options: String = "res://scenes/OptionsCOntrol.tscn"
 var fish_inventory: Array = []
 var caught_fish_species: Dictionary = {}
+
+# --- SETTINGS ---
+var master_volume: float = 1.0
+var music_volume: float = 1.0
+var sfx_volume: float = 1.0
+var resolution_scale: float = 1.0
+var fullscreen: bool = false
+
 
 # 🆕 Gewichtsrekorde pro Fischart
 var fish_weight_records: Dictionary = {}  # {"Fischname": max_weight}
@@ -51,6 +62,64 @@ var spot_prices = {
 
 func _ready():
 	load_game()
+	load_settings()
+
+func save_settings() -> void:
+	var settings_data = {
+		"master_volume": master_volume,
+		"music_volume": music_volume,
+		"sfx_volume": sfx_volume,
+		"resolution_scale": resolution_scale,
+		"fullscreen": fullscreen
+	}
+	var file = FileAccess.open("user://settings.dat", FileAccess.WRITE)
+	file.store_var(settings_data)
+	print("Einstellungen gespeichert!")
+
+func load_settings() -> void:
+	if FileAccess.file_exists("user://settings.dat"):
+		var file = FileAccess.open("user://settings.dat", FileAccess.READ)
+		var settings_data = file.get_var()
+		master_volume = settings_data.get("master_volume", 1.0)
+		music_volume = settings_data.get("music_volume", 1.0)
+		sfx_volume = settings_data.get("sfx_volume", 1.0)
+		resolution_scale = settings_data.get("resolution_scale", 1.0)
+		fullscreen = settings_data.get("fullscreen", false)
+		
+		# Wende Einstellungen an
+		apply_settings()
+		print("Einstellungen geladen!")
+	else:
+		print("Keine Einstellungen gefunden, verwende Standardwerte")
+
+func apply_settings() -> void:
+	# Audio
+	var master_bus = AudioServer.get_bus_index("Master")
+	AudioServer.set_bus_volume_db(master_bus, linear_to_db(master_volume))
+	
+	var music_bus = AudioServer.get_bus_index("Music")
+	if music_bus != -1:
+		AudioServer.set_bus_volume_db(music_bus, linear_to_db(music_volume))
+	
+	var sfx_bus = AudioServer.get_bus_index("SFX")
+	if sfx_bus != -1:
+		AudioServer.set_bus_volume_db(sfx_bus, linear_to_db(sfx_volume))
+	
+	# Resolution Scale
+	get_tree().root.scaling_3d_scale = resolution_scale
+	
+	# Fullscreen
+	if fullscreen:
+		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
+	else:
+		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
+
+
+# 🆕 Touch-Button Sichtbarkeit steuern
+func set_touch_buttons_visible(visible: bool) -> void:
+	if touch_buttons:
+		touch_buttons.visible = visible
+		print("Touch-Buttons Sichtbarkeit:", visible)
 
 func add_money(amount: int) -> void:
 	money += amount

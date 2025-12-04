@@ -1,10 +1,11 @@
-[gd_scene load_steps=8 format=3 uid="uid://b08obrprd472u"]
+[gd_scene load_steps=9 format=3 uid="uid://b08obrprd472u"]
 
 [ext_resource type="Script" uid="uid://cm8ti46pvtir5" path="res://scripts/options.gd" id="1_cfnh7"]
 [ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="2_5683i"]
 [ext_resource type="Script" uid="uid://b43dbk7lbn4pv" path="res://scripts/audio_control.gd" id="2_yf2q3"]
 [ext_resource type="Script" uid="uid://cjlfy1cwa4yf7" path="res://scripts/scale_control.gd" id="3_5683i"]
 [ext_resource type="Script" uid="uid://bb5s5nskhkslj" path="res://scripts/fullscreen_control.gd" id="4_tkc0w"]
+[ext_resource type="Script" uid="uid://7j5d55yd3ps7" path="res://scripts/GUIControl.gd" id="5_5683i"]
 
 [sub_resource type="Theme" id="Theme_tkc0w"]
 default_font = ExtResource("2_5683i")
@@ -43,9 +44,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -155.0
-offset_top = -105.5
+offset_top = -105.0
 offset_right = 155.0
-offset_bottom = 105.5
+offset_bottom = 151.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = SubResource("Theme_tkc0w")
@@ -137,6 +138,12 @@ script = ExtResource("3_5683i")
 layout_mode = 2
 text = "Fullscreen"
 script = ExtResource("4_tkc0w")
+
+[node name="GUIControl" type="CheckButton" parent="Panel/VBoxContainer"]
+visible = false
+layout_mode = 2
+text = "Hide GUI"
+script = ExtResource("5_5683i")
 
 [node name="Controls" type="Panel" parent="."]
 layout_mode = 1
@@ -262,3 +269,4 @@ text = "Map"
 [connection signal="value_changed" from="Panel/VBoxContainer/HBoxContainer2/SFXControl" to="Panel/VBoxContainer/HBoxContainer2/SFXControl" method="_on_value_changed"]
 [connection signal="item_selected" from="Panel/VBoxContainer/HBoxContainer3/ScaleControl" to="Panel/VBoxContainer/HBoxContainer3/ScaleControl" method="_on_item_selected"]
 [connection signal="toggled" from="Panel/VBoxContainer/FullscreenControl" to="Panel/VBoxContainer/FullscreenControl" method="_on_toggled"]
+[connection signal="toggled" from="Panel/VBoxContainer/GUIControl" to="Panel/VBoxContainer/GUIControl" method="_on_toggled"]
