@@ -357,7 +357,6 @@ func _on_biome_completed(biome_name: String, reward: int) -> void:
 		
 		\"desert\":
 			print(\"✨ Alle Biome gemeistert - Geheimes Ende freigeschaltet!\")
-			# get_tree().change_scene_to_file(\"res://scenes/SecretEnding.tscn\")
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -381,7 +380,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	
 	if event.is_action_pressed(\"map_open\"):
 		Player.update_last_scene(\"res://scenes/sewer.tscn\")
-		get_tree().change_scene_to_file(\"res://scenes/MapScene.tscn\")
+		Transition.change_scene(\"res://scenes/MapScene.tscn\")
 		return
 	
 	if event.is_action_pressed(\"journal\"):
@@ -617,13 +616,13 @@ func update_rotation(delta: float) -> void:
 func enter_shop() -> void:
 	print(\"Betrete Shop!\")
 	Player.update_last_scene(\"res://scenes/sewer.tscn\")
-	get_tree().change_scene_to_file(\"res://scenes/shop_inside.tscn\")
+	Transition.change_scene(\"res://scenes/shop_inside.tscn\")
 
 
 # 🆕 Button Handler Funktionen
 func open_map() -> void:
 	Player.update_last_scene(\"res://scenes/sewer.tscn\")
-	get_tree().change_scene_to_file(\"res://scenes/MapScene.tscn\")
+	Transition.change_scene(\"res://scenes/MapScene.tscn\")
 
 
 func on_interact_pressed() -> void:
