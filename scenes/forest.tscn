@@ -1,4 +1,4 @@
-[gd_scene load_steps=60 format=3 uid="uid://bru2npwxw6p10"]
+[gd_scene load_steps=61 format=3 uid="uid://bru2npwxw6p10"]
 
 [ext_resource type="Shader" uid="uid://dmg556n5nwodi" path="res://shader/pixelate.gdshader" id="1_di3lw"]
 [ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="2_8wf4g"]
@@ -23,6 +23,7 @@
 [ext_resource type="AudioStream" uid="uid://26m0pjkxve85" path="res://sounds/sucess.mp3" id="20_a88r6"]
 [ext_resource type="AudioStream" uid="uid://cmr6cded4l11v" path="res://sounds/whoosh.mp3" id="21_okwed"]
 [ext_resource type="PackedScene" uid="uid://dguwyn5rc7uog" path="res://scenes/splash.tscn" id="23_7jawt"]
+[ext_resource type="AudioStream" uid="uid://b7ifxd818oete" path="res://sounds/line.mp3" id="23_soql2"]
 [ext_resource type="AudioStream" uid="uid://5k0clft7ijfq" path="res://sounds/forest.mp3" id="24_g34gq"]
 [ext_resource type="PackedScene" uid="uid://cnx6x67gnieje" path="res://scenes/lake.glb" id="24_jyv4r"]
 [ext_resource type="Material" uid="uid://cj86wv7c01tef" path="res://materials/outlineWhite.tres" id="25_8wf4g"]
@@ -310,6 +311,8 @@ script/source = "extends Node3D
 @onready var cast_sound: AudioStreamPlayer = get_node(\"../../Audio/cast\")
 @onready var success_sound: AudioStreamPlayer = get_node(\"../../Audio/success\")
 @onready var whoosh_sound: AudioStreamPlayer = get_node(\"../../Audio/whoosh\")
+@onready var line_sound: AudioStreamPlayer = get_node(\"../../Audio/line\")
+
 
 @export var cast_power_ui_scene: PackedScene
 var cast_power_ui: Control = null
@@ -1002,6 +1005,7 @@ func end_catch_minigame(success: bool) -> void:
 		Player.save_game()
 	else:
 		print(\"Fisch entwischt! (\", current_fish[\"name\"], \")\")
+		line_sound.play()
 
 	catch_ui.visible = false
 	await reset_line()
@@ -1838,6 +1842,13 @@ bus = &"SFX"
 [node name="music" type="AudioStreamPlayer" parent="Audio"]
 stream = ExtResource("24_g34gq")
 volume_db = -3.587
+pitch_scale = 1.1
+autoplay = true
+bus = &"Music"
+
+[node name="line" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("23_soql2")
+volume_db = -2.735
 pitch_scale = 1.1
 autoplay = true
 bus = &"Music"

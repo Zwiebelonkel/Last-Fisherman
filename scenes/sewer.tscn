@@ -1,4 +1,4 @@
-[gd_scene load_steps=52 format=3 uid="uid://bwpkoys7chajb"]
+[gd_scene load_steps=53 format=3 uid="uid://bwpkoys7chajb"]
 
 [ext_resource type="Shader" uid="uid://dmg556n5nwodi" path="res://shader/pixelate.gdshader" id="1_kqfxt"]
 [ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="2_rtjjv"]
@@ -26,6 +26,7 @@
 [ext_resource type="AudioStream" uid="uid://dmngr2w2skv70" path="res://sounds/push.mp3" id="23_qk11g"]
 [ext_resource type="PackedScene" uid="uid://dguwyn5rc7uog" path="res://scenes/splash.tscn" id="24_kn4m2"]
 [ext_resource type="PackedScene" uid="uid://bvvfbbsylnidf" path="res://assets/subway/subway.tscn" id="24_kqfxt"]
+[ext_resource type="AudioStream" uid="uid://b7ifxd818oete" path="res://sounds/line.mp3" id="25_yudd4"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1wiy7"]
 shader = ExtResource("1_kqfxt")
@@ -198,6 +199,8 @@ script/source = "extends Node3D
 @onready var cast_sound: AudioStreamPlayer = get_node(\"../../Audio/cast\")
 @onready var success_sound: AudioStreamPlayer = get_node(\"../../Audio/success\")
 @onready var whoosh_sound: AudioStreamPlayer = get_node(\"../../Audio/whoosh\")
+@onready var line_sound: AudioStreamPlayer = get_node(\"../../Audio/line\")
+
 
 @export var cast_power_ui_scene: PackedScene
 var cast_power_ui: Control = null
@@ -894,6 +897,7 @@ func end_catch_minigame(success: bool) -> void:
 		Player.save_game()
 	else:
 		print(\"Fisch entwischt! (\", current_fish[\"name\"], \")\")
+		line_sound.play()
 
 	catch_ui.visible = false
 	await reset_line()
@@ -1711,6 +1715,13 @@ bus = &"Music"
 stream = ExtResource("23_qk11g")
 volume_db = 4.426
 bus = &"SFX"
+
+[node name="line" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("25_yudd4")
+volume_db = -2.735
+pitch_scale = 1.1
+autoplay = true
+bus = &"Music"
 
 [node name="Splash" parent="." instance=ExtResource("24_kn4m2")]
 

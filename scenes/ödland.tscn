@@ -1,4 +1,4 @@
-[gd_scene load_steps=55 format=3 uid="uid://bnj4irwko1m1j"]
+[gd_scene load_steps=56 format=3 uid="uid://bnj4irwko1m1j"]
 
 [ext_resource type="Shader" uid="uid://dmg556n5nwodi" path="res://shader/pixelate.gdshader" id="1_kuao5"]
 [ext_resource type="Shader" uid="uid://bso2ewb2ieq7x" path="res://shader/warp.gdshader" id="1_tx5p3"]
@@ -25,6 +25,7 @@
 [ext_resource type="AudioStream" uid="uid://cwsg3mblt4ye6" path="res://sounds/desert.mp3" id="22_acjgc"]
 [ext_resource type="PackedScene" uid="uid://dguwyn5rc7uog" path="res://scenes/splash.tscn" id="23_73ipf"]
 [ext_resource type="PackedScene" uid="uid://bw4vof4oddwco" path="res://assets/ödland.glb" id="24_iho6p"]
+[ext_resource type="AudioStream" uid="uid://b7ifxd818oete" path="res://sounds/line.mp3" id="24_lbf82"]
 [ext_resource type="PackedScene" uid="uid://bej6o0ysl85et" path="res://assets/rock.glb" id="25_a4tue"]
 [ext_resource type="PackedScene" uid="uid://ckje0fw3pep83" path="res://assets/skyscaper.glb" id="26_acjgc"]
 
@@ -200,6 +201,8 @@ script/source = "extends Node3D
 @onready var cast_sound: AudioStreamPlayer = get_node(\"../../Audio/cast\")
 @onready var success_sound: AudioStreamPlayer = get_node(\"../../Audio/success\")
 @onready var whoosh_sound: AudioStreamPlayer = get_node(\"../../Audio/whoosh\")
+@onready var line_sound: AudioStreamPlayer = get_node(\"../../Audio/line\")
+
 
 @export var cast_power_ui_scene: PackedScene
 var cast_power_ui: Control = null
@@ -884,6 +887,8 @@ func end_catch_minigame(success: bool) -> void:
 		Player.save_game()
 	else:
 		print(\"Fisch entwischt! (\", current_fish[\"name\"], \")\")
+		line_sound.play()
+
 
 	catch_ui.visible = false
 	await reset_line()
@@ -1803,6 +1808,13 @@ bus = &"SFX"
 [node name="music" type="AudioStreamPlayer" parent="Audio"]
 stream = ExtResource("22_acjgc")
 volume_db = -2.735
+autoplay = true
+bus = &"Music"
+
+[node name="line" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("24_lbf82")
+volume_db = -2.735
+pitch_scale = 1.1
 autoplay = true
 bus = &"Music"
 
