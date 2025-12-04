@@ -10,7 +10,8 @@ func _ready() -> void:
 
 func _on_button_pressed() -> void:
 	Player.update_last_scene("res://scenes/MainScene.tscn")
-	get_tree().change_scene_to_file("res://scenes/MainScene.tscn")
+	#get_tree().change_scene_to_file("res://scenes/MainScene.tscn")
+	Transition.change_scene("res://scenes/MainScene.tscn", 0.8)
 
 
 func _on_reset_button_pressed() -> void:
@@ -42,4 +43,5 @@ func hideSettings() -> void:
 
 
 func _on_credits_pressed() -> void:
-	get_tree().change_scene_to_file("res://scenes/credits.tscn")
+	Transition.change_scene("res://scenes/credits.tscn", 0.5)
+	

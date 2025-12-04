@@ -108,22 +108,23 @@ func go_to_spot(spot_name: String):
 	match spot_name:
 		"lake":
 			Player.update_last_scene("res://scenes/MainScene.tscn")
-			get_tree().change_scene_to_file("res://scenes/MainScene.tscn")
+			Transition.change_scene("res://scenes/MainScene.tscn", 0.8)
+
 		"city":
 			Player.update_last_scene("res://scenes/city.tscn")
-			get_tree().change_scene_to_file("res://scenes/city.tscn")
+			Transition.change_scene("res://scenes/city.tscn", 0.8)
 		"sewer":
 			Player.update_last_scene("res://scenes/sewer.tscn")
-			get_tree().change_scene_to_file("res://scenes/sewer.tscn")
+			Transition.change_scene("res://scenes/sewer.tscn", 0.8)
 		"forest":
 			Player.update_last_scene("res://scenes/forest.tscn")
-			get_tree().change_scene_to_file("res://scenes/forest.tscn")
+			Transition.change_scene("res://scenes/forest.tscn", 0.8)
 		"desert":
 			Player.update_last_scene("res://scenes/ödland.tscn")
-			get_tree().change_scene_to_file("res://scenes/ödland.tscn")
+			Transition.change_scene("res://scenes/ödland.tscn", 0.8)
 		"iceland":
 			Player.update_last_scene("res://scenes/iceland.tscn")
-			get_tree().change_scene_to_file("res://scenes/iceland.tscn")
+			Transition.change_scene("res://scenes/iceland.tscn", 0.8)
 
 # Helferfunktion zum sicheren Trennen der Signale
 func _disconnect_all(btn: Button):

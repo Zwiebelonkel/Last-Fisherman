@@ -81,7 +81,7 @@ func update_last_scene(scene_path: String) -> void:
 	save_game()
 
 func go_to_last_scene() -> void:
-	get_tree().change_scene_to_file(last_scene)
+	Transition.change_scene_reverse(last_scene, 0.5)
 
 func add_fish(fish_data: Dictionary) -> void:
 	Inventory.add_fish(fish_data)

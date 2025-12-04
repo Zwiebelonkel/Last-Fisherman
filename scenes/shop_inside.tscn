@@ -180,69 +180,215 @@ amount = 75
 
 [node name="UI" type="CanvasLayer" parent="."]
 
-[node name="Panel" type="Panel" parent="UI"]
-anchors_preset = 6
-anchor_left = 1.0
-anchor_top = 0.5
+[node name="ShopContainer" type="CenterContainer" parent="UI"]
+anchors_preset = 15
 anchor_right = 1.0
-anchor_bottom = 0.5
-offset_left = -338.0
-offset_top = -203.5
-offset_right = -55.0
-offset_bottom = 203.5
-grow_horizontal = 0
+anchor_bottom = 1.0
+grow_horizontal = 2
 grow_vertical = 2
+
+[node name="MainPanel" type="PanelContainer" parent="UI/ShopContainer"]
+custom_minimum_size = Vector2(800, 500)
+layout_mode = 2
 theme = SubResource("Theme_pmnnn")
 theme_override_styles/panel = SubResource("StyleBoxFlat_pmnnn")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/Panel"]
-layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
-offset_bottom = 385.0
-grow_horizontal = 2
-theme_override_constants/separation = 50
-
-[node name="GripButton" type="Button" parent="UI/Panel/VBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/ShopContainer/MainPanel"]
 layout_mode = 2
-tooltip_text = "Increases fishing progress in sweetspot"
-tooltip_auto_translate_mode = 1
-theme = SubResource("Theme_pmnnn")
-text = "Grip"
+theme_override_constants/separation = 20
 
-[node name="BaitButton" type="Button" parent="UI/Panel/VBoxContainer"]
+[node name="TopBar" type="HBoxContainer" parent="UI/ShopContainer/MainPanel/VBoxContainer"]
 layout_mode = 2
-tooltip_text = "Increases chance of fishing rare items"
-tooltip_auto_translate_mode = 1
-theme = SubResource("Theme_pmnnn")
-text = "Bait"
+theme_override_constants/separation = 15
 
-[node name="LineButton" type="Button" parent="UI/Panel/VBoxContainer"]
+[node name="TitleLabel" type="Label" parent="UI/ShopContainer/MainPanel/VBoxContainer/TopBar"]
 layout_mode = 2
-tooltip_text = "Reduces waiting time"
-tooltip_auto_translate_mode = 1
 theme = SubResource("Theme_pmnnn")
-text = "Line"
+text = "⚡ UPGRADE SHOP"
+horizontal_alignment = 1
 
-[node name="BackButton" type="Button" parent="UI/Panel"]
-layout_mode = 1
-anchors_preset = 12
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = -23.0
-grow_horizontal = 2
-grow_vertical = 0
-theme = SubResource("Theme_pmnnn")
-text = "Back"
+[node name="Spacer" type="Control" parent="UI/ShopContainer/MainPanel/VBoxContainer/TopBar"]
+layout_mode = 2
+size_flags_horizontal = 3
 
-[node name="MoneyLabel" type="Label" parent="UI"]
-offset_left = 13.0
-offset_top = 13.0
-offset_right = 60.0
-offset_bottom = 36.0
+[node name="MoneyLabel" type="Label" parent="UI/ShopContainer/MainPanel/VBoxContainer/TopBar"]
+layout_mode = 2
 theme = SubResource("Theme_pmnnn")
-text = "Moeny"
+text = "💰 0 €"
+
+[node name="CloseButton" type="Button" parent="UI/ShopContainer/MainPanel/VBoxContainer/TopBar"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+theme = SubResource("Theme_pmnnn")
+text = "✕"
+
+[node name="HSeparator" type="HSeparator" parent="UI/ShopContainer/MainPanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="UpgradeCards" type="HBoxContainer" parent="UI/ShopContainer/MainPanel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 25
+alignment = 1
+
+[node name="GripCard" type="PanelContainer" parent="UI/ShopContainer/MainPanel/VBoxContainer/UpgradeCards"]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+
+[node name="CardContent" type="VBoxContainer" parent="UI/ShopContainer/MainPanel/VBoxContainer/UpgradeCards/GripCard"]
+layout_mode = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="IconLabel" type="Label" parent="UI/ShopContainer/MainPanel/VBoxContainer/UpgradeCards/GripCard/CardContent"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+theme = SubResource("Theme_pmnnn")
+text = "🎣"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TitleLabel" type="Label" parent="UI/ShopContainer/MainPanel/VBoxContainer/UpgradeCards/GripCard/CardContent"]
+layout_mode = 2
+theme = SubResource("Theme_pmnnn")
+text = "GRIFF"
+horizontal_alignment = 1
+
+[node name="LevelLabel" type="Label" parent="UI/ShopContainer/MainPanel/VBoxContainer/UpgradeCards/GripCard/CardContent"]
+layout_mode = 2
+theme = SubResource("Theme_pmnnn")
+text = "Level 1"
+horizontal_alignment = 1
+
+[node name="DescLabel" type="Label" parent="UI/ShopContainer/MainPanel/VBoxContainer/UpgradeCards/GripCard/CardContent"]
+layout_mode = 2
+theme = SubResource("Theme_pmnnn")
+text = "+15% Sweetspot
+Progress"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="Spacer" type="Control" parent="UI/ShopContainer/MainPanel/VBoxContainer/UpgradeCards/GripCard/CardContent"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="PriceLabel" type="Label" parent="UI/ShopContainer/MainPanel/VBoxContainer/UpgradeCards/GripCard/CardContent"]
+layout_mode = 2
+theme = SubResource("Theme_pmnnn")
+text = "50 €"
+horizontal_alignment = 1
+
+[node name="BuyButton" type="Button" parent="UI/ShopContainer/MainPanel/VBoxContainer/UpgradeCards/GripCard/CardContent"]
+custom_minimum_size = Vector2(0, 45)
+layout_mode = 2
+theme = SubResource("Theme_pmnnn")
+text = "UPGRADE"
+
+[node name="BaitCard" type="PanelContainer" parent="UI/ShopContainer/MainPanel/VBoxContainer/UpgradeCards"]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+
+[node name="CardContent" type="VBoxContainer" parent="UI/ShopContainer/MainPanel/VBoxContainer/UpgradeCards/BaitCard"]
+layout_mode = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="IconLabel" type="Label" parent="UI/ShopContainer/MainPanel/VBoxContainer/UpgradeCards/BaitCard/CardContent"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+theme = SubResource("Theme_pmnnn")
+text = "🪱"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TitleLabel" type="Label" parent="UI/ShopContainer/MainPanel/VBoxContainer/UpgradeCards/BaitCard/CardContent"]
+layout_mode = 2
+theme = SubResource("Theme_pmnnn")
+text = "KÖDER"
+horizontal_alignment = 1
+
+[node name="LevelLabel" type="Label" parent="UI/ShopContainer/MainPanel/VBoxContainer/UpgradeCards/BaitCard/CardContent"]
+layout_mode = 2
+theme = SubResource("Theme_pmnnn")
+text = "Level 1"
+horizontal_alignment = 1
+
+[node name="DescLabel" type="Label" parent="UI/ShopContainer/MainPanel/VBoxContainer/UpgradeCards/BaitCard/CardContent"]
+layout_mode = 2
+theme = SubResource("Theme_pmnnn")
+text = "+10% Seltene
+Items Chance"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="Spacer" type="Control" parent="UI/ShopContainer/MainPanel/VBoxContainer/UpgradeCards/BaitCard/CardContent"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="PriceLabel" type="Label" parent="UI/ShopContainer/MainPanel/VBoxContainer/UpgradeCards/BaitCard/CardContent"]
+layout_mode = 2
+theme = SubResource("Theme_pmnnn")
+text = "75 €"
+horizontal_alignment = 1
+
+[node name="BuyButton" type="Button" parent="UI/ShopContainer/MainPanel/VBoxContainer/UpgradeCards/BaitCard/CardContent"]
+custom_minimum_size = Vector2(0, 45)
+layout_mode = 2
+theme = SubResource("Theme_pmnnn")
+text = "UPGRADE"
+
+[node name="LineCard" type="PanelContainer" parent="UI/ShopContainer/MainPanel/VBoxContainer/UpgradeCards"]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+
+[node name="CardContent" type="VBoxContainer" parent="UI/ShopContainer/MainPanel/VBoxContainer/UpgradeCards/LineCard"]
+layout_mode = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="IconLabel" type="Label" parent="UI/ShopContainer/MainPanel/VBoxContainer/UpgradeCards/LineCard/CardContent"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+theme = SubResource("Theme_pmnnn")
+text = "🧵"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TitleLabel" type="Label" parent="UI/ShopContainer/MainPanel/VBoxContainer/UpgradeCards/LineCard/CardContent"]
+layout_mode = 2
+theme = SubResource("Theme_pmnnn")
+text = "FADEN"
+horizontal_alignment = 1
+
+[node name="LevelLabel" type="Label" parent="UI/ShopContainer/MainPanel/VBoxContainer/UpgradeCards/LineCard/CardContent"]
+layout_mode = 2
+theme = SubResource("Theme_pmnnn")
+text = "Level 1"
+horizontal_alignment = 1
+
+[node name="DescLabel" type="Label" parent="UI/ShopContainer/MainPanel/VBoxContainer/UpgradeCards/LineCard/CardContent"]
+layout_mode = 2
+theme = SubResource("Theme_pmnnn")
+text = "-8% Warte-
+zeit"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="Spacer" type="Control" parent="UI/ShopContainer/MainPanel/VBoxContainer/UpgradeCards/LineCard/CardContent"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="PriceLabel" type="Label" parent="UI/ShopContainer/MainPanel/VBoxContainer/UpgradeCards/LineCard/CardContent"]
+layout_mode = 2
+theme = SubResource("Theme_pmnnn")
+text = "100 €"
+horizontal_alignment = 1
+
+[node name="BuyButton" type="Button" parent="UI/ShopContainer/MainPanel/VBoxContainer/UpgradeCards/LineCard/CardContent"]
+custom_minimum_size = Vector2(0, 45)
+layout_mode = 2
+theme = SubResource("Theme_pmnnn")
+text = "UPGRADE"
 
 [node name="Audio" type="Node" parent="."]
 
@@ -317,9 +463,9 @@ shadow_enabled = true
 spot_range = 4.677
 spot_angle = 26.555
 
-[connection signal="pressed" from="UI/Panel/VBoxContainer/GripButton" to="." method="_on_GripButton_pressed"]
-[connection signal="pressed" from="UI/Panel/VBoxContainer/BaitButton" to="." method="_on_BaitButton_pressed"]
-[connection signal="pressed" from="UI/Panel/VBoxContainer/LineButton" to="." method="_on_LineButton_pressed"]
-[connection signal="pressed" from="UI/Panel/BackButton" to="." method="_on_BackButton_pressed"]
+[connection signal="pressed" from="UI/ShopContainer/MainPanel/VBoxContainer/TopBar/CloseButton" to="." method="_on_BackButton_pressed"]
+[connection signal="pressed" from="UI/ShopContainer/MainPanel/VBoxContainer/UpgradeCards/GripCard/CardContent/BuyButton" to="." method="_on_GripButton_pressed"]
+[connection signal="pressed" from="UI/ShopContainer/MainPanel/VBoxContainer/UpgradeCards/BaitCard/CardContent/BuyButton" to="." method="_on_BaitButton_pressed"]
+[connection signal="pressed" from="UI/ShopContainer/MainPanel/VBoxContainer/UpgradeCards/LineCard/CardContent/BuyButton" to="." method="_on_LineButton_pressed"]
 
 [editable path="hillybilly"]

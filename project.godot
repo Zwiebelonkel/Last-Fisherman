@@ -25,6 +25,7 @@ Inventory="*res://scripts/inventar.gd"
 FishDB="*res://scripts/FishDatabase.gd"
 Player="*res://scripts/Player.gd"
 FishBook="*res://scripts/FishBook.gd"
+Transition="*res://scripts/transition.gd"
 
 [display]
 

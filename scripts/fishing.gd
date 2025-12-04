@@ -141,7 +141,7 @@ func enter_shop() -> void:
 	print("Betrete Shop!")
 	# Optional: Fade-Out Animation
 	#await get_tree().create_timer(0.3).timeout
-	get_tree().change_scene_to_file("res://scenes/shop_inside.tscn")
+	Transition.change_scene("res://scenes/shop_inside.tscn", 0.5)
 
 
 # ---------------------------------------------------------
