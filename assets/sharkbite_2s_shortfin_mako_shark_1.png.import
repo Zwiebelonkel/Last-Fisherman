@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bh8cvpmpeuvgc"
-path.s3tc="res://.godot/imported/sharkbite_2s_shortfin_mako_shark_1.png-c8f9117f858c3ca96d70084ad3a51ebb.s3tc.ctex"
-path.etc2="res://.godot/imported/sharkbite_2s_shortfin_mako_shark_1.png-c8f9117f858c3ca96d70084ad3a51ebb.etc2.ctex"
+path.s3tc="res://.godot/imported/sharkbite_2s_shortfin_mako_shark_1.png-1905df190dd0bed799ebeab5b6bc0d03.s3tc.ctex"
+path.etc2="res://.godot/imported/sharkbite_2s_shortfin_mako_shark_1.png-1905df190dd0bed799ebeab5b6bc0d03.etc2.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -15,8 +15,8 @@ generator_parameters={
 
 [deps]
 
-source_file="res://assets/fish/sharkbite_2s_shortfin_mako_shark_1.png"
-dest_files=["res://.godot/imported/sharkbite_2s_shortfin_mako_shark_1.png-c8f9117f858c3ca96d70084ad3a51ebb.s3tc.ctex", "res://.godot/imported/sharkbite_2s_shortfin_mako_shark_1.png-c8f9117f858c3ca96d70084ad3a51ebb.etc2.ctex"]
+source_file="res://assets/sharkbite_2s_shortfin_mako_shark_1.png"
+dest_files=["res://.godot/imported/sharkbite_2s_shortfin_mako_shark_1.png-1905df190dd0bed799ebeab5b6bc0d03.s3tc.ctex", "res://.godot/imported/sharkbite_2s_shortfin_mako_shark_1.png-1905df190dd0bed799ebeab5b6bc0d03.etc2.ctex"]
 
 [params]
 

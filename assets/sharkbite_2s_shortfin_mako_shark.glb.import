@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://bqt5jpnxus11d"
-path="res://.godot/imported/sharkbite_2s_shortfin_mako_shark.glb-d8940a449714082c14e7293fa0e62c9e.scn"
+path="res://.godot/imported/sharkbite_2s_shortfin_mako_shark.glb-b7122b158471ef301b1cbf78de15ce22.scn"
 
 [deps]
 
-source_file="res://assets/fish/sharkbite_2s_shortfin_mako_shark.glb"
-dest_files=["res://.godot/imported/sharkbite_2s_shortfin_mako_shark.glb-d8940a449714082c14e7293fa0e62c9e.scn"]
+source_file="res://assets/sharkbite_2s_shortfin_mako_shark.glb"
+dest_files=["res://.godot/imported/sharkbite_2s_shortfin_mako_shark.glb-b7122b158471ef301b1cbf78de15ce22.scn"]
 
 [params]
 

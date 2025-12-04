@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://b5t6amrp7aa7m"]
 
-[ext_resource type="PackedScene" uid="uid://bqt5jpnxus11d" path="res://assets/fish/sharkbite_2s_shortfin_mako_shark.glb" id="1_8l5qy"]
+[ext_resource type="PackedScene" uid="uid://bqt5jpnxus11d" path="res://assets/sharkbite_2s_shortfin_mako_shark.glb" id="1_8l5qy"]
 
 [node name="shark" type="Node3D"]
 
