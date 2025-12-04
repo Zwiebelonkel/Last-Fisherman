@@ -333,57 +333,57 @@ var FISH_DESERT = [
 
 var FISH_ICELAND = [
 	
-	{"name": "Polardorsch", "rarity": RARITY.NORMAL, "base_value": 20, "icon": "res://assets/fish/polardorsch.png",
-	 "description": "Ein robuster Fisch der kalten arktischen Gewässer mit silbrig-grauem Schimmer.", "weight_min": 0.2, "weight_max": 0.8,
-	 "science_fact": "Polardorsche produzieren Frostschutzproteine in ihrem Blut, die sie vor dem Erfrieren schützen."},
-	
-	{"name": "Schneekrabbe", "rarity": RARITY.NORMAL, "base_value": 23, "icon": "res://assets/fish/schneekrabbe.png",
-	 "description": "Eine große Krabbe mit weißem Panzer, der wie Schnee schimmert.", "weight_min": 0.8, "weight_max": 2.5,
-	 "science_fact": "Königskrabben können bis zu 1.800 Meter tief leben und ihre Beine haben eine Spannweite von bis zu 1,8 Metern."},
-	
-	{"name": "Zapfenqualle", "rarity": RARITY.UNGEWOEHNLICH, "base_value": 30, "icon": "res://assets/fish/zapfenqualle.png",
-	 "description": "Eine biolumineszierende Qualle, die in den dunklen Tiefen eisiger Gewässer leuchtet.", "weight_min": 0.05, "weight_max": 0.3,
-	 "science_fact": "Tiefseequallen nutzen Biolumineszenz, um Beute anzulocken oder Räuber mit plötzlichen Lichtblitzen zu verwirren."},
-	
-	{"name": "Frostbarsch", "rarity": RARITY.UNGEWOEHNLICH, "base_value": 32, "icon": "res://assets/fish/frostbarsch.png",
-	 "description": "Seine Schuppen glitzern wie frisch gefallener Schnee in der Wintersonne.", "weight_min": 0.4, "weight_max": 1.2,
-	 "science_fact": "Rotbarsche können über 75 Jahre alt werden und bringen lebende Junge zur Welt statt Eier zu legen."},
-	
-	{"name": "Gletscher-Lachs", "rarity": RARITY.UNGEWOEHNLICH, "base_value": 34, "icon": "res://assets/fish/gletscherlachs.png",
-	 "description": "Ein prächtiger Fisch mit eisblauem Fleisch, das im Dunkeln schwach leuchtet.", "weight_min": 2.0, "weight_max": 8.0,
-	 "science_fact": "Lachse können sich das magnetische Feld der Erde merken und finden so über tausende Kilometer zu ihrem Geburtsort zurück."},
-	
-	{"name": "Arktis-Tintenfisch", "rarity": RARITY.UNGEWOEHNLICH, "base_value": 35, "icon": "res://assets/fish/arktistintenfisch.png",
-	 "description": "Ein intelligenter Kopffüßer, der seine Farbe von weiß zu eisblau wechseln kann.", "weight_min": 3.0, "weight_max": 12.0,
-	 "science_fact": "Tintenfische haben drei Herzen, blaues Blut und können ihre Hautfarbe in Millisekunden ändern."},
-	
-	{"name": "Eisfisch", "rarity": RARITY.SELTEN, "base_value": 40, "icon": "res://assets/fish/eisfisch.png",
-	 "description": "Durchsichtiger Fisch ohne rote Blutkörperchen - fast wie aus Glas gemacht.", "weight_min": 0.15, "weight_max": 0.5,
-	 "science_fact": "Antarktische Eisfische haben kein Hämoglobin im Blut und erscheinen daher fast transparent."},
-	
-	{"name": "Pinguin", "rarity": RARITY.SELTEN, "base_value": 43, "icon": "res://assets/fish/pinguin.png",
-	 "description": "Eigentlich kein Fisch, aber trotzdem im Netz gelandet. Sieht verwirrt aus.", "weight_min": 2.0, "weight_max": 4.0,
-	 "science_fact": "Kaiserpinguine können bis zu 565 Meter tief tauchen und über 20 Minuten die Luft anhalten."},
-	
-	{"name": "Schneeflocken-Rochen", "rarity": RARITY.SELTEN, "base_value": 45, "icon": "res://assets/fish/schneerocken.png",
-	 "description": "Ein eleganter Rochen mit Mustern, die wie einzigartige Schneeflocken aussehen.", "weight_min": 5.0, "weight_max": 15.0,
-	 "science_fact": "Rochen haben Elektrorezeptoren unter ihrer Haut, mit denen sie elektrische Felder wahrnehmen und Beute im Sand aufspüren können."},
-	
-	{"name": "Kristallhecht", "rarity": RARITY.SELTEN, "base_value": 50, "icon": "res://assets/fish/kristallhecht.png",
-	 "description": "Ein schlanker Raubfisch mit eisigen, kristallinen Flossen.", "weight_min": 1.5, "weight_max": 4.0,
-	 "science_fact": "Hechte haben über 700 scharfe Zähne in ihrem Maul, die in mehreren Reihen angeordnet sind."},
-	
-	{"name": "Wal-Hai", "rarity": RARITY.EPISCH, "base_value": 65, "icon": "res://assets/fish/walhai.png",
-	 "description": "Der größte Fisch der Welt - sanftmütig trotz seiner enormen Größe.", "weight_min": 5000.0, "weight_max": 20000.0,
-	 "science_fact": "Walhaie können bis zu 12 Meter lang werden und filtern täglich tausende Liter Wasser nach Plankton."},
-	
-	{"name": "Frostbiss-Hai", "rarity": RARITY.EPISCH, "base_value": 70, "icon": "res://assets/fish/frosthai.png",
-	 "description": "Ein gefürchteter Räuber, dessen Biss das Wasser um ihn herum gefrieren lässt.", "weight_min": 200.0, "weight_max": 800.0,
-	 "science_fact": "Grönlandhaie können über 400 Jahre alt werden und sind damit die langlebigsten bekannten Wirbeltiere der Erde."},
-	
-	{"name": "Eiswal", "rarity": RARITY.EPISCH, "base_value": 90, "icon": "res://assets/fish/eiswal.png",
-	 "description": "Ein majestätischer Wal dessen Haut von einer dünnen Eisschicht bedeckt ist.", "weight_min": 15000.0, "weight_max": 30000.0,
-	 "science_fact": "Buckelwale singen komplexe Lieder die bis zu 20 Minuten dauern und über hunderte Kilometer unter Wasser zu hören sind."},
+	#{"name": "Polardorsch", "rarity": RARITY.NORMAL, "base_value": 20, "icon": "res://assets/fish/polardorsch.png",
+	 #"description": "Ein robuster Fisch der kalten arktischen Gewässer mit silbrig-grauem Schimmer.", "weight_min": 0.2, "weight_max": 0.8,
+	 #"science_fact": "Polardorsche produzieren Frostschutzproteine in ihrem Blut, die sie vor dem Erfrieren schützen."},
+	#
+	#{"name": "Schneekrabbe", "rarity": RARITY.NORMAL, "base_value": 23, "icon": "res://assets/fish/schneekrabbe.png",
+	 #"description": "Eine große Krabbe mit weißem Panzer, der wie Schnee schimmert.", "weight_min": 0.8, "weight_max": 2.5,
+	 #"science_fact": "Königskrabben können bis zu 1.800 Meter tief leben und ihre Beine haben eine Spannweite von bis zu 1,8 Metern."},
+	#
+	#{"name": "Zapfenqualle", "rarity": RARITY.UNGEWOEHNLICH, "base_value": 30, "icon": "res://assets/fish/zapfenqualle.png",
+	 #"description": "Eine biolumineszierende Qualle, die in den dunklen Tiefen eisiger Gewässer leuchtet.", "weight_min": 0.05, "weight_max": 0.3,
+	 #"science_fact": "Tiefseequallen nutzen Biolumineszenz, um Beute anzulocken oder Räuber mit plötzlichen Lichtblitzen zu verwirren."},
+	#
+	#{"name": "Frostbarsch", "rarity": RARITY.UNGEWOEHNLICH, "base_value": 32, "icon": "res://assets/fish/frostbarsch.png",
+	 #"description": "Seine Schuppen glitzern wie frisch gefallener Schnee in der Wintersonne.", "weight_min": 0.4, "weight_max": 1.2,
+	 #"science_fact": "Rotbarsche können über 75 Jahre alt werden und bringen lebende Junge zur Welt statt Eier zu legen."},
+	#
+	#{"name": "Gletscher-Lachs", "rarity": RARITY.UNGEWOEHNLICH, "base_value": 34, "icon": "res://assets/fish/gletscherlachs.png",
+	 #"description": "Ein prächtiger Fisch mit eisblauem Fleisch, das im Dunkeln schwach leuchtet.", "weight_min": 2.0, "weight_max": 8.0,
+	 #"science_fact": "Lachse können sich das magnetische Feld der Erde merken und finden so über tausende Kilometer zu ihrem Geburtsort zurück."},
+	#
+	#{"name": "Arktis-Tintenfisch", "rarity": RARITY.UNGEWOEHNLICH, "base_value": 35, "icon": "res://assets/fish/arktistintenfisch.png",
+	 #"description": "Ein intelligenter Kopffüßer, der seine Farbe von weiß zu eisblau wechseln kann.", "weight_min": 3.0, "weight_max": 12.0,
+	 #"science_fact": "Tintenfische haben drei Herzen, blaues Blut und können ihre Hautfarbe in Millisekunden ändern."},
+	#
+	#{"name": "Eisfisch", "rarity": RARITY.SELTEN, "base_value": 40, "icon": "res://assets/fish/eisfisch.png",
+	 #"description": "Durchsichtiger Fisch ohne rote Blutkörperchen - fast wie aus Glas gemacht.", "weight_min": 0.15, "weight_max": 0.5,
+	 #"science_fact": "Antarktische Eisfische haben kein Hämoglobin im Blut und erscheinen daher fast transparent."},
+	#
+	#{"name": "Pinguin", "rarity": RARITY.SELTEN, "base_value": 43, "icon": "res://assets/fish/pinguin.png",
+	 #"description": "Eigentlich kein Fisch, aber trotzdem im Netz gelandet. Sieht verwirrt aus.", "weight_min": 2.0, "weight_max": 4.0,
+	 #"science_fact": "Kaiserpinguine können bis zu 565 Meter tief tauchen und über 20 Minuten die Luft anhalten."},
+	#
+	#{"name": "Schneeflocken-Rochen", "rarity": RARITY.SELTEN, "base_value": 45, "icon": "res://assets/fish/schneerocken.png",
+	 #"description": "Ein eleganter Rochen mit Mustern, die wie einzigartige Schneeflocken aussehen.", "weight_min": 5.0, "weight_max": 15.0,
+	 #"science_fact": "Rochen haben Elektrorezeptoren unter ihrer Haut, mit denen sie elektrische Felder wahrnehmen und Beute im Sand aufspüren können."},
+	#
+	#{"name": "Kristallhecht", "rarity": RARITY.SELTEN, "base_value": 50, "icon": "res://assets/fish/kristallhecht.png",
+	 #"description": "Ein schlanker Raubfisch mit eisigen, kristallinen Flossen.", "weight_min": 1.5, "weight_max": 4.0,
+	 #"science_fact": "Hechte haben über 700 scharfe Zähne in ihrem Maul, die in mehreren Reihen angeordnet sind."},
+	#
+	#{"name": "Wal-Hai", "rarity": RARITY.EPISCH, "base_value": 65, "icon": "res://assets/fish/walhai.png",
+	 #"description": "Der größte Fisch der Welt - sanftmütig trotz seiner enormen Größe.", "weight_min": 5000.0, "weight_max": 20000.0,
+	 #"science_fact": "Walhaie können bis zu 12 Meter lang werden und filtern täglich tausende Liter Wasser nach Plankton."},
+	#
+	#{"name": "Frostbiss-Hai", "rarity": RARITY.EPISCH, "base_value": 70, "icon": "res://assets/fish/frosthai.png",
+	 #"description": "Ein gefürchteter Räuber, dessen Biss das Wasser um ihn herum gefrieren lässt.", "weight_min": 200.0, "weight_max": 800.0,
+	 #"science_fact": "Grönlandhaie können über 400 Jahre alt werden und sind damit die langlebigsten bekannten Wirbeltiere der Erde."},
+	#
+	#{"name": "Eiswal", "rarity": RARITY.EPISCH, "base_value": 90, "icon": "res://assets/fish/eiswal.png",
+	 #"description": "Ein majestätischer Wal dessen Haut von einer dünnen Eisschicht bedeckt ist.", "weight_min": 15000.0, "weight_max": 30000.0,
+	 #"science_fact": "Buckelwale singen komplexe Lieder die bis zu 20 Minuten dauern und über hunderte Kilometer unter Wasser zu hören sind."},
 	
 	{"name": "Megalodon", "rarity": RARITY.LEGENDAER, "base_value": 5000, "icon": "res://assets/fish/megalodon.png",
 	 "description": "Ein prähistorischer Riesenhai. Sollte eigentlich ausgestorben sein... sollte.", "weight_min": 30000.0, "weight_max": 60000.0,

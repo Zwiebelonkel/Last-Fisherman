@@ -7,7 +7,7 @@ extends Control
 @onready var animation_player = $AnimationPlayer  # Optional: Für Animationen
 
 var loading_progress := 0.0
-var target_scene := "res://scenes/MainScene.tscn"
+var target_scene := "res://scenes/MainMenu.tscn"
 var fish_textures := []  # 🆕 Array für Fisch-Bilder
 
 func _ready():
