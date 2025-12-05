@@ -1,8 +1,8 @@
-[gd_scene load_steps=57 format=3 uid="uid://bnj4irwko1m1j"]
+[gd_scene load_steps=58 format=3 uid="uid://bnj4irwko1m1j"]
 
-[ext_resource type="Shader" uid="uid://dmg556n5nwodi" path="res://shader/pixelate.gdshader" id="1_kuao5"]
 [ext_resource type="Shader" uid="uid://bso2ewb2ieq7x" path="res://shader/warp.gdshader" id="1_tx5p3"]
 [ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="2_acjgc"]
+[ext_resource type="Shader" uid="uid://c140kjbm2bot5" path="res://shader/buckshot.gdshader" id="2_flfji"]
 [ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="3_tx5p3"]
 [ext_resource type="PackedScene" uid="uid://cqtn78ty1fa7" path="res://scenes/CatchResultUI.tscn" id="4_lbf82"]
 [ext_resource type="PackedScene" uid="uid://dxxrhs12x2m2c" path="res://scenes/InventoryUI.tscn" id="5_bo4cb"]
@@ -29,6 +29,7 @@
 [ext_resource type="AudioStream" uid="uid://b7ifxd818oete" path="res://sounds/line.mp3" id="24_lbf82"]
 [ext_resource type="PackedScene" uid="uid://bej6o0ysl85et" path="res://assets/rock.glb" id="25_a4tue"]
 [ext_resource type="PackedScene" uid="uid://ckje0fw3pep83" path="res://assets/skyscaper.glb" id="26_acjgc"]
+[ext_resource type="PackedScene" uid="uid://ctqxalvjd2b1k" path="res://assets/palm.glb" id="26_flfji"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_lbf82"]
 shader = ExtResource("1_tx5p3")
@@ -36,8 +37,21 @@ shader_parameter/warp_intensity = 0.019
 shader_parameter/time_scale = 0.655
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1wiy7"]
-shader = ExtResource("1_kuao5")
-shader_parameter/pixel_size = 290.82
+shader = ExtResource("2_flfji")
+shader_parameter/exposure = 1.0
+shader_parameter/contrast = 1.1
+shader_parameter/saturation = 1.12
+shader_parameter/enable_pixelate = true
+shader_parameter/pixel_factor = 3.0
+shader_parameter/enable_posterize = true
+shader_parameter/color_levels = 16.0
+shader_parameter/dither_strength = 0.35
+shader_parameter/chrom_aberration = 0.01
+shader_parameter/vignette_strength = 1.0
+shader_parameter/grain_strength = 0.2
+shader_parameter/tint_color = Vector3(0.95, 1.03, 0.9)
+shader_parameter/tint_strength = 0.15
+shader_parameter/viewport_size_override = Vector2(0, 0)
 
 [sub_resource type="Theme" id="Theme_25dfr"]
 default_font = ExtResource("3_tx5p3")
@@ -1819,7 +1833,13 @@ stream = ExtResource("24_lbf82")
 volume_db = -2.735
 pitch_scale = 1.1
 autoplay = true
-bus = &"Music"
+bus = &"SFX"
+
+[node name="palm" parent="Audio" instance=ExtResource("26_flfji")]
+transform = Transform3D(0.52, 0, 0, 0, 0.52, 0, 0, 0, 0.52, -10.0509, -11.2433, 16.6741)
+
+[node name="palm2" parent="Audio" instance=ExtResource("26_flfji")]
+transform = Transform3D(0.49726, 0, 0.152094, 0, 0.52, 0, -0.152094, 0, 0.49726, 21.3821, -11.6499, 13.9163)
 
 [node name="Splash" parent="." instance=ExtResource("23_73ipf")]
 

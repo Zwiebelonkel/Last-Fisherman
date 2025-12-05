@@ -3,8 +3,8 @@ shader_type canvas_item;
 uniform sampler2D screen_tex : hint_screen_texture;
 
 uniform float exposure    : hint_range(0.5, 2.0) = 1.0;
-uniform float contrast    : hint_range(0.5, 2.0) = 1.05;
-uniform float saturation  : hint_range(0.0, 2.0) = 0.9;
+uniform float contrast    : hint_range(0.5, 2.0) = 1.1;
+uniform float saturation  : hint_range(0.0, 2.0) = 1.12;
 
 uniform bool  enable_pixelate = true;
 uniform float pixel_factor    : hint_range(0.5, 6.0) = 3.0;
@@ -13,7 +13,7 @@ uniform bool  enable_posterize = true;
 uniform float color_levels     : hint_range(2.0, 16.0) = 16.0;
 uniform float dither_strength  : hint_range(0.0, 1.0) = 0.35;
 
-uniform float chrom_aberration : hint_range(0.0, 2.0) = 0.07;
+uniform float chrom_aberration : hint_range(0.0, 2.0) = 0.01;
 uniform float vignette_strength: hint_range(0.0, 2.0) = 1.0;
 uniform float grain_strength   : hint_range(0.0, 1.0) = 0.2;
 

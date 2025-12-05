@@ -1,6 +1,6 @@
 [gd_scene load_steps=54 format=3 uid="uid://bwpkoys7chajb"]
 
-[ext_resource type="Shader" uid="uid://dmg556n5nwodi" path="res://shader/pixelate.gdshader" id="1_kqfxt"]
+[ext_resource type="Shader" uid="uid://c140kjbm2bot5" path="res://shader/buckshot.gdshader" id="1_0tnqg"]
 [ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="2_rtjjv"]
 [ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="3_yudd4"]
 [ext_resource type="PackedScene" uid="uid://cqtn78ty1fa7" path="res://scenes/CatchResultUI.tscn" id="4_0tnqg"]
@@ -30,8 +30,21 @@
 [ext_resource type="AudioStream" uid="uid://b7ifxd818oete" path="res://sounds/line.mp3" id="25_yudd4"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1wiy7"]
-shader = ExtResource("1_kqfxt")
-shader_parameter/pixel_size = 200.0
+shader = ExtResource("1_0tnqg")
+shader_parameter/exposure = 1.0
+shader_parameter/contrast = 1.1
+shader_parameter/saturation = 1.12
+shader_parameter/enable_pixelate = true
+shader_parameter/pixel_factor = 3.0
+shader_parameter/enable_posterize = true
+shader_parameter/color_levels = 16.0
+shader_parameter/dither_strength = 0.35
+shader_parameter/chrom_aberration = 0.01
+shader_parameter/vignette_strength = 1.0
+shader_parameter/grain_strength = 0.2
+shader_parameter/tint_color = Vector3(0.95, 1.03, 0.9)
+shader_parameter/tint_strength = 0.15
+shader_parameter/viewport_size_override = Vector2(0, 0)
 
 [sub_resource type="Theme" id="Theme_25dfr"]
 default_font = ExtResource("3_yudd4")
@@ -1721,7 +1734,7 @@ stream = ExtResource("25_yudd4")
 volume_db = -2.735
 pitch_scale = 1.1
 autoplay = true
-bus = &"Music"
+bus = &"SFX"
 
 [node name="Splash" parent="." instance=ExtResource("24_kn4m2")]
 

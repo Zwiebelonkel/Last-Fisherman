@@ -1,10 +1,10 @@
-[gd_scene load_steps=69 format=3 uid="uid://cx2sffjjdjuw5"]
+[gd_scene load_steps=70 format=3 uid="uid://cx2sffjjdjuw5"]
 
-[ext_resource type="Shader" uid="uid://dmg556n5nwodi" path="res://shader/pixelate.gdshader" id="1_1ns3k"]
 [ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="1_2phbr"]
 [ext_resource type="PackedScene" uid="uid://b5ew1rfc8ow8g" path="res://scenes/fishingRod.tscn" id="1_echbf"]
 [ext_resource type="Script" uid="uid://bl1xotduehieu" path="res://scripts/camera_sway.gd" id="1_ibiss"]
 [ext_resource type="PackedScene" uid="uid://cdb3sodlv6np7" path="res://scenes/MoneyHUD.tscn" id="1_kp0ql"]
+[ext_resource type="Shader" uid="uid://c140kjbm2bot5" path="res://shader/buckshot.gdshader" id="1_u55b3"]
 [ext_resource type="PackedScene" uid="uid://cqtn78ty1fa7" path="res://scenes/CatchResultUI.tscn" id="2_o3jky"]
 [ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="3_8wjpf"]
 [ext_resource type="Texture2D" uid="uid://cvllk03mhtybp" path="res://textures/723-normal.jpg" id="6_x537r"]
@@ -35,10 +35,24 @@
 [ext_resource type="PackedScene" uid="uid://xjntcu6j0ri0" path="res://scenes/explosion.tscn" id="31_fto0a"]
 [ext_resource type="PackedScene" uid="uid://7g6l5pa83hrt" path="res://assets/boat.glb" id="34_kwqb8"]
 [ext_resource type="Material" uid="uid://cj86wv7c01tef" path="res://materials/outlineWhite.tres" id="35_y15d6"]
+[ext_resource type="PackedScene" uid="uid://ctqxalvjd2b1k" path="res://assets/palm.glb" id="36_u55b3"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1wiy7"]
-shader = ExtResource("1_1ns3k")
-shader_parameter/pixel_size = 290.82
+shader = ExtResource("1_u55b3")
+shader_parameter/exposure = 1.0
+shader_parameter/contrast = 1.1
+shader_parameter/saturation = 1.14
+shader_parameter/enable_pixelate = true
+shader_parameter/pixel_factor = 3.0
+shader_parameter/enable_posterize = true
+shader_parameter/color_levels = 16.0
+shader_parameter/dither_strength = 0.35
+shader_parameter/chrom_aberration = 0.01
+shader_parameter/vignette_strength = 1.0
+shader_parameter/grain_strength = 0.2
+shader_parameter/tint_color = Vector3(0.95, 1.03, 0.9)
+shader_parameter/tint_strength = 0.15
+shader_parameter/viewport_size_override = Vector2(0, 0)
 
 [sub_resource type="Theme" id="Theme_25dfr"]
 default_font = ExtResource("3_8wjpf")
@@ -152,9 +166,14 @@ radiance_size = 0
 background_mode = 2
 background_energy_multiplier = 0.33
 sky = SubResource("Sky_x537r")
+glow_enabled = true
+glow_intensity = 0.2
+glow_strength = 1.2
+glow_map_strength = 0.0
 fog_light_color = Color(0.808262, 0.429746, 0.296975, 1)
 fog_light_energy = 0.0
 fog_sun_scatter = 1.0
+fog_density = 0.0
 fog_sky_affect = 0.0
 volumetric_fog_enabled = true
 volumetric_fog_length = 42.44
@@ -1582,6 +1601,21 @@ emission_energy_multiplier = 16.0
 [sub_resource type="SphereMesh" id="SphereMesh_08o8g"]
 material = SubResource("StandardMaterial3D_kp0ql")
 
+[sub_resource type="Animation" id="Animation_y15d6"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(1.82034, 0.83367, -1.44675)]
+}
+
 [sub_resource type="Animation" id="Animation_kwqb8"]
 resource_name = "boat"
 length = 5.0
@@ -1597,21 +1631,6 @@ tracks/0/keys = {
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
 "values": [Vector3(1.82034, 0.83367, -1.44675), Vector3(1.82034, 0.762089, -1.44675), Vector3(1.82034, 0.83367, -1.44675)]
-}
-
-[sub_resource type="Animation" id="Animation_y15d6"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(1.82034, 0.83367, -1.44675)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_u55b3"]
@@ -1891,7 +1910,7 @@ stream = ExtResource("26_mekmn")
 volume_db = -2.735
 pitch_scale = 1.1
 autoplay = true
-bus = &"Music"
+bus = &"SFX"
 
 [node name="clouds" parent="." instance=ExtResource("24_a7pbh")]
 transform = Transform3D(-1.81, -2.73302e-07, 1.19464e-14, 0, -7.91176e-08, -1.81, 2.73302e-07, -1.81, 7.91176e-08, 0, 4.53567, 8.9877)
@@ -1969,6 +1988,9 @@ surface_material_override/0 = ExtResource("35_y15d6")
 libraries = {
 &"": SubResource("AnimationLibrary_u55b3")
 }
+
+[node name="palm" parent="." instance=ExtResource("36_u55b3")]
+transform = Transform3D(-0.100218, 0, -0.319658, 0, 0.335, 0, 0.319658, 0, -0.100218, 3.40289, 4.76837e-07, -9.29504)
 
 [editable path="UI/Touch"]
 [editable path="PlayerCamera/FishingRod"]

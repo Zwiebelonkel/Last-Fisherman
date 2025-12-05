@@ -1,6 +1,6 @@
 [gd_scene load_steps=62 format=3 uid="uid://bru2npwxw6p10"]
 
-[ext_resource type="Shader" uid="uid://dmg556n5nwodi" path="res://shader/pixelate.gdshader" id="1_di3lw"]
+[ext_resource type="Shader" uid="uid://c140kjbm2bot5" path="res://shader/buckshot.gdshader" id="1_u01n2"]
 [ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="2_8wf4g"]
 [ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="3_lhlip"]
 [ext_resource type="PackedScene" uid="uid://cqtn78ty1fa7" path="res://scenes/CatchResultUI.tscn" id="4_37aet"]
@@ -33,8 +33,21 @@
 [ext_resource type="PackedScene" uid="uid://b5t6amrp7aa7m" path="res://scenes/shark.tscn" id="28_g34gq"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_lvx2t"]
-shader = ExtResource("1_di3lw")
-shader_parameter/pixel_size = 290.82
+shader = ExtResource("1_u01n2")
+shader_parameter/exposure = 1.0
+shader_parameter/contrast = 1.1
+shader_parameter/saturation = 1.12
+shader_parameter/enable_pixelate = true
+shader_parameter/pixel_factor = 3.0
+shader_parameter/enable_posterize = true
+shader_parameter/color_levels = 16.0
+shader_parameter/dither_strength = 0.35
+shader_parameter/chrom_aberration = 0.01
+shader_parameter/vignette_strength = 1.0
+shader_parameter/grain_strength = 0.2
+shader_parameter/tint_color = Vector3(0.95, 1.03, 0.9)
+shader_parameter/tint_strength = 0.15
+shader_parameter/viewport_size_override = Vector2(0, 0)
 
 [sub_resource type="Theme" id="Theme_dn1w7"]
 default_font = ExtResource("3_lhlip")
@@ -1854,7 +1867,7 @@ stream = ExtResource("23_soql2")
 volume_db = -2.735
 pitch_scale = 1.1
 autoplay = true
-bus = &"Music"
+bus = &"SFX"
 
 [node name="Splash" parent="." instance=ExtResource("23_7jawt")]
 
@@ -1903,6 +1916,15 @@ surface_material_override/0 = ExtResource("25_8wf4g")
 
 [node name="rock" parent="." instance=ExtResource("27_37aet")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5357, 0, -5.97029)
+
+[node name="rock4" parent="." instance=ExtResource("27_37aet")]
+transform = Transform3D(0.204365, 0, -0.233099, 0, 0.31, 0, 0.233099, 0, 0.204365, 11.9873, 0.113852, -6.18571)
+
+[node name="rock5" parent="." instance=ExtResource("27_37aet")]
+transform = Transform3D(0.204365, 0, -0.233099, 0, 0.31, 0, 0.233099, 0, 0.204365, -4.7892, 0.113852, -2.80389)
+
+[node name="rock6" parent="." instance=ExtResource("27_37aet")]
+transform = Transform3D(0.204365, 0, -0.233099, 0, 0.31, 0, 0.233099, 0, 0.204365, 24.9178, 0.113852, 14.702)
 
 [node name="rock2" parent="." instance=ExtResource("27_37aet")]
 transform = Transform3D(-0.477573, 0, -0.878592, 0, 1, 0, 0.878592, 0, -0.477573, -11.1102, 1.04907, -12.566)

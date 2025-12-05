@@ -1,7 +1,7 @@
 [gd_scene load_steps=33 format=4 uid="uid://bw5el7n36awdr"]
 
 [ext_resource type="Script" uid="uid://cslkhtib5limu" path="res://scripts/mainMenu.gd" id="1_tov5d"]
-[ext_resource type="Shader" uid="uid://dmg556n5nwodi" path="res://shader/pixelate.gdshader" id="2_vt84v"]
+[ext_resource type="Shader" uid="uid://c140kjbm2bot5" path="res://shader/buckshot.gdshader" id="2_l4mxc"]
 [ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="3_jfr2g"]
 [ext_resource type="PackedScene" uid="uid://b08obrprd472u" path="res://scenes/OptionsControl.tscn" id="3_tov5d"]
 [ext_resource type="Shader" uid="uid://b8mxoacu7poqc" path="res://shader/sky.gdshader" id="7_ewahu"]
@@ -14,9 +14,22 @@
 [ext_resource type="PackedScene" uid="uid://brmbdno888s38" path="res://assets/tree.glb" id="14_3wx87"]
 [ext_resource type="PackedScene" uid="uid://b5ew1rfc8ow8g" path="res://scenes/fishingRod.tscn" id="15_5p8yk"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_1wiy7"]
-shader = ExtResource("2_vt84v")
-shader_parameter/pixel_size = 290.82
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_l4mxc"]
+shader = ExtResource("2_l4mxc")
+shader_parameter/exposure = 0.92
+shader_parameter/contrast = 1.31
+shader_parameter/saturation = 2.0
+shader_parameter/enable_pixelate = true
+shader_parameter/pixel_factor = 3.44
+shader_parameter/enable_posterize = true
+shader_parameter/color_levels = 16.0
+shader_parameter/dither_strength = 0.35
+shader_parameter/chrom_aberration = 0.03
+shader_parameter/vignette_strength = 2.0
+shader_parameter/grain_strength = 0.2
+shader_parameter/tint_color = Vector3(0.95, 1.03, 0.9)
+shader_parameter/tint_strength = 0.15
+shader_parameter/viewport_size_override = Vector2(0, 0)
 
 [sub_resource type="Theme" id="Theme_6b2wv"]
 default_font = ExtResource("3_jfr2g")
@@ -241,7 +254,7 @@ options = NodePath("UI/OptionsControl")
 layer = 0
 
 [node name="PixelateOverlay" type="ColorRect" parent="Filter"]
-material = SubResource("ShaderMaterial_1wiy7")
+material = SubResource("ShaderMaterial_l4mxc")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
