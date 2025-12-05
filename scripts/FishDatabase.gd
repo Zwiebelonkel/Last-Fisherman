@@ -96,6 +96,16 @@ var FISH_LAKE = [
 		"science_fact": "Einsiedlerkrebse leben in leeren Schneckenhäusern, um ihren weichen Arsch vor Fressfeinden zu schützen, und müssen bei Wachstum in größere Häuser umziehen, wobei oft eine Symbiose mit Seeanemonen entsteht, die das Haus vergrößern, umgekehrt der Krebs die Anemone herumträgt."
 	},
 	{
+		"name": "Manta",
+		"rarity": RARITY.SELTEN,
+		"base_value": 15,
+		"icon": "res://assets/fish/manta.png",
+		"description": "Einer von vielen. Aber er ist sehr süß.",
+		"weight_min": 700.0,
+		"weight_max": 1000.0,
+		"science_fact": "Mantas gehören zu den größten Rochenarten und filtern winzige Planktonpartikel aus dem Wasser – sie sind quai Staubsauger auf Eleganz-Basis."
+	},
+	{
 		"name": "Zander",
 		"rarity": RARITY.EPISCH,
 		"base_value": 25,
@@ -250,6 +260,10 @@ var FISH_SEWER = [
 	 "description": "Abgelaufen seit 2003. Gehörte vermutlich Rainer, 52.", "weight_min": 0.005, "weight_max": 0.01,
 	 "science_fact": "Plastikkarten zerfallen im Wasser extrem langsam – Mikroplastik ahoi."},
 	
+	{"name": "Gift-Manta", "rarity": RARITY.LEGENDAER, "base_value": 85, "icon": "res://assets/fish/mantapoison.png",
+	 "description": "Man sollte diesen Manta doppelt nicht berühren!", "weight_min": 700.0, "weight_max": 1000.0,
+	 "science_fact": "Es gibt tatsächlich Rochenarten mit giftigen Stacheln – eine evolutionäre Kombination aus Majestät und ‚Fass mich nicht an‘."},
+	
 	{"name": "Bilderbuchfisch", "rarity": RARITY.LEGENDAER, "base_value": 90, "icon": "res://assets/fish/Rainbowi.png",
 	 "description": "Die einzige Hoffnung in diesem Drecksloch.", "weight_min": 1.0, "weight_max": 10.0,
 	 "science_fact": "Viele Zierfische werden durch gezielte Züchtung farbintensiver – quasi Kunstwerke mit Kiemen."},
@@ -340,6 +354,10 @@ var FISH_DESERT = [
 	 "description": "Der einzige Fisch mit Wasser in der Wüste. Ein Held.", "weight_min": 1.0, "weight_max": 4.0,
 	 "science_fact": "Wüstenseen können uralte Wasserkörper enthalten, die über Jahrtausende isoliert waren."},
 	
+	{"name": "Feuer-Manta", "rarity": RARITY.LEGENDAER, "base_value": 140, "icon": "res://assets/fish/mantafire.png",
+	 "description": "Ein sehr sehr heißer Manta. Boah", "weight_min": 700.0, "weight_max": 1600.0,
+	 "science_fact": "Temperaturresistente Meeresbewohner existieren wirklich: Einige Arten überleben nahe Vulkanquellen"},
+	
 	{"name": "Sonnenfragment", "rarity": RARITY.EXOTISCH, "base_value": 300, "icon": "res://assets/fish/sonne.png",
 	 "description": "Ein Stück Sonne. Anfassen nicht empfohlen.", "weight_min": 50.0, "weight_max": 100.0,
 	 "science_fact": "Sonnenlicht enthält Energie, die in Milliarden Jahren Fusionsprozessen entstand – heißer geht’s nicht."},
@@ -410,9 +428,6 @@ var FISH_ICELAND = [
 	{"name": "Megalodon", "rarity": RARITY.EXOTISCH, "base_value": 5000, "icon": "res://assets/fish/megalodon.png",
 	 "description": "Ein prähistorischer Riesenhai. Sollte eigentlich ausgestorben sein... sollte.", "weight_min": 30000.0, "weight_max": 60000.0,
 	 "science_fact": "Der Megalodon lebte vor 23-3,6 Millionen Jahren und hatte eine Beißkraft von geschätzten 18 Tonnen - zehnmal stärker als ein Weißer Hai."},
-	
-	
-	
 ]
 
 

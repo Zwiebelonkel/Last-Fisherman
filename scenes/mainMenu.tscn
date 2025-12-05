@@ -17,8 +17,8 @@
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_l4mxc"]
 shader = ExtResource("2_l4mxc")
 shader_parameter/exposure = 0.92
-shader_parameter/contrast = 1.31
-shader_parameter/saturation = 2.0
+shader_parameter/contrast = 1.04
+shader_parameter/saturation = 1.2
 shader_parameter/enable_pixelate = true
 shader_parameter/pixel_factor = 3.44
 shader_parameter/enable_posterize = true

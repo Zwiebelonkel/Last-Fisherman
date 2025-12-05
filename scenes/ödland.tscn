@@ -1719,6 +1719,7 @@ environment = SubResource("Environment_cfq0f")
 
 [node name="PlayerCamera" type="Camera3D" parent="."]
 transform = Transform3D(-1, 0, -1.50996e-07, 0, 1, 0, 1.50996e-07, 0, -1, 0, 2.007, 0.0447942)
+far = 432.7
 script = ExtResource("10_smrcg")
 sway_amount = 0.115
 

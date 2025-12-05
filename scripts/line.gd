@@ -22,7 +22,7 @@ var is_first_frame: bool = true
 # 🆕 Line Extension Animation
 var line_extension: float = 0.0  # 0.0 = am Rod, 1.0 = voll ausgerollt
 var is_casting: bool = false
-var cast_speed: float = 3.0  # Wie schnell die Leine sich ausrollt
+var cast_speed: float = 5.0  # Wie schnell die Leine sich ausrollt
 
 
 func _ready() -> void:
