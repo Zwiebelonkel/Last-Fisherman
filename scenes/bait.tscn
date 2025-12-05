@@ -1,0 +1,32 @@
+[gd_scene load_steps=5 format=3 uid="uid://8ljq0dpgsno5"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8ql8f"]
+albedo_color = Color(1, 0, 0, 1)
+metallic_specular = 0.62
+roughness = 0.5
+emission_enabled = true
+emission = Color(1, 0, 0, 1)
+emission_energy_multiplier = 0.27
+
+[sub_resource type="SphereMesh" id="SphereMesh_hfv2b"]
+material = SubResource("StandardMaterial3D_8ql8f")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ubynk"]
+albedo_color = Color(0, 0, 0, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_c7usv"]
+material = SubResource("StandardMaterial3D_ubynk")
+top_radius = 0.05
+bottom_radius = 0.1
+height = 1.0
+
+[node name="Bait" type="Node3D"]
+transform = Transform3D(0.09, 0, 0, 0, 0.09, 0, 0, 0, 0.09, 0, 0, 0)
+
+[node name="base" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0822784, 0)
+mesh = SubResource("SphereMesh_hfv2b")
+
+[node name="top" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.268639, 0)
+mesh = SubResource("CylinderMesh_c7usv")

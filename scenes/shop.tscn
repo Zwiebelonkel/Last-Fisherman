@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://cfptx2e41wve1"]
+[gd_scene load_steps=6 format=3 uid="uid://cfptx2e41wve1"]
 
 [ext_resource type="PackedScene" uid="uid://4pl6mlicypxk" path="res://textures/shop.glb" id="1_lx5au"]
 [ext_resource type="Material" uid="uid://cj86wv7c01tef" path="res://materials/outlineWhite.tres" id="2_xfvoa"]
 [ext_resource type="PackedScene" uid="uid://txuhvg248mds" path="res://assets/cigs.glb" id="3_1l46r"]
 [ext_resource type="PackedScene" uid="uid://82w5hgvqgb64" path="res://scenes/hillybilly.tscn" id="4_032fp"]
+[ext_resource type="PackedScene" uid="uid://bw80sbvfcwe1p" path="res://scenes/cigarette.tscn" id="5_2fc2m"]
 
 [node name="Shop" type="Node3D"]
 
@@ -11,6 +12,9 @@
 
 [node name="Cube" parent="shop" index="0"]
 surface_material_override/0 = ExtResource("2_xfvoa")
+
+[node name="Text" parent="shop" index="1"]
+visible = false
 
 [node name="cigs" parent="." instance=ExtResource("3_1l46r")]
 transform = Transform3D(-0.0396845, 0, -0.144655, 0, 0.15, 0, 0.144655, 0, -0.0396845, -1.79192, 1.55723, 1.77607)
@@ -21,14 +25,17 @@ transform = Transform3D(0.326996, 0, 0.648625, 0, 1.52218, 0, -0.278669, 0, 0.76
 [node name="SpotLight3D" type="SpotLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 3.21831, -0.453689)
 light_color = Color(1, 1, 0.388235, 1)
-light_energy = 16.0
-light_indirect_energy = 10.374
-light_volumetric_fog_energy = 5.202
+light_energy = 0.896
+light_indirect_energy = 2.31
+light_volumetric_fog_energy = 1.49
 light_specular = 2.278
 spot_angle = 64.6875
 
 [node name="Hillybilly" parent="." instance=ExtResource("4_032fp")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.923214, 0, 0.724418)
+
+[node name="cigaratte" parent="Hillybilly" instance=ExtResource("5_2fc2m")]
+transform = Transform3D(-0.242458, -0.214508, -0.103925, -0.225291, 0.254645, -7.82995e-09, 0.0778353, 0.0688629, -0.323728, 0.0277358, 1.54174, 0.125206)
 
 [editable path="shop"]
 [editable path="cigs"]

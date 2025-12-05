@@ -1,4 +1,4 @@
-[gd_scene load_steps=61 format=3 uid="uid://bru2npwxw6p10"]
+[gd_scene load_steps=62 format=3 uid="uid://bru2npwxw6p10"]
 
 [ext_resource type="Shader" uid="uid://dmg556n5nwodi" path="res://shader/pixelate.gdshader" id="1_di3lw"]
 [ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="2_8wf4g"]
@@ -18,6 +18,7 @@
 [ext_resource type="Script" uid="uid://bymrcyid32xsp" path="res://scripts/line.gd" id="14_7q4h0"]
 [ext_resource type="PackedScene" uid="uid://brmbdno888s38" path="res://assets/tree.glb" id="15_lr7uy"]
 [ext_resource type="PackedScene" uid="uid://cfptx2e41wve1" path="res://scenes/shop.tscn" id="16_igjew"]
+[ext_resource type="PackedScene" uid="uid://8ljq0dpgsno5" path="res://scenes/bait.tscn" id="16_u01n2"]
 [ext_resource type="AudioStream" uid="uid://esyv0p374c5j" path="res://sounds/bite.mp3" id="18_a8hxt"]
 [ext_resource type="AudioStream" uid="uid://cldy38iwm8ovi" path="res://sounds/cast.mp3" id="19_eomrh"]
 [ext_resource type="AudioStream" uid="uid://26m0pjkxve85" path="res://sounds/sucess.mp3" id="20_a88r6"]
@@ -1788,6 +1789,8 @@ mesh = SubResource("QuadMesh_xqxf2")
 libraries = {
 &"": SubResource("AnimationLibrary_1wiy7")
 }
+
+[node name="Bait" parent="Hook" instance=ExtResource("16_u01n2")]
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.931818, 0.362926, 0, -0.362926, 0.931818, -1.07784, 37.4465, 160.116)

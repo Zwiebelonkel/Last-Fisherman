@@ -297,6 +297,10 @@ var FISH_FOREST = [
 	 "description": "Ernährt sich von Bambus und innerer Ruhe.", "weight_min": 5.0, "weight_max": 15.0,
 	 "science_fact": "Einige Haiarten können kurze Strecken an Land zurücklegen, indem sie ihre Flossen als Stützen verwenden."},
 	
+	{"name": "Angepisste Makrele", "rarity": RARITY.LEGENDAER, "base_value": 120, "icon": "res://assets/fish/makrele2.png",
+	 "description": "Diese Makrele ist wahrlich angepisst.", "weight_min": 5.0, "weight_max": 15.0,
+	 "science_fact": "Hier gibt es nichts schlaues zu sagen. Das ist einfach nur ekelig"},
+	
 	{"name": "Wurzelfisch", "rarity": RARITY.EXOTISCH, "base_value": 250, "icon": "res://assets/fish/wurzelfisch.png",
 	 "description": "Halb Fisch, halb Baum, komplett verstörend.", "weight_min": 20.0, "weight_max": 50.0,
 	 "science_fact": "Einige Fischarten leben in symbiotischen Beziehungen mit Pflanzen – z. B. schützen Wurzeln Laichplätze."},

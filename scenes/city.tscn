@@ -1,4 +1,4 @@
-[gd_scene load_steps=58 format=3 uid="uid://cvkrlt4ri1i2u"]
+[gd_scene load_steps=59 format=3 uid="uid://cvkrlt4ri1i2u"]
 
 [ext_resource type="Shader" uid="uid://dmg556n5nwodi" path="res://shader/pixelate.gdshader" id="1_f7b0s"]
 [ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="2_ikoiv"]
@@ -17,6 +17,7 @@
 [ext_resource type="Shader" uid="uid://cfsuhiaq15sgu" path="res://shader/outline.gdshader" id="12_h3250"]
 [ext_resource type="Script" uid="uid://bymrcyid32xsp" path="res://scripts/line.gd" id="13_my70f"]
 [ext_resource type="PackedScene" uid="uid://cfptx2e41wve1" path="res://scenes/shop.tscn" id="15_nmpot"]
+[ext_resource type="PackedScene" uid="uid://8ljq0dpgsno5" path="res://scenes/bait.tscn" id="16_nmpot"]
 [ext_resource type="Shader" uid="uid://of02kbc2kqkw" path="res://shader/sky2.gdshader" id="17_agolw"]
 [ext_resource type="PackedScene" uid="uid://btgasvjdkp460" path="res://assets/hotel.glb" id="18_agolw"]
 [ext_resource type="PackedScene" uid="uid://ckje0fw3pep83" path="res://assets/skyscaper.glb" id="18_ibljb"]
@@ -1727,6 +1728,8 @@ mesh = SubResource("QuadMesh_611at")
 libraries = {
 &"": SubResource("AnimationLibrary_1wiy7")
 }
+
+[node name="Bait" parent="Hook" instance=ExtResource("16_nmpot")]
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.97848, -0.00843342, -0.206171, 0.0389501, 0.988751, 0.144411, 0.202634, -0.149334, 0.967801, -1.07784, 48.3065, 160.116)

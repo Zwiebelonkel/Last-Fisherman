@@ -1,4 +1,4 @@
-[gd_scene load_steps=63 format=3 uid="uid://cx2sffjjdjuw5"]
+[gd_scene load_steps=69 format=3 uid="uid://cx2sffjjdjuw5"]
 
 [ext_resource type="Shader" uid="uid://dmg556n5nwodi" path="res://shader/pixelate.gdshader" id="1_1ns3k"]
 [ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="1_2phbr"]
@@ -21,6 +21,7 @@
 [ext_resource type="PackedScene" uid="uid://bw80sbvfcwe1p" path="res://scenes/cigarette.tscn" id="14_fto0a"]
 [ext_resource type="PackedScene" uid="uid://cfptx2e41wve1" path="res://scenes/shop.tscn" id="15_0cxu4"]
 [ext_resource type="AudioStream" uid="uid://esyv0p374c5j" path="res://sounds/bite.mp3" id="18_2phbr"]
+[ext_resource type="PackedScene" uid="uid://8ljq0dpgsno5" path="res://scenes/bait.tscn" id="18_l3o4o"]
 [ext_resource type="AudioStream" uid="uid://cldy38iwm8ovi" path="res://sounds/cast.mp3" id="19_mkg2b"]
 [ext_resource type="AudioStream" uid="uid://26m0pjkxve85" path="res://sounds/sucess.mp3" id="20_1ns3k"]
 [ext_resource type="AudioStream" uid="uid://cmr6cded4l11v" path="res://sounds/whoosh.mp3" id="21_a7pbh"]
@@ -32,6 +33,8 @@
 [ext_resource type="PackedScene" uid="uid://bmbrqb7ef6c5i" path="res://assets/tripod.glb" id="28_qavw1"]
 [ext_resource type="PackedScene" uid="uid://bw4vof4oddwco" path="res://assets/ödland.glb" id="29_i7ifx"]
 [ext_resource type="PackedScene" uid="uid://xjntcu6j0ri0" path="res://scenes/explosion.tscn" id="31_fto0a"]
+[ext_resource type="PackedScene" uid="uid://7g6l5pa83hrt" path="res://assets/boat.glb" id="34_kwqb8"]
+[ext_resource type="Material" uid="uid://cj86wv7c01tef" path="res://materials/outlineWhite.tres" id="35_y15d6"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1wiy7"]
 shader = ExtResource("1_1ns3k")
@@ -200,6 +203,7 @@ script/source = "extends Node3D
 @onready var line_sound: AudioStreamPlayer = get_node(\"../../Audio/line\")
 
 @onready var dayNightAni: AnimationPlayer = $\"../../DirectionalLight3D/AnimationPlayer\"
+@onready var boatAni: AnimationPlayer = $\"../../boat/AnimationPlayer\"
 
 @export var cast_power_ui_scene: PackedScene
 var cast_power_ui: Control = null
@@ -253,6 +257,7 @@ var hook_end_position: Vector3
 
 func _ready() -> void:
 	anim.play(\"idle\")
+	boatAni.play(\"boat\")
 	dayNightAni.play(\"circle\")
 	hook.visible = false
 	splash.visible = false
@@ -1577,6 +1582,44 @@ emission_energy_multiplier = 16.0
 [sub_resource type="SphereMesh" id="SphereMesh_08o8g"]
 material = SubResource("StandardMaterial3D_kp0ql")
 
+[sub_resource type="Animation" id="Animation_kwqb8"]
+resource_name = "boat"
+length = 5.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 2.46667, 4.86667),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(1.82034, 0.83367, -1.44675), Vector3(1.82034, 0.762089, -1.44675), Vector3(1.82034, 0.83367, -1.44675)]
+}
+
+[sub_resource type="Animation" id="Animation_y15d6"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(1.82034, 0.83367, -1.44675)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_u55b3"]
+_data = {
+&"RESET": SubResource("Animation_y15d6"),
+&"boat": SubResource("Animation_kwqb8")
+}
+
 [node name="MainScene3" type="Node3D"]
 
 [node name="Filter" type="CanvasLayer" parent="."]
@@ -1743,7 +1786,7 @@ inventory_ui = NodePath("../../UI/InventoryUI")
 transform = Transform3D(0.8, 0, 0, 0, 0.773459, 0.204357, 0, -0.204357, 0.773459, 0, 0, -0.0166266)
 
 [node name="cigaratte" parent="PlayerCamera" instance=ExtResource("14_fto0a")]
-transform = Transform3D(0.789812, 0.0794083, 0.274757, -0.0560458, 0.8343, -0.0800153, -0.280456, 0.0569025, 0.789751, -0.156605, -0.174005, 0.0155788)
+transform = Transform3D(0.789812, 0.0794083, 0.274757, -0.0560458, 0.8343, -0.0800153, -0.280456, 0.0569025, 0.789751, -0.156605, -0.13869, -0.260703)
 visible = false
 
 [node name="WaterPlane" type="MeshInstance3D" parent="."]
@@ -1761,6 +1804,8 @@ mesh = SubResource("QuadMesh_611at")
 libraries = {
 &"": SubResource("AnimationLibrary_1wiy7")
 }
+
+[node name="Bait" parent="Hook" instance=ExtResource("18_l3o4o")]
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.931818, 0.362926, 0, -0.362926, 0.931818, -1.07784, 37.4465, 160.116)
@@ -1908,6 +1953,23 @@ transform = Transform3D(-0.214954, 0, -0.000824433, 0, 0.35, 0, 0.00443134, 0, -
 transform = Transform3D(3.07, 0, 0, 0, 3.07, 0, 0, 0, 3.07, -22.6968, 0, 114.287)
 visible = false
 
+[node name="boat" parent="." instance=ExtResource("34_kwqb8")]
+transform = Transform3D(-0.434404, 0, -0.0227662, 0, 0.435, 0, 0.0227662, 0, -0.434404, 1.82034, 0.83367, -1.44675)
+
+[node name="boat" parent="boat" index="0"]
+surface_material_override/0 = ExtResource("35_y15d6")
+
+[node name="Cube" parent="boat" index="1"]
+surface_material_override/0 = ExtResource("35_y15d6")
+
+[node name="Cube_001" parent="boat" index="2"]
+surface_material_override/0 = ExtResource("35_y15d6")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="boat"]
+libraries = {
+&"": SubResource("AnimationLibrary_u55b3")
+}
+
 [editable path="UI/Touch"]
 [editable path="PlayerCamera/FishingRod"]
 [editable path="Shop"]
@@ -1915,3 +1977,4 @@ visible = false
 [editable path="Shop/cigs"]
 [editable path="Explosion"]
 [editable path="Explosion/Sketchfab_Scene"]
+[editable path="boat"]

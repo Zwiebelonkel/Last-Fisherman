@@ -1,4 +1,4 @@
-[gd_scene load_steps=53 format=3 uid="uid://bwpkoys7chajb"]
+[gd_scene load_steps=54 format=3 uid="uid://bwpkoys7chajb"]
 
 [ext_resource type="Shader" uid="uid://dmg556n5nwodi" path="res://shader/pixelate.gdshader" id="1_kqfxt"]
 [ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="2_rtjjv"]
@@ -15,6 +15,7 @@
 [ext_resource type="Texture2D" uid="uid://cvllk03mhtybp" path="res://textures/723-normal.jpg" id="13_kyn5a"]
 [ext_resource type="Texture2D" uid="uid://d31603nl8y0gd" path="res://textures/Water_preview.jpgC878A51E-2B84-45CA-85CB-75E5BC88EEC8Large.jpg" id="14_2n20e"]
 [ext_resource type="Shader" uid="uid://cfsuhiaq15sgu" path="res://shader/outline.gdshader" id="15_xp0e5"]
+[ext_resource type="PackedScene" uid="uid://8ljq0dpgsno5" path="res://scenes/bait.tscn" id="16_0tnqg"]
 [ext_resource type="Script" uid="uid://bymrcyid32xsp" path="res://scripts/line.gd" id="16_ros3w"]
 [ext_resource type="PackedScene" uid="uid://cfptx2e41wve1" path="res://scenes/shop.tscn" id="17_vqh58"]
 [ext_resource type="PackedScene" uid="uid://5eeohonkr6bu" path="res://textures/hillybilly.glb" id="18_cl88l"]
@@ -1501,7 +1502,7 @@ material = SubResource("StandardMaterial3D_ye0jt")
 top_radius = 0.01
 bottom_radius = 0.01
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kqfxt"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0tnqg"]
 albedo_color = Color(0, 0, 0, 1)
 
 [node name="MainScene2" type="Node3D"]
@@ -1661,16 +1662,18 @@ transform = Transform3D(-1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0, 0, 1, 0, 0.6
 mesh = SubResource("PlaneMesh_66o8q")
 
 [node name="Hook" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0925, 5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.04, 5)
 
 [node name="Ripple" type="MeshInstance3D" parent="Hook"]
-transform = Transform3D(0.5, 0, 0, 0, -2.18557e-08, 0.5, 0, -0.5, -2.18557e-08, -0.00294727, -0.233042, 0.392736)
+transform = Transform3D(0.5, 0, 0, 0, -2.18557e-08, 0.5, 0, -0.5, -2.18557e-08, 0, 0, 0)
 mesh = SubResource("QuadMesh_611at")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Hook"]
 libraries = {
 &"": SubResource("AnimationLibrary_1wiy7")
 }
+
+[node name="Bait" parent="Hook" instance=ExtResource("16_0tnqg")]
 
 [node name="Line" type="MeshInstance3D" parent="." node_paths=PackedStringArray("rod_tip", "hook", "fishing_script")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.319973, 1.53619, 0.170711)
@@ -1682,9 +1685,6 @@ fishing_script = NodePath("../PlayerCamera/FishingRod")
 
 [node name="Shop" parent="." instance=ExtResource("17_vqh58")]
 transform = Transform3D(-3.12536e-08, 0, 0.715, 0, 0.715, 0, -0.715, 0, -3.12536e-08, -6.26471, 1.14132, 1.59074)
-
-[node name="hillybilly" parent="." instance=ExtResource("18_cl88l")]
-transform = Transform3D(-0.190341, 0, 1.51307, 0, 1.525, 0, -1.51307, 0, -0.190341, -6.9608, 0.142801, 1.96083)
 
 [node name="Audio" type="Node" parent="."]
 
@@ -1857,7 +1857,7 @@ transform = Transform3D(-0.508764, 0, -0.485346, 0, 0.8, 0, 0.388277, 0, -0.6359
 
 [node name="Object_34" parent="hillybilly2/metarig/Skeleton3D" index="0"]
 transform = Transform3D(0.617351, 0, 1.50316, 0, 1.625, 0, -1.50316, 0, 0.617351, -3.11919, -1.95172, -4.91015)
-surface_material_override/0 = SubResource("StandardMaterial3D_kqfxt")
+surface_material_override/0 = SubResource("StandardMaterial3D_0tnqg")
 
 [node name="OmniLight3D" type="OmniLight3D" parent="hillybilly2"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.62467, 0.971292, -3.92915)
@@ -1881,6 +1881,9 @@ omni_attenuation = 3.185
 
 [editable path="UI/Touch"]
 [editable path="PlayerCamera/FishingRod"]
+[editable path="Shop"]
+[editable path="Shop/shop"]
+[editable path="Shop/cigs"]
 [editable path="Node3D"]
 [editable path="Node3D/Sketchfab_Scene"]
 [editable path="hillybilly2"]

@@ -8,12 +8,15 @@
 material = ExtResource("2_wjujl")
 top_radius = 0.005
 bottom_radius = 0.03
+radial_segments = 8
+rings = 3
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_stpr7"]
 material = ExtResource("2_wjujl")
 top_radius = 0.1
 bottom_radius = 0.1
 height = 0.1
+radial_segments = 40
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_byvj7"]
 render_priority = 0
@@ -30,6 +33,7 @@ material = SubResource("StandardMaterial3D_6deuo")
 top_radius = 0.02
 bottom_radius = 0.02
 height = 0.061
+radial_segments = 35
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_8r45t"]
 render_priority = 0

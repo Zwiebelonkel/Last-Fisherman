@@ -1,4 +1,4 @@
-[gd_scene load_steps=56 format=3 uid="uid://bnj4irwko1m1j"]
+[gd_scene load_steps=57 format=3 uid="uid://bnj4irwko1m1j"]
 
 [ext_resource type="Shader" uid="uid://dmg556n5nwodi" path="res://shader/pixelate.gdshader" id="1_kuao5"]
 [ext_resource type="Shader" uid="uid://bso2ewb2ieq7x" path="res://shader/warp.gdshader" id="1_tx5p3"]
@@ -18,6 +18,7 @@
 [ext_resource type="Shader" uid="uid://cfsuhiaq15sgu" path="res://shader/outline.gdshader" id="14_6d2g4"]
 [ext_resource type="Script" uid="uid://bymrcyid32xsp" path="res://scripts/line.gd" id="15_wbcdt"]
 [ext_resource type="PackedScene" uid="uid://cfptx2e41wve1" path="res://scenes/shop.tscn" id="16_mabyp"]
+[ext_resource type="PackedScene" uid="uid://8ljq0dpgsno5" path="res://scenes/bait.tscn" id="17_bo4cb"]
 [ext_resource type="AudioStream" uid="uid://esyv0p374c5j" path="res://sounds/bite.mp3" id="18_yqxbp"]
 [ext_resource type="AudioStream" uid="uid://cldy38iwm8ovi" path="res://sounds/cast.mp3" id="19_uxuqp"]
 [ext_resource type="AudioStream" uid="uid://26m0pjkxve85" path="res://sounds/sucess.mp3" id="20_p58cv"]
@@ -1748,6 +1749,8 @@ mesh = SubResource("QuadMesh_611at")
 libraries = {
 &"": SubResource("AnimationLibrary_1wiy7")
 }
+
+[node name="Bait" parent="Hook" instance=ExtResource("17_bo4cb")]
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.931818, 0.362926, 0, -0.362926, 0.931818, 4.54267, 37.6064, 160.116)
