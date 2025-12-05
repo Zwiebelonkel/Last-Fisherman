@@ -1621,7 +1621,7 @@ _data = {
 &"attack": SubResource("Animation_soql2")
 }
 
-[node name="MainScene2" type="Node3D"]
+[node name="MainScene3" type="Node3D"]
 
 [node name="Filter" type="CanvasLayer" parent="."]
 layer = 0

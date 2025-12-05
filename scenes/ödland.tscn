@@ -1573,7 +1573,7 @@ emission_energy_multiplier = 16.0
 [sub_resource type="SphereMesh" id="SphereMesh_7r1ho"]
 material = SubResource("StandardMaterial3D_55u6b")
 
-[node name="MainScene" type="Node3D"]
+[node name="MainScene5" type="Node3D"]
 
 [node name="Filter2" type="CanvasLayer" parent="."]
 layer = 0

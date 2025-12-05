@@ -86,6 +86,16 @@ var FISH_LAKE = [
 		"science_fact": "Hechte beschleunigen in Millisekunden, da ihre Muskulatur auf explosive Schnellkraft ausgelegt ist."
 	},
 	{
+		"name": "Einsiedler",
+		"rarity": RARITY.SELTEN,
+		"base_value": 10,
+		"icon": "res://assets/fish/hermitcrab.png",
+		"description": "Der chillt einfach. Fühlst du dich nicht schlecht, dass du ihn gestört hast?",
+		"weight_min": 0.185,
+		"weight_max": 0.5,
+		"science_fact": "Einsiedlerkrebse leben in leeren Schneckenhäusern, um ihren weichen Arsch vor Fressfeinden zu schützen, und müssen bei Wachstum in größere Häuser umziehen, wobei oft eine Symbiose mit Seeanemonen entsteht, die das Haus vergrößern, umgekehrt der Krebs die Anemone herumträgt."
+	},
+	{
 		"name": "Zander",
 		"rarity": RARITY.EPISCH,
 		"base_value": 25,
@@ -171,6 +181,10 @@ var FISH_CITY = [
 	{"name": "Barrakuda", "rarity": RARITY.SELTEN, "base_value": 25, "icon": "res://assets/fish/baracuda.png",
 	 "description": "Schwimmt schneller als du vor Verantwortung fliehst.", "weight_min": 3.0, "weight_max": 10.0,
 	 "science_fact": "Barrakudas erreichen dank Muskelzusammensetzung und Körperform extreme Beschleunigung in Sekundenbruchteilen."},
+	
+	{"name": "Loaf-fish", "rarity": RARITY.SELTEN, "base_value": 28, "icon": "res://assets/fish/brot.png",
+	 "description": "Ist halt ein Brot mit Flossen und Kiemen. Übelst sauer und schlecht gelaunt.", "weight_min": 1.0, "weight_max": 3.0,
+	 "science_fact": "Ein Fleisch-Sandwich kann bis zu 15.544 Liter Wasser verbrauchen, während ein Gurken-Sandwich (aus 1 kg Gurken) nur etwa 28 Liter Wasser benötigt."},
 	
 	{"name": "Neonflosser", "rarity": RARITY.EPISCH, "base_value": 30, "icon": "res://assets/fish/Eel.png",
 	 "description": "Sieht aus wie ein Rave im Aquarium.", "weight_min": 1.0, "weight_max": 2.5,
@@ -357,10 +371,10 @@ var FISH_ICELAND = [
 	 #"description": "Ein intelligenter Kopffüßer, der seine Farbe von weiß zu eisblau wechseln kann.", "weight_min": 3.0, "weight_max": 12.0,
 	 #"science_fact": "Tintenfische haben drei Herzen, blaues Blut und können ihre Hautfarbe in Millisekunden ändern."},
 	#
-	#{"name": "Eisfisch", "rarity": RARITY.SELTEN, "base_value": 40, "icon": "res://assets/fish/eisfisch.png",
-	 #"description": "Durchsichtiger Fisch ohne rote Blutkörperchen - fast wie aus Glas gemacht.", "weight_min": 0.15, "weight_max": 0.5,
-	 #"science_fact": "Antarktische Eisfische haben kein Hämoglobin im Blut und erscheinen daher fast transparent."},
-	#
+	{"name": "Eisfisch", "rarity": RARITY.SELTEN, "base_value": 40, "icon": "res://assets/fish/eisfisch.png",
+	 "description": "Durchsichtiger Fisch ohne rote Blutkörperchen - fast wie aus Glas gemacht.", "weight_min": 0.15, "weight_max": 0.5,
+	 "science_fact": "Antarktische Eisfische haben kein Hämoglobin im Blut und erscheinen daher fast transparent."},
+	
 	#{"name": "Pinguin", "rarity": RARITY.SELTEN, "base_value": 43, "icon": "res://assets/fish/pinguin.png",
 	 #"description": "Eigentlich kein Fisch, aber trotzdem im Netz gelandet. Sieht verwirrt aus.", "weight_min": 2.0, "weight_max": 4.0,
 	 #"science_fact": "Kaiserpinguine können bis zu 565 Meter tief tauchen und über 20 Minuten die Luft anhalten."},
@@ -381,13 +395,18 @@ var FISH_ICELAND = [
 	 #"description": "Ein gefürchteter Räuber, dessen Biss das Wasser um ihn herum gefrieren lässt.", "weight_min": 200.0, "weight_max": 800.0,
 	 #"science_fact": "Grönlandhaie können über 400 Jahre alt werden und sind damit die langlebigsten bekannten Wirbeltiere der Erde."},
 	#
-	#{"name": "Eiswal", "rarity": RARITY.EPISCH, "base_value": 90, "icon": "res://assets/fish/eiswal.png",
-	 #"description": "Ein majestätischer Wal dessen Haut von einer dünnen Eisschicht bedeckt ist.", "weight_min": 15000.0, "weight_max": 30000.0,
-	 #"science_fact": "Buckelwale singen komplexe Lieder die bis zu 20 Minuten dauern und über hunderte Kilometer unter Wasser zu hören sind."},
+	{"name": "Blauer Marlin", "rarity": RARITY.EPISCH, "base_value": 90, "icon": "res://assets/fish/speerfisch.png",
+	 "description": "Ein Basic Fisch. Nur diese lange Nase macht ihn besonders.", "weight_min": 1.0, "weight_max": 10.0,
+	 "science_fact": "Sie sind extrem schnelle Jäger der Hochsee, die ihren langen, speerähnlichen Oberkiefer (Rostrum) zum Aufspießen ihrer Beute nutzen."},
 	
-	{"name": "Megalodon", "rarity": RARITY.LEGENDAER, "base_value": 5000, "icon": "res://assets/fish/megalodon.png",
+	{"name": "Schwarzer Marlin", "rarity": RARITY.LEGENDAER, "base_value": 500, "icon": "res://assets/fish/marlin.png",
+	 "description": "Man könnte sagen, dass der Entwickler zu faul gewesen ist um ein neues Asset zu erstellen", "weight_min": 500.0, "weight_max": 700.0,
+	 "science_fact": "Der schwarze Marlin gilt als der schnellste Fisch der Welt, mit dokumentierten Spitzengeschwindigkeiten von bis zu 129 km/h. Seine Fähigkeit zu schnellen Sprints verdankt er seinem torpedoförmigen Körper, der stromlinienförmig ist und beim Jagen durch das Wasser schneidet."},
+	
+	{"name": "Megalodon", "rarity": RARITY.EXOTISCH, "base_value": 5000, "icon": "res://assets/fish/megalodon.png",
 	 "description": "Ein prähistorischer Riesenhai. Sollte eigentlich ausgestorben sein... sollte.", "weight_min": 30000.0, "weight_max": 60000.0,
 	 "science_fact": "Der Megalodon lebte vor 23-3,6 Millionen Jahren und hatte eine Beißkraft von geschätzten 18 Tonnen - zehnmal stärker als ein Weißer Hai."},
+	
 	
 	
 ]

@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dbl8niqpajih2"
-path="res://.godot/imported/Plutonium.png-3f0f3bf7b1a1155657696e6cf894c720.ctex"
+path="res://.godot/imported/plutonium.png-ef13065d7aa7bf9433d851d9535e70e2.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/fish/Plutonium.png"
-dest_files=["res://.godot/imported/Plutonium.png-3f0f3bf7b1a1155657696e6cf894c720.ctex"]
+source_file="res://assets/fish/plutonium.png"
+dest_files=["res://.godot/imported/plutonium.png-ef13065d7aa7bf9433d851d9535e70e2.ctex"]
 
 [params]
 

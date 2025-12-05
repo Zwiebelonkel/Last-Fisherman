@@ -1560,7 +1560,7 @@ albedo_color = Color(0.194349, 0.194349, 0.194349, 1)
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nmpot"]
 albedo_color = Color(0.180005, 0.180005, 0.180005, 1)
 
-[node name="MainScene" type="Node3D"]
+[node name="MainScene2" type="Node3D"]
 
 [node name="Filter" type="CanvasLayer" parent="."]
 layer = 0

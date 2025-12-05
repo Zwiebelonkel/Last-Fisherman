@@ -87,8 +87,14 @@ https://sketchfab.com/3d-models/mushroom-cloud-low-poly-7d37e0570a164eaba038594b
 [node name="Label9" type="Label" parent="VScrollBar/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-text = "1-bit Icons by ???
-???"
+text = "1-bit Icons by Nikoichu
+https://nikoichu.itch.io/pixel-icons"
+
+[node name="Label10" type="Label" parent="VScrollBar/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "Sprite helpers <3:
+Julia, Daniel"
 
 [node name="Button" type="Button" parent="."]
 layout_mode = 1
