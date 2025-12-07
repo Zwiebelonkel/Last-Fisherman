@@ -1,0 +1,238 @@
+[gd_scene load_steps=19 format=3 uid="uid://cor735uf1n5si"]
+
+[ext_resource type="Shader" uid="uid://c140kjbm2bot5" path="res://shader/buckshot.gdshader" id="1_d1od2"]
+[ext_resource type="PackedScene" uid="uid://bvenk87ooe7ma" path="res://assets/cozy_wooden_cabin.glb" id="1_qssp3"]
+[ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="3_s6eg2"]
+[ext_resource type="PackedScene" uid="uid://dxxrhs12x2m2c" path="res://scenes/InventoryUI.tscn" id="5_phvbg"]
+[ext_resource type="PackedScene" uid="uid://cdb3sodlv6np7" path="res://scenes/MoneyHUD.tscn" id="6_3q32m"]
+[ext_resource type="PackedScene" uid="uid://be7bs5po2ukhi" path="res://scenes/FishBook.tscn" id="7_8hrlh"]
+[ext_resource type="PackedScene" uid="uid://b08obrprd472u" path="res://scenes/OptionsControl.tscn" id="9_mw5nc"]
+[ext_resource type="PackedScene" uid="uid://xt7f7m4i2iwi" path="res://scenes/touch.tscn" id="10_7t3s2"]
+[ext_resource type="Script" uid="uid://b20gpacd3w34" path="res://scripts/fps.gd" id="12_s6eg2"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_w6xti"]
+shader = ExtResource("1_d1od2")
+shader_parameter/exposure = 1.0
+shader_parameter/contrast = 1.1
+shader_parameter/saturation = 1.14
+shader_parameter/enable_pixelate = true
+shader_parameter/pixel_factor = 3.0
+shader_parameter/enable_posterize = true
+shader_parameter/color_levels = 16.0
+shader_parameter/dither_strength = 0.35
+shader_parameter/chrom_aberration = 0.01
+shader_parameter/vignette_strength = 1.0
+shader_parameter/grain_strength = 0.2
+shader_parameter/tint_color = Vector3(0.95, 1.03, 0.9)
+shader_parameter/tint_strength = 0.15
+shader_parameter/viewport_size_override = Vector2(0, 0)
+
+[sub_resource type="Theme" id="Theme_qrwm6"]
+default_font = ExtResource("3_s6eg2")
+
+[sub_resource type="Theme" id="Theme_2hkft"]
+default_font = ExtResource("3_s6eg2")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_s6eg2"]
+size = Vector3(331.727, 242.136, 13.1674)
+
+[sub_resource type="Shader" id="Shader_kqfxt"]
+code = "shader_type sky;
+
+group_uniforms Sky;
+/**
+ * Use directional light for sun color
+*/
+uniform bool use_directional_light = true;
+uniform vec4 sun_color : source_color = vec4(1.0);
+uniform float sun_energy = 15.0;
+uniform vec4 cloud_color : source_color = vec4(0.296, 0.402, 0.521, 1.0);
+/**
+ * Determines how much light the clouds absorb
+*/
+uniform float cloud_density = 5.0;
+/**
+ * Depth of the parallax effect
+*/
+uniform float cloud_depth = 2.0;
+/**
+ * Higher values give the clouds a heavier appearance
+*/
+uniform float cloud_sag = 2.0;
+uniform sampler2D noise_texture;
+uniform vec2 noise_tiling = vec2(1.0);
+uniform vec2 wind_speed = vec2(0.5);
+group_uniforms;
+
+group_uniforms Ground;
+uniform vec4 ground_bottom_color : source_color = vec4(0.2, 0.169, 0.133, 1.0);
+uniform float ground_curve : hint_range(0, 1) = 0.04;
+group_uniforms;
+
+uniform float exposure : hint_range(0, 128) = 1.0;
+
+// https://www.scratchapixel.com/lessons/3d-basic-rendering/minimal-ray-tracer-rendering-simple-shapes/ray-plane-and-ray-disk-intersection.html
+float ray_plane_intersection(vec3 origin, vec3 normal, vec3 ray_start, vec3 ray_dir) {
+	return dot(origin - ray_start, normal) / dot(ray_dir, normal);
+}
+
+float sample_height(vec2 uv) {
+	float height = texture(noise_texture, uv).r;
+	return pow(height, cloud_sag);
+}
+
+float beers_law(float absorption, float dist) {
+	return exp(-absorption * dist);
+}
+
+void sky() {
+	vec3 light_color = vec3(0.0);
+	if (use_directional_light)
+		light_color = LIGHT0_COLOR * LIGHT0_ENERGY * dot(LIGHT0_DIRECTION, vec3(0.0, 1.0, 0.0));
+	else
+		light_color = sun_color.rgb * sun_energy;
+
+	vec3 sky = cloud_color.rgb;
+
+	// Find view ray intersection with cloud layer
+	float t = ray_plane_intersection(vec3(0.0, 1.0, 0.0), vec3(0.0, -1.0, 0.0), vec3(0.0), EYEDIR);
+	if (t >= 0.0) {
+		vec3 wind = vec3(wind_speed.x, 0.0, wind_speed.y) * TIME * 0.1;
+		vec3 tiling = vec3(noise_tiling.x, 1.0, noise_tiling.y) * 0.2;
+		vec3 cloud_pos = EYEDIR * t * tiling + wind;
+
+		// Parallax mapping
+		float height = sample_height(cloud_pos.xz);
+		cloud_pos += EYEDIR * height * cloud_depth * 0.1;
+		height = sample_height(cloud_pos.xz);
+
+		// Attenuate light by view angle to simulate occlusion
+		float n_dot_v = dot(vec3(0.0, 1.0, 0.0), EYEDIR);
+		sky += light_color * beers_law(cloud_density, 1.0 - height * n_dot_v);
+	}
+	vec3 horizon = cloud_color.rgb + light_color * beers_law(cloud_density, 1.0);
+	vec3 ground = mix(horizon, ground_bottom_color.rgb, clamp(1.0 - pow(1.0 + EYEDIR.y, 1.0 / ground_curve), 0.0, 1.0));
+	COLOR = mix(ground, sky, step(0.0, EYEDIR.y)) * exposure;
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_0vypl"]
+shader = SubResource("Shader_kqfxt")
+shader_parameter/use_directional_light = false
+shader_parameter/sun_color = Color(0.0605303, 0.0605303, 0.0605303, 1)
+shader_parameter/sun_energy = 8.525
+shader_parameter/cloud_color = Color(0, 0, 0, 1)
+shader_parameter/cloud_density = 5.0
+shader_parameter/cloud_depth = 2.0
+shader_parameter/cloud_sag = 2.0
+shader_parameter/noise_tiling = Vector2(1, 1)
+shader_parameter/wind_speed = Vector2(0.5, 0.5)
+shader_parameter/ground_bottom_color = Color(0.2, 0.169, 0.133, 1)
+shader_parameter/ground_curve = 0.04
+shader_parameter/exposure = 1.0
+
+[sub_resource type="Sky" id="Sky_x537r"]
+sky_material = SubResource("ShaderMaterial_0vypl")
+radiance_size = 0
+
+[sub_resource type="Environment" id="Environment_fm13a"]
+background_mode = 2
+background_energy_multiplier = 0.14
+sky = SubResource("Sky_x537r")
+glow_enabled = true
+glow_intensity = 0.05
+glow_strength = 0.29
+glow_hdr_scale = 1.17
+glow_hdr_luminance_cap = 4.75
+glow_map_strength = 0.0
+fog_light_color = Color(0.808262, 0.429746, 0.296975, 1)
+fog_light_energy = 0.0
+fog_sun_scatter = 1.0
+fog_density = 0.0
+fog_sky_affect = 0.0
+volumetric_fog_enabled = true
+volumetric_fog_length = 42.44
+volumetric_fog_ambient_inject = 0.2
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_tmir4"]
+
+[node name="Node3D" type="Node3D"]
+
+[node name="Filter" type="CanvasLayer" parent="."]
+layer = 0
+
+[node name="PixelateOverlay" type="ColorRect" parent="Filter"]
+material = SubResource("ShaderMaterial_w6xti")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 28.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="MoneyHUD" parent="UI" instance=ExtResource("6_3q32m")]
+offset_right = 60.0
+offset_bottom = 43.0
+theme = SubResource("Theme_qrwm6")
+
+[node name="FishBook" parent="UI" instance=ExtResource("7_8hrlh")]
+visible = false
+
+[node name="OptionsControl" parent="UI" instance=ExtResource("9_mw5nc")]
+visible = false
+
+[node name="Touch" parent="UI" instance=ExtResource("10_7t3s2")]
+
+[node name="InventoryUI" parent="UI" instance=ExtResource("5_phvbg")]
+theme = SubResource("Theme_2hkft")
+
+[node name="Cabin" parent="." instance=ExtResource("1_qssp3")]
+transform = Transform3D(0.025, 0, 0, 0, 0.025, 0, 0, 0, 0.025, -2.79241, -4.36985, 1.98553)
+
+[node name="Material22" parent="Cabin/Sketchfab_model/Collada visual scene group" index="2"]
+visible = false
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Cabin/Sketchfab_model/Collada visual scene group" index="28"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cabin/Sketchfab_model/Collada visual scene group/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 131.484, 48.8557, 152.687)
+shape = SubResource("BoxShape3D_s6eg2")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_fm13a")
+
+[node name="FPSPlayer" type="CharacterBody3D" parent="." node_paths=PackedStringArray("fishbook_ui", "options", "inventory_ui", "journal_button", "inventory_button", "map_button", "settings_button", "fishbook_close_button", "inventory_close_button")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.52368, 0)
+script = ExtResource("12_s6eg2")
+walk_speed = 2.395
+fishbook_ui = NodePath("../UI/FishBook")
+options = NodePath("../UI/OptionsControl")
+inventory_ui = NodePath("../UI/InventoryUI")
+journal_button = NodePath("../UI/Touch/TopLeftPanel/MarginContainer/VBoxContainer/JournalButton")
+inventory_button = NodePath("../UI/Touch/TopLeftPanel/MarginContainer/VBoxContainer/InventoryButton")
+map_button = NodePath("../UI/Touch/TopLeftPanel/MarginContainer/VBoxContainer/MapButton")
+settings_button = NodePath("../UI/Touch/TopLeftPanel/MarginContainer/VBoxContainer/SettingsButton")
+fishbook_close_button = NodePath("../UI/FishBook/close")
+inventory_close_button = NodePath("../UI/InventoryUI/close")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="FPSPlayer"]
+shape = SubResource("CapsuleShape3D_tmir4")
+
+[node name="Head" type="Node3D" parent="FPSPlayer"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.49675, 0)
+
+[node name="Camera3D" type="Camera3D" parent="FPSPlayer/Head"]
+
+[node name="OmniLight3D" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.33143, 1)
+light_color = Color(0.737255, 0.74902, 0.341176, 1)
+light_energy = 15.691
+omni_range = 4.777
+omni_attenuation = 0.79
+
+[editable path="UI/FishBook"]
+[editable path="UI/Touch"]
+[editable path="UI/InventoryUI"]
+[editable path="Cabin"]

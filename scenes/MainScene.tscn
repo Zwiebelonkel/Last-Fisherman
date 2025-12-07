@@ -63,7 +63,7 @@ default_font = ExtResource("3_8wjpf")
 [sub_resource type="Theme" id="Theme_2phbr"]
 default_font = ExtResource("3_8wjpf")
 
-[sub_resource type="Shader" id="Shader_kqfxt"]
+[sub_resource type="Shader" id="Shader_u55b3"]
 code = "shader_type sky;
 
 group_uniforms Sky;
@@ -144,7 +144,7 @@ void sky() {
 "
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_cfq0f"]
-shader = SubResource("Shader_kqfxt")
+shader = SubResource("Shader_u55b3")
 shader_parameter/use_directional_light = false
 shader_parameter/sun_color = Color(0.0605303, 0.0605303, 0.0605303, 1)
 shader_parameter/sun_energy = 8.525
@@ -158,14 +158,14 @@ shader_parameter/ground_bottom_color = Color(0.2, 0.169, 0.133, 1)
 shader_parameter/ground_curve = 0.04
 shader_parameter/exposure = 1.0
 
-[sub_resource type="Sky" id="Sky_x537r"]
+[sub_resource type="Sky" id="Sky_wsqty"]
 sky_material = SubResource("ShaderMaterial_cfq0f")
 radiance_size = 0
 
 [sub_resource type="Environment" id="Environment_cfq0f"]
 background_mode = 2
 background_energy_multiplier = 0.14
-sky = SubResource("Sky_x537r")
+sky = SubResource("Sky_wsqty")
 glow_enabled = true
 glow_intensity = 0.05
 glow_strength = 0.29

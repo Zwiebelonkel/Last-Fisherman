@@ -57,7 +57,7 @@ var spot_prices = {
 	"sewer": 1200,
 	"forest": 2000,
 	"desert": 4000,
-	"iceland": 1000000,
+	"iceland": 6000,
 }
 
 func _ready():

@@ -425,7 +425,7 @@ var FISH_ICELAND = [
 	 "description": "Man könnte sagen, dass der Entwickler zu faul gewesen ist um ein neues Asset zu erstellen", "weight_min": 500.0, "weight_max": 700.0,
 	 "science_fact": "Der schwarze Marlin gilt als der schnellste Fisch der Welt, mit dokumentierten Spitzengeschwindigkeiten von bis zu 129 km/h. Seine Fähigkeit zu schnellen Sprints verdankt er seinem torpedoförmigen Körper, der stromlinienförmig ist und beim Jagen durch das Wasser schneidet."},
 	
-	{"name": "Megalodon", "rarity": RARITY.EXOTISCH, "base_value": 5000, "icon": "res://assets/fish/megalodon.png",
+	{"name": "Megalodon", "rarity": RARITY.EXOTISCH, "base_value": 1000, "icon": "res://assets/fish/megalodon.png",
 	 "description": "Ein prähistorischer Riesenhai. Sollte eigentlich ausgestorben sein... sollte.", "weight_min": 30000.0, "weight_max": 60000.0,
 	 "science_fact": "Der Megalodon lebte vor 23-3,6 Millionen Jahren und hatte eine Beißkraft von geschätzten 18 Tonnen - zehnmal stärker als ein Weißer Hai."},
 ]
