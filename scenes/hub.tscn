@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://cor735uf1n5si"]
+[gd_scene load_steps=23 format=3 uid="uid://cor735uf1n5si"]
 
 [ext_resource type="Shader" uid="uid://c140kjbm2bot5" path="res://shader/buckshot.gdshader" id="1_d1od2"]
 [ext_resource type="PackedScene" uid="uid://bvenk87ooe7ma" path="res://assets/cozy_wooden_cabin.glb" id="1_qssp3"]
@@ -9,6 +9,8 @@
 [ext_resource type="PackedScene" uid="uid://b08obrprd472u" path="res://scenes/OptionsControl.tscn" id="9_mw5nc"]
 [ext_resource type="PackedScene" uid="uid://xt7f7m4i2iwi" path="res://scenes/touch.tscn" id="10_7t3s2"]
 [ext_resource type="Script" uid="uid://b20gpacd3w34" path="res://scripts/fps.gd" id="12_s6eg2"]
+[ext_resource type="Shader" uid="uid://bstde7wsk0sgt" path="res://shader/icon.gdshader" id="13_w5lyg"]
+[ext_resource type="Texture2D" uid="uid://cdqevtqdy43fr" path="res://assets/fish/unknown.png" id="14_ahhda"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_w6xti"]
 shader = ExtResource("1_d1od2")
@@ -156,6 +158,21 @@ volumetric_fog_ambient_inject = 0.2
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_tmir4"]
 
+[sub_resource type="GDScript" id="GDScript_gfcdx"]
+script/source = "extends PanelContainer\n\n@onready var fish_layer: Control = $MarginContainer/VBoxContainer/FishArea/FishLayer\n@onready var title_label: Label = $MarginContainer/VBoxContainer/Title\n@onready var status_label: Label = $MarginContainer/VBoxContainer/Status\nvar rng := RandomNumberGenerator.new()\n\nconst ICON_SHADER_PATH := \"res://shader/icon.gdshader\"\nconst FALLBACK_ICON_PATH := \"res://assets/fish/unknown.png\"\n\nfunc _ready():\n\tawait get_tree().process_frame\n\trng.randomize()\n\tpopulate_aquarium()\n\nfunc populate_aquarium():\n\tif fish_layer == null:\n\t\treturn\n\tfor child in fish_layer.get_children():\n\t\tchild.queue_free()\n\n\tvar fish_entries: Array = []\n\tif Player.has_method(\"get_aquarium_fish\"):\n\t\tfish_entries = Player.get_aquarium_fish()\n\t\tif fish_entries.is_empty() and Player.has_method(\"fill_aquarium_with_caught_species\"):\n\t\t\tPlayer.fill_aquarium_with_caught_species()\n\t\t\tfish_entries = Player.get_aquarium_fish()\n\n\tif title_label:\n\t\ttitle_label.text = \"Hub-Aquarium (%d Fische)\" % fish_entries.size()\n\tif status_label:\n\t\tstatus_label.text = fish_entries.is_empty() ? \"Keine gefangenen Fische vorhanden.\" : \"Zeigt alle gefangenen Fische aus dem Fischbuch.\"\n\n\tvar area_size := fish_layer.size\n\tif area_size == Vector2.ZERO:\n\t\tarea_size = fish_layer.get_rect().size\n\n\tfor fish_data in fish_entries:\n\t\tvar fish_icon := _create_fish_icon(fish_data)\n\t\tfish_layer.add_child(fish_icon)\n\t\t_animate_fish(fish_icon, area_size)\n\nfunc _create_fish_icon(fish_data: Dictionary) -> TextureRect:\n\tvar icon_path := fish_data.get(\"icon\", FALLBACK_ICON_PATH)\n\tvar texture: Texture2D = null\n\tif icon_path is String and icon_path != \"\" and ResourceLoader.exists(icon_path):\n\t\ttexture = load(icon_path)\n\telse:\n\t\ttexture = load(FALLBACK_ICON_PATH)\n\n\tvar rect := TextureRect.new()\n\trect.texture = texture\n\trect.material = _make_icon_material()\n\trect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT\n\trect.size = Vector2(72, 56)\n\trect.position = Vector2(rng.randf_range(-60.0, 20.0), rng.randf_range(12.0, max(12.0, fish_layer.size.y - 60.0)))\n\trect.modulate = Color(1.0, 1.0, 1.0, 0.92)\n\trect.mouse_filter = Control.MOUSE_FILTER_IGNORE\n\treturn rect\n\nfunc _make_icon_material() -> ShaderMaterial:\n\tvar mat := ShaderMaterial.new()\n\tmat.shader = load(ICON_SHADER_PATH)\n\tmat.set_shader_parameter(\"enable_bobbing\", true)\n\tmat.set_shader_parameter(\"enable_pulse\", true)\n\tmat.set_shader_parameter(\"bobbing_amplitude\", rng.randf_range(0.7, 1.4))\n\tmat.set_shader_parameter(\"bobbing_speed\", rng.randf_range(1.0, 2.6))\n\tmat.set_shader_parameter(\"sway_amplitude\", rng.randf_range(1.5, 4.0))\n\tmat.set_shader_parameter(\"sway_speed\", rng.randf_range(0.6, 1.6))\n\tmat.set_shader_parameter(\"enable_sway\", true)\n\treturn mat\n\nfunc _animate_fish(fish_icon: TextureRect, area_size: Vector2):\n\tvar start_y := rng.randf_range(16.0, max(16.0, area_size.y - 56.0))\n\tvar start_pos := Vector2(rng.randf_range(-80.0, -20.0), start_y)\n\tvar end_pos := Vector2(area_size.x + rng.randf_range(20.0, 80.0), clamp(start_y + rng.randf_range(-60.0, 60.0), 12.0, max(12.0, area_size.y - 56.0)))\n\tfish_icon.position = start_pos\n\n\tvar duration := rng.randf_range(8.0, 14.0)\n\tvar return_duration := rng.randf_range(6.5, 12.5)\n\tvar tween := fish_icon.create_tween().set_loops()\n\ttween.tween_property(fish_icon, \"position\", end_pos, duration).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)\n\ttween.tween_property(fish_icon, \"position\", start_pos, return_duration).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)\n"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_hbmso"]
+shader = ExtResource("13_w5lyg")
+shader_parameter/enable_bobbing = true
+shader_parameter/enable_sway = true
+shader_parameter/bobbing_amplitude = 1.0
+shader_parameter/bobbing_speed = 1.5
+shader_parameter/sway_amplitude = 2.5
+shader_parameter/sway_speed = 1.2
+shader_parameter/pulse_amount = 0.018
+shader_parameter/pulse_speed = 3.0
+shader_parameter/enable_pulse = true
+
 [node name="Node3D" type="Node3D"]
 
 [node name="Filter" type="CanvasLayer" parent="."]
@@ -187,6 +204,77 @@ visible = false
 
 [node name="InventoryUI" parent="UI" instance=ExtResource("5_phvbg")]
 theme = SubResource("Theme_2hkft")
+
+[node name="AquariumDisplay" type="CanvasLayer" parent="UI"]
+layer = 2
+
+[node name="AquariumPanel" type="PanelContainer" parent="UI/AquariumDisplay"]
+material = SubResource("ShaderMaterial_hbmso")
+anchors_preset = 4
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -280.0
+offset_top = -260.0
+offset_right = 280.0
+offset_bottom = -24.0
+grow_horizontal = 2
+grow_vertical = 0
+theme = SubResource("Theme_qrwm6")
+script = SubResource("GDScript_gfcdx")
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/AquariumDisplay/AquariumPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 12
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/AquariumDisplay/AquariumPanel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Title" type="Label" parent="UI/AquariumDisplay/AquariumPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+theme_override_colors/font_color = Color(0.917647, 0.905882, 0.854902, 1)
+text = "Hub-Aquarium"
+
+[node name="Status" type="Label" parent="UI/AquariumDisplay/AquariumPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
+text = "Zeigt alle gefangenen Fische aus dem Fischbuch."
+
+[node name="FishArea" type="Control" parent="UI/AquariumDisplay/AquariumPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+custom_minimum_size = Vector2(520, 200)
+
+[node name="Background" type="ColorRect" parent="UI/AquariumDisplay/AquariumPanel/MarginContainer/VBoxContainer/FishArea"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.05, 0.09, 0.12, 0.78)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+
+[node name="FishLayer" type="Control" parent="UI/AquariumDisplay/AquariumPanel/MarginContainer/VBoxContainer/FishArea"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="Cabin" parent="." instance=ExtResource("1_qssp3")]
 transform = Transform3D(0.025, 0, 0, 0, 0.025, 0, 0, 0, 0.025, -2.79241, -4.36985, 1.98553)

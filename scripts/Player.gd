@@ -17,6 +17,7 @@ var last_scene: String = "res://scenes/MainScene.tscn"
 var options: String = "res://scenes/OptionsCOntrol.tscn"
 var fish_inventory: Array = []
 var caught_fish_species: Dictionary = {}
+var aquarium_fish: Array = []
 
 # --- SETTINGS ---
 var master_volume: float = 1.0
@@ -188,11 +189,48 @@ func get_max_caught_weight(fish_name: String) -> float:
 
 # 🆕 Fangzähler erhöhen
 func update_catch_count(fish_name: String) -> void:
-	if not fish_catch_count.has(fish_name):
-		fish_catch_count[fish_name] = 1
-	else:
-		fish_catch_count[fish_name] += 1
-	print("📊 %s gefangen: %dx" % [fish_name, fish_catch_count[fish_name]])
+        if not fish_catch_count.has(fish_name):
+                fish_catch_count[fish_name] = 1
+        else:
+                fish_catch_count[fish_name] += 1
+        print("📊 %s gefangen: %dx" % [fish_name, fish_catch_count[fish_name]])
+
+# 🆕 Alle gefangenen Fischarten ins Aquarium übernehmen
+func fill_aquarium_with_caught_species() -> int:
+        aquarium_fish.clear()
+
+        for fish_name in caught_fish_species.keys():
+                if not caught_fish_species[fish_name]:
+                        continue
+
+                var fish_data = get_fish_data_by_name(fish_name)
+                if fish_data.is_empty():
+                        continue
+
+                var stored_fish = fish_data.duplicate(true)
+                stored_fish["caught"] = true
+                stored_fish["original_name"] = fish_name
+                aquarium_fish.append(stored_fish)
+
+        save_game()
+        return aquarium_fish.size()
+
+# 🆕 Aktuelle Aquarium-Belegung abrufen
+func get_aquarium_fish() -> Array:
+        return aquarium_fish
+
+# 🆕 Hilfsfunktion: Fischdaten per Name finden
+func get_fish_data_by_name(fish_name: String) -> Dictionary:
+        var biome = get_fish_biome(fish_name)
+        if biome == "":
+                return {}
+
+        var biome_list = get_biome_fish_list(biome)
+        for fish in biome_list:
+                if fish.get("name", "") == fish_name:
+                        return fish
+
+        return {}
 
 # 🆕 Anzahl gefangener Fische abrufen
 func get_catch_count(fish_name: String) -> int:
@@ -347,11 +385,11 @@ func _add_all_fish() -> void:
 
 func clear_inventory():
 	Inventory.clear_inventory()
-	fish_inventory.clear()
-	save_game()
+        fish_inventory.clear()
+        save_game()
 
 func get_inventory_value() -> int:
-	var total = 0
+        var total = 0
 	for f in fish_inventory:
 		var rarity_bonus = FishDB.RARITY_DATA[f["rarity"]]["value"]
 		total += int(f["base_value"] * rarity_bonus)
@@ -393,17 +431,18 @@ func save_game() -> void:
 		"level": level,
 		"xp": xp,
 		"upgrade_grip": upgrade_grip,
-		"upgrade_bait": upgrade_bait,
-		"upgrade_line": upgrade_line,
-		"last_scene": last_scene,
-		"fish_inventory": fish_inventory,
-		"unlocked_spots": unlocked_spots,
-		"caught_fish_species": caught_fish_species,
-		"completed_biomes": completed_biomes,
-		"fish_weight_records": fish_weight_records,
-		"fish_catch_count": fish_catch_count  # 🆕
-	}
-	var file = FileAccess.open("user://savegame.dat", FileAccess.WRITE)
+                "upgrade_bait": upgrade_bait,
+                "upgrade_line": upgrade_line,
+                "last_scene": last_scene,
+                "fish_inventory": fish_inventory,
+                "unlocked_spots": unlocked_spots,
+                "caught_fish_species": caught_fish_species,
+                "aquarium_fish": aquarium_fish,
+                "completed_biomes": completed_biomes,
+                "fish_weight_records": fish_weight_records,
+                "fish_catch_count": fish_catch_count  # 🆕
+        }
+        var file = FileAccess.open("user://savegame.dat", FileAccess.WRITE)
 	file.store_var(save_data)
 	print("Spiel gespeichert!")
 
@@ -415,15 +454,16 @@ func load_game() -> void:
 		level = save_data.get("level", 1)
 		xp = save_data.get("xp", 0)
 		upgrade_grip = save_data.get("upgrade_grip", 1)
-		upgrade_bait = save_data.get("upgrade_bait", 1)
-		upgrade_line = save_data.get("upgrade_line", 1)
-		last_scene = save_data.get("last_scene", "res://scenes/MainScene.tscn")
-		fish_inventory = save_data.get("fish_inventory", [])
-		unlocked_spots = save_data.get("unlocked_spots", unlocked_spots)
-		caught_fish_species = save_data.get("caught_fish_species", {})
-		completed_biomes = save_data.get("completed_biomes", completed_biomes)
-		fish_weight_records = save_data.get("fish_weight_records", {})
-		fish_catch_count = save_data.get("fish_catch_count", {})  # 🆕
-		print("Spiel geladen!")
+                upgrade_bait = save_data.get("upgrade_bait", 1)
+                upgrade_line = save_data.get("upgrade_line", 1)
+                last_scene = save_data.get("last_scene", "res://scenes/MainScene.tscn")
+                fish_inventory = save_data.get("fish_inventory", [])
+                unlocked_spots = save_data.get("unlocked_spots", unlocked_spots)
+                caught_fish_species = save_data.get("caught_fish_species", {})
+                aquarium_fish = save_data.get("aquarium_fish", [])
+                completed_biomes = save_data.get("completed_biomes", completed_biomes)
+                fish_weight_records = save_data.get("fish_weight_records", {})
+                fish_catch_count = save_data.get("fish_catch_count", {})  # 🆕
+                print("Spiel geladen!")
 	else:
 		print("Keine Speicherdatei gefunden, starte neues Spiel")
