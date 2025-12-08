@@ -8,6 +8,10 @@ var grid_container: GridContainer
 var location_selector: OptionButton
 var stats_label: Label
 var title_label: Label
+var aquarium_grid: GridContainer
+var aquarium_status_label: Label
+var fill_aquarium_button: Button
+var aquarium_title_label: Label
 
 var current_location = "lake"
 var fish_entry_scene = preload("res://scenes/FishBookEntry.tscn")
@@ -33,13 +37,25 @@ func _ready():
 		grid_container = get_node("VBoxContainer/ScrollContainer/GridContainer")
 	
 	if has_node("VBoxContainer/HBoxContainer/LocationSelector"):
-		location_selector = get_node("VBoxContainer/HBoxContainer/LocationSelector")
-	
-	if has_node("VBoxContainer/HBoxContainer/StatsLabel"):
-		stats_label = get_node("VBoxContainer/HBoxContainer/StatsLabel")
-	
-	if has_node("VBoxContainer/TitleLabel"):
-		title_label = get_node("VBoxContainer/TitleLabel")
+                location_selector = get_node("VBoxContainer/HBoxContainer/LocationSelector")
+
+        if has_node("VBoxContainer/HBoxContainer/StatsLabel"):
+                stats_label = get_node("VBoxContainer/HBoxContainer/StatsLabel")
+
+        if has_node("VBoxContainer/TitleLabel"):
+                title_label = get_node("VBoxContainer/TitleLabel")
+
+        if has_node("VBoxContainer/AquariumActions/FillAquariumButton"):
+                fill_aquarium_button = get_node("VBoxContainer/AquariumActions/FillAquariumButton")
+
+        if has_node("VBoxContainer/AquariumActions/AquariumStatus"):
+                aquarium_status_label = get_node("VBoxContainer/AquariumActions/AquariumStatus")
+
+        if has_node("VBoxContainer/AquariumPanel/MarginContainer/VBoxContainer/AquariumTitle"):
+                aquarium_title_label = get_node("VBoxContainer/AquariumPanel/MarginContainer/VBoxContainer/AquariumTitle")
+
+        if has_node("VBoxContainer/AquariumPanel/MarginContainer/VBoxContainer/ScrollContainer/AquariumGrid"):
+                aquarium_grid = get_node("VBoxContainer/AquariumPanel/MarginContainer/VBoxContainer/ScrollContainer/AquariumGrid")
 	
 	# Detail-Popup erstellen
 	if fish_detail_popup_scene:
@@ -58,17 +74,19 @@ func _ready():
 	print("Stats Label: ", stats_label)
 	print("Title Label: ", title_label)
 	
-	if not grid_container or not location_selector or not stats_label or not title_label:
-		print("❌ ERROR: Nicht alle Nodes gefunden!")
-		return
-	
-	# Grid-Einstellungen
-	grid_container.columns = 5  # 5 Karten pro Reihe
-	
-	# Location-Selector Setup
-	if location_selector is OptionButton:
-		location_selector.item_selected.connect(_on_location_changed)
-		location_selector.clear()
+        if not grid_container or not location_selector or not stats_label or not title_label:
+                print("❌ ERROR: Nicht alle Nodes gefunden!")
+                return
+
+        # Grid-Einstellungen
+        grid_container.columns = 5  # 5 Karten pro Reihe
+        if aquarium_grid:
+                aquarium_grid.columns = 4
+
+        # Location-Selector Setup
+        if location_selector is OptionButton:
+                location_selector.item_selected.connect(_on_location_changed)
+                location_selector.clear()
 		location_selector.add_item("🌊 See")
 		location_selector.add_item("🏢 Stadt")
 		location_selector.add_item("🐀 Kanal")
@@ -80,9 +98,14 @@ func _ready():
 	
 	# Signal verbinden
 	visibility_changed.connect(_on_visibility_changed)
-	
-	#load_bestiary()
+
+	if fill_aquarium_button:
+		fill_aquarium_button.pressed.connect(_on_fill_aquarium_pressed)
+
+	load_bestiary()
 	print("✅ FishBook UI erfolgreich geladen!")
+	refresh_aquarium_display()
+	update_aquarium_status()
 
 # 🆕 Popup anzeigen
 func show_fish_detail_popup(fish_data: Dictionary):
@@ -115,12 +138,14 @@ func show_fish_detail_popup(fish_data: Dictionary):
 				print("  ❌ Auch nach Neuerstellen keine Methode gefunden")
 
 func _on_visibility_changed() -> void:
-	if visible:
-		print("📖 FishBook wurde geöffnet - Aktualisiere Daten...")
-		load_bestiary()
+        if visible:
+                print("📖 FishBook wurde geöffnet - Aktualisiere Daten...")
+                load_bestiary()
+                refresh_aquarium_display()
+                update_aquarium_status()
 
 func load_bestiary():
-	print("📖 load_bestiary() - Starting...")
+        print("📖 load_bestiary() - Starting...")
 	
 	# Alte Einträge löschen
 	for child in grid_container.get_children():
@@ -157,7 +182,66 @@ func load_bestiary():
 		#entry_ui.mouse_exited.connect(_on_entry_hover.bind(entry_ui, false))
 	
 	# Stats aktualisieren
-	update_stats()
+        update_stats()
+
+func refresh_aquarium_display():
+        if not aquarium_grid:
+                return
+
+        for child in aquarium_grid.get_children():
+                child.queue_free()
+
+        await get_tree().process_frame
+
+        var aquarium_fish = Player.get_aquarium_fish()
+
+        if aquarium_title_label:
+                aquarium_title_label.text = "🏠 Aquarium (%d Fische)" % aquarium_fish.size()
+
+        for i in range(aquarium_fish.size()):
+                var fish_data = _build_aquarium_entry(aquarium_fish[i])
+                var entry_ui = fish_entry_scene.instantiate()
+
+                if entry_ui.has_method("set_fishbook_ui"):
+                        entry_ui.set_fishbook_ui(self)
+
+                entry_ui.set_fish_data(fish_data)
+                aquarium_grid.add_child(entry_ui)
+
+                entry_ui.modulate.a = 0
+                entry_ui.scale = Vector2(0.85, 0.85)
+
+                var tween = create_tween()
+                tween.set_parallel(true)
+                tween.tween_property(entry_ui, "modulate:a", 1.0, 0.25).set_delay(i * 0.02)
+                tween.tween_property(entry_ui, "scale", Vector2(1.0, 1.0), 0.25).set_delay(i * 0.02).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+
+func update_aquarium_status():
+        if not aquarium_status_label:
+                return
+
+        var caught_total = 0
+        for fish_name in Player.caught_fish_species.keys():
+                if Player.caught_fish_species[fish_name]:
+                        caught_total += 1
+
+        aquarium_status_label.text = "Aquarium: %d / %d gefüllte Einträge" % [Player.get_aquarium_fish().size(), caught_total]
+
+func _on_fill_aquarium_pressed():
+        var added = Player.fill_aquarium_with_caught_species()
+        print("🏠 Aquarium aktualisiert: ", added, " Fische")
+        refresh_aquarium_display()
+        update_aquarium_status()
+
+func _build_aquarium_entry(fish_data: Dictionary) -> Dictionary:
+        var entry = fish_data.duplicate(true)
+        entry["name"] = fish_data.get("name", "???")
+        entry["icon"] = fish_data.get("icon", "res://assets/fish/unknown.png")
+        entry["rarity"] = fish_data.get("rarity", FishDB.RARITY.NORMAL)
+        entry["base_value"] = fish_data.get("base_value", 0)
+        entry["caught"] = true
+        entry["original_name"] = fish_data.get("original_name", fish_data.get("name", ""))
+        return entry
 
 #func _on_entry_hover(entry: PanelContainer, is_hovering: bool) -> void:
 	## Nur für gefangene Fische
@@ -196,8 +280,10 @@ func update_stats():
 	stats_label.text = "Gefangen: %d / %d (%d%%)" % [stats["caught"], stats["total"], completion]
 	
 	# 🏆 Komplettierungs-Badge
-	if completion == 100:
-		stats_label.text += " 🏆"
+        if completion == 100:
+                stats_label.text += " 🏆"
+
+        update_aquarium_status()
 	
 	# 📖 Titel aktualisieren
 	match current_location:
