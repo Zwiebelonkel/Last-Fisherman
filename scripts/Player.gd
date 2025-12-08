@@ -17,12 +17,14 @@ var last_scene: String = "res://scenes/MainScene.tscn"
 var options: String = "res://scenes/OptionsCOntrol.tscn"
 var fish_inventory: Array = []
 var caught_fish_species: Dictionary = {}
+var used_story_items: Array = []
 
 # --- SETTINGS ---
 var master_volume: float = 1.0
 var music_volume: float = 1.0
 var sfx_volume: float = 1.0
 var resolution_scale: float = 1.0
+var frame_limit: int = 0
 var fullscreen: bool = false
 
 
@@ -70,6 +72,7 @@ func save_settings() -> void:
 		"music_volume": music_volume,
 		"sfx_volume": sfx_volume,
 		"resolution_scale": resolution_scale,
+		"frame_limit": frame_limit,
 		"fullscreen": fullscreen
 	}
 	var file = FileAccess.open("user://settings.dat", FileAccess.WRITE)
@@ -84,6 +87,7 @@ func load_settings() -> void:
 		music_volume = settings_data.get("music_volume", 1.0)
 		sfx_volume = settings_data.get("sfx_volume", 1.0)
 		resolution_scale = settings_data.get("resolution_scale", 1.0)
+		frame_limit = settings_data.get("frame_limit", 0)
 		fullscreen = settings_data.get("fullscreen", false)
 		
 		# Wende Einstellungen an
@@ -105,7 +109,7 @@ func apply_settings() -> void:
 	if sfx_bus != -1:
 		AudioServer.set_bus_volume_db(sfx_bus, linear_to_db(sfx_volume))
 	
-	# Resolution Scale
+	# 3D Resolution Scale
 	get_tree().root.scaling_3d_scale = resolution_scale
 	
 	# Fullscreen
@@ -113,6 +117,10 @@ func apply_settings() -> void:
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
 	else:
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
+
+	# 🆕 Frame-Limit anwenden
+	Engine.max_fps = frame_limit
+
 
 
 # 🆕 Touch-Button Sichtbarkeit steuern
@@ -156,22 +164,22 @@ func add_fish(fish_data: Dictionary) -> void:
 	Inventory.add_fish(fish_data)
 	print("Fisch ins Inventar hinzugefügt:", fish_data)
 	
-	# 🆕 Gewichtsrekord aktualisieren
+	# Gewichtsrekord aktualisieren
 	if fish_data.has("weight"):
 		update_weight_record(fish_data["name"], fish_data["weight"])
 	
-	# 🆕 Fangzähler erhöhen
+	# Fangzähler erhöhen
 	update_catch_count(fish_data["name"])
 	
 	# Fisch ins Fischbuch eintragen
 	if not caught_fish_species.has(fish_data["name"]):
 		caught_fish_species[fish_data["name"]] = true
 		print("🐟 Neue Fischart entdeckt:", fish_data["name"])
-		
-		check_biome_completion(fish_data)
+	
+	# 🆕 Story-Items werden NICHT automatisch verwendet!
+	# Das Event wird nur über den "Use"-Button im CatchResultUI ausgelöst
 	
 	save_game()
-
 # 🆕 Gewichtsrekord aktualisieren
 func update_weight_record(fish_name: String, weight: float) -> void:
 	if not fish_weight_records.has(fish_name):
@@ -357,6 +365,53 @@ func get_inventory_value() -> int:
 		total += int(f["base_value"] * rarity_bonus)
 	return total
 
+
+# Im save_game():
+func save_game() -> void:
+	var save_data = {
+		"money": money,
+		"level": level,
+		"xp": xp,
+		"upgrade_grip": upgrade_grip,
+		"upgrade_bait": upgrade_bait,
+		"upgrade_line": upgrade_line,
+		"last_scene": last_scene,
+		"fish_inventory": fish_inventory,
+		"unlocked_spots": unlocked_spots,
+		"caught_fish_species": caught_fish_species,
+		"completed_biomes": completed_biomes,
+		"fish_weight_records": fish_weight_records,
+		"fish_catch_count": fish_catch_count,
+		"used_story_items": used_story_items  # 🆕
+	}
+	var file = FileAccess.open("user://savegame.dat", FileAccess.WRITE)
+	file.store_var(save_data)
+	print("Spiel gespeichert!")
+
+
+# Im load_game():
+func load_game() -> void:
+	if FileAccess.file_exists("user://savegame.dat"):
+		var file = FileAccess.open("user://savegame.dat", FileAccess.READ)
+		var save_data = file.get_var()
+		money = save_data.get("money", 0)
+		level = save_data.get("level", 1)
+		xp = save_data.get("xp", 0)
+		upgrade_grip = save_data.get("upgrade_grip", 1)
+		upgrade_bait = save_data.get("upgrade_bait", 1)
+		upgrade_line = save_data.get("upgrade_line", 1)
+		last_scene = save_data.get("last_scene", "res://scenes/MainScene.tscn")
+		fish_inventory = save_data.get("fish_inventory", [])
+		unlocked_spots = save_data.get("unlocked_spots", unlocked_spots)
+		caught_fish_species = save_data.get("caught_fish_species", {})
+		completed_biomes = save_data.get("completed_biomes", completed_biomes)
+		fish_weight_records = save_data.get("fish_weight_records", {})
+		fish_catch_count = save_data.get("fish_catch_count", {})
+		used_story_items = save_data.get("used_story_items", [])  # 🆕
+		print("Spiel geladen!")
+
+
+# Im reset():
 func reset():
 	money = 0
 	level = 1
@@ -368,7 +423,8 @@ func reset():
 	Inventory.clear_inventory()
 	caught_fish_species.clear()
 	fish_weight_records.clear()
-	fish_catch_count.clear()  # 🆕
+	fish_catch_count.clear()
+	used_story_items.clear()  # 🆕
 	completed_biomes = {
 		"lake": false,
 		"city": false,
@@ -386,44 +442,3 @@ func reset():
 		"iceland": false,
 	}
 	save_game()
-
-func save_game() -> void:
-	var save_data = {
-		"money": money,
-		"level": level,
-		"xp": xp,
-		"upgrade_grip": upgrade_grip,
-		"upgrade_bait": upgrade_bait,
-		"upgrade_line": upgrade_line,
-		"last_scene": last_scene,
-		"fish_inventory": fish_inventory,
-		"unlocked_spots": unlocked_spots,
-		"caught_fish_species": caught_fish_species,
-		"completed_biomes": completed_biomes,
-		"fish_weight_records": fish_weight_records,
-		"fish_catch_count": fish_catch_count  # 🆕
-	}
-	var file = FileAccess.open("user://savegame.dat", FileAccess.WRITE)
-	file.store_var(save_data)
-	print("Spiel gespeichert!")
-
-func load_game() -> void:
-	if FileAccess.file_exists("user://savegame.dat"):
-		var file = FileAccess.open("user://savegame.dat", FileAccess.READ)
-		var save_data = file.get_var()
-		money = save_data.get("money", 0)
-		level = save_data.get("level", 1)
-		xp = save_data.get("xp", 0)
-		upgrade_grip = save_data.get("upgrade_grip", 1)
-		upgrade_bait = save_data.get("upgrade_bait", 1)
-		upgrade_line = save_data.get("upgrade_line", 1)
-		last_scene = save_data.get("last_scene", "res://scenes/MainScene.tscn")
-		fish_inventory = save_data.get("fish_inventory", [])
-		unlocked_spots = save_data.get("unlocked_spots", unlocked_spots)
-		caught_fish_species = save_data.get("caught_fish_species", {})
-		completed_biomes = save_data.get("completed_biomes", completed_biomes)
-		fish_weight_records = save_data.get("fish_weight_records", {})
-		fish_catch_count = save_data.get("fish_catch_count", {})  # 🆕
-		print("Spiel geladen!")
-	else:
-		print("Keine Speicherdatei gefunden, starte neues Spiel")

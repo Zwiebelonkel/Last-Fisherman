@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://cor735uf1n5si"]
+[gd_scene load_steps=29 format=3 uid="uid://cor735uf1n5si"]
 
 [ext_resource type="Shader" uid="uid://c140kjbm2bot5" path="res://shader/buckshot.gdshader" id="1_d1od2"]
 [ext_resource type="PackedScene" uid="uid://bvenk87ooe7ma" path="res://assets/cozy_wooden_cabin.glb" id="1_qssp3"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://cdb3sodlv6np7" path="res://scenes/MoneyHUD.tscn" id="6_3q32m"]
 [ext_resource type="PackedScene" uid="uid://be7bs5po2ukhi" path="res://scenes/FishBook.tscn" id="7_8hrlh"]
 [ext_resource type="PackedScene" uid="uid://b08obrprd472u" path="res://scenes/OptionsControl.tscn" id="9_mw5nc"]
+[ext_resource type="Script" uid="uid://dykdxx6r3ibik" path="res://scripts/lightFlicker.gd" id="10_4oyfp"]
 [ext_resource type="PackedScene" uid="uid://xt7f7m4i2iwi" path="res://scenes/touch.tscn" id="10_7t3s2"]
 [ext_resource type="Script" uid="uid://b20gpacd3w34" path="res://scripts/fps.gd" id="12_s6eg2"]
 
@@ -33,8 +34,35 @@ default_font = ExtResource("3_s6eg2")
 [sub_resource type="Theme" id="Theme_2hkft"]
 default_font = ExtResource("3_s6eg2")
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_2hkft"]
+size = Vector3(42.417, 94.3036, 68.8503)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_5ox4q"]
+size = Vector3(151.742, 33.0678, 48.2673)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_mw5nc"]
+size = Vector3(45.3826, 63.6097, 48.2673)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_4oyfp"]
+size = Vector3(36.3713, 45.45, 61.5756)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_lcd1r"]
+size = Vector3(112.757, 22.562, 100.63)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_glsmu"]
+size = Vector3(35.9858, 84.5004, 92.1423)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_phvbg"]
+size = Vector3(102.883, 57.7344, 70.1152)
+
 [sub_resource type="BoxShape3D" id="BoxShape3D_s6eg2"]
 size = Vector3(331.727, 242.136, 13.1674)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_3q32m"]
+size = Vector3(20.4595, 225.075, 255.854)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_8hrlh"]
+size = Vector3(440.95, 225.075, 21.969)
 
 [sub_resource type="Shader" id="Shader_kqfxt"]
 code = "shader_type sky;
@@ -191,14 +219,85 @@ theme = SubResource("Theme_2hkft")
 [node name="Cabin" parent="." instance=ExtResource("1_qssp3")]
 transform = Transform3D(0.025, 0, 0, 0, 0.025, 0, 0, 0, 0.025, -2.79241, -4.36985, 1.98553)
 
-[node name="Material22" parent="Cabin/Sketchfab_model/Collada visual scene group" index="2"]
-visible = false
+[node name="StaticBody3D" type="StaticBody3D" parent="Cabin/Sketchfab_model/Collada visual scene group/Material2" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.80906, 29.0451, 185.47)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cabin/Sketchfab_model/Collada visual scene group/Material2/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.0873, -18.8174, 6.63586)
+shape = SubResource("BoxShape3D_2hkft")
+
+[node name="StaticBody3D2" type="StaticBody3D" parent="Cabin/Sketchfab_model/Collada visual scene group/Material2" index="1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 178.313, 144.644, 185.47)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cabin/Sketchfab_model/Collada visual scene group/Material2/StaticBody3D2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 48.5754, 11.8005, -3.65489)
+shape = SubResource("BoxShape3D_5ox4q")
+
+[node name="StaticBody3D3" type="StaticBody3D" parent="Cabin/Sketchfab_model/Collada visual scene group/Material2" index="2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 273.457, 68.225, 185.47)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cabin/Sketchfab_model/Collada visual scene group/Material2/StaticBody3D3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.84685, -0.779783, -3.65489)
+shape = SubResource("BoxShape3D_mw5nc")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Cabin/Sketchfab_model/Collada visual scene group/Material310" index="0"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cabin/Sketchfab_model/Collada visual scene group/Material310/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 94.7128, -54.2287, 200.956)
+shape = SubResource("BoxShape3D_4oyfp")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Cabin/Sketchfab_model/Collada visual scene group/Material314" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 35.5855, -55.4364, 198.27)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cabin/Sketchfab_model/Collada visual scene group/Material314/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.0589, 10.781, 9.41197)
+shape = SubResource("BoxShape3D_lcd1r")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Cabin/Sketchfab_model/Collada visual scene group/Material317" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 274.429, -31.8908, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cabin/Sketchfab_model/Collada visual scene group/Material317/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.47607, -4.79144, 172.751)
+shape = SubResource("BoxShape3D_glsmu")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Cabin/Sketchfab_model/Collada visual scene group/Material319" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 141.166, 174.46)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cabin/Sketchfab_model/Collada visual scene group/Material319/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.6046, 0.479496, 11.8112)
+shape = SubResource("BoxShape3D_phvbg")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="Cabin/Sketchfab_model/Collada visual scene group" index="28"]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Cabin/Sketchfab_model/Collada visual scene group/StaticBody3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 131.484, 48.8557, 152.687)
 shape = SubResource("BoxShape3D_s6eg2")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Cabin"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cabin/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -43.2064, 259.562, -51.2674)
+shape = SubResource("BoxShape3D_3q32m")
+
+[node name="StaticBody3D2" type="StaticBody3D" parent="Cabin"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cabin/StaticBody3D2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 305.739, 259.562, -51.2674)
+shape = SubResource("BoxShape3D_3q32m")
+
+[node name="StaticBody3D3" type="StaticBody3D" parent="Cabin"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -181.647, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cabin/StaticBody3D3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 313.02, 259.562, -181.185)
+shape = SubResource("BoxShape3D_8hrlh")
+
+[node name="StaticBody3D4" type="StaticBody3D" parent="Cabin"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -181.647, 0, 263.437)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cabin/StaticBody3D4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 313.02, 259.562, -181.185)
+shape = SubResource("BoxShape3D_8hrlh")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_fm13a")
@@ -225,12 +324,36 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.49675, 0)
 
 [node name="Camera3D" type="Camera3D" parent="FPSPlayer/Head"]
 
-[node name="OmniLight3D" type="OmniLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.33143, 1)
+[node name="OmniLight3D" type="SpotLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.0222162, 0.999753, 0, -0.999753, 0.0222162, 3.43658, 4.03626, 1)
 light_color = Color(0.737255, 0.74902, 0.341176, 1)
-light_energy = 15.691
-omni_range = 4.777
-omni_attenuation = 0.79
+light_energy = 11.927
+light_indirect_energy = 0.709
+light_volumetric_fog_energy = 2.018
+light_specular = 0.936
+spot_range = 727.227
+spot_angle = 48.32
+script = ExtResource("10_4oyfp")
+flicker_type = "Candle"
+min_energy = 1.0
+max_energy = 2.0
+flicker_speed = 1.9
+flicker_color = true
+
+[node name="OmniLight3D2" type="SpotLight3D" parent="."]
+transform = Transform3D(0.989178, 0.00325961, 0.146686, -0.146722, 0.0219758, 0.988934, 0, -0.999753, 0.0222162, -2.98047, 4.00869, 1)
+light_color = Color(0.737255, 0.74902, 0.341176, 1)
+light_energy = 11.927
+light_indirect_energy = 0.709
+light_volumetric_fog_energy = 2.018
+light_specular = 0.936
+spot_range = 727.227
+spot_angle = 48.32
+script = ExtResource("10_4oyfp")
+flicker_type = "Candle"
+min_energy = 1.0
+max_energy = 1.81
+flicker_color = true
 
 [editable path="UI/FishBook"]
 [editable path="UI/Touch"]

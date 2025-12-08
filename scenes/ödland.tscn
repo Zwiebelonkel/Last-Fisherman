@@ -282,9 +282,23 @@ func _ready() -> void:
 		cast_power_ui = cast_power_ui_scene.instantiate()
 		add_child(cast_power_ui)
 		
-	Player.biome_completed.connect(_on_biome_completed)
 	# 🆕 Button-Signals verbinden
 	setup_buttons()
+	if catch_result_ui:
+		catch_result_ui.story_item_used.connect(_on_story_item_used)
+	
+	Player.biome_completed.connect(_on_biome_completed)
+
+
+# 🆕 Story-Item wurde \\\"verwendet\\\"
+func _on_story_item_used(biome: String) -> void:
+	print(\"🎭 Story-Item Event ausgelöst für Biom:\", biome)
+	
+	_on_biome_completed(\"desert\", 100)
+	# Trigger das Biom-Completion Event
+	if not Player.completed_biomes.get(biome, false):
+		Player.trigger_biome_completion_event(biome)
+
 
 
 
@@ -1588,7 +1602,7 @@ emission_energy_multiplier = 16.0
 [sub_resource type="SphereMesh" id="SphereMesh_7r1ho"]
 material = SubResource("StandardMaterial3D_55u6b")
 
-[node name="MainScene5" type="Node3D"]
+[node name="MainScene" type="Node3D"]
 
 [node name="Filter2" type="CanvasLayer" parent="."]
 layer = 0

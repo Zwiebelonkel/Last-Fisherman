@@ -73,15 +73,14 @@ func _ready():
 		location_selector.add_item("🏢 Stadt")
 		location_selector.add_item("🐀 Kanal")
 		location_selector.add_item("🌲 Wald")
-		location_selector.add_item("🌵 Ödland")
+		location_selector.add_item("🌵 Wüste")
 		location_selector.add_item("❄️ Eisland")
 		location_selector.add_item("🌍 Alle")
-		location_selector.select(0)
+		# 🆕 Noch NICHT select(0) - das passiert in _on_visibility_changed
 	
 	# Signal verbinden
 	visibility_changed.connect(_on_visibility_changed)
 	
-	#load_bestiary()
 	print("✅ FishBook UI erfolgreich geladen!")
 
 # 🆕 Popup anzeigen
@@ -114,10 +113,57 @@ func show_fish_detail_popup(fish_data: Dictionary):
 			else:
 				print("  ❌ Auch nach Neuerstellen keine Methode gefunden")
 
+# 🆕 WICHTIG: Beim Öffnen aktuellen Ort aus FishingRod holen
 func _on_visibility_changed() -> void:
 	if visible:
-		print("📖 FishBook wurde geöffnet - Aktualisiere Daten...")
+		print("📖 FishBook wurde geöffnet - Lade aktuellen Ort...")
+		
+		# 🆕 Versuche fishing_location aus FishingRod zu holen
+		# Pfad: Root -> MainScene3 -> PlayerCamera -> FishingRod
+		var fishing_rod = get_tree().root.get_node_or_null("MainScene3/PlayerCamera/FishingRod")
+		
+		if not fishing_rod:
+			# Fallback: Suche in allen Scenes
+			for scene_name in ["MainScene", "MainScene2", "forest"]:
+				fishing_rod = get_tree().root.get_node_or_null(scene_name + "/PlayerCamera/FishingRod")
+				if fishing_rod:
+					break
+		
+		if fishing_rod and "fishing_location" in fishing_rod:
+			var detected_location = fishing_rod.fishing_location
+			print("  ✅ Ort erkannt: ", detected_location)
+			current_location = detected_location
+			
+			# 🆕 OptionButton auf richtigen Index setzen
+			var location_index = get_location_index(detected_location)
+			if location_index >= 0:
+				location_selector.select(location_index)
+		else:
+			print("  ⚠️ FishingRod nicht gefunden, nutze Standard: lake")
+			current_location = "lake"
+			location_selector.select(0)
+		
 		load_bestiary()
+
+# 🆕 Hilfsfunktion: Location String → OptionButton Index
+func get_location_index(location: String) -> int:
+	match location:
+		"lake":
+			return 0
+		"city":
+			return 1
+		"sewer":
+			return 2
+		"forest":
+			return 3
+		"desert":
+			return 4
+		"iceland":
+			return 5
+		"insgesamt":
+			return 6
+		_:
+			return 0  # Fallback zu See
 
 func load_bestiary():
 	print("📖 load_bestiary() - Starting...")
@@ -151,30 +197,9 @@ func load_bestiary():
 		tween.set_parallel(true)
 		tween.tween_property(entry_ui, "modulate:a", 1.0, 0.3).set_delay(i * 0.03)
 		tween.tween_property(entry_ui, "scale", Vector2(1.0, 1.0), 0.3).set_delay(i * 0.03).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-		
-		 #🎭 Hover-Effekt hinzufügen
-		#entry_ui.mouse_entered.connect(_on_entry_hover.bind(entry_ui, true))
-		#entry_ui.mouse_exited.connect(_on_entry_hover.bind(entry_ui, false))
 	
 	# Stats aktualisieren
 	update_stats()
-
-#func _on_entry_hover(entry: PanelContainer, is_hovering: bool) -> void:
-	## Nur für gefangene Fische
-	#if not entry.fish_data.get("caught", false):
-		#return
-	#
-	#var tween = create_tween()
-	#
-	#var start_pos = entry.position
-	#var target_pos = start_pos + Vector2(0, -6)  # 6px nach oben
-	#
-	#if is_hovering:
-		#entry.z_index = 10
-		#tween.tween_property(entry, "position", target_pos, 0.05).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
-	#else:
-		#entry.z_index = 0
-		#tween.tween_property(entry, "position", entry.position + Vector2(0, 6), 0.05).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
 
 func update_stats():
 	var stats = fish_book.get_bestiary_stats(current_location)
@@ -210,7 +235,7 @@ func update_stats():
 		"forest":
 			title_label.text = "📖 Fischbuch - 🌲 Wald"
 		"desert":
-			title_label.text = "📖 Fischbuch - 🌵 Ödland"
+			title_label.text = "📖 Fischbuch - 🌵 Wüste"
 		"iceland":
 			title_label.text = "📖 Fischbuch - ❄️ Eisland"
 		"insgesamt":

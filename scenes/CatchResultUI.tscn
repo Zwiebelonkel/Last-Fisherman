@@ -161,7 +161,7 @@ scale = Vector2(3.5, 3.5)
 [node name="Panel2" type="Panel" parent="."]
 layout_mode = 0
 offset_right = 240.0
-offset_bottom = 290.0
+offset_bottom = 324.0
 
 [node name="Panel" type="Panel" parent="."]
 layout_mode = 2
@@ -173,9 +173,10 @@ grow_vertical = 2
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
 offset_right = 240.0
-offset_bottom = 290.0
+offset_bottom = 342.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/separation = 10
 
 [node name="MarginContainer" type="MarginContainer" parent="VBoxContainer"]
 layout_mode = 2
@@ -223,7 +224,7 @@ theme_override_constants/margin_bottom = 0
 [node name="FishName" type="Label" parent="VBoxContainer/MarginContainer2"]
 layout_mode = 2
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-text = "d"
+text = "Name"
 
 [node name="MarginContainer3" type="MarginContainer" parent="VBoxContainer"]
 layout_mode = 2
@@ -232,7 +233,7 @@ theme_override_constants/margin_left = 10
 [node name="FishRarity" type="Label" parent="VBoxContainer/MarginContainer3"]
 layout_mode = 2
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-text = "d"
+text = "Rarity"
 
 [node name="MarginContainer4" type="MarginContainer" parent="VBoxContainer"]
 layout_mode = 2
@@ -241,7 +242,7 @@ theme_override_constants/margin_left = 10
 [node name="FishValue" type="Label" parent="VBoxContainer/MarginContainer4"]
 layout_mode = 2
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-text = "d"
+text = "Value"
 
 [node name="MarginContainer5" type="MarginContainer" parent="VBoxContainer"]
 layout_mode = 2
@@ -252,20 +253,30 @@ layout_mode = 2
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "Gewicht: 0 kg"
 
+[node name="MarginContainer6" type="MarginContainer" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+
+[node name="StoryLabel" type="Label" parent="VBoxContainer/MarginContainer6"]
+custom_minimum_size = Vector2(33.405, 62.395)
+layout_mode = 2
+text = "Story text befindet sich hier"
+autowrap_mode = 2
+
 [node name="ContinueButton" type="Button" parent="."]
 layout_mode = 2
-offset_top = 267.0
+offset_top = 300.0
 offset_right = 240.0
-offset_bottom = 290.0
+offset_bottom = 323.0
 size_flags_vertical = 8
 text = "Continue"
 
 [node name="NewLabel" type="Label" parent="."]
 layout_mode = 2
 offset_left = 191.0
-offset_top = -1.82087
+offset_top = 2.0
 offset_right = 238.0
-offset_bottom = 16.1791
+offset_bottom = 20.0
 size_flags_horizontal = 8
 theme_override_colors/font_color = Color(1, 0.85, 0, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)

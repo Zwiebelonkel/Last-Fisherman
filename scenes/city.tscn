@@ -164,7 +164,20 @@ func _ready() -> void:
 	
 	# 🆕 Button-Signals verbinden
 	setup_buttons()
+	if catch_result_ui:
+		catch_result_ui.story_item_used.connect(_on_story_item_used)
+	
 	Player.biome_completed.connect(_on_biome_completed)
+
+
+# 🆕 Story-Item wurde \"verwendet\"
+func _on_story_item_used(biome: String) -> void:
+	print(\"🎭 Story-Item Event ausgelöst für Biom:\", biome)
+	
+	_on_biome_completed(\"city\", 100)
+	# Trigger das Biom-Completion Event
+	if not Player.completed_biomes.get(biome, false):
+		Player.trigger_biome_completion_event(biome)
 
 
 

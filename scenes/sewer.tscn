@@ -278,9 +278,23 @@ func _ready() -> void:
 		cast_power_ui = cast_power_ui_scene.instantiate()
 		add_child(cast_power_ui)
 	
-	Player.biome_completed.connect(_on_biome_completed)
 	# 🆕 Button-Signals verbinden
 	setup_buttons()
+	if catch_result_ui:
+		catch_result_ui.story_item_used.connect(_on_story_item_used)
+	
+	Player.biome_completed.connect(_on_biome_completed)
+
+
+# 🆕 Story-Item wurde \\\"verwendet\\\"
+func _on_story_item_used(biome: String) -> void:
+	print(\"🎭 Story-Item Event ausgelöst für Biom:\", biome)
+	
+	_on_biome_completed(\"sewer\", 100)
+	# Trigger das Biom-Completion Event
+	if not Player.completed_biomes.get(biome, false):
+		Player.trigger_biome_completion_event(biome)
+
 
 
 
