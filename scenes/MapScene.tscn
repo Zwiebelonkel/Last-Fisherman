@@ -191,6 +191,14 @@ offset_right = 446.0
 offset_bottom = 99.5
 text = "Iceland"
 
+[node name="HomeButton" type="Button" parent="layout/Locations"]
+layout_mode = 0
+offset_left = 266.0
+offset_top = 352.5
+offset_right = 340.0
+offset_bottom = 383.5
+text = "Home"
+
 [node name="Popup" type="Panel" parent="layout"]
 layout_mode = 0
 offset_left = -32.0
@@ -271,10 +279,8 @@ text = "Back"
 
 [node name="Filter" type="CanvasLayer" parent="."]
 layer = 0
-visible = false
 
 [node name="PixelateOverlay" type="ColorRect" parent="Filter"]
-visible = false
 material = SubResource("ShaderMaterial_jqekx")
 anchors_preset = 15
 anchor_right = 1.0
@@ -348,6 +354,7 @@ flip_h = true
 layer = 0
 
 [node name="PixelateOverlay" type="ColorRect" parent="Filter2"]
+visible = false
 material = SubResource("ShaderMaterial_prey2")
 anchors_preset = 15
 anchor_right = 1.0

@@ -53,37 +53,6 @@ func _unhandled_input(event: InputEvent) -> void:
 		_on_continue_pressed()
 		return
 
-
-# ---------------------------------------------------------
-# TYPEWRITER EFFECT
-# ---------------------------------------------------------
-func typewriter(label: Label, text: String, speed := 0.02) -> void:
-	if label == null:
-		return
-	label.text = ""
-	for i in text.length():
-		label.text = text.substr(0, i + 1)
-		await get_tree().create_timer(speed).timeout
-
-
-# ---------------------------------------------------------
-# RAINBOW COLOR FADE (nur für ANTIK-Storytext)
-# ---------------------------------------------------------
-func animate_rainbow(label: Label) -> void:
-	if label == null:
-		return
-	var tw := create_tween().set_loops()
-	tw.set_trans(Tween.TRANS_LINEAR)
-	tw.set_ease(Tween.EASE_IN_OUT)
-	tw.tween_property(label, "modulate", Color(1,0,0), 0.7)
-	tw.tween_property(label, "modulate", Color(1,0.5,0), 0.7)
-	tw.tween_property(label, "modulate", Color(1,1,0), 0.7)
-	tw.tween_property(label, "modulate", Color(0,1,0), 0.7)
-	tw.tween_property(label, "modulate", Color(0,1,1), 0.7)
-	tw.tween_property(label, "modulate", Color(0,0,1), 0.7)
-	tw.tween_property(label, "modulate", Color(1,0,1), 0.7)
-
-
 # ---------------------------------------------------------
 # HAUPTFUNKTION – FISCH ANZEIGEN
 # ---------------------------------------------------------
@@ -112,8 +81,8 @@ func show_fish(fish: Dictionary) -> void:
 			story_label.visible = true
 			story_label.modulate = Color.WHITE
 			# Typewriter + Rainbow für Storytext
-			await typewriter(story_label, fish["story_text"], 0.03)
-			animate_rainbow(story_label)
+			
+			story_label.text = fish["story_text"]
 	else:
 		continue_button.text = "Continue"
 		if story_label:
@@ -137,11 +106,11 @@ func show_fish(fish: Dictionary) -> void:
 	fish_icon.texture = _get_fish_icon(fish)
 	
 	# Name
-	await typewriter(fish_name, fish["name"], 0.03)
+	fish_name.text = fish["name"]
 	
 	# Rarity
 	fish_rarity.modulate = rarity_color
-	await typewriter(fish_rarity, rarity_data["name"], 0.02)
+	fish_rarity.text = rarity_data["name"]
 	
 	# Wert
 	var display_value_text: String
@@ -151,12 +120,11 @@ func show_fish(fish: Dictionary) -> void:
 	else:
 		var total_value: int = int(fish["base_value"] * rarity_data["value"])
 		display_value_text = str(total_value) + " €"
-	await typewriter(fish_value, display_value_text, 0.02)
+	fish_value.text = display_value_text
 	
 	# Gewicht
 	if fish_weight and fish.has("weight"):
-		var weight_text := "Gewicht: %.2f kg" % fish["weight"]
-		await typewriter(fish_weight, weight_text, 0.02)
+		fish_weight.text = "Gewicht: %.2f kg" % fish["weight"]
 	
 	# -----------------------------------
 	# Panel-Rand + Shine-Farbe
@@ -273,8 +241,16 @@ func prepare_fish_data(fish: Dictionary) -> Dictionary:
 	
 	if not prepared_fish.has("location"):
 		prepared_fish["location"] = "unknown"
-	
+
+	# 🆕 Gewicht generieren
+	if not prepared_fish.has("weight") and prepared_fish.has("weight_min") and prepared_fish.has("weight_max"):
+		prepared_fish["weight"] = randf_range(
+			prepared_fish["weight_min"],
+			prepared_fish["weight_max"]
+		)
+
 	return prepared_fish
+
 
 
 func get_description_from_fishdb(fish_name: String) -> String:

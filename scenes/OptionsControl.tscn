@@ -6,7 +6,7 @@
 [ext_resource type="Script" uid="uid://cjlfy1cwa4yf7" path="res://scripts/scale_control.gd" id="3_5683i"]
 [ext_resource type="Script" uid="uid://bb5s5nskhkslj" path="res://scripts/fullscreen_control.gd" id="4_tkc0w"]
 [ext_resource type="Script" uid="uid://7j5d55yd3ps7" path="res://scripts/GUIControl.gd" id="5_5683i"]
-[ext_resource type="Script" uid="uid://bq1artw2hgunn" path="res://scripts/frameControl.gd" id="5_rjqyh"]
+[ext_resource type="Script" path="res://scripts/frameControl.gd" id="5_rjqyh"]
 
 [sub_resource type="Theme" id="Theme_tkc0w"]
 default_font = ExtResource("2_5683i")

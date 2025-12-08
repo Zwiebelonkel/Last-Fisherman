@@ -2,6 +2,8 @@ extends Node
 
 # 🆕 Signal für UI-Benachrichtigungen
 signal biome_completed(biome_name: String, reward: int)
+signal fish_caught(fish_name: String)  # 🆕 NEU für Aquarium
+
 
 # 🆕 Touch-Button Referenz
 var touch_buttons: Node = null
@@ -51,6 +53,8 @@ var unlocked_spots = {
 	"forest": false,
 	"desert": false,
 	"iceland": false,
+	"home": true,
+
 }
 
 var spot_prices = {
@@ -60,6 +64,7 @@ var spot_prices = {
 	"forest": 2000,
 	"desert": 4000,
 	"iceland": 6000,
+	"home": 0,
 }
 
 func _ready():
@@ -172,12 +177,14 @@ func add_fish(fish_data: Dictionary) -> void:
 	update_catch_count(fish_data["name"])
 	
 	# Fisch ins Fischbuch eintragen
+	var is_new_fish = false
 	if not caught_fish_species.has(fish_data["name"]):
 		caught_fish_species[fish_data["name"]] = true
+		is_new_fish = true
 		print("🐟 Neue Fischart entdeckt:", fish_data["name"])
-	
-	# 🆕 Story-Items werden NICHT automatisch verwendet!
-	# Das Event wird nur über den "Use"-Button im CatchResultUI ausgelöst
+		
+		# 🆕 Signal für Aquarium emittieren (nur bei neuen Fischen!)
+		emit_signal("fish_caught", fish_data["name"])
 	
 	save_game()
 # 🆕 Gewichtsrekord aktualisieren
@@ -432,6 +439,8 @@ func reset():
 		"forest": false,
 		"desert": false,
 		"iceland": false,
+		"home": true,
+
 	}
 	unlocked_spots = {
 		"lake": true,
@@ -440,5 +449,6 @@ func reset():
 		"forest": false,
 		"desert": false,
 		"iceland": false,
+		"home": true,
 	}
 	save_game()

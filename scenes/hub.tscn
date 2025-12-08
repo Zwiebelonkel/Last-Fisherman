@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=3 uid="uid://cor735uf1n5si"]
+[gd_scene load_steps=32 format=3 uid="uid://cor735uf1n5si"]
 
 [ext_resource type="Shader" uid="uid://c140kjbm2bot5" path="res://shader/buckshot.gdshader" id="1_d1od2"]
 [ext_resource type="PackedScene" uid="uid://bvenk87ooe7ma" path="res://assets/cozy_wooden_cabin.glb" id="1_qssp3"]
@@ -7,8 +7,9 @@
 [ext_resource type="PackedScene" uid="uid://cdb3sodlv6np7" path="res://scenes/MoneyHUD.tscn" id="6_3q32m"]
 [ext_resource type="PackedScene" uid="uid://be7bs5po2ukhi" path="res://scenes/FishBook.tscn" id="7_8hrlh"]
 [ext_resource type="PackedScene" uid="uid://b08obrprd472u" path="res://scenes/OptionsControl.tscn" id="9_mw5nc"]
-[ext_resource type="Script" uid="uid://dykdxx6r3ibik" path="res://scripts/lightFlicker.gd" id="10_4oyfp"]
+[ext_resource type="Script" path="res://scripts/lightFlicker.gd" id="10_4oyfp"]
 [ext_resource type="PackedScene" uid="uid://xt7f7m4i2iwi" path="res://scenes/touch.tscn" id="10_7t3s2"]
+[ext_resource type="Script" uid="uid://dcpmiuqpwqgew" path="res://scripts/Aquarium.gd" id="11_lcd1r"]
 [ext_resource type="Script" uid="uid://b20gpacd3w34" path="res://scripts/fps.gd" id="12_s6eg2"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_w6xti"]
@@ -184,6 +185,17 @@ volumetric_fog_ambient_inject = 0.2
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_tmir4"]
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4oyfp"]
+transparency = 1
+albedo_color = Color(0.309804, 1, 1, 0.843137)
+metallic = 1.0
+metallic_specular = 0.69
+roughness = 0.52
+
+[sub_resource type="BoxMesh" id="BoxMesh_4oyfp"]
+material = SubResource("StandardMaterial3D_4oyfp")
+size = Vector3(3.15, 1.57, 0.805)
+
 [node name="Node3D" type="Node3D"]
 
 [node name="Filter" type="CanvasLayer" parent="."]
@@ -354,6 +366,23 @@ flicker_type = "Candle"
 min_energy = 1.0
 max_energy = 1.81
 flicker_color = true
+
+[node name="Aquarium" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.7388, 1.55163, -1.88465)
+script = ExtResource("11_lcd1r")
+aquarium_size = Vector3(3.15, 1.57, 0.805)
+fish_scale = 0.35
+spawn_padding = 0.1
+max_fish = 235
+
+[node name="AquariumMesh" type="MeshInstance3D" parent="Aquarium"]
+mesh = SubResource("BoxMesh_4oyfp")
+
+[node name="SpotLight3D" type="OmniLight3D" parent="Aquarium"]
+transform = Transform3D(1, 0, 0, 0, -0.00298452, 0.999996, 0, -0.999996, -0.00298452, 0, -0.12668, -0.126931)
+light_color = Color(0, 0.9268, 0.9372, 1)
+light_energy = 5.236
+light_volumetric_fog_energy = 0.0
 
 [editable path="UI/FishBook"]
 [editable path="UI/Touch"]
