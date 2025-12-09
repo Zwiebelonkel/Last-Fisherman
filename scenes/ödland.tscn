@@ -1,4 +1,4 @@
-[gd_scene load_steps=58 format=3 uid="uid://bnj4irwko1m1j"]
+[gd_scene load_steps=62 format=3 uid="uid://bnj4irwko1m1j"]
 
 [ext_resource type="Shader" uid="uid://bso2ewb2ieq7x" path="res://shader/warp.gdshader" id="1_tx5p3"]
 [ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="2_acjgc"]
@@ -30,6 +30,7 @@
 [ext_resource type="PackedScene" uid="uid://bej6o0ysl85et" path="res://assets/rock.glb" id="25_a4tue"]
 [ext_resource type="PackedScene" uid="uid://ckje0fw3pep83" path="res://assets/skyscaper.glb" id="26_acjgc"]
 [ext_resource type="PackedScene" uid="uid://ctqxalvjd2b1k" path="res://assets/palm.glb" id="26_flfji"]
+[ext_resource type="AudioStream" uid="uid://gokupx1gu8h3" path="res://sounds/implode.mp3" id="26_re5ia"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_lbf82"]
 shader = ExtResource("1_tx5p3")
@@ -379,7 +380,14 @@ func _on_biome_completed(biome_name: String, reward: int) -> void:
 			pass
 		
 		\"desert\":
-			print(\"✨ Alle Biome gemeistert - Geheimes Ende freigeschaltet!\")
+			var ani: AnimationPlayer = $\"../../sun/AnimationPlayer\"
+			var sound: AudioStreamPlayer = $\"../../Audio/implode\"
+			sound.play()
+			camera.start_screenshake(0.09,5)
+			ani.play(\"implode\")
+			await ani.animation_finished  # ✅ Warte auf das Signal
+			Player.update_last_scene(\"res://scenes/MainScene.tscn\")
+			Transition.change_scene(\"res://scenes/MapScene.tscn\")
 
 func _unhandled_input(event: InputEvent) -> void:
 	# 🆕 ESC/Pause behandeln - IMMER als erstes prüfen
@@ -1487,7 +1495,7 @@ tracks/2/keys = {
 tracks/3/type = "value"
 tracks/3/imported = false
 tracks/3/enabled = true
-tracks/3/path = NodePath("../MeshInstance3D2:position")
+tracks/3/path = NodePath("../sun:position")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
@@ -1552,7 +1560,7 @@ tracks/2/keys = {
 tracks/3/type = "value"
 tracks/3/imported = false
 tracks/3/enabled = true
-tracks/3/path = NodePath("../MeshInstance3D2:position")
+tracks/3/path = NodePath("../sun:position")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
@@ -1601,6 +1609,115 @@ emission_energy_multiplier = 16.0
 
 [sub_resource type="SphereMesh" id="SphereMesh_7r1ho"]
 material = SubResource("StandardMaterial3D_55u6b")
+
+[sub_resource type="Animation" id="Animation_re5ia"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(101.89, 101.89, 101.89)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("../DirectionalLight3D:light_energy")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [7.564]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("../DirectionalLight3D:light_angular_distance")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [9.1]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("../WaterPlane:position")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, -10.13, 129.833)]
+}
+
+[sub_resource type="Animation" id="Animation_flfji"]
+resource_name = "implode"
+length = 5.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:scale")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1, 2, 3, 3.53435, 4.01, 5),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(101.89, 101.89, 101.89), Vector3(145.16, 145.16, 145.16), Vector3(156.39, 156.39, 156.39), Vector3(156.39, 156.39, 156.39), Vector3(-0.03, -0.03, -0.03), Vector3(-0.0299988, -0.0299988, -0.0299988), Vector3(781.605, 781.605, 781.605)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("../DirectionalLight3D:light_energy")
+tracks/1/interp = 2
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 1, 2.65, 3.56, 4, 5),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [7.564, 14.393, 14.393, 0.0, 0.0, 16.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("../DirectionalLight3D:light_angular_distance")
+tracks/2/interp = 2
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 1, 3.02, 3.54, 4.02, 5),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [9.1, 24.47, 24.47, 0.0, 0.0, 90.0]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("../WaterPlane:position")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 1, 4.01, 4.96667),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(0, -10.13, 129.833), Vector3(0, -12.3174, 129.833), Vector3(0, -12.3174, 129.833), Vector3(0, -19.6276, 129.833)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_8cl07"]
+_data = {
+&"RESET": SubResource("Animation_re5ia"),
+&"implode": SubResource("Animation_flfji")
+}
 
 [node name="MainScene" type="Node3D"]
 
@@ -1785,7 +1902,7 @@ libraries = {
 transform = Transform3D(1, 0, 0, 0, 0.931818, 0.362926, 0, -0.362926, 0.931818, 4.54267, 37.6064, 160.116)
 light_color = Color(0.810809, 0.655906, 0.414645, 1)
 light_energy = 7.564
-light_indirect_energy = 5.041
+light_indirect_energy = 9.529
 light_volumetric_fog_energy = 0.63
 light_angular_distance = 9.1
 light_specular = 0.676
@@ -1811,9 +1928,14 @@ rod_tip = NodePath("../PlayerCamera/FishingRod/RodMesh/RodTip")
 hook = NodePath("../Hook")
 fishing_script = NodePath("../PlayerCamera/FishingRod")
 
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+[node name="sun" type="MeshInstance3D" parent="."]
 transform = Transform3D(101.89, 0, 0, 0, 101.89, 0, 0, 0, 101.89, 18.9142, 88.4997, 385.297)
 mesh = SubResource("SphereMesh_7r1ho")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="sun"]
+libraries = {
+&"": SubResource("AnimationLibrary_8cl07")
+}
 
 [node name="Shop" parent="." instance=ExtResource("16_mabyp")]
 transform = Transform3D(-3.12536e-08, 0, 0.715, 0.183488, 0.691055, 8.02051e-09, -0.691055, 0.183488, -3.02069e-08, -2.74395, 0.284576, -0.208801)
@@ -1848,6 +1970,12 @@ stream = ExtResource("24_lbf82")
 volume_db = -2.735
 pitch_scale = 1.1
 autoplay = true
+bus = &"SFX"
+
+[node name="implode" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("26_re5ia")
+volume_db = -2.735
+pitch_scale = 1.43
 bus = &"SFX"
 
 [node name="palm" parent="Audio" instance=ExtResource("26_flfji")]

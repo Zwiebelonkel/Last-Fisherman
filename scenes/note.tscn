@@ -1,0 +1,46 @@
+[gd_scene load_steps=7 format=3 uid="uid://cbxqcwmep1mf8"]
+
+[ext_resource type="Script" uid="uid://56yw48ywi5p4" path="res://scripts/note.gd" id="1_t3yvt"]
+[ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="2_1bnk6"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_7buut"]
+size = Vector3(1, 0.05, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_43c4j"]
+albedo_color = Color(0, 0, 0, 1)
+emission = Color(1, 1, 0, 1)
+emission_energy_multiplier = 0.68
+
+[sub_resource type="TextMesh" id="TextMesh_njo4t"]
+material = SubResource("StandardMaterial3D_43c4j")
+text = "E"
+font = ExtResource("2_1bnk6")
+font_size = 86
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_t3yvt"]
+size = Vector3(1, 0.05, 1)
+
+[node name="Note" type="Node3D"]
+script = ExtResource("1_t3yvt")
+
+[node name="Mesh" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_7buut")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Mesh"]
+transform = Transform3D(-4.37114e-08, -0.999701, 0.0244322, 0, 0.0244322, 0.999701, -1, 4.36983e-08, -1.06797e-09, 0, 0.0391025, 0)
+mesh = SubResource("TextMesh_njo4t")
+
+[node name="Area3D" type="Area3D" parent="."]
+transform = Transform3D(2.74, 0, 0, 0, 47.355, 0, 0, 0, 2.74, 0, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+shape = SubResource("BoxShape3D_t3yvt")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.545942, 0)
+light_color = Color(0.774446, 0.774446, 0, 1)
+light_energy = 1.145
+omni_range = 0.878
+
+[connection signal="body_entered" from="Area3D" to="." method="_on_detection_area_body_entered"]
+[connection signal="body_exited" from="Area3D" to="." method="_on_detection_area_body_exited"]

@@ -21,6 +21,7 @@ extends Control
 var selected_spot := ""
 
 func _ready():
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	assign_button(lake_btn, "lake")
 	assign_button(city_btn, "city")
 	assign_button(sewer_btn, "sewer")

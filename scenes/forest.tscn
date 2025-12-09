@@ -1,4 +1,4 @@
-[gd_scene load_steps=62 format=3 uid="uid://bru2npwxw6p10"]
+[gd_scene load_steps=63 format=3 uid="uid://bru2npwxw6p10"]
 
 [ext_resource type="Shader" uid="uid://c140kjbm2bot5" path="res://shader/buckshot.gdshader" id="1_u01n2"]
 [ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="2_8wf4g"]
@@ -28,6 +28,7 @@
 [ext_resource type="AudioStream" uid="uid://5k0clft7ijfq" path="res://sounds/forest.mp3" id="24_g34gq"]
 [ext_resource type="PackedScene" uid="uid://cnx6x67gnieje" path="res://scenes/lake.glb" id="24_jyv4r"]
 [ext_resource type="Material" uid="uid://cj86wv7c01tef" path="res://materials/outlineWhite.tres" id="25_8wf4g"]
+[ext_resource type="AudioStream" uid="uid://bsrjqcyow2is3" path="res://sounds/scare.mp3" id="25_qu0hn"]
 [ext_resource type="PackedScene" uid="uid://bej6o0ysl85et" path="res://assets/rock.glb" id="27_37aet"]
 [ext_resource type="PackedScene" uid="uid://bw4vof4oddwco" path="res://assets/ödland.glb" id="28_bjond"]
 [ext_resource type="PackedScene" uid="uid://b5t6amrp7aa7m" path="res://scenes/shark.tscn" id="28_g34gq"]
@@ -487,9 +488,11 @@ func _on_biome_completed(biome_name: String, reward: int) -> void:
 		\"forest\":
 			var shark : Node3D = $\"../../shark\"
 			var ani : AnimationPlayer = $\"../../shark/AnimationPlayer\"
+			var scare: AudioStreamPlayer = $\"../../Audio/scare\"
 			
 			shark.show()
 			ani.play(\"attack\")
+			scare.play()
 			camera.start_screenshake(0.02,10)
 			await ani.animation_finished
 			open_map()
@@ -1881,6 +1884,11 @@ stream = ExtResource("23_soql2")
 volume_db = -2.735
 pitch_scale = 1.1
 autoplay = true
+bus = &"SFX"
+
+[node name="scare" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("25_qu0hn")
+volume_db = -1.03
 bus = &"SFX"
 
 [node name="Splash" parent="." instance=ExtResource("23_7jawt")]

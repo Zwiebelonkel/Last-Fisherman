@@ -2,18 +2,21 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://5olhq7vqrcxm"
-path.s3tc="res://.godot/imported/map3.png-fa0f7a48154caf4ac34cfca1a2c84009.s3tc.ctex"
-path.etc2="res://.godot/imported/map3.png-fa0f7a48154caf4ac34cfca1a2c84009.etc2.ctex"
+uid="uid://bnupk4xoydh3r"
+path.s3tc="res://.godot/imported/ticket_ticket_color.png-e500c4f80ee339b37708961b3adf5526.s3tc.ctex"
+path.etc2="res://.godot/imported/ticket_ticket_color.png-e500c4f80ee339b37708961b3adf5526.etc2.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
+generator_parameters={
+"md5": "da84d3daf50ea494488bf8167dc751bb"
+}
 
 [deps]
 
-source_file="res://textures/map3.png"
-dest_files=["res://.godot/imported/map3.png-fa0f7a48154caf4ac34cfca1a2c84009.s3tc.ctex", "res://.godot/imported/map3.png-fa0f7a48154caf4ac34cfca1a2c84009.etc2.ctex"]
+source_file="res://assets/ticket_ticket_color.png"
+dest_files=["res://.godot/imported/ticket_ticket_color.png-e500c4f80ee339b37708961b3adf5526.s3tc.ctex", "res://.godot/imported/ticket_ticket_color.png-e500c4f80ee339b37708961b3adf5526.etc2.ctex"]
 
 [params]
 

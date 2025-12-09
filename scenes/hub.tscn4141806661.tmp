@@ -1,4 +1,4 @@
-[gd_scene load_steps=38 format=3 uid="uid://cor735uf1n5si"]
+[gd_scene load_steps=37 format=3 uid="uid://cor735uf1n5si"]
 
 [ext_resource type="Script" uid="uid://cjxfvb4fkjrhh" path="res://scripts/note_manager.gd" id="1_8hrlh"]
 [ext_resource type="Shader" uid="uid://c140kjbm2bot5" path="res://shader/buckshot.gdshader" id="1_d1od2"]
@@ -16,7 +16,6 @@
 [ext_resource type="PackedScene" uid="uid://b1al4ihr573ig" path="res://assets/ticket.glb" id="13_glsmu"]
 [ext_resource type="PackedScene" uid="uid://cbxqcwmep1mf8" path="res://scenes/note.tscn" id="14_phvbg"]
 [ext_resource type="PackedScene" uid="uid://sxspmj8y0jsf" path="res://scenes/note_ui.tscn" id="15_3q32m"]
-[ext_resource type="Texture2D" uid="uid://5olhq7vqrcxm" path="res://textures/map3.png" id="17_5ox4q"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_w6xti"]
 shader = ExtResource("1_d1od2")
@@ -268,9 +267,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 273.457, 68.225, 185.47)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.84685, -0.779783, -3.65489)
 shape = SubResource("BoxShape3D_mw5nc")
 
-[node name="Material36" parent="Cabin/Sketchfab_model/Collada visual scene group" index="8"]
-visible = false
-
 [node name="StaticBody3D" type="StaticBody3D" parent="Cabin/Sketchfab_model/Collada visual scene group/Material310" index="0"]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Cabin/Sketchfab_model/Collada visual scene group/Material310/StaticBody3D"]
@@ -431,41 +427,10 @@ bus = &"Music"
 transform = Transform3D(0.189695, 0, 0.981843, 0, 1, 0, -0.981843, 0, 0.189695, -3.10431, 0.373518, 1.55291)
 
 [node name="Note" parent="." groups=["notes"] instance=ExtResource("14_phvbg")]
-transform = Transform3D(2.98122e-09, 0.25, 0, -0.25, 2.98122e-09, 0, 0, 0, 0.25, -3.58208, 1.00371, 0)
-note_title = "Nr. 1 - Stille"
-note_text = "Es ist merkwürdig, wie leise die Welt geworden ist.
-Früher konnte man Menschen hören, Autos, Maschinen.
-Jetzt höre ich nur noch Wasser… und meine eigenen Gedanken."
-interaction_distance = 19.595
-
-[node name="Note2" parent="." groups=["notes"] instance=ExtResource("14_phvbg")]
-transform = Transform3D(4.77671e-16, -1.09278e-08, -0.25, -0.25, -1.09278e-08, 0, -1.09278e-08, 0.25, -1.09278e-08, -0.7623, 1.00371, -2.31215)
-note_title = "Nr. 2 - Der See"
-note_text = "Der See verändert sich.
-Manchmal spüre ich eine Art Vibration, als würde etwas in der Tiefe atmen.
-Und trotzdem beruhigt es mich."
-interaction_distance = 19.595
-
-[node name="Note3" parent="." groups=["notes"] instance=ExtResource("14_phvbg")]
-transform = Transform3D(1.50376e-11, 0.00126102, 0.249997, -0.249772, 0.0106693, -5.38175e-05, -0.0106694, -0.249769, 0.00125987, 1.63611, 1.00371, 3.78897)
-note_title = "Nr. 3 - Warum ich angle"
-note_text = "Ich weiß nicht, warum ich das hier noch mache.
-Vielleicht, weil es das Einzige ist, das sich noch echt anfühlt.
-Vielleicht auch, weil alles andere längst verschwunden ist."
-interaction_distance = 19.595
-
-[node name="Note4" parent="." groups=["notes"] instance=ExtResource("14_phvbg")]
-transform = Transform3D(-2.98122e-09, -0.25, 0.000104704, -0.25, 2.98122e-09, 0, -1.24858e-12, -0.000104704, -0.25, 4.43401, 1.00371, -0.811785)
-note_title = "Nr. 4 - Der Untergang"
-note_text = "Alle sagen, die Welt ist langsam gestorben.
-Ich habe es nie richtig bemerkt.
-Vielleicht wollte ich es nicht bemerken."
-interaction_distance = 19.595
-
-[node name="Sprite3D" type="Sprite3D" parent="."]
-transform = Transform3D(0.134924, -0.0045254, 0, 0.0045254, 0.134924, 0, 0, 0, 0.135, 0.292666, 1.22644, -2.30826)
-modulate = Color(0.72543, 0.941102, 0.718106, 1)
-texture = ExtResource("17_5ox4q")
+transform = Transform3D(2.98122e-09, 0.25, 0, -0.25, 2.98122e-09, 0, 0, 0, 0.25, -2.06839, 0.708773, 0)
+note_title = "Test"
+note_text = null
+interaction_distance = 7.78
 
 [editable path="UI/NodeUI"]
 [editable path="UI/FishBook"]

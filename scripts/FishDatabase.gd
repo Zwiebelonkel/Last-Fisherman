@@ -20,7 +20,7 @@ var RARITY_DATA = {
 	RARITY.EPISCH:        {"name": "Episch",       "color": Color(0.7,0,1),   "value": 3.0,  "spawn_chance": 10.0, "difficulty": 2.0},
 	RARITY.LEGENDAER:     {"name": "Legendär",     "color": Color(1,0.8,0.1), "value": 6.0,  "spawn_chance": 4.0,  "difficulty": 2.5},
 	RARITY.EXOTISCH:      {"name": "Exotisch",     "color": Color(1,0,0.2),   "value": 12.0, "spawn_chance": 1.0,  "difficulty": 3.0},
-	RARITY.ANTIK:         {"name": "Antik",        "color": Color(0.4,0.8,0.9), "value": 0.0,  "spawn_chance": 100.0,  "difficulty": 1.0}  # 🆕 Cyan/Türkis
+	RARITY.ANTIK:         {"name": "Antik",        "color": Color(0.4,0.8,0.9), "value": 0.0,  "spawn_chance": 0.5,  "difficulty": 1.0}  # 🆕 Cyan/Türkis
 }
 
 # ===========================
@@ -171,7 +171,7 @@ var FISH_LAKE = [
 		"name": "Roter Knopf",
 		"rarity": RARITY.ANTIK,  # 🆕 Geändert zu ANTIK
 		"base_value": 0,  # Kein Verkaufswert
-		"icon": "res://assets/fish/fish1.png",
+		"icon": "res://assets/fish/button.png",
 		"description": "Ist tot. Schwimmt trotzdem. Frag nicht.",
 		"weight_min": 0.5,
 		"weight_max": 2.0,
@@ -244,7 +244,7 @@ var FISH_CITY = [
 		"name": "Stöpsel",
 		"rarity": RARITY.ANTIK,  # 🆕 Geändert zu ANTIK
 		"base_value": 0,  # Kein Verkaufswert
-		"icon": "res://assets/fish/fish1.png",
+		"icon": "res://assets/fish/plug.png",
 		"description": "Ist tot. Schwimmt trotzdem. Frag nicht.",
 		"weight_min": 0.5,
 		"weight_max": 2.0,
@@ -313,11 +313,11 @@ var FISH_SEWER = [
 		"name": "Bahnkarte",
 		"rarity": RARITY.ANTIK,  # 🆕 Geändert zu ANTIK
 		"base_value": 0,  # Kein Verkaufswert
-		"icon": "res://assets/fish/fish1.png",
-		"description": "Ist tot. Schwimmt trotzdem. Frag nicht.",
+		"icon": "res://assets/fish/ticket.png",
+		"description": "Seit 37 Jahren ungültig",
 		"weight_min": 0.5,
 		"weight_max": 2.0,
-		"science_fact": "Forellen reagieren extrem empfindlich auf Sauerstoffgehalt im Wasser.",
+		"science_fact": "Dieses Relikt stammt in einer Zeit, wo die Erde noch komplett war.",
 		"is_story_item": true,
 		"biome": "sewer",
 		"story_text": "Die Geisterforelle leuchtet in deinen Händen auf. Eine alte Macht erwacht..."
@@ -373,11 +373,11 @@ var FISH_FOREST = [
 		"name": "Haizahn",
 		"rarity": RARITY.ANTIK,  # 🆕 Geändert zu ANTIK
 		"base_value": 0,  # Kein Verkaufswert
-		"icon": "res://assets/fish/fish1.png",
-		"description": "Ist tot. Schwimmt trotzdem. Frag nicht.",
-		"weight_min": 0.5,
-		"weight_max": 2.0,
-		"science_fact": "Forellen reagieren extrem empfindlich auf Sauerstoffgehalt im Wasser.",
+		"icon": "res://assets/fish/zahn.png",
+		"description": "Ein schönes Souvenir. Aber auch bisschen krank wenn man darüber nachdenkt.",
+		"weight_min": 0.1,
+		"weight_max": 0.75,
+		"science_fact": "Haie haben ein sogenanntes „Revolvergebiss“ mit mehreren Zahnreihen, wodurch sie im Laufe ihres Lebens Tausende von Zähnen verlieren und durch nachwachsende ersetzen können",
 		"is_story_item": true,
 		"biome": "forest",
 		"story_text": "Die Geisterforelle leuchtet in deinen Händen auf. Eine alte Macht erwacht..."
@@ -430,11 +430,11 @@ var FISH_DESERT = [
 		"name": "Benzin",
 		"rarity": RARITY.ANTIK,  # 🆕 Geändert zu ANTIK
 		"base_value": 0,  # Kein Verkaufswert
-		"icon": "res://assets/fish/fish1.png",
-		"description": "Ist tot. Schwimmt trotzdem. Frag nicht.",
-		"weight_min": 0.5,
-		"weight_max": 2.0,
-		"science_fact": "Forellen reagieren extrem empfindlich auf Sauerstoffgehalt im Wasser.",
+		"icon": "res://assets/fish/benzin.png",
+		"description": "Das wird nicht lange reichen...",
+		"weight_min": 1.0,
+		"weight_max": 10.0,
+		"science_fact": "Benzin ist ein hochentzündliches, flüchtiges Gemisch aus über 100 verschiedenen Kohlenwasserstoffen, gewonnen aus Erdöl.",
 		"is_story_item": true,
 		"biome": "desert",
 		"story_text": "Die Geisterforelle leuchtet in deinen Händen auf. Eine alte Macht erwacht..."
@@ -483,14 +483,14 @@ var FISH_ICELAND = [
 	 #"description": "Ein schlanker Raubfisch mit eisigen, kristallinen Flossen.", "weight_min": 1.5, "weight_max": 4.0,
 	 #"science_fact": "Hechte haben über 700 scharfe Zähne in ihrem Maul, die in mehreren Reihen angeordnet sind."},
 	#
-	#{"name": "Wal-Hai", "rarity": RARITY.EPISCH, "base_value": 65, "icon": "res://assets/fish/walhai.png",
-	 #"description": "Der größte Fisch der Welt - sanftmütig trotz seiner enormen Größe.", "weight_min": 5000.0, "weight_max": 20000.0,
-	 #"science_fact": "Walhaie können bis zu 12 Meter lang werden und filtern täglich tausende Liter Wasser nach Plankton."},
-	#
-	#{"name": "Frostbiss-Hai", "rarity": RARITY.EPISCH, "base_value": 70, "icon": "res://assets/fish/frosthai.png",
-	 #"description": "Ein gefürchteter Räuber, dessen Biss das Wasser um ihn herum gefrieren lässt.", "weight_min": 200.0, "weight_max": 800.0,
-	 #"science_fact": "Grönlandhaie können über 400 Jahre alt werden und sind damit die langlebigsten bekannten Wirbeltiere der Erde."},
-	#
+	{"name": "Anglerfisch", "rarity": RARITY.EPISCH, "base_value": 65, "icon": "res://assets/fish/angler.png",
+	 "description": "Das Glühwürmchen der Tiefsee. Mit Tollwut...", "weight_min": 10.0, "weight_max": 50.0,
+	 "science_fact": "Das viel kleinere Männchen findet das Weibchen, beißt sich fest und verschmilzt mit ihr zu einer Lebensgemeinschaft, wobei er seine Organe reduziert."},
+	
+	{"name": "Blobfisch", "rarity": RARITY.EPISCH, "base_value": 70, "icon": "res://assets/fish/blob.png",
+	 "description": "Wenn Alpträume schwimmen könnten, würden sie so aussehen.", "weight_min": 200.0, "weight_max": 800.0,
+	 "science_fact": "Sein berühmtes „matschiges“ Aussehen entsteht erst an der Oberfläche, da er in der Tiefsee durch den extremen Wasserdruck seine normale, fischähnliche Form behält und als gallertartige Masse über dem Meeresboden schwebt."},
+	
 	{"name": "Blauer Marlin", "rarity": RARITY.EPISCH, "base_value": 90, "icon": "res://assets/fish/speerfisch.png",
 	 "description": "Ein Basic Fisch. Nur diese lange Nase macht ihn besonders.", "weight_min": 1.0, "weight_max": 10.0,
 	 "science_fact": "Sie sind extrem schnelle Jäger der Hochsee, die ihren langen, speerähnlichen Oberkiefer (Rostrum) zum Aufspießen ihrer Beute nutzen."},
@@ -507,11 +507,11 @@ var FISH_ICELAND = [
 		"name": "Pinguin",
 		"rarity": RARITY.ANTIK,  # 🆕 Geändert zu ANTIK
 		"base_value": 0,  # Kein Verkaufswert
-		"icon": "res://assets/fish/fish1.png",
-		"description": "Ist tot. Schwimmt trotzdem. Frag nicht.",
+		"icon": "res://assets/fish/pinguin.png",
+		"description": "Der arme Bursche hat seine Familie verloren.",
 		"weight_min": 0.5,
 		"weight_max": 2.0,
-		"science_fact": "Forellen reagieren extrem empfindlich auf Sauerstoffgehalt im Wasser.",
+		"science_fact": "Pinguine kommunizieren durch Schreie, leben in großen Kolonien, trinken Salzwasser und nutzen ihre Bauchseite zum schnellen Gleiten über Eis.",
 		"is_story_item": true,
 		"biome": "iceland",
 		"story_text": "Die Geisterforelle leuchtet in deinen Händen auf. Eine alte Macht erwacht..."

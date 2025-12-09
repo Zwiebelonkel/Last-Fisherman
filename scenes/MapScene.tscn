@@ -279,8 +279,10 @@ text = "Back"
 
 [node name="Filter" type="CanvasLayer" parent="."]
 layer = 0
+visible = false
 
 [node name="PixelateOverlay" type="ColorRect" parent="Filter"]
+visible = false
 material = SubResource("ShaderMaterial_jqekx")
 anchors_preset = 15
 anchor_right = 1.0
@@ -354,7 +356,6 @@ flip_h = true
 layer = 0
 
 [node name="PixelateOverlay" type="ColorRect" parent="Filter2"]
-visible = false
 material = SubResource("ShaderMaterial_prey2")
 anchors_preset = 15
 anchor_right = 1.0
