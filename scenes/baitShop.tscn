@@ -1,0 +1,203 @@
+[gd_scene format=3 uid="uid://db2gj65xdl2b5"]
+
+[node name="BaitShop" type="VBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -924.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/separation = 20
+
+[node name="Scroll" type="ScrollContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="Cards" type="VBoxContainer" parent="Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 20
+
+[node name="UngewöhnlichCard" type="PanelContainer" parent="Scroll/Cards"]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+
+[node name="CardContent" type="VBoxContainer" parent="Scroll/Cards/UngewöhnlichCard"]
+layout_mode = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="TitleLabel" type="Label" parent="Scroll/Cards/UngewöhnlichCard/CardContent"]
+layout_mode = 2
+text = "Ungewöhnlich-Köder"
+horizontal_alignment = 1
+
+[node name="StockLabel" type="Label" parent="Scroll/Cards/UngewöhnlichCard/CardContent"]
+layout_mode = 2
+text = "Vorrat: 0"
+horizontal_alignment = 1
+
+[node name="DescLabel" type="Label" parent="Scroll/Cards/UngewöhnlichCard/CardContent"]
+layout_mode = 2
+text = "Garantiert
+Ungewöhnlich Fisch!"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="PriceLabel" type="Label" parent="Scroll/Cards/UngewöhnlichCard/CardContent"]
+layout_mode = 2
+text = "Preis"
+horizontal_alignment = 1
+
+[node name="BuyButton" type="Button" parent="Scroll/Cards/UngewöhnlichCard/CardContent"]
+custom_minimum_size = Vector2(0, 45)
+layout_mode = 2
+text = "KAUFEN"
+
+[node name="SeltenCard" type="PanelContainer" parent="Scroll/Cards"]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+
+[node name="CardContent" type="VBoxContainer" parent="Scroll/Cards/SeltenCard"]
+layout_mode = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="TitleLabel" type="Label" parent="Scroll/Cards/SeltenCard/CardContent"]
+layout_mode = 2
+text = "Selten-Köder"
+horizontal_alignment = 1
+
+[node name="StockLabel" type="Label" parent="Scroll/Cards/SeltenCard/CardContent"]
+layout_mode = 2
+text = "Vorrat: 0"
+horizontal_alignment = 1
+
+[node name="DescLabel" type="Label" parent="Scroll/Cards/SeltenCard/CardContent"]
+layout_mode = 2
+text = "Garantiert
+Selten Fisch!"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="PriceLabel" type="Label" parent="Scroll/Cards/SeltenCard/CardContent"]
+layout_mode = 2
+text = "Preis"
+horizontal_alignment = 1
+
+[node name="BuyButton" type="Button" parent="Scroll/Cards/SeltenCard/CardContent"]
+custom_minimum_size = Vector2(0, 45)
+layout_mode = 2
+text = "KAUFEN"
+
+[node name="EpischCard" type="PanelContainer" parent="Scroll/Cards"]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+
+[node name="CardContent" type="VBoxContainer" parent="Scroll/Cards/EpischCard"]
+layout_mode = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="TitleLabel" type="Label" parent="Scroll/Cards/EpischCard/CardContent"]
+layout_mode = 2
+text = "Episch-Köder"
+horizontal_alignment = 1
+
+[node name="StockLabel" type="Label" parent="Scroll/Cards/EpischCard/CardContent"]
+layout_mode = 2
+text = "Vorrat: 0"
+horizontal_alignment = 1
+
+[node name="DescLabel" type="Label" parent="Scroll/Cards/EpischCard/CardContent"]
+layout_mode = 2
+text = "Garantiert
+Episch Fisch!"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="PriceLabel" type="Label" parent="Scroll/Cards/EpischCard/CardContent"]
+layout_mode = 2
+text = "Preis"
+horizontal_alignment = 1
+
+[node name="BuyButton" type="Button" parent="Scroll/Cards/EpischCard/CardContent"]
+custom_minimum_size = Vector2(0, 45)
+layout_mode = 2
+text = "KAUFEN"
+
+[node name="LegendärCard" type="PanelContainer" parent="Scroll/Cards"]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+
+[node name="CardContent" type="VBoxContainer" parent="Scroll/Cards/LegendärCard"]
+layout_mode = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="TitleLabel" type="Label" parent="Scroll/Cards/LegendärCard/CardContent"]
+layout_mode = 2
+text = "Legendär-Köder"
+horizontal_alignment = 1
+
+[node name="StockLabel" type="Label" parent="Scroll/Cards/LegendärCard/CardContent"]
+layout_mode = 2
+text = "Vorrat: 0"
+horizontal_alignment = 1
+
+[node name="DescLabel" type="Label" parent="Scroll/Cards/LegendärCard/CardContent"]
+layout_mode = 2
+text = "Garantiert
+Legendär Fisch!"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="PriceLabel" type="Label" parent="Scroll/Cards/LegendärCard/CardContent"]
+layout_mode = 2
+text = "Preis"
+horizontal_alignment = 1
+
+[node name="BuyButton" type="Button" parent="Scroll/Cards/LegendärCard/CardContent"]
+custom_minimum_size = Vector2(0, 45)
+layout_mode = 2
+text = "KAUFEN"
+
+[node name="ExotischCard" type="PanelContainer" parent="Scroll/Cards"]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+
+[node name="CardContent" type="VBoxContainer" parent="Scroll/Cards/ExotischCard"]
+layout_mode = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="TitleLabel" type="Label" parent="Scroll/Cards/ExotischCard/CardContent"]
+layout_mode = 2
+text = "Exotisch-Köder"
+horizontal_alignment = 1
+
+[node name="StockLabel" type="Label" parent="Scroll/Cards/ExotischCard/CardContent"]
+layout_mode = 2
+text = "Vorrat: 0"
+horizontal_alignment = 1
+
+[node name="DescLabel" type="Label" parent="Scroll/Cards/ExotischCard/CardContent"]
+layout_mode = 2
+text = "Garantiert
+Exotisch Fisch!"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="PriceLabel" type="Label" parent="Scroll/Cards/ExotischCard/CardContent"]
+layout_mode = 2
+text = "Preis"
+horizontal_alignment = 1
+
+[node name="BuyButton" type="Button" parent="Scroll/Cards/ExotischCard/CardContent"]
+custom_minimum_size = Vector2(0, 45)
+layout_mode = 2
+text = "KAUFEN"

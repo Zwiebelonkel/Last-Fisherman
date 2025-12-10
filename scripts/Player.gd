@@ -67,6 +67,74 @@ var spot_prices = {
 	"home": 0,
 }
 
+# 🎣 Köder-Inventar
+var bait_inventory: Dictionary = {
+	"Uncommon": 0,
+	"Rare": 0,
+	"Epic": 0,
+	"Legendary": 0,
+	"Exotic": 0
+}
+
+# 🎣 Aktiver Köder (null = kein Köder aktiv)
+var active_bait: String = ""
+
+# 🎣 Köder-Preise (Teurer als durchschnittlicher Fisch-Verkaufswert)
+const BAIT_PRICES = {
+	"Uncommon": 150,    # Uncommon Fische: ~50-100€
+	"Rare": 400,        # Rare Fische: ~150-300€
+	"Epic": 900,        # Epic Fische: ~400-700€
+	"Legendary": 2000,  # Legendary Fische: ~800-1500€
+	"Exotic": 4500      # Exotic Fische: ~2000-4000€
+}
+
+# 🎣 Köder kaufen
+func buy_bait(rarity: String, amount: int = 1) -> bool:
+	var total_cost = BAIT_PRICES[rarity] * amount
+	if remove_money(total_cost):
+		bait_inventory[rarity] += amount
+		print("✅ Gekauft: %dx %s Köder für %d€" % [amount, rarity, total_cost])
+		save_game()
+		return true
+	else:
+		print("❌ Nicht genug Geld für %s Köder!" % rarity)
+		return false
+
+# 🎣 Köder aktivieren
+func activate_bait(rarity: String) -> bool:
+	if bait_inventory[rarity] > 0:
+		active_bait = rarity
+		bait_inventory[rarity] -= 1
+		print("🎣 Köder aktiviert: %s" % rarity)
+		save_game()
+		return true
+	else:
+		print("❌ Kein %s Köder verfügbar!" % rarity)
+		return false
+
+# 🎣 Aktiven Köder deaktivieren (ohne zu verbrauchen)
+func deactivate_bait() -> void:
+	if active_bait != "":
+		bait_inventory[active_bait] += 1  # Zurückgeben
+		print("⚠️ Köder deaktiviert: %s" % active_bait)
+		active_bait = ""
+		save_game()
+
+# 🎣 Köder nach erfolgreichem Fang verbrauchen
+func consume_active_bait() -> void:
+	if active_bait != "":
+		print("✅ Köder verbraucht: %s" % active_bait)
+		active_bait = ""
+		save_game()
+
+# 🎣 Prüfen ob Köder aktiv ist
+func has_active_bait() -> bool:
+	return active_bait != ""
+
+# 🎣 Aktive Köder-Seltenheit zurückgeben
+func get_active_bait_rarity() -> String:
+	return active_bait
+
 func _ready():
 	load_game()
 	load_settings()
@@ -389,7 +457,9 @@ func save_game() -> void:
 		"completed_biomes": completed_biomes,
 		"fish_weight_records": fish_weight_records,
 		"fish_catch_count": fish_catch_count,
-		"used_story_items": used_story_items  # 🆕
+		"used_story_items": used_story_items,
+		"bait_inventory": bait_inventory,
+		"active_bait": active_bait
 	}
 	var file = FileAccess.open("user://savegame.dat", FileAccess.WRITE)
 	file.store_var(save_data)
@@ -414,7 +484,9 @@ func load_game() -> void:
 		completed_biomes = save_data.get("completed_biomes", completed_biomes)
 		fish_weight_records = save_data.get("fish_weight_records", {})
 		fish_catch_count = save_data.get("fish_catch_count", {})
-		used_story_items = save_data.get("used_story_items", [])  # 🆕
+		used_story_items = save_data.get("used_story_items", [])
+		bait_inventory = save_data.get("bait_inventory", bait_inventory)
+		active_bait = save_data.get("active_bait", "")
 		print("Spiel geladen!")
 
 
@@ -451,4 +523,12 @@ func reset():
 		"iceland": false,
 		"home": true,
 	}
+	bait_inventory = {
+		"Uncommon": 0,
+		"Rare": 0,
+		"Epic": 0,
+		"Legendary": 0,
+		"Exotic": 0
+	}
+	active_bait = ""
 	save_game()

@@ -205,7 +205,10 @@ script/source = "extends Node3D
 @export var left_button: Button
 @export var right_button: Button
 @export var interact_button: Button
-@export var settings_button: Button  # <-- Exportvariable hinzufügen
+@export var settings_button: Button
+@export var bait_selector_ui: Control
+@export var active_bait_label: Label
+
 
 
 @onready var anim: AnimationPlayer = $AnimationPlayer
@@ -280,23 +283,97 @@ func _ready() -> void:
 	anim.play(\"idle\")
 	boatAni.play(\"boat\")
 	dayNightAni.play(\"circle\")
+
 	hook.visible = false
 	splash.visible = false
 	splash.emitting = false
 	ui_bite_indicator.visible = false
 	catch_ui.visible = false
-	
+
+	# 🆕 Köder UI aktivieren
+	if bait_selector_ui:
+		setup_bait_selector()
+
+	update_active_bait_display()
+
+	# Cast UI
 	if cast_power_ui_scene:
 		cast_power_ui = cast_power_ui_scene.instantiate()
 		add_child(cast_power_ui)
-	
-	# 🆕 Button-Signals verbinden
+
 	setup_buttons()
+
 	if catch_result_ui:
 		catch_result_ui.story_item_used.connect(_on_story_item_used)
-	
-	Player.biome_completed.connect(_on_biome_completed)
 
+	Player.biome_completed.connect(_on_biome_completed)
+func setup_bait_selector() -> void:
+	var btns = {
+		\"UncommonButton\": \"Ungewöhnlich\",
+		\"RareButton\": \"Selten\",
+		\"EpicButton\": \"Episch\",
+		\"LegendaryButton\": \"Legendär\",
+		\"ExoticButton\": \"Exotisch\"
+	}
+
+	for btn_name in btns:
+		var btn = bait_selector_ui.get_node_or_null(btn_name)
+		if btn:
+			btn.pressed.connect(func(): activate_bait_ui(btns[btn_name]))
+
+	var deactivate_btn = bait_selector_ui.get_node_or_null(\"DeactivateButton\")
+	if deactivate_btn:
+		deactivate_btn.pressed.connect(deactivate_bait_ui)
+
+	update_bait_selector_buttons()
+# 🆕 Köder aktivieren (mit UI Feedback)
+func activate_bait_ui(rarity: String) -> void:
+	if Player.activate_bait(rarity):
+		print(\"✅ %s Köder aktiviert!\" % rarity)
+		update_active_bait_display()
+		update_bait_selector_buttons()
+	else:
+		print(\"❌ Kein %s Köder vorhanden!\" % rarity)
+
+# 🆕 Köder deaktivieren
+func deactivate_bait_ui() -> void:
+	Player.deactivate_bait()
+	update_active_bait_display()
+	update_bait_selector_buttons()
+
+# 🆕 Aktiven Köder anzeigen
+func update_active_bait_display() -> void:
+	if not active_bait_label:
+		return
+
+	if Player.has_active_bait():
+		var r = Player.get_active_bait_rarity()
+		active_bait_label.text = \"🎣 Aktiv: %s Köder\" % r
+		active_bait_label.visible = true
+	else:
+		active_bait_label.text = \"Kein Köder aktiv\"
+		active_bait_label.modulate = Color(0.7, 0.7, 0.7)
+
+# 🆕 Button-States aktualisieren
+func update_bait_selector_buttons() -> void:
+	if not bait_selector_ui:
+		return
+
+	var btns = {
+		\"UncommonButton\": \"Ungewöhnlich\",
+		\"RareButton\": \"Selten\",
+		\"EpicButton\": \"Episch\",
+		\"LegendaryButton\": \"Legendär\",
+		\"ExoticButton\": \"Exotisch\"
+	}
+
+	for name in btns:
+		var btn = bait_selector_ui.get_node_or_null(name)
+		if btn:
+			var rarity = btns[name]
+			var stock = Player.bait_inventory.get(rarity, 0)
+			btn.text = \"%s (%d)\" % [rarity, stock]
+			btn.disabled = (stock <= 0 or Player.has_active_bait())
 
 # 🆕 Story-Item wurde \"verwendet\"
 func _on_story_item_used(biome: String) -> void:
@@ -847,19 +924,28 @@ func start_catch_minigame() -> void:
 	state = STATE_MINIGAME
 	catch_ui.visible = true
 	anim.play(\"fight\")
-	camera.start_screenshake(0.1,1)
+	camera.start_screenshake(0.1, 1)
 
+	splash.visible = true
 	splash.emitting = true
 
-	# Cast-Qualität als Bonus für bessere Fische verwenden
-	var quality_bonus = int(last_cast_quality * 2)  # 0-2 zusätzliche Level
+	# 🆕 Köder aktiv → garantiert Seltenheit
+	var target_rarity = \"\"
+	if Player.has_active_bait():
+		target_rarity = Player.get_active_bait_rarity()
+		print(\"🎣 Köder aktiv! Ziel:\", target_rarity)
+
+	var quality_bonus = int(last_cast_quality * 2)
 	var effective_bait = Player.upgrade_bait + quality_bonus
-	
-	current_fish = FishDB.get_random_from_list(FishDB.FISH_LAKE, effective_bait)
-	var difficulty = FishDB.get_fish_difficulty(current_fish)
+
+	if target_rarity != \"\":
+		current_fish = FishDB.get_random_fish_by_rarity(FishDB.FISH_LAKE, target_rarity)
+	else:
+		current_fish = FishDB.get_random_from_list(FishDB.FISH_LAKE, effective_bait)
+
 	marker_speed = FishDB.get_marker_speed_for_fish(current_fish)
-	
-	print(\"Gefangen: \", current_fish[\"name\"], \" (Schwierigkeit: \", difficulty, \", Cast-Qualität: \", last_cast_quality, \", Effektives Bait-Level: \", effective_bait, \")\")
+
+	print(\"Gefangen: \", current_fish[\"name\"])
 
 	catch_progress.value = 50.0
 	marker_pos = 0.0
@@ -919,25 +1005,31 @@ func update_catch_minigame(delta: float) -> void:
 		end_catch_minigame(false)
 
 func end_catch_minigame(success: bool) -> void:
-	camera.start_screenshake(0.4,0.3)
+	camera.start_screenshake(0.4, 0.3)
+
 	if success:
 		var fish = current_fish
 		Player.add_fish(fish)
 		Player.caught_fish_species[fish[\"name\"]] = true
 		success_sound.play()
 
+		# 🆕 Köder VERBRAUCHEN
+		if Player.has_active_bait():
+			Player.consume_active_bait()
+			update_active_bait_display()
+			update_bait_selector_buttons()
+
 		if catch_result_ui:
 			catch_result_ui.show_fish(fish)
 
-		print(\"Erfolgreich gefangen: \", fish[\"name\"])
 		Player.save_game()
 	else:
-		print(\"Fisch entwischt! (\", current_fish[\"name\"], \")\")
+		print(\"Fisch entwischt!\")
 		line_sound.play()
+		print(\"⚠️ Köder bleibt aktiv!\")
 
 	catch_ui.visible = false
 	await reset_line()
-
 
 func trigger_splash_burst() -> void:
 	if not splash:

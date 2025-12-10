@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://dme4l6a6jg0g6"]
+[gd_scene load_steps=21 format=3 uid="uid://dme4l6a6jg0g6"]
 
 [ext_resource type="PackedScene" uid="uid://b5ew1rfc8ow8g" path="res://scenes/fishingRod.tscn" id="1_3qbwi"]
 [ext_resource type="Script" uid="uid://cl5fc0glwmnhs" path="res://scripts/UpgradeShop.gd" id="1_i2sg0"]
@@ -7,6 +7,7 @@
 [ext_resource type="Script" uid="uid://bl1xotduehieu" path="res://scripts/camera_sway.gd" id="4_8sl8s"]
 [ext_resource type="AudioStream" uid="uid://jckhtkutmeot" path="res://sounds/shop.mp3" id="4_a5104"]
 [ext_resource type="AudioStream" uid="uid://cgv2wx0vgdw41" path="res://sounds/interact.mp3" id="5_ltjmg"]
+[ext_resource type="PackedScene" uid="uid://db2gj65xdl2b5" path="res://scenes/baitShop.tscn" id="7_k7utd"]
 [ext_resource type="PackedScene" uid="uid://5eeohonkr6bu" path="res://textures/hillybilly.glb" id="7_pmnnn"]
 [ext_resource type="PackedScene" uid="uid://dguwyn5rc7uog" path="res://scenes/splash.tscn" id="9_d207q"]
 
@@ -222,8 +223,16 @@ layout_mode = 2
 theme = SubResource("Theme_pmnnn")
 text = "✕"
 
+[node name="ShopToggleButton" type="Button" parent="UI/ShopContainer/MainPanel/VBoxContainer/TopBar"]
+layout_mode = 2
+
 [node name="HSeparator" type="HSeparator" parent="UI/ShopContainer/MainPanel/VBoxContainer"]
 layout_mode = 2
+
+[node name="BaitShop" parent="UI/ShopContainer/MainPanel/VBoxContainer" instance=ExtResource("7_k7utd")]
+layout_mode = 2
+size_flags_horizontal = 1
+size_flags_vertical = 3
 
 [node name="UpgradeCards" type="HBoxContainer" parent="UI/ShopContainer/MainPanel/VBoxContainer"]
 layout_mode = 2
@@ -468,4 +477,5 @@ spot_angle = 26.555
 [connection signal="pressed" from="UI/ShopContainer/MainPanel/VBoxContainer/UpgradeCards/BaitCard/CardContent/BuyButton" to="." method="_on_BaitButton_pressed"]
 [connection signal="pressed" from="UI/ShopContainer/MainPanel/VBoxContainer/UpgradeCards/LineCard/CardContent/BuyButton" to="." method="_on_LineButton_pressed"]
 
+[editable path="UI/ShopContainer/MainPanel/VBoxContainer/BaitShop"]
 [editable path="hillybilly"]

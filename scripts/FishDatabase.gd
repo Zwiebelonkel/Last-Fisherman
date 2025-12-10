@@ -13,7 +13,7 @@ enum RARITY {
 	ANTIK
 }
 
-var RARITY_DATA = {
+static var RARITY_DATA = {
 	RARITY.NORMAL:        {"name": "Normal",       "color": Color.WHITE,     "value": 1.0,  "spawn_chance": 40.0, "difficulty": 1.0},
 	RARITY.UNGEWOEHNLICH: {"name": "Ungewöhnlich", "color": Color(0.3,1,0.3), "value": 1.5,  "spawn_chance": 30.0, "difficulty": 1.3},
 	RARITY.SELTEN:        {"name": "Selten",       "color": Color(0.2,0.4,1), "value": 2.0,  "spawn_chance": 15.0, "difficulty": 1.6},
@@ -522,7 +522,7 @@ var FISH_ICELAND = [
 # ===========================
 #  RANDOM FISH (BAIT UPGRADE)
 # ===========================
-func get_random_from_list(list: Array, bait_level := 1) -> Dictionary:
+static func get_random_from_list(list: Array, bait_level := 1) -> Dictionary:
 	var weighted_list: Array = []
 	
 	# ---------------------------------------
@@ -646,6 +646,48 @@ func get_fish_difficulty(fish: Dictionary) -> float:
 
 func get_marker_speed_for_fish(fish: Dictionary, base_speed: float = 350.0) -> float:
 	return base_speed * get_fish_difficulty(fish)
+	
+static func get_random_fish_by_rarity(fish_list: Array, target_rarity_name: String) -> Dictionary:
+	# Konvertiere String-Namen zu RARITY enum
+	var target_rarity = -1
+	match target_rarity_name:
+		"Ungewöhnlich": target_rarity = RARITY.UNGEWOEHNLICH
+		"Selten": target_rarity = RARITY.SELTEN
+		"Episch": target_rarity = RARITY.EPISCH
+		"Legendär": target_rarity = RARITY.LEGENDAER
+		"Exotisch": target_rarity = RARITY.EXOTISCH
+	
+	if target_rarity == -1:
+		print("⚠️ Ungültige Seltenheit: %s" % target_rarity_name)
+		return get_random_from_list(fish_list, 1)
+	
+	# Sammle alle Fische mit der Ziel-Seltenheit
+	var matching_fish = []
+	for fish in fish_list:
+		if fish["rarity"] == target_rarity:
+			# 🚫 Story-Items (ANTIK) überspringen
+			if fish["rarity"] == RARITY.ANTIK:
+				continue
+			matching_fish.append(fish)
+	
+	# Wenn keine Fische gefunden, Fallback
+	if matching_fish.is_empty():
+		print("⚠️ Keine Fische mit Seltenheit %s gefunden!" % target_rarity_name)
+		return get_random_from_list(fish_list, 1)
+	
+	# Wähle zufälligen Fisch und generiere Gewicht
+	var selected_fish = matching_fish[randi() % matching_fish.size()].duplicate(true)
+	
+	if selected_fish.has("weight_min") and selected_fish.has("weight_max"):
+		var w = randf_range(selected_fish["weight_min"], selected_fish["weight_max"])
+		selected_fish["weight"] = snappedf(w, 0.01)
+	else:
+		selected_fish["weight"] = 1.0
+	
+	selected_fish["is_new_catch"] = not Player.caught_fish_species.has(selected_fish["name"])
+	
+	print("🎣 Köder-Fisch generiert: %s (%s)" % [selected_fish["name"], target_rarity_name])
+	return selected_fish
 
 # ===========================
 #  ICON ACCESS
