@@ -1,4 +1,4 @@
-[gd_scene load_steps=70 format=3 uid="uid://cx2sffjjdjuw5"]
+[gd_scene load_steps=71 format=3 uid="uid://cx2sffjjdjuw5"]
 
 [ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="1_2phbr"]
 [ext_resource type="PackedScene" uid="uid://b5ew1rfc8ow8g" path="res://scenes/fishingRod.tscn" id="1_echbf"]
@@ -16,6 +16,7 @@
 [ext_resource type="PackedScene" uid="uid://je70iqlm248a" path="res://scenes/CastPowerUI.tscn" id="11_7wwop"]
 [ext_resource type="PackedScene" uid="uid://dxxrhs12x2m2c" path="res://scenes/InventoryUI.tscn" id="11_pjux3"]
 [ext_resource type="PackedScene" uid="uid://xt7f7m4i2iwi" path="res://scenes/touch.tscn" id="11_r3sjc"]
+[ext_resource type="PackedScene" uid="uid://bgnalk1ruht4d" path="res://scenes/bait_hud.tscn" id="12_wsqty"]
 [ext_resource type="Shader" uid="uid://cfsuhiaq15sgu" path="res://shader/outline.gdshader" id="13_0ehpd"]
 [ext_resource type="PackedScene" uid="uid://brmbdno888s38" path="res://assets/tree.glb" id="14_08o8g"]
 [ext_resource type="PackedScene" uid="uid://bw80sbvfcwe1p" path="res://scenes/cigarette.tscn" id="14_fto0a"]
@@ -206,9 +207,6 @@ script/source = "extends Node3D
 @export var right_button: Button
 @export var interact_button: Button
 @export var settings_button: Button
-@export var bait_selector_ui: Control
-@export var active_bait_label: Label
-
 
 
 @onready var anim: AnimationPlayer = $AnimationPlayer
@@ -290,12 +288,6 @@ func _ready() -> void:
 	ui_bite_indicator.visible = false
 	catch_ui.visible = false
 
-	# 🆕 Köder UI aktivieren
-	if bait_selector_ui:
-		setup_bait_selector()
-
-	update_active_bait_display()
-
 	# Cast UI
 	if cast_power_ui_scene:
 		cast_power_ui = cast_power_ui_scene.instantiate()
@@ -307,73 +299,6 @@ func _ready() -> void:
 		catch_result_ui.story_item_used.connect(_on_story_item_used)
 
 	Player.biome_completed.connect(_on_biome_completed)
-func setup_bait_selector() -> void:
-	var btns = {
-		\"UncommonButton\": \"Ungewöhnlich\",
-		\"RareButton\": \"Selten\",
-		\"EpicButton\": \"Episch\",
-		\"LegendaryButton\": \"Legendär\",
-		\"ExoticButton\": \"Exotisch\"
-	}
-
-	for btn_name in btns:
-		var btn = bait_selector_ui.get_node_or_null(btn_name)
-		if btn:
-			btn.pressed.connect(func(): activate_bait_ui(btns[btn_name]))
-
-	var deactivate_btn = bait_selector_ui.get_node_or_null(\"DeactivateButton\")
-	if deactivate_btn:
-		deactivate_btn.pressed.connect(deactivate_bait_ui)
-
-	update_bait_selector_buttons()
-# 🆕 Köder aktivieren (mit UI Feedback)
-func activate_bait_ui(rarity: String) -> void:
-	if Player.activate_bait(rarity):
-		print(\"✅ %s Köder aktiviert!\" % rarity)
-		update_active_bait_display()
-		update_bait_selector_buttons()
-	else:
-		print(\"❌ Kein %s Köder vorhanden!\" % rarity)
-
-# 🆕 Köder deaktivieren
-func deactivate_bait_ui() -> void:
-	Player.deactivate_bait()
-	update_active_bait_display()
-	update_bait_selector_buttons()
-
-# 🆕 Aktiven Köder anzeigen
-func update_active_bait_display() -> void:
-	if not active_bait_label:
-		return
-
-	if Player.has_active_bait():
-		var r = Player.get_active_bait_rarity()
-		active_bait_label.text = \"🎣 Aktiv: %s Köder\" % r
-		active_bait_label.visible = true
-	else:
-		active_bait_label.text = \"Kein Köder aktiv\"
-		active_bait_label.modulate = Color(0.7, 0.7, 0.7)
-
-# 🆕 Button-States aktualisieren
-func update_bait_selector_buttons() -> void:
-	if not bait_selector_ui:
-		return
-
-	var btns = {
-		\"UncommonButton\": \"Ungewöhnlich\",
-		\"RareButton\": \"Selten\",
-		\"EpicButton\": \"Episch\",
-		\"LegendaryButton\": \"Legendär\",
-		\"ExoticButton\": \"Exotisch\"
-	}
-
-	for name in btns:
-		var btn = bait_selector_ui.get_node_or_null(name)
-		if btn:
-			var rarity = btns[name]
-			var stock = Player.bait_inventory.get(rarity, 0)
-			btn.text = \"%s (%d)\" % [rarity, stock]
-			btn.disabled = (stock <= 0 or Player.has_active_bait())
 
 # 🆕 Story-Item wurde \"verwendet\"
 func _on_story_item_used(biome: String) -> void:
@@ -951,7 +876,6 @@ func start_catch_minigame() -> void:
 	marker_pos = 0.0
 	marker.position.x = 0.0
 
-
 func update_catch_minigame(delta: float) -> void:
 	var current_speed = marker_speed
 	
@@ -1016,8 +940,6 @@ func end_catch_minigame(success: bool) -> void:
 		# 🆕 Köder VERBRAUCHEN
 		if Player.has_active_bait():
 			Player.consume_active_bait()
-			update_active_bait_display()
-			update_bait_selector_buttons()
 
 		if catch_result_ui:
 			catch_result_ui.show_fish(fish)
@@ -1852,6 +1774,7 @@ theme = SubResource("Theme_2phbr")
 visible = false
 
 [node name="CastPowerUI" parent="UI" instance=ExtResource("11_7wwop")]
+visible = false
 
 [node name="OptionsControl" parent="UI" instance=ExtResource("9_ye0jt")]
 visible = false
@@ -1875,6 +1798,10 @@ transform = Transform3D(-0.260732, 0, 0.248231, 0, 0.36, 0, -0.248231, 0, -0.260
 transform = Transform3D(-0.391098, 0, 0.372347, 0, 0.54, 0, -0.372347, 0, -0.391098, 33.8869, 9.08063, -4.52298)
 
 [node name="Touch" parent="UI" instance=ExtResource("11_r3sjc")]
+
+[node name="BaitHUD" parent="UI" instance=ExtResource("12_wsqty")]
+offset_top = 47.52
+offset_bottom = 82.52
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_cfq0f")

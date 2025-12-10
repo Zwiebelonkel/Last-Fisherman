@@ -1,4 +1,4 @@
-[gd_scene load_steps=62 format=3 uid="uid://bnj4irwko1m1j"]
+[gd_scene load_steps=63 format=3 uid="uid://bnj4irwko1m1j"]
 
 [ext_resource type="Shader" uid="uid://bso2ewb2ieq7x" path="res://shader/warp.gdshader" id="1_tx5p3"]
 [ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="2_acjgc"]
@@ -13,6 +13,7 @@
 [ext_resource type="Script" uid="uid://bl1xotduehieu" path="res://scripts/camera_sway.gd" id="10_smrcg"]
 [ext_resource type="PackedScene" uid="uid://xt7f7m4i2iwi" path="res://scenes/touch.tscn" id="11_tx5p3"]
 [ext_resource type="PackedScene" uid="uid://b5ew1rfc8ow8g" path="res://scenes/fishingRod.tscn" id="11_y20ih"]
+[ext_resource type="PackedScene" uid="uid://bgnalk1ruht4d" path="res://scenes/bait_hud.tscn" id="12_8cl07"]
 [ext_resource type="Texture2D" uid="uid://cvllk03mhtybp" path="res://textures/723-normal.jpg" id="12_tcwwm"]
 [ext_resource type="Texture2D" uid="uid://d31603nl8y0gd" path="res://textures/Water_preview.jpgC878A51E-2B84-45CA-85CB-75E5BC88EEC8Large.jpg" id="13_xyw1b"]
 [ext_resource type="Shader" uid="uid://cfsuhiaq15sgu" path="res://shader/outline.gdshader" id="14_6d2g4"]
@@ -838,24 +839,32 @@ func start_catch_minigame() -> void:
 	state = STATE_MINIGAME
 	catch_ui.visible = true
 	anim.play(\"fight\")
-	camera.start_screenshake(0.1,1)
+	camera.start_screenshake(0.1, 1)
 
+	splash.visible = true
 	splash.emitting = true
 
-	# Cast-Qualität als Bonus für bessere Fische verwenden
-	var quality_bonus = int(last_cast_quality * 2)  # 0-2 zusätzliche Level
+	# 🆕 Köder aktiv → garantiert Seltenheit
+	var target_rarity = \"\"
+	if Player.has_active_bait():
+		target_rarity = Player.get_active_bait_rarity()
+		print(\"🎣 Köder aktiv! Ziel:\", target_rarity)
+
+	var quality_bonus = int(last_cast_quality * 2)
 	var effective_bait = Player.upgrade_bait + quality_bonus
-	
-	current_fish = FishDB.get_random_from_list(FishDB.FISH_DESERT, effective_bait)
-	var difficulty = FishDB.get_fish_difficulty(current_fish)
+
+	if target_rarity != \"\":
+		current_fish = FishDB.get_random_fish_by_rarity(FishDB.FISH_DESERT, target_rarity)
+	else:
+		current_fish = FishDB.get_random_from_list(FishDB.FISH_DESERT, effective_bait)
+
 	marker_speed = FishDB.get_marker_speed_for_fish(current_fish)
-	
-	print(\"Gefangen: \", current_fish[\"name\"], \" (Schwierigkeit: \", difficulty, \", Cast-Qualität: \", last_cast_quality, \", Effektives Bait-Level: \", effective_bait, \")\")
+
+	print(\"Gefangen: \", current_fish[\"name\"])
 
 	catch_progress.value = 50.0
 	marker_pos = 0.0
 	marker.position.x = 0.0
-
 
 func update_catch_minigame(delta: float) -> void:
 	var current_speed = marker_speed
@@ -916,6 +925,10 @@ func end_catch_minigame(success: bool) -> void:
 		Player.add_fish(fish)
 		Player.caught_fish_species[fish[\"name\"]] = true
 		success_sound.play()
+		
+		# 🆕 Köder VERBRAUCHEN
+		if Player.has_active_bait():
+			Player.consume_active_bait()
 
 		if catch_result_ui:
 			catch_result_ui.show_fish(fish)
@@ -1844,6 +1857,10 @@ visible = false
 visible = false
 
 [node name="Touch" parent="UI" instance=ExtResource("11_tx5p3")]
+
+[node name="BaitHUD" parent="UI" instance=ExtResource("12_8cl07")]
+offset_top = 47.52
+offset_bottom = 82.52
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_cfq0f")

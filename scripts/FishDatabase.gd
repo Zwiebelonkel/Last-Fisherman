@@ -520,35 +520,28 @@ var FISH_ICELAND = [
 
 
 # ===========================
-#  RANDOM FISH (BAIT UPGRADE)
+#  RANDOM FISH (NORMAL)
 # ===========================
 static func get_random_from_list(list: Array, bait_level := 1) -> Dictionary:
 	var weighted_list: Array = []
-	
-	# ---------------------------------------
-	# BAUE GEWICHTETE LISTE
-	# ---------------------------------------
+
 	for fish in list:
-		var rarity = fish["rarity"]
-		
-		# Story-Items (ANTIK) nur spawnen, wenn Biom NICHT abgeschlossen
+		var rarity: int = fish["rarity"]
+
+		# 🛑 Story-Items nur spawnen, wenn Biom NICHT abgeschlossen
 		if rarity == RARITY.ANTIK:
-			var biome = fish.get("biome", "")
+			var biome: String = fish.get("biome", "")
 			if biome != "" and Player.completed_biomes.get(biome, false):
-				print("🚫 Story-Item '%s' übersprungen – Biom '%s' bereits abgeschlossen" % [fish["name"], biome])
 				continue
-		
+
 		var base_spawn: float = RARITY_DATA[rarity]["spawn_chance"]
 		var spawn_amount: int = int(base_spawn * (1.0 + bait_level * 0.10))
-		
+
 		for i in range(spawn_amount):
 			weighted_list.append(fish)
-	
-	# ---------------------------------------
-	# FALLBACK WENN KEINE FISCHE
-	# ---------------------------------------
+
+	# Fallback
 	if weighted_list.is_empty():
-		print("⚠️ Weighted list ist leer! Gebe Unknown-Fisch zurück")
 		return {
 			"name": "Unknown",
 			"rarity": RARITY.NORMAL,
@@ -559,138 +552,86 @@ static func get_random_from_list(list: Array, bait_level := 1) -> Dictionary:
 			"weight": 1.0,
 			"is_new_catch": true
 		}
-	
-	# ---------------------------------------
-	# ZUFÄLLIGEN FISCH AUS DER LISTE WÄHLEN
-	# ---------------------------------------
-	var selected_fish = weighted_list.pick_random().duplicate(true)
-	
-	# ---------------------------------------
-	# GEWICHT GENERIEREN
-	# ---------------------------------------
-	if selected_fish.has("weight_min") and selected_fish.has("weight_max"):
-		var w = randf_range(selected_fish["weight_min"], selected_fish["weight_max"])
-		selected_fish["weight"] = snappedf(w, 0.01)  # 2 Nachkommastellen
+
+	var selected: Dictionary = weighted_list.pick_random().duplicate(true)
+
+	# Gewicht generieren
+	if selected.has("weight_min") and selected.has("weight_max"):
+		var w = randf_range(selected["weight_min"], selected["weight_max"])
+		selected["weight"] = snappedf(w, 0.01)
 	else:
-		selected_fish["weight"] = 1.0
-	
-	# ---------------------------------------
-	# NEU? (für Popup)
-	# ---------------------------------------
-	selected_fish["is_new_catch"] = not Player.caught_fish_species.has(selected_fish["name"])
-	
-	return selected_fish
+		selected["weight"] = 1.0
 
-	
-	for fish in list:
-		var rarity = fish["rarity"]
-		
-		# 🆕 Story-Items (ANTIK) nur spawnen wenn Biom noch nicht abgeschlossen
-		if rarity == RARITY.ANTIK:
-			var biome = fish.get("biome", "")
-			if biome != "" and Player.completed_biomes.get(biome, false):
-				print("🚫 Story-Item '%s' übersprungen - Biom '%s' bereits abgeschlossen" % [fish["name"], biome])
-				continue
-		
-		var base_spawn: float = RARITY_DATA[rarity]["spawn_chance"]
-		var spawn: float = base_spawn * (1.0 + bait_level * 0.10)
+	selected["is_new_catch"] = not Player.caught_fish_species.has(selected["name"])
+	return selected
 
-		for i in range(int(spawn)):
-			weighted_list.append(fish)
-	
-	# ❗ Sicherstellen, dass die Liste nicht leer ist
-	if weighted_list.is_empty():
-		print("⚠️ Weighted list ist leer! Gebe Unknown-Fisch zurück")
-		return {
-			"name": "Unknown",
-			"rarity": RARITY.NORMAL,
-			"base_value": 1,
-			"icon": "res://assets/fish/unknown.png",
-			"weight": 1.0
-		}
-	
-	# ❗ Zufälligen Fisch aus der gewichteten Liste zurückgeben
-	var result = weighted_list[randi() % weighted_list.size()]
-	return result
-	
-	for fish in list:
-		var rarity = fish["rarity"]
-		
-		# 🆕 Story-Items (ANTIK) nur spawnen wenn Biom noch nicht abgeschlossen
-		if rarity == RARITY.ANTIK:
-			var biome = fish.get("biome", "")
-			if biome != "" and Player.completed_biomes.get(biome, false):
-				print("🚫 Story-Item '%s' übersprungen - Biom '%s' bereits abgeschlossen" % [fish["name"], biome])
-				continue  # Überspringen wenn Biom schon komplett
-		
-		var base_spawn: float = RARITY_DATA[rarity]["spawn_chance"]
-		var spawn: float = base_spawn * (1.0 + bait_level * 0.10)
 
-		for i in range(int(spawn)):
-			weighted_list.append(fish)
-	
-	if weighted_list.is_empty():
-		print("⚠️ Weighted list ist leer! Gebe Unknown-Fisch zurück")
-		return {
-			"name": "Unknown",
-			"rarity": RARITY.NORMAL,
-			"base_value": 1,
-			"icon": "res://assets/fish/unknown.png",
-			"weight": 1.0
-		}
 # ===========================
-#  MINIGAME ADJUSTMENTS
+#  RANDOM FISH (TARGET RARITY)
 # ===========================
-func get_fish_difficulty(fish: Dictionary) -> float:
+static func get_random_fish_by_rarity(list: Array, rarity_string: String) -> Dictionary:
+	var rarity_enum := rarity_string_to_enum(rarity_string)
+
+	if rarity_enum == -1:
+		return get_random_from_list(list)
+
+	var filtered: Array = []
+	for fish in list:
+		if fish["rarity"] == rarity_enum:
+			filtered.append(fish)
+
+	if filtered.is_empty():
+		return get_random_from_list(list)
+
+	var selected: Dictionary = filtered.pick_random().duplicate(true)
+
+
+	# Gewicht generieren
+	if selected.has("weight_min") and selected.has("weight_max"):
+		var w = randf_range(selected["weight_min"], selected["weight_max"])
+		selected["weight"] = snappedf(w, 0.01)
+	else:
+		selected["weight"] = 1.0
+
+	selected["is_new_catch"] = not Player.caught_fish_species.has(selected["name"])
+	return selected
+
+
+# ===========================
+#  DIFFICULTY
+# ===========================
+static func get_fish_difficulty(fish: Dictionary) -> float:
 	return RARITY_DATA[fish["rarity"]]["difficulty"]
 
-func get_marker_speed_for_fish(fish: Dictionary, base_speed: float = 350.0) -> float:
+
+static func get_marker_speed_for_fish(fish: Dictionary, base_speed: float = 350.0) -> float:
 	return base_speed * get_fish_difficulty(fish)
-	
-static func get_random_fish_by_rarity(fish_list: Array, target_rarity_name: String) -> Dictionary:
-	# Konvertiere String-Namen zu RARITY enum
-	var target_rarity = -1
-	match target_rarity_name:
-		"Ungewöhnlich": target_rarity = RARITY.UNGEWOEHNLICH
-		"Selten": target_rarity = RARITY.SELTEN
-		"Episch": target_rarity = RARITY.EPISCH
-		"Legendär": target_rarity = RARITY.LEGENDAER
-		"Exotisch": target_rarity = RARITY.EXOTISCH
-	
-	if target_rarity == -1:
-		print("⚠️ Ungültige Seltenheit: %s" % target_rarity_name)
-		return get_random_from_list(fish_list, 1)
-	
-	# Sammle alle Fische mit der Ziel-Seltenheit
-	var matching_fish = []
-	for fish in fish_list:
-		if fish["rarity"] == target_rarity:
-			# 🚫 Story-Items (ANTIK) überspringen
-			if fish["rarity"] == RARITY.ANTIK:
-				continue
-			matching_fish.append(fish)
-	
-	# Wenn keine Fische gefunden, Fallback
-	if matching_fish.is_empty():
-		print("⚠️ Keine Fische mit Seltenheit %s gefunden!" % target_rarity_name)
-		return get_random_from_list(fish_list, 1)
-	
-	# Wähle zufälligen Fisch und generiere Gewicht
-	var selected_fish = matching_fish[randi() % matching_fish.size()].duplicate(true)
-	
-	if selected_fish.has("weight_min") and selected_fish.has("weight_max"):
-		var w = randf_range(selected_fish["weight_min"], selected_fish["weight_max"])
-		selected_fish["weight"] = snappedf(w, 0.01)
-	else:
-		selected_fish["weight"] = 1.0
-	
-	selected_fish["is_new_catch"] = not Player.caught_fish_species.has(selected_fish["name"])
-	
-	print("🎣 Köder-Fisch generiert: %s (%s)" % [selected_fish["name"], target_rarity_name])
-	return selected_fish
+
 
 # ===========================
 #  ICON ACCESS
 # ===========================
-func get_fish_icon(fish: Dictionary) -> Texture2D:
-	return fish.get("icon", null)
+static func get_fish_icon(fish: Dictionary) -> String:
+	return fish.get("icon", "res://assets/fish/unknown.png")
+
+
+# ===========================
+#  RARITY STRING → ENUM (FIXED)
+# ===========================
+static func rarity_string_to_enum(r: String) -> int:
+	var map := {
+		"Uncommon": RARITY.UNGEWOEHNLICH,
+		"Rare": RARITY.SELTEN,
+		"Epic": RARITY.EPISCH,
+		"Legendary": RARITY.LEGENDAER,
+		"Exotic": RARITY.EXOTISCH,
+
+		# Deutsche Varianten
+		"Ungewöhnlich": RARITY.UNGEWOEHNLICH,
+		"Selten": RARITY.SELTEN,
+		"Episch": RARITY.EPISCH,
+		"Legendär": RARITY.LEGENDAER,
+		"Exotisch": RARITY.EXOTISCH
+	}
+
+	return map.get(r, -1)

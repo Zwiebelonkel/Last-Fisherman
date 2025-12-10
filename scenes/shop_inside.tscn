@@ -217,19 +217,20 @@ layout_mode = 2
 theme = SubResource("Theme_pmnnn")
 text = "💰 0 €"
 
+[node name="ShopToggleButton" type="Button" parent="UI/ShopContainer/MainPanel/VBoxContainer/TopBar"]
+layout_mode = 2
+
 [node name="CloseButton" type="Button" parent="UI/ShopContainer/MainPanel/VBoxContainer/TopBar"]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 theme = SubResource("Theme_pmnnn")
 text = "✕"
 
-[node name="ShopToggleButton" type="Button" parent="UI/ShopContainer/MainPanel/VBoxContainer/TopBar"]
-layout_mode = 2
-
 [node name="HSeparator" type="HSeparator" parent="UI/ShopContainer/MainPanel/VBoxContainer"]
 layout_mode = 2
 
 [node name="BaitShop" parent="UI/ShopContainer/MainPanel/VBoxContainer" instance=ExtResource("7_k7utd")]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 1
 size_flags_vertical = 3

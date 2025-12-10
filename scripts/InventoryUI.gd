@@ -16,7 +16,7 @@ func _ready() -> void:
 	visibility_changed.connect(_on_visibility_changed)
 
 	if fish_grid:
-		fish_grid.columns = 4
+		fish_grid.columns = 3
 
 	refresh()
 
@@ -35,9 +35,9 @@ func toggle() -> void:
 
 
 func refresh() -> void:
-	# ---------------------------------
-	# 🐟 FISCHE LADEN
-	# ---------------------------------
+	# ----------------------------
+	# 🧹 GRIDS LEEREN
+	# ----------------------------
 	for child in fish_grid.get_children():
 		child.queue_free()
 
@@ -47,14 +47,18 @@ func refresh() -> void:
 	var total_value := 0
 	var fish_count := Inventory.fish_inventory.size()
 
+	# ----------------------------
+	# 🐟 FISCHE LADEN
+	# ----------------------------
 	for i in range(fish_count):
-		var f: Dictionary = Inventory.fish_inventory[i]
-		var item: PanelContainer = item_scene.instantiate()
+		var f = Inventory.fish_inventory[i]
+		var item := item_scene.instantiate()
 
 		var rarity = f.get("rarity", FishDB.RARITY.NORMAL)
 		var rarity_data = FishDB.RARITY_DATA[rarity]
 		var rarity_color: Color = rarity_data["color"]
 
+		# Style
 		var style := StyleBoxFlat.new()
 		style.bg_color = Color(0.15, 0.15, 0.15, 0.9)
 		style.border_width_left = 3
@@ -68,42 +72,45 @@ func refresh() -> void:
 		style.corner_radius_bottom_right = 8
 		style.shadow_size = 4
 		style.shadow_color = Color(0, 0, 0, 0.5)
-
 		item.add_theme_stylebox_override("panel", style)
 
+		# Icon
 		var icon: TextureRect = item.get_node("VBoxContainer/IconContainer/MarginContainer/FishIcon")
 		icon.texture = _get_fish_icon(f)
 
-		var name_label: Label = item.get_node("VBoxContainer/InfoContainer/MarginContainer/Name")
-		name_label.text = str(f.get("name", "Unbekannter Fisch"))
+		# Name
+		item.get_node("VBoxContainer/InfoContainer/MarginContainer/Name").text = str(f.get("name", "Unbekannter Fisch"))
 
+		# Rarity
 		var rarity_label: Label = item.get_node("VBoxContainer/InfoContainer/MarginContainer2/Rarity")
 		rarity_label.text = rarity_data["name"]
 		rarity_label.modulate = rarity_color
 
+		# Gewicht
 		var weight_label: Label = item.get_node("VBoxContainer/InfoContainer/StatsContainer/MarginContainer3/Weight")
 		if f.has("weight"):
 			weight_label.text = "⚖️ %.2f kg" % f["weight"]
 		else:
 			weight_label.text = "⚖️ ??? kg"
 
+		# Wert
 		var value := int(f["base_value"] * rarity_data["value"])
-		var value_label: Label = item.get_node("VBoxContainer/InfoContainer/StatsContainer/MarginContainer4/Value")
-		value_label.text = "💰 %d €" % value
-
+		item.get_node("VBoxContainer/InfoContainer/StatsContainer/MarginContainer4/Value").text = "💰 %d €" % value
 		total_value += value
 
+		# Rechtsklick verkaufen
 		item.gui_input.connect(_on_item_clicked.bind(i))
 
 		fish_grid.add_child(item)
 
-		item.modulate.a = 0.0
-		var tween = create_tween()
-		tween.tween_property(item, "modulate:a", 1.0, 0.3).set_delay(i * 0.05)
+		# Fade-in
+		item.modulate.a = 0
+		create_tween().tween_property(item, "modulate:a", 1.0, 0.3).set_delay(i * 0.05)
 
-	# ---------------------------------
+
+	# ----------------------------
 	# 🎣 KÖDER LADEN
-	# ---------------------------------
+	# ----------------------------
 	var bait_colors := {
 		"Uncommon": Color(0.4, 0.8, 0.4),
 		"Rare": Color(0.3, 0.5, 1.0),
@@ -122,19 +129,16 @@ func refresh() -> void:
 		var style_bait := StyleBoxFlat.new()
 		style_bait.bg_color = Color(0.12, 0.12, 0.12, 0.9)
 		style_bait.border_width_left = 3
-		style_bait.border_width_top = 3
-		style_bait.border_width_right = 3
-		style_bait.border_width_bottom = 3
+		style_bait.border_color = bait_colors.get(rarity, Color.WHITE)
 		style_bait.corner_radius_top_left = 6
 		style_bait.corner_radius_top_right = 6
 		style_bait.corner_radius_bottom_left = 6
 		style_bait.corner_radius_bottom_right = 6
-		style_bait.border_color = bait_colors.get(rarity, Color.WHITE)
-
 		bait_item.add_theme_stylebox_override("panel", style_bait)
 
 		var vbox := VBoxContainer.new()
 		vbox.alignment = BoxContainer.ALIGNMENT_CENTER
+		vbox.custom_minimum_size = Vector2(180, 110)
 
 		var bait_title := Label.new()
 		bait_title.text = "%s-Köder" % rarity
@@ -144,21 +148,36 @@ func refresh() -> void:
 		amount_label.text = "x%d" % amount
 		amount_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 
+		var activate_button := Button.new()
+		activate_button.text = "Aktivieren"
+		activate_button.custom_minimum_size = Vector2(0, 35)
+
+		activate_button.pressed.connect(func():
+			_on_activate_bait_pressed(rarity)
+		)
+
+		if Player.active_bait == rarity:
+			activate_button.text = "Aktiv ✔"
+			activate_button.disabled = true
+			activate_button.modulate = Color(0.3, 1.0, 0.3)
+
 		vbox.add_child(bait_title)
 		vbox.add_child(amount_label)
-		bait_item.add_child(vbox)
+		vbox.add_child(activate_button)
 
+		bait_item.add_child(vbox)
 		bait_grid.add_child(bait_item)
 
-		bait_item.modulate.a = 0.0
+		# Fade
+		bait_item.modulate.a = 0
 		create_tween().tween_property(bait_item, "modulate:a", 1.0, 0.3)
 
-	# ---------------------------------
-	# 📊 UI-TEXTE
-	# ---------------------------------
+
+	# ----------------------------
+	# 📊 UI UPDATE
+	# ----------------------------
 	title_label.text = "Inventar (%d Fische)" % fish_count
-	if total_value_label:
-		total_value_label.text = "Gesamtwert: %d €" % total_value
+	total_value_label.text = "Gesamtwert: %d €" % total_value
 
 	if fish_count > 0:
 		sell_button.text = "Alle verkaufen (%d €)" % total_value
@@ -166,7 +185,6 @@ func refresh() -> void:
 	else:
 		sell_button.text = "Keine Fische zum Verkaufen"
 		sell_button.disabled = true
-
 
 func _on_item_clicked(event: InputEvent, index: int) -> void:
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
@@ -209,6 +227,14 @@ func _on_sell_all_pressed() -> void:
 	Player.add_money(money)
 
 	print("💰 Alle %d Fische verkauft für: %d €" % [fish_count, money])
+	refresh()
+
+func _on_activate_bait_pressed(rarity: String) -> void:
+	if Player.activate_bait(rarity):
+		print("🎣 Köder aktiviert:", rarity)
+	else:
+		print("❌ Kein Köder verfügbar:", rarity)
+
 	refresh()
 
 
