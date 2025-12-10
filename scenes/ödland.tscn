@@ -1732,7 +1732,7 @@ _data = {
 &"implode": SubResource("Animation_flfji")
 }
 
-[node name="MainScene" type="Node3D"]
+[node name="MainScene2" type="Node3D"]
 
 [node name="Filter2" type="CanvasLayer" parent="."]
 layer = 0

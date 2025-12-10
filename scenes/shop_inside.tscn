@@ -230,10 +230,24 @@ text = "✕"
 layout_mode = 2
 
 [node name="BaitShop" parent="UI/ShopContainer/MainPanel/VBoxContainer" instance=ExtResource("7_k7utd")]
-visible = false
 layout_mode = 2
 size_flags_horizontal = 1
 size_flags_vertical = 3
+
+[node name="UngewöhnlichCard" parent="UI/ShopContainer/MainPanel/VBoxContainer/BaitShop/Scroll/Cards" index="0"]
+size_flags_horizontal = 4
+
+[node name="SeltenCard" parent="UI/ShopContainer/MainPanel/VBoxContainer/BaitShop/Scroll/Cards" index="1"]
+size_flags_horizontal = 4
+
+[node name="EpischCard" parent="UI/ShopContainer/MainPanel/VBoxContainer/BaitShop/Scroll/Cards" index="2"]
+size_flags_horizontal = 4
+
+[node name="LegendärCard" parent="UI/ShopContainer/MainPanel/VBoxContainer/BaitShop/Scroll/Cards" index="3"]
+size_flags_horizontal = 4
+
+[node name="ExotischCard" parent="UI/ShopContainer/MainPanel/VBoxContainer/BaitShop/Scroll/Cards" index="4"]
+size_flags_horizontal = 4
 
 [node name="UpgradeCards" type="HBoxContainer" parent="UI/ShopContainer/MainPanel/VBoxContainer"]
 layout_mode = 2
