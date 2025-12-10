@@ -1,9 +1,13 @@
-[gd_scene load_steps=7 format=3 uid="uid://cbxqcwmep1mf8"]
+[gd_scene load_steps=8 format=3 uid="uid://cbxqcwmep1mf8"]
 
 [ext_resource type="Script" uid="uid://56yw48ywi5p4" path="res://scripts/note.gd" id="1_t3yvt"]
 [ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="2_1bnk6"]
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1bnk6"]
+albedo_color = Color(1, 1, 0.509804, 1)
+
 [sub_resource type="BoxMesh" id="BoxMesh_7buut"]
+material = SubResource("StandardMaterial3D_1bnk6")
 size = Vector3(1, 0.05, 1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_43c4j"]
