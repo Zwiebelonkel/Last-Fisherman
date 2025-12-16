@@ -41,6 +41,26 @@ var base_grip_cost := 50
 var base_bait_cost := 75
 var base_line_cost := 100
 
+# 🌍 Localized Strings
+var localized_texts := {
+	"bait_suffix": {
+		"de": "-Köder",
+		"en": " Bait"
+	},
+	"stock": {
+		"de": "Vorrat: %d",
+		"en": "Stock: %d"
+	},
+	"guarantees": {
+		"de": "Garantiert %s\nFisch!",
+		"en": "Guarantees %s\nFish!"
+	},
+	"upgrades_button": {
+		"de": "⚙️ Upgrades",
+		"en": "⚙️ Upgrades"
+	}
+}
+
 func _ready():
 	update_ui()
 	play_intro_animation()
@@ -53,6 +73,19 @@ func _ready():
 	
 	# Start: Upgrade-Ansicht
 	show_upgrade_shop()
+
+
+# ============================================
+# 🌍 LOCALIZATION HELPER
+# ============================================
+
+func get_text(key: String) -> String:
+	var current_lang = Player.current_language
+	if localized_texts.has(key) and localized_texts[key].has(current_lang):
+		return localized_texts[key][current_lang]
+	elif localized_texts.has(key) and localized_texts[key].has("de"):
+		return localized_texts[key]["de"]
+	return key
 
 
 # ============================================
@@ -83,14 +116,14 @@ func show_upgrade_shop():
 	showing_bait_shop = false
 	upgrade_panel.visible = true
 	bait_shop_panel.visible = false
-	shop_toggle_button.text = "🎣 Köder"
+	shop_toggle_button.text = tr("BAITS")
 
 
 func show_bait_shop():
 	showing_bait_shop = true
 	upgrade_panel.visible = false
 	bait_shop_panel.visible = true
-	shop_toggle_button.text = "⚙️ Upgrades"
+	shop_toggle_button.text = get_text("upgrades_button")
 	update_bait_ui()
 
 
@@ -105,11 +138,11 @@ func buy_bait(rarity: String):
 		
 		var card: PanelContainer
 		match rarity:
-			"Ungewöhnlich": card = uncommon_bait_card
-			"Selten": card = rare_bait_card
-			"Episch": card = epic_bait_card
-			"Legendär": card = legendary_bait_card
-			"Exotisch": card = exotic_bait_card
+			"Uncommon": card = uncommon_bait_card
+			"Rare": card = rare_bait_card
+			"Epic": card = epic_bait_card
+			"Legendary": card = legendary_bait_card
+			"Exotic": card = exotic_bait_card
 		
 		#play_purchase_effect(card)
 		update_ui()
@@ -131,21 +164,21 @@ func update_ui():
 	# Grip
 	var grip_cost = calculate_cost(base_grip_cost, Player.upgrade_grip)
 	grip_level_label.text = "Level %d" % Player.upgrade_grip
-	grip_desc_label.text = "+%d%% Sweetspot\nProgress" % (Player.upgrade_grip * 15)
+	grip_desc_label.text = ("+%d%% " + tr("GRIP_DESC")) % (Player.upgrade_grip * 15)
 	grip_price_label.text = "%d €" % grip_cost
 	grip_button.disabled = (Player.money < grip_cost)
 	
 	# Bait
 	var bait_cost = calculate_cost(base_bait_cost, Player.upgrade_bait)
 	bait_level_label.text = "Level %d" % Player.upgrade_bait
-	bait_desc_label.text = "+%d%% Seltene\nItems Chance" % (Player.upgrade_bait * 10)
+	bait_desc_label.text = ("+%d%% " + tr("BAIT_DESC")) % (Player.upgrade_bait * 10)
 	bait_price_label.text = "%d €" % bait_cost
 	bait_button.disabled = (Player.money < bait_cost)
 	
 	# Line
 	var line_cost = calculate_cost(base_line_cost, Player.upgrade_line)
 	line_level_label.text = "Level %d" % Player.upgrade_line
-	line_desc_label.text = "-%d%% Warte-\nzeit" % (Player.upgrade_line * 8)
+	line_desc_label.text = ("-%d%% " + tr("LINE_DESC")) % (Player.upgrade_line * 8)
 	line_price_label.text = "%d €" % line_cost
 	line_button.disabled = (Player.money < line_cost)
 	
@@ -172,13 +205,16 @@ func update_bait_card(card: PanelContainer, rarity: String, color: Color):
 	var price_label = content.get_node("PriceLabel")
 	var buy_button = content.get_node("BuyButton")
 	
-	title_label.text = "%s-Köder" % rarity
+	# 🌍 Titel mit übersetzter Rarity + Suffix
+	var rarity_translated = tr(rarity.to_upper())
+	title_label.text = rarity_translated + get_text("bait_suffix")
 	title_label.modulate = color
 	
 	var stock = Player.bait_inventory.get(rarity, 0)
-	stock_label.text = "Vorrat: %d" % stock
+	stock_label.text = get_text("stock") % stock
 	
-	desc_label.text = "Garantiert %s\nFisch!" % rarity
+	# 🌍 Beschreibung
+	desc_label.text = get_text("guarantees") % rarity_translated
 	
 	var price = Player.BAIT_PRICES[rarity]
 	price_label.text = "%d €" % price

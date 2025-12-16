@@ -1,0 +1,56 @@
+keys,de,en
+PLAY,Spielen,Play
+QUIT,Verlassen,Quit
+RESET,Zurücksetzen,Reset Game
+SETTINGS,Einstellungen,Settings
+CREDITS,Credits,Credits
+GRIP,Griff,Grip
+BAIT,Köder,Bait
+LINE,Faden,Line
+GRIP_DESC,Bereichsfortschritt,Sweetspot Progress
+BAIT_DESC,Seltene Items Chance,Rare Items Chance
+LINE_DESC,Wartezeit,Wait Time
+BEACH,Strand,Beach
+CITY,Stadt,City
+SEWER,U-Bahn,Subway
+FOREST,Wald,Forest
+DESERT,Wüste,Desert
+ICELAND,Eisland,Iceland
+HOME,Zuhause,Home
+BUY,Kaufen,Buy
+CLOSE,Schließen,Close
+GO,Betreten,Enter
+BACK,Zurück,Back
+SUBMIT,Bestätigen,Confirm
+PASSWORD,Passwort,Password
+MUSIC,Musik,Music
+SFX,SFX,SFX
+3DSCALE,3D-Skalierung,3D Scale
+FRAMELIMIT,Bildraten-Limit,Frame Limit
+FULLSCREEN,Vollbild,Fullscreen
+SPACEBAR,Leertaste,Spacebar
+ARROWKEYS,Pfeiltasten,Arrow Keys
+CAST,Auswerfen,Cast
+INTERACT,Interagieren,Interact
+FIGHT,Kämpfen,Fight
+TURNAROUND,Umsehen,Turn Around
+INVENTORY,Inventar,Inventory
+FISCHBOOK,Fischbuch,Fishbook
+MAP,Karte,Map
+MENU,Menü,Menu
+NORMAL,Normal,Common
+UNCOMMON,Ungewöhnlich,Uncommon
+RARE,Selten,Rare
+EPIC,Episch,Epic
+LEGENDARY,Legendär,Legendary
+EXOTIC,Exotisch,Exotic
+ANTIQUE,Antik,Antique
+DESCRIPTION,Beschreibung,Description
+BASEVALUE,Basiswert,Base Value
+WEIGHT1,Gewicht (Rekord),Weight (Record)
+WEIGHT2,Gewicht (Bereich),Weight (Range)
+CATCHED,Gefangen,Caught
+NEVERCATCHED,Noch nicht gefangen,Not Caught Yet
+COMPLETEVALUE,Gesamtwert,Total Value
+BAITS,Köder,Baits
+SELLALL,Alle verkaufen,Sell All

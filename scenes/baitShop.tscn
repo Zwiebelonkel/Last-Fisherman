@@ -60,7 +60,7 @@ horizontal_alignment = 1
 [node name="BuyButton" type="Button" parent="Scroll/Cards/UngewöhnlichCard/CardContent"]
 custom_minimum_size = Vector2(0, 45)
 layout_mode = 2
-text = "KAUFEN"
+text = "BUY"
 
 [node name="SeltenCard" type="PanelContainer" parent="Scroll/Cards"]
 custom_minimum_size = Vector2(220, 0)
@@ -100,7 +100,7 @@ horizontal_alignment = 1
 [node name="BuyButton" type="Button" parent="Scroll/Cards/SeltenCard/CardContent"]
 custom_minimum_size = Vector2(0, 45)
 layout_mode = 2
-text = "KAUFEN"
+text = "BUY"
 
 [node name="EpischCard" type="PanelContainer" parent="Scroll/Cards"]
 custom_minimum_size = Vector2(220, 0)
@@ -140,7 +140,7 @@ horizontal_alignment = 1
 [node name="BuyButton" type="Button" parent="Scroll/Cards/EpischCard/CardContent"]
 custom_minimum_size = Vector2(0, 45)
 layout_mode = 2
-text = "KAUFEN"
+text = "BUY"
 
 [node name="LegendärCard" type="PanelContainer" parent="Scroll/Cards"]
 custom_minimum_size = Vector2(220, 0)
@@ -180,7 +180,7 @@ horizontal_alignment = 1
 [node name="BuyButton" type="Button" parent="Scroll/Cards/LegendärCard/CardContent"]
 custom_minimum_size = Vector2(0, 45)
 layout_mode = 2
-text = "KAUFEN"
+text = "BUY"
 
 [node name="ExotischCard" type="PanelContainer" parent="Scroll/Cards"]
 custom_minimum_size = Vector2(220, 0)
@@ -220,4 +220,4 @@ horizontal_alignment = 1
 [node name="BuyButton" type="Button" parent="Scroll/Cards/ExotischCard/CardContent"]
 custom_minimum_size = Vector2(0, 45)
 layout_mode = 2
-text = "KAUFEN"
+text = "BUY"

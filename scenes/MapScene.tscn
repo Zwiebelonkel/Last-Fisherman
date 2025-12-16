@@ -109,6 +109,7 @@ grow_vertical = 2
 theme = SubResource("Theme_bnqbi")
 
 [node name="MapImage" type="TextureRect" parent="layout"]
+visible = false
 material = SubResource("ShaderMaterial_w8wlc")
 layout_mode = 1
 anchors_preset = 15
@@ -279,10 +280,8 @@ text = "Back"
 
 [node name="Filter" type="CanvasLayer" parent="."]
 layer = 0
-visible = false
 
 [node name="PixelateOverlay" type="ColorRect" parent="Filter"]
-visible = false
 material = SubResource("ShaderMaterial_jqekx")
 anchors_preset = 15
 anchor_right = 1.0

@@ -8,7 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://cdb3sodlv6np7" path="res://scenes/MoneyHUD.tscn" id="6_3q32m"]
 [ext_resource type="PackedScene" uid="uid://be7bs5po2ukhi" path="res://scenes/FishBook.tscn" id="7_8hrlh"]
 [ext_resource type="PackedScene" uid="uid://b08obrprd472u" path="res://scenes/OptionsControl.tscn" id="9_mw5nc"]
-[ext_resource type="Script" path="res://scripts/lightFlicker.gd" id="10_4oyfp"]
+[ext_resource type="Script" uid="uid://dykdxx6r3ibik" path="res://scripts/lightFlicker.gd" id="10_4oyfp"]
 [ext_resource type="PackedScene" uid="uid://xt7f7m4i2iwi" path="res://scenes/touch.tscn" id="10_7t3s2"]
 [ext_resource type="Script" uid="uid://dcpmiuqpwqgew" path="res://scripts/Aquarium.gd" id="11_lcd1r"]
 [ext_resource type="AudioStream" uid="uid://dmsahwwgrlg3s" path="res://sounds/cabin.mp3" id="12_glsmu"]
