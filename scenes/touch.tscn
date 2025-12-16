@@ -43,7 +43,7 @@ theme_override_constants/separation = 50
 [node name="JournalButton" type="Button" parent="TopLeftPanel/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
-tooltip_text = "Fishbook"
+tooltip_text = "FISHBOOK"
 theme_override_fonts/font = ExtResource("1_iac43")
 icon = ExtResource("2_ja7e8")
 icon_alignment = 1
@@ -52,7 +52,7 @@ expand_icon = true
 [node name="InventoryButton" type="Button" parent="TopLeftPanel/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
-tooltip_text = "Inventory"
+tooltip_text = "INVENTORY"
 theme_override_fonts/font = ExtResource("1_iac43")
 icon = ExtResource("3_dyx1v")
 icon_alignment = 1
@@ -61,7 +61,7 @@ expand_icon = true
 [node name="MapButton" type="Button" parent="TopLeftPanel/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
-tooltip_text = "Map"
+tooltip_text = "MAP"
 theme_override_fonts/font = ExtResource("1_iac43")
 icon = ExtResource("4_vydqa")
 icon_alignment = 1
@@ -70,7 +70,7 @@ expand_icon = true
 [node name="SettingsButton" type="Button" parent="TopLeftPanel/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
-tooltip_text = "Options"
+tooltip_text = "SETTINGS"
 theme_override_fonts/font = ExtResource("1_iac43")
 icon = ExtResource("5_3dfsu")
 icon_alignment = 1
