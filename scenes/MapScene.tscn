@@ -109,7 +109,6 @@ grow_vertical = 2
 theme = SubResource("Theme_bnqbi")
 
 [node name="MapImage" type="TextureRect" parent="layout"]
-visible = false
 material = SubResource("ShaderMaterial_w8wlc")
 layout_mode = 1
 anchors_preset = 15
@@ -142,7 +141,7 @@ offset_right = -101.0
 offset_bottom = 152.0
 grow_horizontal = 2
 grow_vertical = 2
-text = "Beach"
+text = "BEACH"
 
 [node name="CityButton" type="Button" parent="layout/Locations"]
 layout_mode = 0
@@ -150,8 +149,7 @@ offset_left = 168.0
 offset_top = 167.5
 offset_right = 214.0
 offset_bottom = 198.5
-text = "City
-"
+text = "CITY"
 
 [node name="SewerButton" type="Button" parent="layout/Locations"]
 layout_mode = 0
@@ -159,7 +157,7 @@ offset_left = 287.0
 offset_top = 200.5
 offset_right = 352.0
 offset_bottom = 231.5
-text = "Subway"
+text = "SUBWAY"
 
 [node name="ForestButton" type="Button" parent="layout/Locations"]
 layout_mode = 0
@@ -167,7 +165,7 @@ offset_left = 181.0
 offset_top = 69.5
 offset_right = 246.0
 offset_bottom = 100.5
-text = "Forest"
+text = "FOREST"
 
 [node name="DesertButton" type="Button" parent="layout/Locations"]
 layout_mode = 1
@@ -182,7 +180,7 @@ offset_right = 201.0
 offset_bottom = -50.0
 grow_horizontal = 2
 grow_vertical = 2
-text = "Desert"
+text = "DESERT"
 
 [node name="IcelandButton" type="Button" parent="layout/Locations"]
 layout_mode = 0
@@ -190,7 +188,7 @@ offset_left = 372.0
 offset_top = 68.5
 offset_right = 446.0
 offset_bottom = 99.5
-text = "Iceland"
+text = "ICELAND"
 
 [node name="HomeButton" type="Button" parent="layout/Locations"]
 layout_mode = 0
@@ -198,7 +196,7 @@ offset_left = 266.0
 offset_top = 352.5
 offset_right = 340.0
 offset_bottom = 383.5
-text = "Home"
+text = "HOME"
 
 [node name="Popup" type="Panel" parent="layout"]
 layout_mode = 0
@@ -241,7 +239,7 @@ offset_top = -11.5
 offset_bottom = 11.5
 grow_horizontal = 2
 grow_vertical = 2
-text = "Buy"
+text = "BUY"
 
 [node name="CloseButton" type="Button" parent="layout/Popup"]
 layout_mode = 1
@@ -252,8 +250,7 @@ anchor_bottom = 1.0
 offset_top = -23.0
 grow_horizontal = 2
 grow_vertical = 0
-text = "Close
-"
+text = "CLOSE"
 
 [node name="GoButton" type="Button" parent="layout/Popup"]
 layout_mode = 1
@@ -265,7 +262,7 @@ offset_top = 27.0
 offset_bottom = 50.0
 grow_horizontal = 2
 grow_vertical = 2
-text = "Go"
+text = "GO"
 
 [node name="BackButton" type="Button" parent="layout"]
 layout_mode = 1
@@ -276,7 +273,7 @@ anchor_bottom = 1.0
 offset_top = -23.0
 grow_horizontal = 2
 grow_vertical = 0
-text = "Back"
+text = "BACK"
 
 [node name="Filter" type="CanvasLayer" parent="."]
 layer = 0
@@ -316,7 +313,7 @@ offset_top = -47.0
 offset_bottom = -1.0
 grow_horizontal = 0
 grow_vertical = 0
-text = "Submit"
+text = "SUBMIT"
 
 [node name="password" type="TextEdit" parent="."]
 layout_mode = 1
@@ -330,7 +327,7 @@ offset_top = -47.0
 offset_right = -74.0
 grow_horizontal = 0
 grow_vertical = 0
-placeholder_text = "password"
+placeholder_text = "PASSWORD"
 
 [node name="Clouds" type="TextureRect" parent="."]
 material = SubResource("ShaderMaterial_titcf")

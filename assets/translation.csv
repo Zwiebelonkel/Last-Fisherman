@@ -28,12 +28,14 @@ SFX,SFX,SFX
 3DSCALE,3D-Skalierung,3D Scale
 FRAMELIMIT,Bildraten-Limit,Frame Limit
 FULLSCREEN,Vollbild,Fullscreen
+LANGUAGE,Sprache,Language
 SPACEBAR,Leertaste,Spacebar
 ARROWKEYS,Pfeiltasten,Arrow Keys
 CAST,Auswerfen,Cast
 INTERACT,Interagieren,Interact
 FIGHT,Kämpfen,Fight
 TURNAROUND,Umsehen,Turn Around
+CAST_INTERACT_FIGHT,"Auswerfen, Interagieren, Kämpfen","Cast, Interact, Fight"
 INVENTORY,Inventar,Inventory
 FISHBOOK,Fischbuch,Fishbook
 MAP,Karte,Map
@@ -49,7 +51,7 @@ DESCRIPTION,Beschreibung,Description
 BASEVALUE,Basiswert,Base Value
 WEIGHT1,Gewicht (Rekord),Weight (Record)
 WEIGHT2,Gewicht (Bereich),Weight (Range)
-CATCHED,Gefangen,Caught
+CAUGHT,Gefangen,Caught
 NEVERCATCHED,Noch nicht gefangen,Not Caught Yet
 COMPLETEVALUE,Gesamtwert,Total Value
 BAITS,Köder,Baits
