@@ -179,7 +179,7 @@ func change_to_biome(target_scene: String, biome_name: String, duration: float =
 
 # Schnelle Transition zurück zum Hauptmenü (von oben nach unten)
 func back_to_main(duration: float = 0.4) -> void:
-	change_scene_reverse("res://scenes/MainMenu.tscn", duration)
+	change_scene_reverse("res://scenes/mainMenu.tscn", duration)
 
 # Reverse Transition (von oben nach unten - für "Zurück") mit Async Loading
 func change_scene_reverse(target_scene: String, duration: float = 0.5) -> void:
