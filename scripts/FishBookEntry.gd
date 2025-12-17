@@ -16,6 +16,22 @@ var is_hovering: bool = false
 # 🆕 Referenz zum FishBook UI
 var fishbook_ui: Control = null
 
+# 🌍 Localized Texts
+var localized_texts := {
+	"unknown": {
+		"de": "Unbekannt",
+		"en": "Unknown"
+	},
+	"record": {
+		"de": "⚖️ Rekord: %.2f kg",
+		"en": "⚖️ Record: %.2f kg"
+	},
+	"no_description": {
+		"de": "Keine Beschreibung verfügbar.",
+		"en": "No description available."
+	}
+}
+
 func _ready():
 	# Nodes finden
 	icon = $VBoxContainer/IconContainer/MarginContainer/Icon
@@ -33,6 +49,39 @@ func _ready():
 	
 	# Tooltip erstellen
 	create_tooltip()
+
+
+# ============================================
+# 🌍 LOCALIZATION HELPER
+# ============================================
+
+func get_text(key: String) -> String:
+	var current_lang = Player.current_language
+	if localized_texts.has(key) and localized_texts[key].has(current_lang):
+		return localized_texts[key][current_lang]
+	elif localized_texts.has(key) and localized_texts[key].has("de"):
+		return localized_texts[key]["de"]
+	return key
+
+func _get_rarity_key(rarity_name: String) -> String:
+	match rarity_name:
+		"Normal":
+			return "NORMAL"
+		"Ungewöhnlich":
+			return "UNCOMMON"
+		"Selten":
+			return "RARE"
+		"Episch":
+			return "EPIC"
+		"Legendär":
+			return "LEGENDARY"
+		"Exotisch":
+			return "EXOTIC"
+		"Antik":
+			return "ANTIQUE"
+		_:
+			return "NORMAL"
+
 
 func set_fishbook_ui(ui: Control):
 	fishbook_ui = ui
@@ -91,8 +140,10 @@ func update_display():
 		name_label.text = fish_data["name"]
 		name_label.add_theme_font_size_override("font_size", 15)
 		
-		# 🎨 SELTENHEIT
-		rarity_label.text = rarity_data["name"]
+		# 🌍 SELTENHEIT (Übersetzt)
+		var rarity_name = rarity_data["name"]
+		var rarity_key = _get_rarity_key(rarity_name)
+		rarity_label.text = tr(rarity_key)
 		rarity_label.modulate = rarity_color
 		separator.modulate = rarity_color
 		rarity_label.add_theme_font_size_override("font_size", 12)
@@ -122,7 +173,8 @@ func update_display():
 		name_label.text = "???"
 		name_label.add_theme_font_size_override("font_size", 15)
 		
-		rarity_label.text = "Unbekannt"
+		# 🌍 "Unbekannt" übersetzt
+		rarity_label.text = get_text("unknown")
 		rarity_label.modulate = Color.GRAY
 		separator.modulate = Color.GRAY
 		rarity_label.add_theme_font_size_override("font_size", 12)
@@ -240,18 +292,25 @@ func _on_mouse_entered():
 	var tooltip_text = ""
 	tooltip_text += "[b][font_size=16]%s[/font_size][/b]\n" % fish_data["name"]
 	
+	# 🌍 Rarity im Tooltip übersetzt
 	var rarity_data = FishDB.RARITY_DATA[fish_data["rarity"]]
-	tooltip_text += "[color=%s]%s[/color]" % [rarity_data["color"].to_html(), rarity_data["name"]]
+	var rarity_name = rarity_data["name"]
+	var rarity_key = _get_rarity_key(rarity_name)
+	var rarity_translated = tr(rarity_key)
+	
+	tooltip_text += "[color=%s]%s[/color]" % [rarity_data["color"].to_html(), rarity_translated]
 	tooltip_text += " • 💰 %d\n" % fish_data["base_value"]
 	
+	# 🌍 Rekord-Text übersetzt
 	var max_weight = Player.get_max_caught_weight(fish_data["name"])
 	if max_weight > 0:
-		tooltip_text += "\n[color=#FFD700]⚖️ Rekord: %.2f kg[/color]\n" % max_weight
+		var record_text = get_text("record") % max_weight
+		tooltip_text += "\n[color=#FFD700]%s[/color]\n" % record_text
 	
 	if description != "":
 		tooltip_text += "\n[color=#CCCCCC]%s[/color]" % description
 	else:
-		tooltip_text += "\n[color=#888888][i]Keine Beschreibung verfügbar.[/i][/color]"
+		tooltip_text += "\n[color=#888888][i]%s[/i][/color]" % get_text("no_description")
 	
 	tooltip_label.text = tooltip_text
 	tooltip_panel.visible = true

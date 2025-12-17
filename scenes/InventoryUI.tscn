@@ -76,7 +76,7 @@ layout_mode = 2
 
 [node name="Button" type="Button" parent="PanelContainer/VBoxContainer"]
 layout_mode = 2
-text = "Verkaufen"
+text = "SELLALL"
 
 [node name="PanelContainer2" type="PanelContainer" parent="."]
 layout_mode = 1
@@ -104,7 +104,7 @@ theme_override_constants/margin_top = 5
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_l5txx")
 theme_override_font_sizes/font_size = 28
-text = "Köder"
+text = "BAIT"
 horizontal_alignment = 1
 
 [node name="HSeparator2" type="HSeparator" parent="PanelContainer2/VBoxContainer"]

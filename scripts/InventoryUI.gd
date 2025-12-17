@@ -10,6 +10,42 @@ extends Control
 var item_scene := preload("res://scenes/FishingItem.tscn")
 var is_open := false
 
+# 🌍 Localized Texts
+var localized_texts := {
+	"inventory_title": {
+		"de": "Inventar (%d Fische)",
+		"en": "Inventory (%d Fish)"
+	},
+	"total_value": {
+		"de": "Gesamtwert: %d €",
+		"en": "Total Value: %d €"
+	},
+	"sell_all": {
+		"de": "Alle verkaufen (%d €)",
+		"en": "Sell All (%d €)"
+	},
+	"no_fish": {
+		"de": "Keine Fische zum Verkaufen",
+		"en": "No Fish to Sell"
+	},
+	"unknown_fish": {
+		"de": "Unbekannter Fisch",
+		"en": "Unknown Fish"
+	},
+	"bait_suffix": {
+		"de": "-Köder",
+		"en": " Bait"
+	},
+	"activate": {
+		"de": "Aktivieren",
+		"en": "Activate"
+	},
+	"active": {
+		"de": "Aktiv ✔",
+		"en": "Active ✔"
+	}
+}
+
 func _ready() -> void:
 	visible = false
 	sell_button.pressed.connect(_on_sell_all_pressed)
@@ -19,6 +55,19 @@ func _ready() -> void:
 		fish_grid.columns = 3
 
 	refresh()
+
+
+# ============================================
+# 🌍 LOCALIZATION HELPER
+# ============================================
+
+func get_text(key: String) -> String:
+	var current_lang = Player.current_language
+	if localized_texts.has(key) and localized_texts[key].has(current_lang):
+		return localized_texts[key][current_lang]
+	elif localized_texts.has(key) and localized_texts[key].has("de"):
+		return localized_texts[key]["de"]
+	return key
 
 
 func _on_visibility_changed() -> void:
@@ -78,12 +127,14 @@ func refresh() -> void:
 		var icon: TextureRect = item.get_node("VBoxContainer/IconContainer/MarginContainer/FishIcon")
 		icon.texture = _get_fish_icon(f)
 
-		# Name
-		item.get_node("VBoxContainer/InfoContainer/MarginContainer/Name").text = str(f.get("name", "Unbekannter Fisch"))
+		# Name (🌍 Mit Fallback)
+		item.get_node("VBoxContainer/InfoContainer/MarginContainer/Name").text = str(f.get("name", get_text("unknown_fish")))
 
-		# Rarity
+		# Rarity (🌍 Übersetzt)
 		var rarity_label: Label = item.get_node("VBoxContainer/InfoContainer/MarginContainer2/Rarity")
-		rarity_label.text = rarity_data["name"]
+		var rarity_name = rarity_data["name"]
+		var rarity_key = _get_rarity_key(rarity_name)
+		rarity_label.text = tr(rarity_key)
 		rarity_label.modulate = rarity_color
 
 		# Gewicht
@@ -140,16 +191,19 @@ func refresh() -> void:
 		vbox.alignment = BoxContainer.ALIGNMENT_CENTER
 		vbox.custom_minimum_size = Vector2(180, 110)
 
+		# 🌍 Köder-Titel übersetzt
 		var bait_title := Label.new()
-		bait_title.text = "%s-Köder" % rarity
+		var rarity_translated = tr(rarity.to_upper())
+		bait_title.text = rarity_translated + get_text("bait_suffix")
 		bait_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 
 		var amount_label := Label.new()
 		amount_label.text = "x%d" % amount
 		amount_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 
+		# 🌍 Aktivieren-Button übersetzt
 		var activate_button := Button.new()
-		activate_button.text = "Aktivieren"
+		activate_button.text = get_text("activate")
 		activate_button.custom_minimum_size = Vector2(0, 35)
 
 		activate_button.pressed.connect(func():
@@ -157,7 +211,7 @@ func refresh() -> void:
 		)
 
 		if Player.active_bait == rarity:
-			activate_button.text = "Aktiv ✔"
+			activate_button.text = get_text("active")
 			activate_button.disabled = true
 			activate_button.modulate = Color(0.3, 1.0, 0.3)
 
@@ -174,17 +228,39 @@ func refresh() -> void:
 
 
 	# ----------------------------
-	# 📊 UI UPDATE
+	# 📊 UI UPDATE (🌍 Übersetzt)
 	# ----------------------------
-	title_label.text = "Inventar (%d Fische)" % fish_count
-	total_value_label.text = "Gesamtwert: %d €" % total_value
+	title_label.text = get_text("inventory_title") % fish_count
+	total_value_label.text = get_text("total_value") % total_value
 
 	if fish_count > 0:
-		sell_button.text = "Alle verkaufen (%d €)" % total_value
+		sell_button.text = get_text("sell_all") % total_value
 		sell_button.disabled = false
 	else:
-		sell_button.text = "Keine Fische zum Verkaufen"
+		sell_button.text = get_text("no_fish")
 		sell_button.disabled = true
+
+
+# 🌍 Rarity Name → Translation Key
+func _get_rarity_key(rarity_name: String) -> String:
+	match rarity_name:
+		"Normal":
+			return "NORMAL"
+		"Ungewöhnlich":
+			return "UNCOMMON"
+		"Selten":
+			return "RARE"
+		"Episch":
+			return "EPIC"
+		"Legendär":
+			return "LEGENDARY"
+		"Exotisch":
+			return "EXOTIC"
+		"Antik":
+			return "ANTIQUE"
+		_:
+			return "NORMAL"
+
 
 func _on_item_clicked(event: InputEvent, index: int) -> void:
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
