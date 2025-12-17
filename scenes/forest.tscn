@@ -952,32 +952,37 @@ func start_catch_minigame() -> void:
 	catch_ui.visible = true
 	anim.play(\"fight\")
 	camera.start_screenshake(0.1, 1)
-
 	splash.visible = true
 	splash.emitting = true
-
+	
 	# 🆕 Köder aktiv → garantiert Seltenheit
 	var target_rarity = \"\"
 	if Player.has_active_bait():
 		target_rarity = Player.get_active_bait_rarity()
 		print(\"🎣 Köder aktiv! Ziel:\", target_rarity)
-
-	var quality_bonus = int(last_cast_quality * 2)
-	var effective_bait = Player.upgrade_bait + quality_bonus
-
+	
+	# ✅ NERF: Prozentual statt additiv (max +15% bei perfektem Wurf)
+	var quality_multiplier = 1.0 + (last_cast_quality * 0.15)
+	var effective_bait = max(1, int(Player.upgrade_bait * quality_multiplier))
+	
+	print(\"🎯 Cast Quality: %.2f | Bait Level: %d → %d (%.1f%%)\" % [
+		last_cast_quality, 
+		Player.upgrade_bait, 
+		effective_bait,
+		(quality_multiplier - 1.0) * 100
+	])
+	
 	if target_rarity != \"\":
 		current_fish = FishDB.get_random_fish_by_rarity(FishDB.FISH_FOREST, target_rarity)
 	else:
 		current_fish = FishDB.get_random_from_list(FishDB.FISH_FOREST, effective_bait)
-
+	
 	marker_speed = FishDB.get_marker_speed_for_fish(current_fish)
-
 	print(\"Gefangen: \", current_fish[\"name\"])
-
+	
 	catch_progress.value = 50.0
 	marker_pos = 0.0
 	marker.position.x = 0.0
-
 func update_catch_minigame(delta: float) -> void:
 	var current_speed = marker_speed
 	

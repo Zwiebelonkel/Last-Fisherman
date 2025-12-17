@@ -14,13 +14,13 @@ enum RARITY {
 }
 
 static var RARITY_DATA = {
-	RARITY.NORMAL:        {"name": "Normal",       "color": Color.WHITE,     "value": 1.0,  "spawn_chance": 40.0, "difficulty": 1.0},
-	RARITY.UNGEWOEHNLICH: {"name": "Ungewöhnlich", "color": Color(0.3,1,0.3), "value": 1.5,  "spawn_chance": 30.0, "difficulty": 1.3},
-	RARITY.SELTEN:        {"name": "Selten",       "color": Color(0.2,0.4,1), "value": 2.0,  "spawn_chance": 15.0, "difficulty": 1.6},
-	RARITY.EPISCH:        {"name": "Episch",       "color": Color(0.7,0,1),   "value": 3.0,  "spawn_chance": 10.0, "difficulty": 2.0},
-	RARITY.LEGENDAER:     {"name": "Legendär",     "color": Color(1,0.8,0.1), "value": 6.0,  "spawn_chance": 4.0,  "difficulty": 2.5},
-	RARITY.EXOTISCH:      {"name": "Exotisch",     "color": Color(1,0,0.2),   "value": 12.0, "spawn_chance": 1.0,  "difficulty": 3.0},
-	RARITY.ANTIK:         {"name": "Antik",        "color": Color(0.4,0.8,0.9), "value": 0.0,  "spawn_chance": 0.5,  "difficulty": 1.0}  # 🆕 Cyan/Türkis
+	RARITY.NORMAL:        {"name": "Normal",       "color": Color.WHITE,      "value": 1.0,  "spawn_chance": 45.0, "difficulty": 1.0},
+	RARITY.UNGEWOEHNLICH: {"name": "Ungewöhnlich", "color": Color(0.3,1,0.3), "value": 1.5,  "spawn_chance": 33.0, "difficulty": 1.3},
+	RARITY.SELTEN:        {"name": "Selten",       "color": Color(0.2,0.4,1), "value": 2.0,  "spawn_chance": 12.0, "difficulty": 1.6},
+	RARITY.EPISCH:        {"name": "Episch",       "color": Color(0.7,0,1),   "value": 3.0,  "spawn_chance": 7.0,  "difficulty": 2.0},
+	RARITY.LEGENDAER:     {"name": "Legendär",     "color": Color(1,0.8,0.1), "value": 6.0,  "spawn_chance": 2.5, "difficulty": 2.5},
+	RARITY.EXOTISCH:      {"name": "Exotisch",     "color": Color(1,0,0.2),   "value": 12.0, "spawn_chance": 0.5, "difficulty": 3.0},
+	RARITY.ANTIK:         {"name": "Antik",        "color": Color(0.4,0.8,0.9), "value": 0.0, "spawn_chance": 0.4, "difficulty": 1.0}
 }
 
 # ===========================
@@ -522,49 +522,147 @@ var FISH_ICELAND = [
 # ===========================
 #  RANDOM FISH (NORMAL)
 # ===========================
+# KORRIGIERTE VERSION
 static func get_random_from_list(list: Array, bait_level := 1) -> Dictionary:
-	var weighted_list: Array = []
-
+	# 1. Sammle alle verfügbaren Rarities und berechne Gewichte
+	var rarity_weights: Dictionary = {}  # {RARITY: weight}
+	
 	for fish in list:
 		var rarity: int = fish["rarity"]
-
-		# 🛑 Story-Items nur spawnen, wenn Biom NICHT abgeschlossen
+		
+		# Überspringe Story-Items wenn Biom abgeschlossen
 		if rarity == RARITY.ANTIK:
 			var biome: String = fish.get("biome", "")
 			if biome != "" and Player.completed_biomes.get(biome, false):
 				continue
-
+		
+		# Initialisiere Rarity wenn noch nicht vorhanden
+		if not rarity_weights.has(rarity):
+			rarity_weights[rarity] = 0.0
+	
+	# 2. Berechne Gewichte basierend auf Bait-Level
+	for rarity in rarity_weights.keys():
 		var base_spawn: float = RARITY_DATA[rarity]["spawn_chance"]
-		var spawn_amount: int = int(base_spawn * (1.0 + bait_level * 0.10))
-
-		for i in range(spawn_amount):
-			weighted_list.append(fish)
-
-	# Fallback
-	if weighted_list.is_empty():
-		return {
-			"name": "Unknown",
-			"rarity": RARITY.NORMAL,
-			"base_value": 1,
-			"icon": "res://assets/fish/unknown.png",
-			"weight_min": 1.0,
-			"weight_max": 1.0,
-			"weight": 1.0,
-			"is_new_catch": true
-		}
-
-	var selected: Dictionary = weighted_list.pick_random().duplicate(true)
-
-	# Gewicht generieren
+		var boosted_spawn: float = _calculate_rarity_boost(base_spawn, rarity, bait_level)
+		rarity_weights[rarity] = boosted_spawn
+	
+	# Debug-Ausgabe
+	print("🎣 Bait Level: ", bait_level)
+	for r in rarity_weights.keys():
+		print("  ", RARITY_DATA[r]["name"], ": ", rarity_weights[r], " (", 
+			  snappedf(rarity_weights[r] / _sum_weights(rarity_weights) * 100.0, 0.1), "%)")
+	
+	# 3. Erstelle gewichtetes Array für Rarity-Auswahl
+	var weighted_rarities: Array = []
+	for rarity in rarity_weights.keys():
+		var weight: int = int(rarity_weights[rarity])
+		for i in range(weight):
+			weighted_rarities.append(rarity)
+	
+	if weighted_rarities.is_empty():
+		return _fallback_fish()
+	
+	# 4. Wähle zufällige Rarity
+	var selected_rarity: int = weighted_rarities.pick_random()
+	
+	# 5. Wähle zufälligen Fisch dieser Rarity
+	var fish_of_rarity: Array = []
+	for fish in list:
+		if fish["rarity"] == selected_rarity:
+			# Überspringe Story-Items wenn Biom abgeschlossen
+			if selected_rarity == RARITY.ANTIK:
+				var biome: String = fish.get("biome", "")
+				if biome != "" and Player.completed_biomes.get(biome, false):
+					continue
+			fish_of_rarity.append(fish)
+	
+	if fish_of_rarity.is_empty():
+		return _fallback_fish()
+	
+	var selected: Dictionary = fish_of_rarity.pick_random().duplicate(true)
+	
+	# 6. Generiere Gewicht
 	if selected.has("weight_min") and selected.has("weight_max"):
 		var w = randf_range(selected["weight_min"], selected["weight_max"])
 		selected["weight"] = snappedf(w, 0.01)
 	else:
 		selected["weight"] = 1.0
-
+	
 	selected["is_new_catch"] = not Player.caught_fish_species.has(selected["name"])
+	
+	print("✨ Gefangen: ", selected["name"], " (", RARITY_DATA[selected_rarity]["name"], ")")
+	
 	return selected
+	
+# ===========================
+#  RARITY BOOST CALCULATION
+# ===========================
+# ===========================
+#  RARITY BOOST CALCULATION
+# ===========================
+static func _calculate_rarity_boost(base_spawn: float, rarity: int, bait_level: int) -> float:
+	# Diminishing Returns System: Je höher das Level, desto weniger Effekt
+	# Formel: multiplier = 1 + (max_boost * (1 - e^(-k * level)))
+	
+	var max_boost: float = 0.0  # Maximaler Multiplikator bei unendlichem Level
+	var growth_rate: float = 0.0  # Wie schnell der Boost wächst
+	
+	match rarity:
+		RARITY.NORMAL:
+			# Normale Fische sinken auf min. 10% ihrer Originalchance
+			max_boost = -0.90  # -90% maximal (war -95%)
+			growth_rate = 0.12  # Langsamer sinkend (war 0.15)
+		
+		RARITY.UNGEWOEHNLICH:
+			max_boost = 0.40   # +40% maximal (war 0.50)
+			growth_rate = 0.15  # Langsamer (war 0.20)
+		
+		RARITY.SELTEN:
+			max_boost = 1.5    # +150% maximal (war 2.0 = 3× häufiger)
+			growth_rate = 0.12  # Viel langsamer (war 0.18)
+		
+		RARITY.EPISCH:
+			max_boost = 2.5    # +250% maximal (war 4.0 = 5× häufiger)
+			growth_rate = 0.10  # Viel langsamer (war 0.15)
+		
+		RARITY.LEGENDAER:
+			max_boost = 5.0    # +500% maximal (war 8.0 = 9× häufiger)
+			growth_rate = 0.08  # Sehr langsam (war 0.12)
+		
+		RARITY.EXOTISCH:
+			max_boost = 10.0   # +1000% maximal (war 15.0 = 16× häufiger)
+			growth_rate = 0.06  # Extrem langsam (war 0.10)
+		
+		RARITY.ANTIK:
+			max_boost = 8.0    # +800% maximal (war 12.0)
+			growth_rate = 0.08  # Langsamer (war 0.12)
+	
+	# Exponentiell abnehmender Zuwachs (Diminishing Returns)
+	var progress: float = 1.0 - exp(-growth_rate * (bait_level - 1))
+	var multiplier: float = 1.0 + (max_boost * progress)
+	
+	# Verhindere negative Werte (mindestens 10% der Originalchance)
+	multiplier = max(multiplier, 0.10)  # War 0.05
+	
+	return base_spawn * multiplier
+# Helper: Summe aller Gewichte
+static func _sum_weights(weights: Dictionary) -> float:
+	var total := 0.0
+	for w in weights.values():
+		total += w
+	return total
 
+static func _fallback_fish() -> Dictionary:
+	return {
+		"name": "Unknown",
+		"rarity": RARITY.NORMAL,
+		"base_value": 1,
+		"icon": "res://assets/fish/unknown.png",
+		"weight_min": 1.0,
+		"weight_max": 1.0,
+		"weight": 1.0,
+		"is_new_catch": true
+	}
 
 # ===========================
 #  RANDOM FISH (TARGET RARITY)

@@ -26,11 +26,11 @@
 [ext_resource type="AudioStream" uid="uid://cldy38iwm8ovi" path="res://sounds/cast.mp3" id="19_mkg2b"]
 [ext_resource type="AudioStream" uid="uid://26m0pjkxve85" path="res://sounds/sucess.mp3" id="20_1ns3k"]
 [ext_resource type="AudioStream" uid="uid://cmr6cded4l11v" path="res://sounds/whoosh.mp3" id="21_a7pbh"]
-[ext_resource type="AudioStream" uid="uid://he0cwfvqtp7v" path="res://sounds/beach.mp3" id="22_mkg2b"]
 [ext_resource type="PackedScene" uid="uid://dedujdavqgnhc" path="res://scenes/clouds.tscn" id="24_a7pbh"]
 [ext_resource type="PackedScene" uid="uid://dguwyn5rc7uog" path="res://scenes/splash.tscn" id="25_ye0jt"]
 [ext_resource type="AudioStream" uid="uid://b7ifxd818oete" path="res://sounds/line.mp3" id="26_mekmn"]
 [ext_resource type="PackedScene" uid="uid://bej6o0ysl85et" path="res://assets/rock.glb" id="27_jcw2p"]
+[ext_resource type="AudioStream" uid="uid://b4h6tfle8d5uh" path="res://sounds/NERVES.mp3" id="27_wsqty"]
 [ext_resource type="PackedScene" uid="uid://bmbrqb7ef6c5i" path="res://assets/tripod.glb" id="28_qavw1"]
 [ext_resource type="PackedScene" uid="uid://bw4vof4oddwco" path="res://assets/ödland.glb" id="29_i7ifx"]
 [ext_resource type="PackedScene" uid="uid://xjntcu6j0ri0" path="res://scenes/explosion.tscn" id="31_fto0a"]
@@ -850,32 +850,37 @@ func start_catch_minigame() -> void:
 	catch_ui.visible = true
 	anim.play(\"fight\")
 	camera.start_screenshake(0.1, 1)
-
 	splash.visible = true
 	splash.emitting = true
-
+	
 	# 🆕 Köder aktiv → garantiert Seltenheit
 	var target_rarity = \"\"
 	if Player.has_active_bait():
 		target_rarity = Player.get_active_bait_rarity()
 		print(\"🎣 Köder aktiv! Ziel:\", target_rarity)
-
-	var quality_bonus = int(last_cast_quality * 2)
-	var effective_bait = Player.upgrade_bait + quality_bonus
-
+	
+	# ✅ NERF: Prozentual statt additiv (max +15% bei perfektem Wurf)
+	var quality_multiplier = 1.0 + (last_cast_quality * 0.15)
+	var effective_bait = max(1, int(Player.upgrade_bait * quality_multiplier))
+	
+	print(\"🎯 Cast Quality: %.2f | Bait Level: %d → %d (%.1f%%)\" % [
+		last_cast_quality, 
+		Player.upgrade_bait, 
+		effective_bait,
+		(quality_multiplier - 1.0) * 100
+	])
+	
 	if target_rarity != \"\":
 		current_fish = FishDB.get_random_fish_by_rarity(FishDB.FISH_LAKE, target_rarity)
 	else:
 		current_fish = FishDB.get_random_from_list(FishDB.FISH_LAKE, effective_bait)
-
+	
 	marker_speed = FishDB.get_marker_speed_for_fish(current_fish)
-
 	print(\"Gefangen: \", current_fish[\"name\"])
-
+	
 	catch_progress.value = 50.0
 	marker_pos = 0.0
 	marker.position.x = 0.0
-
 func update_catch_minigame(delta: float) -> void:
 	var current_speed = marker_speed
 	
@@ -1932,9 +1937,8 @@ stream = ExtResource("21_a7pbh")
 bus = &"SFX"
 
 [node name="music" type="AudioStreamPlayer" parent="Audio"]
-stream = ExtResource("22_mkg2b")
-volume_db = -10.407
-pitch_scale = 1.1
+stream = ExtResource("27_wsqty")
+volume_db = -1.03
 autoplay = true
 bus = &"Music"
 

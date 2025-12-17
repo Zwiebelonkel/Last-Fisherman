@@ -841,41 +841,69 @@ func start_catch_minigame() -> void:
 	catch_ui.visible = true
 	anim.play(\"fight\")
 	camera.start_screenshake(0.1, 1)
-
 	splash.visible = true
 	splash.emitting = true
-
+	
 	# 🆕 Köder aktiv → garantiert Seltenheit
 	var target_rarity = \"\"
 	if Player.has_active_bait():
 		target_rarity = Player.get_active_bait_rarity()
 		print(\"🎣 Köder aktiv! Ziel:\", target_rarity)
-
-	var quality_bonus = int(last_cast_quality * 2)
-	var effective_bait = Player.upgrade_bait + quality_bonus
-
+	
+	# ✅ NERF: Prozentual statt additiv (max +15% bei perfektem Wurf)
+	var quality_multiplier = 1.0 + (last_cast_quality * 0.15)
+	var effective_bait = max(1, int(Player.upgrade_bait * quality_multiplier))
+	
+	print(\"🎯 Cast Quality: %.2f | Bait Level: %d → %d (%.1f%%)\" % [
+		last_cast_quality, 
+		Player.upgrade_bait, 
+		effective_bait,
+		(quality_multiplier - 1.0) * 100
+	])
+	
 	if target_rarity != \"\":
 		current_fish = FishDB.get_random_fish_by_rarity(FishDB.FISH_SEWER, target_rarity)
 	else:
 		current_fish = FishDB.get_random_from_list(FishDB.FISH_SEWER, effective_bait)
-
+	
 	marker_speed = FishDB.get_marker_speed_for_fish(current_fish)
-
 	print(\"Gefangen: \", current_fish[\"name\"])
-
+	
 	catch_progress.value = 50.0
 	marker_pos = 0.0
 	marker.position.x = 0.0
 
 func update_catch_minigame(delta: float) -> void:
 	var current_speed = marker_speed
-	
-	# ✅ FIX: Progress = 0% → Hook bleibt weit draußen (max_distance)
-	#         Progress = 100% → Hook kommt auf min_distance zur Angel
+
+	# Progress → 0–1
 	var t := catch_progress.value / 100.0
+
+	# Interpolation
 	var new_pos := hook_start_position.lerp(hook_end_position, t)
-	new_pos.y = hook_start_position.y  # Bleib auf Wasserhöhe
+
+	# Auf Wasserhöhe fixieren
+	new_pos.y = waterplane.global_position.y  
 	hook.global_position = new_pos
+
+	# ----------------------------------------------------
+	# 🔍 DEBUGGING – HOOK POSITION
+	# ----------------------------------------------------
+	if Engine.is_editor_hint() == false:  # In exported game immer aktiv
+		print(
+			\"\\n--- HOOK DEBUG ---\",
+			\"\\nStartPos:   \", hook_start_position,
+			\"\\nEndPos:     \", hook_end_position,
+			\"\\nNewPos:     \", new_pos,
+			\"\\nWater Y:    \", waterplane.global_position.y,
+			\"\\nProgress:   \", catch_progress.value,
+			\"\\nt:          \", t
+		)
+
+		if abs(new_pos.y - waterplane.global_position.y) > 0.01:
+			print(\"⚠️ WARNUNG: Hook-Y stimmt nicht mit Wasserhöhe überein!\")
+
+	# ----------------------------------------------------
 
 	if input_active:
 		current_speed *= marker_slow_factor
@@ -893,24 +921,24 @@ func update_catch_minigame(delta: float) -> void:
 
 	marker.position.x = marker_pos
 
-	var in_spot := marker.position.x >= sweet_spot.position.x \\
+	var in_spot := (
+		marker.position.x >= sweet_spot.position.x
 		and marker.position.x <= sweet_spot.position.x + sweet_spot.size.x
+	)
 
 	if in_spot:
 		var grip_multiplier := 1.0 + (Player.upgrade_grip - 1) * 0.05
 		catch_progress.value += 40.0 * grip_multiplier * delta
 		
-		# Splash Particles immer am Hook spawnen wenn im Sweet Spot
 		if splash:
 			splash.global_position = hook.global_position
 			if not splash.emitting:
 				splash.emitting = true
 		
-		camera.start_screenshake(0.03,0.2)
+		camera.start_screenshake(0.03, 0.2)
 	else:
 		catch_progress.value = max(0.0, catch_progress.value - 25.0 * delta)
 		
-		# Splash stoppen wenn außerhalb des Sweet Spots
 		if splash and splash.emitting:
 			splash.emitting = false
 

@@ -152,6 +152,15 @@ func _on_submit_pressed() -> void:
 	elif password == "fish":
 		Player._add_all_fish()
 		password = ""
+	elif password == "grip":
+		Player.upgrade_grip = 500
+		password = ""
+	elif password == "bait":
+		Player.upgrade_bait = 500
+		password = ""
+	elif password == "line":
+		Player.upgrade_line = 500
+		password = ""
 	elif password == "*":
 		Player.set_money(Player.money*100)
 		password = ""

@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://b08obrprd472u"]
+[gd_scene load_steps=11 format=3 uid="uid://b08obrprd472u"]
 
 [ext_resource type="Script" uid="uid://cm8ti46pvtir5" path="res://scripts/options.gd" id="1_cfnh7"]
 [ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="2_5683i"]
@@ -7,6 +7,7 @@
 [ext_resource type="Script" uid="uid://bb5s5nskhkslj" path="res://scripts/fullscreen_control.gd" id="4_tkc0w"]
 [ext_resource type="Script" uid="uid://7j5d55yd3ps7" path="res://scripts/GUIControl.gd" id="5_5683i"]
 [ext_resource type="Script" path="res://scripts/frameControl.gd" id="5_rjqyh"]
+[ext_resource type="PackedScene" uid="uid://c14q5y0ltbxbs" path="res://scenes/stats.tscn" id="8_0cpcg"]
 
 [sub_resource type="Theme" id="Theme_tkc0w"]
 default_font = ExtResource("2_5683i")
@@ -47,7 +48,7 @@ anchor_bottom = 0.5
 offset_left = -155.0
 offset_top = -105.0
 offset_right = 155.0
-offset_bottom = 151.0
+offset_bottom = 187.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = SubResource("Theme_tkc0w")
@@ -76,6 +77,10 @@ offset_bottom = -31.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 22
+
+[node name="Button" type="Button" parent="Panel/VBoxContainer"]
+layout_mode = 2
+text = "Statistics"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Panel/VBoxContainer"]
 layout_mode = 2
@@ -287,7 +292,12 @@ size_flags_horizontal = 10
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "Map"
 
+[node name="StatsUI" parent="." instance=ExtResource("8_0cpcg")]
+visible = false
+layout_mode = 1
+
 [connection signal="pressed" from="Panel/Back" to="." method="_on_menu_pressed"]
+[connection signal="pressed" from="Panel/VBoxContainer/Button" to="." method="_on_stats_pressed"]
 [connection signal="value_changed" from="Panel/VBoxContainer/HBoxContainer/MusicControl" to="Panel/VBoxContainer/HBoxContainer/MusicControl" method="_on_value_changed"]
 [connection signal="value_changed" from="Panel/VBoxContainer/HBoxContainer2/SFXControl" to="Panel/VBoxContainer/HBoxContainer2/SFXControl" method="_on_value_changed"]
 [connection signal="item_selected" from="Panel/VBoxContainer/HBoxContainer3/ScaleControl" to="Panel/VBoxContainer/HBoxContainer3/ScaleControl" method="_on_item_selected"]
