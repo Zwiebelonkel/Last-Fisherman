@@ -1,5 +1,8 @@
 extends CanvasLayer
 
+# Font als Konstante preloaden (statt dynamisch laden)
+const CUSTOM_FONT = preload("res://fonts/VCR_OSD_MONO_1.001.ttf")
+
 # Node-Referenzen
 var color_rect: ColorRect
 var loading_label: Label        # 🆕 Loading Text
@@ -69,10 +72,12 @@ func _ready():
 		label_settings.outline_size = 8
 		label_settings.outline_color = Color.BLACK
 		
-		# Optional: Lade eine custom Font (falls vorhanden)
-		# Ersetze den Pfad mit deiner .ttf oder .otf Datei
-		if FileAccess.file_exists("res://fonts/VCR_OSD_MONO_1.001.ttf"):
-			label_settings.font = load("res://fonts/VCR_OSD_MONO_1.001.ttf")
+		# Font direkt zuweisen (wurde oben als Konstante preloaded)
+		if CUSTOM_FONT:
+			label_settings.font = CUSTOM_FONT
+			print("✅ Custom Font geladen!")
+		else:
+			print("⚠️ Custom Font nicht gefunden - nutze Standard-Font")
 		
 		loading_label.label_settings = label_settings
 		
