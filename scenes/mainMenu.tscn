@@ -291,7 +291,7 @@ grow_vertical = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 theme = SubResource("Theme_tov5d")
-text = "Start"
+text = "PLAY"
 
 [node name="Luca Müller" type="Label" parent="UI"]
 anchors_preset = 2
@@ -316,7 +316,7 @@ offset_top = -31.0
 grow_horizontal = 0
 grow_vertical = 0
 theme = SubResource("Theme_vt84v")
-text = "RESET GAME"
+text = "RESET"
 
 [node name="Quit" type="Button" parent="UI"]
 anchors_preset = 14
@@ -330,7 +330,7 @@ grow_vertical = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 theme = SubResource("Theme_tov5d")
-text = "Quit"
+text = "QUIT"
 
 [node name="OptionsControl" parent="UI" instance=ExtResource("3_tov5d")]
 visible = false
@@ -347,13 +347,13 @@ offset_left = -70.0
 offset_bottom = 31.0
 grow_horizontal = 0
 theme = SubResource("Theme_vt84v")
-text = "Settings"
+text = "SETTINGS"
 
 [node name="Credits" type="Button" parent="UI"]
 offset_right = 74.0
 offset_bottom = 31.0
 theme = SubResource("Theme_vt84v")
-text = "Credits"
+text = "CREDITS"
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_cfq0f")

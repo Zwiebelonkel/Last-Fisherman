@@ -14,10 +14,44 @@ extends Control
 
 var fish_data: Dictionary = {}
 
+# 🌍 Localized Texts
+var localized_texts := {
+	"not_caught_yet": {
+		"de": "⚖️ Noch nicht gefangen",
+		"en": "⚖️ Not caught yet"
+	},
+	"unknown": {
+		"de": "Unbekannt",
+		"en": "Unknown"
+	},
+	"caught_times": {
+		"de": "🎣 %dx gefangen",
+		"en": "🎣 Caught %dx"
+	},
+	"no_description": {
+		"de": "Keine Beschreibung verfügbar.",
+		"en": "No description available."
+	}
+}
+
 func _ready():
 	visible = false
 	close_button.pressed.connect(_on_close_pressed)
 	overlay.gui_input.connect(_on_overlay_clicked)
+
+
+# ============================================
+# 🌍 LOCALIZATION HELPER
+# ============================================
+
+func get_text(key: String) -> String:
+	var current_lang = Player.current_language
+	if localized_texts.has(key) and localized_texts[key].has(current_lang):
+		return localized_texts[key][current_lang]
+	elif localized_texts.has(key) and localized_texts[key].has("de"):
+		return localized_texts[key]["de"]
+	return key
+
 
 func show_fish_details(fish: Dictionary):
 	fish_data = fish
@@ -37,12 +71,33 @@ func show_fish_details(fish: Dictionary):
 	# 📝 Name
 	fish_name_label.text = fish["name"]
 	
-	# 🎨 Seltenheit
+	# 🎨 Seltenheit (🌍 Übersetzt)
 	var rarity = full_fish_data["rarity"]
 	var rarity_data = FishDB.RARITY_DATA[rarity]
 	var rarity_color = rarity_data["color"]
 	
-	rarity_label.text = "⭐ " + rarity_data["name"]
+	# 🌍 Rarity Name übersetzen
+	var rarity_name = rarity_data["name"]
+	var rarity_key = rarity_name.to_upper()
+	
+	# Konvertiere deutsche Namen zu Translation Keys
+	match rarity_name:
+		"Normal":
+			rarity_key = "NORMAL"
+		"Ungewöhnlich":
+			rarity_key = "UNCOMMON"
+		"Selten":
+			rarity_key = "RARE"
+		"Episch":
+			rarity_key = "EPIC"
+		"Legendär":
+			rarity_key = "LEGENDARY"
+		"Exotisch":
+			rarity_key = "EXOTIC"
+		"Antik":
+			rarity_key = "ANTIQUE"
+	
+	rarity_label.text = "⭐ " + tr(rarity_key)
 	rarity_label.modulate = rarity_color
 	
 	# Rahmen in Seltenheitsfarbe
@@ -53,25 +108,25 @@ func show_fish_details(fish: Dictionary):
 	var total_value = int(base_value * rarity_data["value"])
 	value_label.text = "💰 %d €  (x%.1f)" % [total_value, rarity_data["value"]]
 	
-	# ⚖️ Gewicht (Rekord)
+	# ⚖️ Gewicht (Rekord) (🌍 Übersetzt)
 	var max_weight = Player.get_max_caught_weight(fish["original_name"])
 	if max_weight > 0:
 		weight_label.text = "⚖️ %.2f kg 🏆" % max_weight
 	else:
-		weight_label.text = "⚖️ Noch nicht gefangen"
+		weight_label.text = get_text("not_caught_yet")
 	
-	# 📊 Gewichtsbereich
+	# 📊 Gewichtsbereich (🌍 Übersetzt)
 	if full_fish_data.has("weight_min") and full_fish_data.has("weight_max"):
 		weight_range_label.text = "%.2f - %.2f kg" % [full_fish_data["weight_min"], full_fish_data["weight_max"]]
 	else:
-		weight_range_label.text = "Unbekannt"
+		weight_range_label.text = get_text("unknown")
 	
-	# 🎣 Wie oft gefangen
+	# 🎣 Wie oft gefangen (🌍 Übersetzt)
 	var caught_count = Player.get_catch_count(fish["original_name"])
-	caught_count_label.text = "🎣 %dx gefangen" % caught_count
+	caught_count_label.text = get_text("caught_times") % caught_count
 	
 	# 📖 Beschreibung + Wissenschaftlicher Fakt
-	var description = full_fish_data.get("description", "Keine Beschreibung verfügbar.")
+	var description = full_fish_data.get("description", get_text("no_description"))
 	var science_fact = full_fish_data.get("science_fact", "")
 	
 	var full_description = "[color=#CCCCCC]%s[/color]" % description
@@ -107,14 +162,6 @@ func get_full_fish_data(fish_name: String) -> Dictionary:
 				return fish
 	
 	return {}
-
-# Nicht mehr benötigt - wird jetzt von Player.get_catch_count() gehandhabt
-# func count_fish_in_inventory(fish_name: String) -> int:
-#     var count = 0
-#     for fish in Inventory.fish_inventory:
-#         if fish["name"] == fish_name:
-#             count += 1
-#     return count
 
 func update_border_color(color: Color):
 	var style = popup_panel.get_theme_stylebox("panel").duplicate()

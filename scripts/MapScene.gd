@@ -8,8 +8,6 @@ extends Control
 @onready var home_btn = $layout/Locations/HomeButton
 @onready var passwordField = $password
 
-
-
 @onready var popup = $layout/Popup
 @onready var popup_title = $layout/Popup/Title
 @onready var popup_price = $layout/Popup/Price
@@ -19,6 +17,54 @@ extends Control
 @onready var back_btn = $layout/BackButton
 @onready var interact = $Audio/interact
 var selected_spot := ""
+
+# 🌍 Location Display Names
+var location_names := {
+	"lake": {
+		"de": "Strand",
+		"en": "Beach"
+	},
+	"city": {
+		"de": "Stadt",
+		"en": "City"
+	},
+	"sewer": {
+		"de": "U-Bahn",
+		"en": "Subway"
+	},
+	"forest": {
+		"de": "Wald",
+		"en": "Forest"
+	},
+	"desert": {
+		"de": "Wüste",
+		"en": "Desert"
+	},
+	"iceland": {
+		"de": "Eisland",
+		"en": "Iceland"
+	},
+	"home": {
+		"de": "Zuhause",
+		"en": "Home"
+	}
+}
+
+# 🌍 Localized Texts
+var localized_texts := {
+	"unlocked": {
+		"de": "Freigeschaltet",
+		"en": "Unlocked"
+	},
+	"price": {
+		"de": "Preis: %d $",
+		"en": "Price: %d $"
+	},
+	"buy_button": {
+		"de": "Kaufen (%d$)",
+		"en": "Buy (%d$)"
+	}
+}
 
 func _ready():
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
@@ -30,13 +76,31 @@ func _ready():
 	assign_button(iceland_btn, "iceland")
 	assign_button(home_btn, "home")
 
-
-
-
-
 	popup.visible = false
 	popup_close_btn.pressed.connect(hide_popup)
 	back_btn.pressed.connect(go_back)
+
+
+# ============================================
+# 🌍 LOCALIZATION HELPER
+# ============================================
+
+func get_text(key: String) -> String:
+	var current_lang = Player.current_language
+	if localized_texts.has(key) and localized_texts[key].has(current_lang):
+		return localized_texts[key][current_lang]
+	elif localized_texts.has(key) and localized_texts[key].has("de"):
+		return localized_texts[key]["de"]
+	return key
+
+func get_location_name(spot_name: String) -> String:
+	var current_lang = Player.current_language
+	if location_names.has(spot_name) and location_names[spot_name].has(current_lang):
+		return location_names[spot_name][current_lang]
+	elif location_names.has(spot_name) and location_names[spot_name].has("de"):
+		return location_names[spot_name]["de"]
+	return spot_name.capitalize()
+
 
 func hide_popup():
 	popup.visible = false
@@ -60,22 +124,31 @@ func show_spot_popup(spot_name: String):
 	selected_spot = spot_name
 	var price = Player.spot_prices[spot_name]
 	var unlocked = Player.unlocked_spots.get(spot_name, false)
+	
 	popup.visible = true
-	popup_title.text = spot_name.capitalize()
+	
+	# 🌍 Lokalisierter Titel
+	popup_title.text = get_location_name(spot_name)
+	
+	# 🌍 Lokalisierter Preis-Text
 	if unlocked:
-		popup_price.text = "Freigeschaltet"
+		popup_price.text = get_text("unlocked")
 	else:
-		popup_price.text = "Preis: %d $" % price
+		popup_price.text = get_text("price") % price
+	
 	# Sichtbarkeit der Buttons
 	popup_buy_button.visible = not unlocked
 	popup_go_button.visible = unlocked
-	# Buy Button text + disabled state
+	
+	# 🌍 Buy Button Text
 	if not unlocked:
-		popup_buy_button.text = "Kaufen (%d$)" % price
+		popup_buy_button.text = get_text("buy_button") % price
 		popup_buy_button.disabled = Player.money < price
+	
 	# Bestehende Signale trennen
 	_disconnect_all(popup_buy_button)
 	_disconnect_all(popup_go_button)
+	
 	# Neue Signale verbinden
 	popup_buy_button.pressed.connect(func():
 		buy_spot(selected_spot)
@@ -104,10 +177,6 @@ func buy_spot(spot_name: String):
 	assign_button(desert_btn, "desert")
 	assign_button(iceland_btn, "iceland")
 	assign_button(home_btn, "home")
-
-
-
-
 
 func go_to_spot(spot_name: String):
 	interact.play()

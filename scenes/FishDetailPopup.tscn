@@ -130,7 +130,7 @@ columns = 2
 layout_mode = 2
 theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
 theme_override_font_sizes/font_size = 14
-text = "Basiswert:"
+text = "BASEVALUE"
 
 [node name="Value" type="Label" parent="CenterContainer/PopupPanel/MarginContainer/VBoxContainer/Header/InfoContainer/StatsGrid"]
 layout_mode = 2
@@ -142,7 +142,7 @@ text = "💰 0"
 layout_mode = 2
 theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
 theme_override_font_sizes/font_size = 14
-text = "Gewicht (Rekord):"
+text = "WEIGHT1"
 
 [node name="Weight" type="Label" parent="CenterContainer/PopupPanel/MarginContainer/VBoxContainer/Header/InfoContainer/StatsGrid"]
 layout_mode = 2
@@ -154,7 +154,7 @@ text = "⚖️ 0.00 kg"
 layout_mode = 2
 theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
 theme_override_font_sizes/font_size = 14
-text = "Gewicht (Bereich):"
+text = "WEIGHT2"
 
 [node name="WeightRange" type="Label" parent="CenterContainer/PopupPanel/MarginContainer/VBoxContainer/Header/InfoContainer/StatsGrid"]
 layout_mode = 2
@@ -166,7 +166,7 @@ text = "0.0 - 0.0 kg"
 layout_mode = 2
 theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
 theme_override_font_sizes/font_size = 14
-text = "Gefangen:"
+text = "CAUGHT"
 
 [node name="CaughtCount" type="Label" parent="CenterContainer/PopupPanel/MarginContainer/VBoxContainer/Header/InfoContainer/StatsGrid"]
 layout_mode = 2
@@ -181,7 +181,7 @@ layout_mode = 2
 layout_mode = 2
 theme_override_colors/font_color = Color(0.6, 0.6, 0.6, 1)
 theme_override_font_sizes/font_size = 12
-text = "BESCHREIBUNG:"
+text = "DESCRIPTION"
 
 [node name="Description" type="RichTextLabel" parent="CenterContainer/PopupPanel/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 120)

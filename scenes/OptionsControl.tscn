@@ -6,8 +6,8 @@
 [ext_resource type="Script" uid="uid://cjlfy1cwa4yf7" path="res://scripts/scale_control.gd" id="3_5683i"]
 [ext_resource type="Script" uid="uid://bb5s5nskhkslj" path="res://scripts/fullscreen_control.gd" id="4_tkc0w"]
 [ext_resource type="Script" uid="uid://7j5d55yd3ps7" path="res://scripts/GUIControl.gd" id="5_5683i"]
-[ext_resource type="Script" path="res://scripts/frameControl.gd" id="5_rjqyh"]
-[ext_resource type="PackedScene" uid="uid://c14q5y0ltbxbs" path="res://scenes/stats.tscn" id="8_0cpcg"]
+[ext_resource type="Script" uid="uid://bq1artw2hgunn" path="res://scripts/frameControl.gd" id="5_rjqyh"]
+[ext_resource type="Script" uid="uid://y5dgtxi1m3tc" path="res://scripts/language_control.gd" id="6_0cpcg"]
 
 [sub_resource type="Theme" id="Theme_tkc0w"]
 default_font = ExtResource("2_5683i")
@@ -46,7 +46,7 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -155.0
-offset_top = -105.0
+offset_top = -125.0
 offset_right = 155.0
 offset_bottom = 187.0
 grow_horizontal = 2
@@ -63,7 +63,7 @@ anchor_bottom = 1.0
 offset_top = -31.0
 grow_horizontal = 2
 grow_vertical = 0
-text = "Menu"
+text = "MENU"
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
 layout_mode = 1
@@ -76,7 +76,7 @@ offset_right = -19.0
 offset_bottom = -31.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 22
+theme_override_constants/separation = 18
 
 [node name="Button" type="Button" parent="Panel/VBoxContainer"]
 layout_mode = 2
@@ -89,7 +89,7 @@ theme_override_constants/separation = 15
 [node name="Label" type="Label" parent="Panel/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-text = "Music"
+text = "MUSIC"
 
 [node name="MusicControl" type="HSlider" parent="Panel/VBoxContainer/HBoxContainer"]
 layout_mode = 2
@@ -124,7 +124,7 @@ layout_mode = 2
 [node name="Label" type="Label" parent="Panel/VBoxContainer/HBoxContainer3"]
 layout_mode = 2
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-text = "3D-Scale"
+text = "3DSCALE"
 
 [node name="ScaleControl" type="OptionButton" parent="Panel/VBoxContainer/HBoxContainer3"]
 layout_mode = 2
@@ -146,7 +146,7 @@ layout_mode = 2
 [node name="Label" type="Label" parent="Panel/VBoxContainer/HBoxContainer4"]
 layout_mode = 2
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-text = "Frame-Limit"
+text = "FRAMELIMIT"
 
 [node name="FrameControl" type="OptionButton" parent="Panel/VBoxContainer/HBoxContainer4"]
 layout_mode = 2
@@ -162,9 +162,27 @@ popup/item_3/text = "30"
 popup/item_3/id = 3
 script = ExtResource("5_rjqyh")
 
+[node name="HBoxContainer6" type="HBoxContainer" parent="Panel/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Panel/VBoxContainer/HBoxContainer6"]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "LANGUAGE"
+
+[node name="LanguageControl" type="OptionButton" parent="Panel/VBoxContainer/HBoxContainer6"]
+layout_mode = 2
+size_flags_horizontal = 10
+item_count = 2
+popup/item_0/text = "Deutsch"
+popup/item_0/id = 0
+popup/item_1/text = "English"
+popup/item_1/id = 1
+script = ExtResource("6_0cpcg")
+
 [node name="FullscreenControl" type="CheckButton" parent="Panel/VBoxContainer"]
 layout_mode = 2
-text = "Fullscreen"
+text = "FULLSCREEN"
 script = ExtResource("4_tkc0w")
 
 [node name="GUIControl" type="CheckButton" parent="Panel/VBoxContainer"]
@@ -209,7 +227,7 @@ theme_override_constants/separation = 15
 [node name="Space" type="Label" parent="Controls/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-text = "Spacebar"
+text = "SPACEBAR"
 
 [node name="VSeparator" type="VSeparator" parent="Controls/VBoxContainer/HBoxContainer"]
 layout_mode = 2
@@ -218,7 +236,7 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 10
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-text = "Cast, Interact, Fight"
+text = "CAST_INTERACT_FIGHT"
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="Controls/VBoxContainer"]
 layout_mode = 2
@@ -227,7 +245,7 @@ theme_override_constants/separation = 15
 [node name="Space" type="Label" parent="Controls/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-text = "Arrowkeys"
+text = "ARROWKEYS"
 
 [node name="VSeparator" type="VSeparator" parent="Controls/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
@@ -236,7 +254,7 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 10
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-text = "Turn around"
+text = "TURNAROUND"
 
 [node name="HBoxContainer3" type="HBoxContainer" parent="Controls/VBoxContainer"]
 layout_mode = 2
@@ -254,7 +272,7 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 10
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-text = "Inventory"
+text = "INVENTORY"
 
 [node name="HBoxContainer4" type="HBoxContainer" parent="Controls/VBoxContainer"]
 layout_mode = 2
@@ -272,7 +290,7 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 10
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-text = "Fischbuch"
+text = "FISHBOOK"
 
 [node name="HBoxContainer5" type="HBoxContainer" parent="Controls/VBoxContainer"]
 layout_mode = 2
@@ -290,7 +308,7 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 10
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-text = "Map"
+text = "MAP"
 
 [node name="StatsUI" parent="." instance=ExtResource("8_0cpcg")]
 visible = false
@@ -302,5 +320,6 @@ layout_mode = 1
 [connection signal="value_changed" from="Panel/VBoxContainer/HBoxContainer2/SFXControl" to="Panel/VBoxContainer/HBoxContainer2/SFXControl" method="_on_value_changed"]
 [connection signal="item_selected" from="Panel/VBoxContainer/HBoxContainer3/ScaleControl" to="Panel/VBoxContainer/HBoxContainer3/ScaleControl" method="_on_item_selected"]
 [connection signal="item_selected" from="Panel/VBoxContainer/HBoxContainer4/FrameControl" to="Panel/VBoxContainer/HBoxContainer4/FrameControl" method="_on_item_selected"]
+[connection signal="item_selected" from="Panel/VBoxContainer/HBoxContainer6/LanguageControl" to="Panel/VBoxContainer/HBoxContainer6/LanguageControl" method="_on_item_selected"]
 [connection signal="toggled" from="Panel/VBoxContainer/FullscreenControl" to="Panel/VBoxContainer/FullscreenControl" method="_on_toggled"]
 [connection signal="toggled" from="Panel/VBoxContainer/GUIControl" to="Panel/VBoxContainer/GUIControl" method="_on_toggled"]

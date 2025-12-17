@@ -282,7 +282,7 @@ vertical_alignment = 1
 [node name="TitleLabel" type="Label" parent="UI/ShopContainer/MainPanel/VBoxContainer/UpgradeCards/GripCard/CardContent"]
 layout_mode = 2
 theme = SubResource("Theme_pmnnn")
-text = "GRIFF"
+text = "GRIP"
 horizontal_alignment = 1
 
 [node name="LevelLabel" type="Label" parent="UI/ShopContainer/MainPanel/VBoxContainer/UpgradeCards/GripCard/CardContent"]
@@ -335,7 +335,7 @@ vertical_alignment = 1
 [node name="TitleLabel" type="Label" parent="UI/ShopContainer/MainPanel/VBoxContainer/UpgradeCards/BaitCard/CardContent"]
 layout_mode = 2
 theme = SubResource("Theme_pmnnn")
-text = "KÖDER"
+text = "BAIT"
 horizontal_alignment = 1
 
 [node name="LevelLabel" type="Label" parent="UI/ShopContainer/MainPanel/VBoxContainer/UpgradeCards/BaitCard/CardContent"]
@@ -388,7 +388,7 @@ vertical_alignment = 1
 [node name="TitleLabel" type="Label" parent="UI/ShopContainer/MainPanel/VBoxContainer/UpgradeCards/LineCard/CardContent"]
 layout_mode = 2
 theme = SubResource("Theme_pmnnn")
-text = "FADEN"
+text = "LINE"
 horizontal_alignment = 1
 
 [node name="LevelLabel" type="Label" parent="UI/ShopContainer/MainPanel/VBoxContainer/UpgradeCards/LineCard/CardContent"]

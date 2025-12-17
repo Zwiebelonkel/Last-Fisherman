@@ -28,6 +28,7 @@ var sfx_volume: float = 1.0
 var resolution_scale: float = 1.0
 var frame_limit: int = 0
 var fullscreen: bool = false
+var current_language: String = "de"  # 🌍 NEU - Default: Deutsch
 
 
 # 🆕 Gewichtsrekorde pro Fischart
@@ -138,6 +139,8 @@ func get_active_bait_rarity() -> String:
 func _ready():
 	load_game()
 	load_settings()
+	# 🌍 Sprache anwenden beim Start
+	TranslationServer.set_locale(current_language)
 
 func save_settings() -> void:
 	var settings_data = {
@@ -146,11 +149,12 @@ func save_settings() -> void:
 		"sfx_volume": sfx_volume,
 		"resolution_scale": resolution_scale,
 		"frame_limit": frame_limit,
-		"fullscreen": fullscreen
+		"fullscreen": fullscreen,
+		"language": current_language  # 🌍 NEU
 	}
 	var file = FileAccess.open("user://settings.dat", FileAccess.WRITE)
 	file.store_var(settings_data)
-	print("Einstellungen gespeichert!")
+	print("Einstellungen gespeichert! Sprache:", current_language)
 
 func load_settings() -> void:
 	if FileAccess.file_exists("user://settings.dat"):
@@ -162,12 +166,18 @@ func load_settings() -> void:
 		resolution_scale = settings_data.get("resolution_scale", 1.0)
 		frame_limit = settings_data.get("frame_limit", 0)
 		fullscreen = settings_data.get("fullscreen", false)
+		current_language = settings_data.get("language", "de")  # 🌍 NEU
 		
 		# Wende Einstellungen an
 		apply_settings()
-		print("Einstellungen geladen!")
+		# 🌍 Sprache anwenden
+		TranslationServer.set_locale(current_language)
+		print("Einstellungen geladen! Sprache:", current_language)
 	else:
 		print("Keine Einstellungen gefunden, verwende Standardwerte")
+		# 🌍 Default Sprache setzen
+		current_language = "de"
+		TranslationServer.set_locale("de")
 
 func apply_settings() -> void:
 	# Audio
@@ -503,7 +513,7 @@ func reset():
 	caught_fish_species.clear()
 	fish_weight_records.clear()
 	fish_catch_count.clear()
-	used_story_items.clear()  # 🆕
+	used_story_items.clear()
 	completed_biomes = {
 		"lake": false,
 		"city": false,

@@ -15,6 +15,46 @@ var fish_detail_popup_scene  # Wird in _ready() geladen
 var fish_book
 var detail_popup: Control
 
+# 🌍 Localized Texts
+var localized_texts := {
+	"caught_text": {
+		"de": "Gefangen: %d / %d (%d%%)",
+		"en": "Caught: %d / %d (%d%%)"
+	},
+	"fishbook_title": {
+		"de": "📖 Fischbuch - %s",
+		"en": "📖 Fishbook - %s"
+	},
+	"location_lake": {
+		"de": "🌊 Strand",
+		"en": "🌊 Beach"
+	},
+	"location_city": {
+		"de": "🏢 Stadt",
+		"en": "🏢 City"
+	},
+	"location_sewer": {
+		"de": "🐀 U-Bahn",
+		"en": "🐀 Subway"
+	},
+	"location_forest": {
+		"de": "🌲 Wald",
+		"en": "🌲 Forest"
+	},
+	"location_desert": {
+		"de": "🌵 Wüste",
+		"en": "🌵 Desert"
+	},
+	"location_iceland": {
+		"de": "❄️ Eisland",
+		"en": "❄️ Iceland"
+	},
+	"location_all": {
+		"de": "🌍 Alle",
+		"en": "🌍 All"
+	}
+}
+
 
 func _ready():
 	fish_book = load("res://scripts/FishBook.gd").new()
@@ -65,23 +105,36 @@ func _ready():
 	# Grid-Einstellungen
 	grid_container.columns = 5  # 5 Karten pro Reihe
 	
-	# Location-Selector Setup
+	# Location-Selector Setup (🌍 Mit Übersetzungen)
 	if location_selector is OptionButton:
 		location_selector.item_selected.connect(_on_location_changed)
 		location_selector.clear()
-		location_selector.add_item("🌊 See")
-		location_selector.add_item("🏢 Stadt")
-		location_selector.add_item("🐀 Kanal")
-		location_selector.add_item("🌲 Wald")
-		location_selector.add_item("🌵 Wüste")
-		location_selector.add_item("❄️ Eisland")
-		location_selector.add_item("🌍 Alle")
-		# 🆕 Noch NICHT select(0) - das passiert in _on_visibility_changed
+		location_selector.add_item(get_text("location_lake"))
+		location_selector.add_item(get_text("location_city"))
+		location_selector.add_item(get_text("location_sewer"))
+		location_selector.add_item(get_text("location_forest"))
+		location_selector.add_item(get_text("location_desert"))
+		location_selector.add_item(get_text("location_iceland"))
+		location_selector.add_item(get_text("location_all"))
 	
 	# Signal verbinden
 	visibility_changed.connect(_on_visibility_changed)
 	
 	print("✅ FishBook UI erfolgreich geladen!")
+
+
+# ============================================
+# 🌍 LOCALIZATION HELPER
+# ============================================
+
+func get_text(key: String) -> String:
+	var current_lang = Player.current_language
+	if localized_texts.has(key) and localized_texts[key].has(current_lang):
+		return localized_texts[key][current_lang]
+	elif localized_texts.has(key) and localized_texts[key].has("de"):
+		return localized_texts[key]["de"]
+	return key
+
 
 # 🆕 Popup anzeigen
 func show_fish_detail_popup(fish_data: Dictionary):
@@ -218,28 +271,32 @@ func update_stats():
 		color = Color(0.8, 0.8, 0.8)  # Grau unter 50%
 	
 	stats_label.add_theme_color_override("font_color", color)
-	stats_label.text = "Gefangen: %d / %d (%d%%)" % [stats["caught"], stats["total"], completion]
+	# 🌍 Übersetzter Stats-Text
+	stats_label.text = get_text("caught_text") % [stats["caught"], stats["total"], completion]
 	
 	# 🏆 Komplettierungs-Badge
 	if completion == 100:
 		stats_label.text += " 🏆"
 	
-	# 📖 Titel aktualisieren
+	# 📖 Titel aktualisieren (🌍 Mit Übersetzungen)
+	var location_text = ""
 	match current_location:
 		"lake":
-			title_label.text = "📖 Fischbuch - 🌊 See"
+			location_text = get_text("location_lake")
 		"city":
-			title_label.text = "📖 Fischbuch - 🏢 Stadt"
+			location_text = get_text("location_city")
 		"sewer":
-			title_label.text = "📖 Fischbuch - 🐀 Kanal"
+			location_text = get_text("location_sewer")
 		"forest":
-			title_label.text = "📖 Fischbuch - 🌲 Wald"
+			location_text = get_text("location_forest")
 		"desert":
-			title_label.text = "📖 Fischbuch - 🌵 Wüste"
+			location_text = get_text("location_desert")
 		"iceland":
-			title_label.text = "📖 Fischbuch - ❄️ Eisland"
+			location_text = get_text("location_iceland")
 		"insgesamt":
-			title_label.text = "📖 Fischbuch - 🌍 Alle Gebiete"
+			location_text = get_text("location_all")
+	
+	title_label.text = get_text("fishbook_title") % location_text
 
 func _on_location_changed(index: int):
 	match index:
