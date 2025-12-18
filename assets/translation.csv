@@ -56,3 +56,39 @@ NEVERCATCHED,Noch nicht gefangen,Not Caught Yet
 COMPLETEVALUE,Gesamtwert,Total Value
 BAITS,Köder,Baits
 SELLALL,Alle verkaufen,Sell All
+
+STATS_TITLE,🎣 FISCH STATISTIKEN 🎣,🎣 FISH STATISTICS 🎣
+STATS_BAIT_LEVEL,Köder Level: {level},Bait Level: {level}
+STATS_CLOSE,X,X
+STATS_TOTAL_CAUGHT,Insgesamt gefangen: {count} Fische,Total caught: {count} fish
+STATS_NO_FISH_YET,Noch keine Fische gefangen - Los geht's! 🎣,No fish caught yet - Let's go! 🎣
+
+STATS_HEADER_SPAWN_CHANCES,📊 SPAWN-CHANCEN & FÄNGE,📊 SPAWN CHANCES & CATCHES
+STATS_HEADER_BIOME_PROGRESS,🗺️ BIOM-FORTSCHRITT,🗺️ BIOME PROGRESS
+STATS_HEADER_WEIGHT_RECORDS,🏆 GEWICHTSREKORDE (Top 5),🏆 WEIGHT RECORDS (Top 5)
+STATS_HEADER_MOST_CAUGHT,🎣 MEISTGEFANGENE FISCHE (Top 5),🎣 MOST CAUGHT FISH (Top 5)
+STATS_HEADER_BAIT_INVENTORY,🪝 KÖDER-INVENTAR,🪝 BAIT INVENTORY
+STATS_HEADER_UPGRADES,⚙️ UPGRADES,⚙️ UPGRADES
+
+BIOME_LAKE,🌊 See,🌊 Lake
+BIOME_CITY,🏙️ Stadt,🏙️ City
+BIOME_SEWER,🚽 Kanalisation,🚽 Sewer
+BIOME_FOREST,🌲 Wald,🌲 Forest
+BIOME_DESERT,🏜️ Wüste,🏜️ Desert
+BIOME_ICELAND,🧊 Island,🧊 Iceland
+
+STATS_CAUGHT,Gefangen: {count},Caught: {count}
+STATS_CHANCE,Chance: {chance}%,Chance: {chance}%
+STATS_NO_RECORDS,Noch keine Rekorde,No records yet
+STATS_NO_CATCHES,Noch keine Fänge,No catches yet
+STATS_NO_BAIT,Kein Köder vorhanden,No bait available
+STATS_ACTIVE_BAIT,🎣 AKTIV: {bait} Köder,🎣 ACTIVE: {bait} Bait
+STATS_BAIT_AMOUNT,{rarity} Köder: {amount} Stück,{rarity} Bait: {amount} pieces
+STATS_WEIGHT_ENTRY,{rank}. {name}: {weight} kg,{rank}. {name}: {weight} kg
+STATS_CAUGHT_ENTRY,{rank}. {name}: {count}x gefangen,{rank}. {name}: caught {count}x
+STATS_BIOME_PROGRESS,{biome}: {caught}/{total},{biome}: {caught}/{total}
+
+UPGRADE_GRIP,⚡ Grip,⚡ Grip
+UPGRADE_BAIT,🎣 Köder,🎣 Bait
+UPGRADE_LINE,🪢 Leine,🪢 Line
+STATS_UPGRADE_LEVEL,{name}: Level {level},{name}: Level {level}

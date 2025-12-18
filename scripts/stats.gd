@@ -5,12 +5,19 @@ extends Control
 @onready var stats_container: VBoxContainer = $Panel/ScrollContainer/StatsContainer
 @onready var total_label: Label = $Panel/TotalLabel
 @onready var bait_level_label: Label = $Panel/BaitLevelLabel
+@onready var title_label: Label = $Panel/TitleLabel
 
 func _ready() -> void:
 	print("📊 Stats UI bereit!")
 	close_button.pressed.connect(hide)
 	visibility_changed.connect(_on_visibility_changed)
+	_update_static_labels()
 	hide()
+
+func _update_static_labels() -> void:
+	# Statische Labels übersetzen
+	title_label.text = tr("STATS_TITLE")
+	close_button.text = tr("STATS_CLOSE")
 
 func _on_visibility_changed() -> void:
 	if visible:
@@ -25,12 +32,12 @@ func update_stats() -> void:
 		child.queue_free()
 	
 	var bait_level := Player.upgrade_bait
-	bait_level_label.text = "Köder Level: " + str(bait_level)
+	bait_level_label.text = tr("STATS_BAIT_LEVEL").format({"level": str(bait_level)})
 	
 	var spawn_chances := _calculate_spawn_chances(bait_level)
 	var catch_stats := _get_catch_statistics()
 	
-	_create_section_header("📊 SPAWN-CHANCEN & FÄNGE")
+	_create_section_header(tr("STATS_HEADER_SPAWN_CHANCES"))
 	
 	var total_caught := 0
 	
@@ -45,52 +52,57 @@ func update_stats() -> void:
 		_create_stat_entry(rarity_name, rarity_color, caught_count, spawn_chance)
 	
 	if total_caught == 0:
-		total_label.text = "Noch keine Fische gefangen - Los geht's! 🎣"
+		total_label.text = tr("STATS_NO_FISH_YET")
 	else:
-		total_label.text = "Insgesamt gefangen: " + str(total_caught) + " Fische"
+		total_label.text = tr("STATS_TOTAL_CAUGHT").format({"count": str(total_caught)})
 	
 	_create_spacer()
-	_create_section_header("🗺️ BIOM-FORTSCHRITT")
+	_create_section_header(tr("STATS_HEADER_BIOME_PROGRESS"))
 	_create_biome_completion_stats()
 	
 	_create_spacer()
-	_create_section_header("🏆 GEWICHTSREKORDE (Top 5)")
+	_create_section_header(tr("STATS_HEADER_WEIGHT_RECORDS"))
 	_create_weight_records()
 	
 	_create_spacer()
-	_create_section_header("🎣 MEISTGEFANGENE FISCHE (Top 5)")
+	_create_section_header(tr("STATS_HEADER_MOST_CAUGHT"))
 	_create_most_caught_fish()
 	
 	_create_spacer()
-	_create_section_header("🪝 KÖDER-INVENTAR")
+	_create_section_header(tr("STATS_HEADER_BAIT_INVENTORY"))
 	_create_bait_inventory()
 	
 	_create_spacer()
-	_create_section_header("⚙️ UPGRADES")
+	_create_section_header(tr("STATS_HEADER_UPGRADES"))
 	_create_upgrade_status()
 
 func _create_biome_completion_stats() -> void:
-	var biome_names = {
-		"lake": "🌊 See",
-		"city": "🏙️ Stadt",
-		"sewer": "🚽 Kanalisation",
-		"forest": "🌲 Wald",
-		"desert": "🏜️ Wüste",
-		"iceland": "🧊 Island"
+	var biome_keys = {
+		"lake": "BIOME_LAKE",
+		"city": "BIOME_CITY",
+		"sewer": "BIOME_SEWER",
+		"forest": "BIOME_FOREST",
+		"desert": "BIOME_DESERT",
+		"iceland": "BIOME_ICELAND"
 	}
 	
 	for biome in Player.completed_biomes.keys():
 		var is_complete: bool = Player.completed_biomes[biome]
-		var biome_display: String = biome_names.get(biome, biome.capitalize())
+		var biome_display: String = tr(biome_keys.get(biome, biome.to_upper()))
 		var biome_fish_list = Player.get_biome_fish_list(biome)
 		var total_fish: int = biome_fish_list.size()
 		var caught_fish: int = 0
 		
 		for fish in biome_fish_list:
-			if Player.caught_fish_species.has(fish["name"]):
+			var fish_name = FishDB.get_translated_name(fish) if fish.has("name_key") else fish["name"]
+			if Player.caught_fish_species.has(fish_name):
 				caught_fish += 1
 		
-		var progress_text := "%s: %d/%d" % [biome_display, caught_fish, total_fish]
+		var progress_text := tr("STATS_BIOME_PROGRESS").format({
+			"biome": biome_display,
+			"caught": str(caught_fish),
+			"total": str(total_fish)
+		})
 		var status_icon := "✅" if is_complete else "⏳"
 		var color := Color.GREEN if is_complete else Color.GRAY
 		
@@ -111,12 +123,16 @@ func _create_weight_records() -> void:
 	for record in records:
 		if count >= 5:
 			break
-		var text := "%d. %s: %.2f kg" % [count + 1, record["name"], record["weight"]]
+		var text := tr("STATS_WEIGHT_ENTRY").format({
+			"rank": str(count + 1),
+			"name": record["name"],
+			"weight": "%.2f" % record["weight"]
+		})
 		_create_simple_entry(text, Color(1, 0.8, 0.1))
 		count += 1
 	
 	if records.is_empty():
-		_create_simple_entry("Noch keine Rekorde", Color.GRAY)
+		_create_simple_entry(tr("STATS_NO_RECORDS"), Color.GRAY)
 
 func _create_most_caught_fish() -> void:
 	var catch_counts: Array = []
@@ -133,12 +149,16 @@ func _create_most_caught_fish() -> void:
 	for fish_data in catch_counts:
 		if count >= 5:
 			break
-		var text := "%d. %s: %dx gefangen" % [count + 1, fish_data["name"], fish_data["count"]]
+		var text := tr("STATS_CAUGHT_ENTRY").format({
+			"rank": str(count + 1),
+			"name": fish_data["name"],
+			"count": str(fish_data["count"])
+		})
 		_create_simple_entry(text, Color(0.3, 1, 0.3))
 		count += 1
 	
 	if catch_counts.is_empty():
-		_create_simple_entry("Noch keine Fänge", Color.GRAY)
+		_create_simple_entry(tr("STATS_NO_CATCHES"), Color.GRAY)
 
 func _create_bait_inventory() -> void:
 	var has_baits := false
@@ -148,28 +168,35 @@ func _create_bait_inventory() -> void:
 		
 		if amount > 0:
 			has_baits = true
-			var text := "%s Köder: %d Stück" % [rarity, amount]
+			var text := tr("STATS_BAIT_AMOUNT").format({
+				"rarity": rarity,
+				"amount": str(amount)
+			})
 			var color := _get_rarity_color_by_name(rarity)
 			_create_simple_entry(text, color)
 	
 	if Player.has_active_bait():
-		var active_text := "🎣 AKTIV: %s Köder" % Player.active_bait
+		var active_text := tr("STATS_ACTIVE_BAIT").format({"bait": Player.active_bait})
 		_create_simple_entry(active_text, Color(1, 1, 0.3))
 		has_baits = true
 	
 	if not has_baits:
-		_create_simple_entry("Kein Köder vorhanden", Color.GRAY)
+		_create_simple_entry(tr("STATS_NO_BAIT"), Color.GRAY)
 
 func _create_upgrade_status() -> void:
 	var upgrades = {
-		"⚡ Grip": Player.upgrade_grip,
-		"🎣 Köder": Player.upgrade_bait,
-		"🪢 Leine": Player.upgrade_line
+		"UPGRADE_GRIP": Player.upgrade_grip,
+		"UPGRADE_BAIT": Player.upgrade_bait,
+		"UPGRADE_LINE": Player.upgrade_line
 	}
 	
-	for upgrade_name in upgrades.keys():
-		var level: int = upgrades[upgrade_name]
-		var text := "%s: Level %d" % [upgrade_name, level]
+	for upgrade_key in upgrades.keys():
+		var level: int = upgrades[upgrade_key]
+		var upgrade_name := tr(upgrade_key)
+		var text := tr("STATS_UPGRADE_LEVEL").format({
+			"name": upgrade_name,
+			"level": str(level)
+		})
 		_create_simple_entry(text, Color(0.7, 0.9, 1.0))
 
 func _get_rarity_color_by_name(rarity_name: String) -> Color:
@@ -241,7 +268,8 @@ func _get_catch_statistics() -> Dictionary:
 		
 		var fish_list := Player.get_biome_fish_list(biome)
 		for fish in fish_list:
-			if fish["name"] == fish_name:
+			var current_fish_name = FishDB.get_translated_name(fish) if fish.has("name_key") else fish["name"]
+			if current_fish_name == fish_name:
 				var rarity: int = fish["rarity"]
 				stats[rarity] = stats.get(rarity, 0) + count
 				break
@@ -269,14 +297,14 @@ func _create_stat_entry(rarity_name: String, rarity_color: Color, caught: int, c
 	entry.add_child(name_label)
 	
 	var caught_label := Label.new()
-	caught_label.text = "Gefangen: " + str(caught)
+	caught_label.text = tr("STATS_CAUGHT").format({"count": str(caught)})
 	caught_label.custom_minimum_size = Vector2(180, 0)
 	caught_label.add_theme_font_size_override("font_size", 20)
 	caught_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	entry.add_child(caught_label)
 	
 	var chance_label := Label.new()
-	chance_label.text = "Chance: " + str(snappedf(chance, 0.1)) + "%"
+	chance_label.text = tr("STATS_CHANCE").format({"chance": str(snappedf(chance, 0.1))})
 	chance_label.custom_minimum_size = Vector2(200, 0)
 	chance_label.add_theme_font_size_override("font_size", 20)
 	chance_label.add_theme_color_override("font_color", Color(0.7, 0.9, 1.0))
