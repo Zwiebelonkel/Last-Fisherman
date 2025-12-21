@@ -74,11 +74,20 @@ func get_bestiary_entries(location: String) -> Array:
 	var fish_list = get_fish_by_location(location)
 	
 	for fish in fish_list:
+		# 🔒 CRITICAL FIX: Prüfe rarity VOR Zugriff
+		if not fish.has("rarity"):
+			push_warning("⚠️ Fish ohne rarity im Bestiary: %s" % fish.get("name", "Unknown"))
+			continue
+		
+		if not FishDB.RARITY_DATA.has(fish["rarity"]):
+			push_warning("⚠️ Ungültige rarity im Bestiary: %s" % fish["rarity"])
+			continue
+		
 		var caught = is_fish_caught(fish["name"])
 		
 		var entry = {
 			"name": fish["name"] if caught else "???",
-			"rarity": fish["rarity"] if caught else -1,
+			"rarity": fish["rarity"] if caught else FishDB.RARITY.NORMAL,  # 🔒 FIX: Fallback zu NORMAL
 			"base_value": fish["base_value"] if caught else 0,
 			"icon": fish["icon"] if caught else "res://assets/fish/unknown.png",
 			"caught": caught,
@@ -88,7 +97,6 @@ func get_bestiary_entries(location: String) -> Array:
 		entries.append(entry)
 	
 	return entries
-
 
 
 # ===========================

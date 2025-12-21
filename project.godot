@@ -21,12 +21,13 @@ config/windows_native_icon="res://assets/logo.ico"
 
 [autoload]
 
-Inventory="*res://scripts/inventar.gd"
+FileLogger="*res://scripts/FileLogger.gd"
 FishDB="*res://scripts/FishDatabase.gd"
+GodotSteam="*res://scripts/godotsteam.gd"
 Player="*res://scripts/Player.gd"
+Inventory="*res://scripts/inventar.gd"
 FishBook="*res://scripts/FishBook.gd"
 Transition="*res://scripts/transition.gd"
-Godotsteam="*res://scripts/godotsteam.gd"
 
 [display]
 

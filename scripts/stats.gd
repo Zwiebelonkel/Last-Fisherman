@@ -270,7 +270,17 @@ func _get_catch_statistics() -> Dictionary:
 		for fish in fish_list:
 			var current_fish_name = FishDB.get_translated_name(fish) if fish.has("name_key") else fish["name"]
 			if current_fish_name == fish_name:
+				# 🔒 CRITICAL FIX: Sichere rarity-Zugriffe
+				if not fish.has("rarity"):
+					push_warning("⚠️ Fish ohne rarity in Statistics: %s" % fish_name)
+					continue
+				
 				var rarity: int = fish["rarity"]
+				
+				if not FishDB.RARITY_DATA.has(rarity):
+					push_warning("⚠️ Ungültige rarity in Statistics: %s" % rarity)
+					continue
+				
 				stats[rarity] = stats.get(rarity, 0) + count
 				break
 	

@@ -90,6 +90,7 @@ func _ready():
 
 # Standard-Transition (Swipe von unten nach oben) mit Async Loading
 func change_scene(target_scene: String, duration: float = 0.5) -> void:
+	GodotSteam.flush_scores()
 	if is_transitioning:
 		print("⚠️ Transition läuft bereits!")
 		return

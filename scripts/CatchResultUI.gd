@@ -57,6 +57,17 @@ func _unhandled_input(event: InputEvent) -> void:
 # HAUPTFUNKTION – FISCH ANZEIGEN
 # ---------------------------------------------------------
 func show_fish(fish: Dictionary) -> void:
+	# 🔒 CRITICAL FIX: Prüfe und repariere Fish-Daten VOR allem anderen
+	if not fish.has("rarity"):
+		push_error("❌ CRITICAL: Fish ohne rarity in show_fish: %s" % fish.get("name", "Unknown"))
+		# Notfall-Reparatur
+		fish["rarity"] = FishDB.RARITY.NORMAL
+	
+	if not FishDB.RARITY_DATA.has(fish["rarity"]):
+		push_error("❌ CRITICAL: Ungültige rarity in show_fish: %s" % fish["rarity"])
+		# Notfall-Reparatur
+		fish["rarity"] = FishDB.RARITY.NORMAL
+	
 	current_fish = prepare_fish_data(fish)
 	visible = true
 	
@@ -68,6 +79,7 @@ func show_fish(fish: Dictionary) -> void:
 	var ani_label: AnimationPlayer = $NewLabel/AnimationPlayer if has_node("NewLabel/AnimationPlayer") else null
 	var ani_fish: AnimationPlayer = $VBoxContainer/MarginContainer/PanelContainer/AnimationPlayer
 	
+	# 🔒 FIX: Sichere Zugriffe
 	var rarity_data: Dictionary = FishDB.RARITY_DATA[rarity]
 	var rarity_color: Color = rarity_data["color"]
 	
@@ -80,8 +92,6 @@ func show_fish(fish: Dictionary) -> void:
 		if story_label and fish.has("story_text"):
 			story_label.visible = true
 			story_label.modulate = Color.WHITE
-			# Typewriter + Rainbow für Storytext
-			
 			story_label.text = fish["story_text"]
 	else:
 		continue_button.text = "Continue"
@@ -96,7 +106,6 @@ func show_fish(fish: Dictionary) -> void:
 		
 		if is_new_catch and not is_story_item:
 			Player.add_money(100)
-
 		if is_new_catch and ani_label and ani_label.has_animation("idle"):
 			ani_label.play("idle")
 	
@@ -179,7 +188,6 @@ func show_fish(fish: Dictionary) -> void:
 		shadow_mat.set_shader_parameter("pulse_speed", 2.5)
 	
 	fish_icon.material = shadow_mat
-
 
 # ---------------------------------------------------------
 # Continue/Use Button Handler

@@ -696,14 +696,31 @@ static func get_random_fish_by_rarity(list: Array, rarity_string: String) -> Dic
 
 
 # ===========================
-#  DIFFICULTY
+#  DIFFICULTY (FIXED VERSION)
 # ===========================
 static func get_fish_difficulty(fish: Dictionary) -> float:
-	return RARITY_DATA[fish["rarity"]]["difficulty"]
+	# CRITICAL FIX: Niemals 0 oder null zurückgeben!
+	if not fish.has("rarity"):
+		push_error("⚠️ Fish ohne rarity: ", fish.get("name", "Unknown"))
+		return 1.0
+	
+	var rarity: int = fish["rarity"]
+	
+	if not RARITY_DATA.has(rarity):
+		push_error("⚠️ Ungültige rarity: ", rarity, " für ", fish.get("name", "Unknown"))
+		return 1.0
+	
+	var difficulty: float = RARITY_DATA[rarity].get("difficulty", 1.0)
+	
+	# Sicherheit: Minimum 0.5
+	return max(difficulty, 0.5)
 
 
 static func get_marker_speed_for_fish(fish: Dictionary, base_speed: float = 350.0) -> float:
-	return base_speed * get_fish_difficulty(fish)
+	var speed := base_speed * get_fish_difficulty(fish)
+	# CRITICAL FIX: Speed niemals unter 50
+	return max(speed, 50.0)
+
 
 
 # ===========================
@@ -733,3 +750,44 @@ static func rarity_string_to_enum(r: String) -> int:
 	}
 
 	return map.get(r, -1)
+	
+	
+# ===========================
+# SICHERE RARITY-ZUGRIFFE
+# ===========================
+
+static func get_rarity_safe(fish: Dictionary) -> int:
+	"""Gibt rarity zurück oder NORMAL als Fallback"""
+	if not fish.has("rarity"):
+		push_warning("⚠️ Fisch ohne rarity:", fish.get("name", "Unknown"))
+		return RARITY.NORMAL
+	
+	var rarity = fish["rarity"]
+	if not RARITY_DATA.has(rarity):
+		push_warning("⚠️ Ungültige rarity:", rarity)
+		return RARITY.NORMAL
+	
+	return rarity
+
+static func get_rarity_data_safe(fish: Dictionary) -> Dictionary:
+	"""Gibt rarity data zurück oder Normal-Daten"""
+	var rarity = get_rarity_safe(fish)
+	return RARITY_DATA[rarity]
+
+static func get_rarity_name(fish: Dictionary) -> String:
+	"""Gibt Rarity-Namen zurück"""
+	return get_rarity_data_safe(fish)["name"]
+
+static func get_rarity_color(fish: Dictionary) -> Color:
+	"""Gibt Rarity-Farbe zurück"""
+	return get_rarity_data_safe(fish)["color"]
+
+static func get_rarity_value(fish: Dictionary) -> float:
+	"""Gibt Rarity-Wert zurück"""
+	return get_rarity_data_safe(fish)["value"]
+
+static func get_fish_value(fish: Dictionary) -> int:
+	"""Berechnet Verkaufswert des Fisches"""
+	var base_value = fish.get("base_value", 1)
+	var rarity_multiplier = get_rarity_value(fish)
+	return int(base_value * rarity_multiplier)
