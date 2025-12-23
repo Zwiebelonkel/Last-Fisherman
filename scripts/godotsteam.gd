@@ -5,157 +5,138 @@ const STEAM_APP_ID: int = 4262030
 var steam_ready: bool = false
 var steam_id: int = 0
 
-# Leaderboard handles
 var leaderboards: Dictionary = {}
+var expected_leaderboards: int = 2
+var leaderboards_ready: int = 0
 
-# 🆕 Lokaler Cache für Scores
 var cached_scores: Dictionary = {
-	"fishcaught": 0,
-	"moneyearned": 0
+	"fish_total": 0,
+	"money_total": 0
 }
 
-# 🆕 Dirty Flags - zeigt an ob Upload nötig ist
-var needs_upload: Dictionary = {
-	"fishcaught": false,
-	"moneyearned": false
-}
-
-# Verhindert Crash beim Start
 var initialization_complete: bool = false
+signal leaderboards_loaded
+
+const MAX_LEADERBOARD_SCORE = 2147483647
 
 func _ready() -> void:
-	# Verzögere Init um Crash zu vermeiden
 	await get_tree().create_timer(0.5).timeout
 	_init_steam()
 
 func _process(_delta: float) -> void:
-	if steam_ready and initialization_complete:
+	if steam_ready:
 		Steam.run_callbacks()
 
 func _init_steam() -> void:
 	print("🔧 Starte Steam Initialisierung...")
 	
-	# Check singleton
 	if not Engine.has_singleton("Steam"):
-		print("⚠️ Steam nicht verfügbar (Editor Modus)")
+		print("⚠️ Steam nicht verfügbar")
 		initialization_complete = true
+		leaderboards_loaded.emit()
 		return
 	
-	# Set environment variables
 	OS.set_environment("SteamAppId", str(STEAM_APP_ID))
 	OS.set_environment("SteamGameId", str(STEAM_APP_ID))
 	
-	# Initialize Steam
 	var ok: bool = Steam.steamInit()
 	if not ok:
 		print("⚠️ Steam Init fehlgeschlagen")
 		initialization_complete = true
+		leaderboards_loaded.emit()
 		return
 	
-	# Get Steam ID
 	steam_id = int(Steam.getSteamID())
 	steam_ready = bool(Steam.loggedOn())
 	
 	if not steam_ready:
 		print("⚠️ Steam nicht eingeloggt")
-		initialization_complete = true
 		return
 	
 	print("✅ Steam bereit | ID:", steam_id)
-	print("✅ Steam Username:", Steam.getPersonaName())
 	
-	# Connect signals
 	if not Steam.leaderboard_find_result.is_connected(_on_leaderboard_find):
 		Steam.leaderboard_find_result.connect(_on_leaderboard_find)
 	
 	if not Steam.leaderboard_score_uploaded.is_connected(_on_score_uploaded):
 		Steam.leaderboard_score_uploaded.connect(_on_score_uploaded)
 	
-	# Warte vor Leaderboard-Suche
 	await get_tree().create_timer(1.0).timeout
 	
 	print("🔍 Suche Leaderboards...")
-	Steam.findLeaderboard("fishcaught")
+	Steam.findOrCreateLeaderboard("fish_total", Steam.LEADERBOARD_SORT_METHOD_DESCENDING, Steam.LEADERBOARD_DISPLAY_TYPE_NUMERIC)
 	await get_tree().create_timer(0.5).timeout
-	Steam.findLeaderboard("moneyearned")
-	
-	initialization_complete = true
-	print("✅ Steam Initialisierung abgeschlossen")
+	Steam.findOrCreateLeaderboard("money_total", Steam.LEADERBOARD_SORT_METHOD_DESCENDING, Steam.LEADERBOARD_DISPLAY_TYPE_NUMERIC)
 
 func _on_leaderboard_find(handle: int, found: int) -> void:
-	if found == 0:
-		print("⚠️ Leaderboard nicht gefunden - bitte im Dashboard erstellen")
+	if handle <= 0:
 		return
 	
-	var name: String = str(Steam.getLeaderboardName(handle))
+	var name := Steam.getLeaderboardName(handle)
 	leaderboards[name] = handle
-	print("✅ Leaderboard bereit:", name)
+	leaderboards_ready += 1
+	
+	print("✅ Leaderboard:", name, "| Handle:", handle)
+	
+	if leaderboards_ready >= expected_leaderboards:
+		initialization_complete = true
+		print("✅ Alle Leaderboards bereit")
+		leaderboards_loaded.emit()
 
-func _on_score_uploaded(success: int, handle: int, score: Dictionary) -> void:
-	var name: String = str(Steam.getLeaderboardName(handle))
+func _on_score_uploaded(success: int, steam_leaderboard: int, score_details: Dictionary) -> void:
+	if steam_leaderboard <= 0:
+		return
+	
+	var leaderboard_name := Steam.getLeaderboardName(steam_leaderboard)
+	var score = score_details.get("score", 0)
+	var score_changed = score_details.get("score_changed", 0)
+	var global_rank = score_details.get("global_rank_new", 0)
 	
 	if success == 1:
-		print("✅ Score hochgeladen:", name, "→", score.get("score", "?"))
+		if score_changed == 1:
+			print("✅", leaderboard_name, "hochgeladen:", score, "| Rang:", global_rank)
+		else:
+			print("ℹ️", leaderboard_name, ":", score, "(nicht besser als vorheriger)")
 	else:
-		print("ℹ️ Score Upload Info:", name, "(evtl. nicht besser)")
-
-# -----------------------------
-# PUBLIC API - LOKALES CACHING
-# -----------------------------
+		print("❌", leaderboard_name, "Upload fehlgeschlagen")
 
 func update_fish(total_fish: int) -> void:
-	# 🆕 Nur lokal cachen, NICHT sofort uploaden
-	if cached_scores["fishcaught"] != total_fish:
-		cached_scores["fishcaught"] = total_fish
-		needs_upload["fishcaught"] = true
-		print("💾 Fish Score gecached:", total_fish)
+	cached_scores["fish_total"] = mini(total_fish, MAX_LEADERBOARD_SCORE)
+	print("💾 Fish:", cached_scores["fish_total"])
 
-func update_money(money: int) -> void:
-	# 🆕 Nur lokal cachen, NICHT sofort uploaden
-	if cached_scores["moneyearned"] != money:
-		cached_scores["moneyearned"] = money
-		needs_upload["moneyearned"] = true
-		print("💾 Money Score gecached:", money)
+func update_money(total_money: int) -> void:
+	cached_scores["money_total"] = mini(total_money, MAX_LEADERBOARD_SCORE)
+	print("💾 Money:", cached_scores["money_total"])
 
-# 🆕 Manueller Upload - wird beim Szenenwechsel aufgerufen
 func flush_scores() -> void:
 	if not steam_ready or not initialization_complete:
 		return
 	
-	print("📤 Flush Scores zu Steam...")
-	
-	for leaderboard_name in needs_upload.keys():
-		if needs_upload[leaderboard_name]:
-			_upload_score(leaderboard_name, cached_scores[leaderboard_name])
-			needs_upload[leaderboard_name] = false
+	print("📤 Flush Scores:", cached_scores)
+	_upload_score("fish_total", cached_scores["fish_total"])
+	_upload_score("money_total", cached_scores["money_total"])
 
 func _upload_score(name: String, score: int) -> void:
-	if not leaderboards.has(name):
-		print("⚠️ Leaderboard nicht gefunden:", name)
+	if not leaderboards.has(name) or leaderboards[name] <= 0:
 		return
 	
-	var handle: int = int(leaderboards[name])
-	if handle == 0:
+	if score < 0 or score > MAX_LEADERBOARD_SCORE:
+		print("❌", name, "Score ungültig:", score)
 		return
 	
-	print("📤 Upload Score:", name, "→", score)
+	var handle: int = leaderboards[name]
+	print("📤 Upload:", name, "→", score)
 	
 	Steam.uploadLeaderboardScore(
-		handle,
-		Steam.LEADERBOARD_UPLOAD_SCORE_METHOD_KEEP_BEST,
-		PackedInt32Array([score]),
-		0
+		score,                     # 1️⃣ SCORE
+		true,                      # 2️⃣ keep_best
+		PackedInt32Array(),        # 3️⃣ Details (leer)
+		handle                     # 4️⃣ Leaderboard Handle
 	)
 
-# 🆕 Upload bei bestimmten Events
-func upload_on_milestone() -> void:
-	# Z.B. wenn Biom komplett ist, Achievement unlocked, etc.
-	flush_scores()
 
-# Graceful shutdown - uploaded beim Beenden
 func _exit_tree() -> void:
 	if steam_ready:
 		flush_scores()
-		# Warte kurz damit Upload durchgeht
 		await get_tree().create_timer(0.5).timeout
 		Steam.steamShutdown()

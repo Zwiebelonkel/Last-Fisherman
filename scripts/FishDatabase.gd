@@ -23,6 +23,16 @@ static var RARITY_DATA = {
 	RARITY.ANTIK:         {"name": "Antik",        "color": Color(0.4,0.8,0.9), "value": 0.0, "spawn_chance": 0.4, "difficulty": 1.0}
 }
 
+#static var RARITY_DATA = {
+	#RARITY.NORMAL:        {"name": "Normal",       "color": Color.WHITE,      "value": 1.0,  "spawn_chance": .0, "difficulty": 1.0},
+	#RARITY.UNGEWOEHNLICH: {"name": "Ungewöhnlich", "color": Color(0.3,1,0.3), "value": 1.5,  "spawn_chance": 0, "difficulty": 1.3},
+	#RARITY.SELTEN:        {"name": "Selten",       "color": Color(0.2,0.4,1), "value": 2.0,  "spawn_chance": 0, "difficulty": 1.6},
+	#RARITY.EPISCH:        {"name": "Episch",       "color": Color(0.7,0,1),   "value": 3.0,  "spawn_chance": 0,  "difficulty": 2.0},
+	#RARITY.LEGENDAER:     {"name": "Legendär",     "color": Color(1,0.8,0.1), "value": 6.0,  "spawn_chance": 0, "difficulty": 2.5},
+	#RARITY.EXOTISCH:      {"name": "Exotisch",     "color": Color(1,0,0.2),   "value": 12.0, "spawn_chance": 0, "difficulty": 3.0},
+	#RARITY.ANTIK:         {"name": "Antik",        "color": Color(0.4,0.8,0.9), "value": 0.0, "spawn_chance": 100, "difficulty": 1.0}
+#}
+
 # ===========================
 #  FISH LISTS BY LOCATION
 # ===========================

@@ -1,10 +1,8 @@
 extends Node
 
-# 🆕 Signal für UI-Benachrichtigungen
 signal biome_completed(biome_name: String, reward: int)
 signal fish_caught(fish_name: String)
 
-# 🆕 Touch-Button Referenz
 var touch_buttons: Node = null
 
 # --- PLAYER DATA ---
@@ -28,91 +26,61 @@ var frame_limit: int = 0
 var fullscreen: bool = false
 var current_language: String = "de"
 
-# 🆕 Gewichtsrekorde pro Fischart
+# Gewichtsrekorde pro Fischart
 var fish_weight_records: Dictionary = {}
 var fish_catch_count: Dictionary = {}
 
-# 🆕 Biom-Completion Tracking
+# Biom-Completion Tracking
 var completed_biomes: Dictionary = {
-	"lake": false,
-	"city": false,
-	"sewer": false,
-	"forest": false,
-	"desert": false,
-	"iceland": false,
+	"lake": false, "city": false, "sewer": false,
+	"forest": false, "desert": false, "iceland": false,
 }
 
 var unlocked_spots = {
-	"lake": true,
-	"city": false,
-	"sewer": false,
-	"forest": false,
-	"desert": false,
-	"iceland": false,
-	"home": true,
+	"lake": true, "city": false, "sewer": false,
+	"forest": false, "desert": false, "iceland": false, "home": true,
 }
 
 var spot_prices = {
-	"lake": 0,
-	"city": 500,
-	"sewer": 1200,
-	"forest": 2000,
-	"desert": 4000,
-	"iceland": 6000,
-	"home": 0,
+	"lake": 0, "city": 500, "sewer": 1200,
+	"forest": 2000, "desert": 4000, "iceland": 6000, "home": 0,
 }
 
-# 🎣 Köder-Inventar
+# Köder-Inventar
 var bait_inventory: Dictionary = {
-	"Uncommon": 0,
-	"Rare": 0,
-	"Epic": 0,
-	"Legendary": 0,
-	"Exotic": 0
+	"Uncommon": 0, "Rare": 0, "Epic": 0, "Legendary": 0, "Exotic": 0
 }
 
 var active_bait: String = ""
 
 const BAIT_PRICES = {
-	"Uncommon": 150,
-	"Rare": 400,
-	"Epic": 900,
-	"Legendary": 2000,
-	"Exotic": 4500
+	"Uncommon": 150, "Rare": 400, "Epic": 900, "Legendary": 2000, "Exotic": 4500
 }
 
 func buy_bait(rarity: String, amount: int = 1) -> bool:
 	var total_cost = BAIT_PRICES[rarity] * amount
 	if remove_money(total_cost):
 		bait_inventory[rarity] += amount
-		print("✅ Gekauft: %dx %s Köder für %d€" % [amount, rarity, total_cost])
 		save_game()
 		return true
-	else:
-		print("❌ Nicht genug Geld für %s Köder!" % rarity)
-		return false
+	return false
 
 func activate_bait(rarity: String) -> bool:
 	if bait_inventory[rarity] > 0:
 		active_bait = rarity
 		bait_inventory[rarity] -= 1
-		print("🎣 Köder aktiviert: %s" % rarity)
 		save_game()
 		return true
-	else:
-		print("❌ Kein %s Köder verfügbar!" % rarity)
-		return false
+	return false
 
 func deactivate_bait() -> void:
 	if active_bait != "":
 		bait_inventory[active_bait] += 1
-		print("⚠️ Köder deaktiviert: %s" % active_bait)
 		active_bait = ""
 		save_game()
 
 func consume_active_bait() -> void:
 	if active_bait != "":
-		print("✅ Köder verbraucht: %s" % active_bait)
 		active_bait = ""
 		save_game()
 
@@ -126,6 +94,19 @@ func _ready():
 	load_game()
 	load_settings()
 	TranslationServer.set_locale(current_language)
+	
+	# 🔧 OPTIMIERT: Warte auf Signal statt fixer Zeit
+	if not GodotSteam.leaderboards_loaded.is_connected(_sync_steam_scores):
+		GodotSteam.leaderboards_loaded.connect(_sync_steam_scores)
+	
+	# Falls Steam schon bereit ist
+	if GodotSteam.initialization_complete:
+		_sync_steam_scores()
+
+# 🔧 OPTIMIERT: Direkt ohne Check (wird in GodotSteam gemacht)
+func _sync_steam_scores() -> void:
+	GodotSteam.update_fish(get_total_fish_caught())
+	GodotSteam.update_money(money)
 
 func save_settings() -> void:
 	var settings_data = {
@@ -139,7 +120,6 @@ func save_settings() -> void:
 	}
 	var file = FileAccess.open("user://settings.dat", FileAccess.WRITE)
 	file.store_var(settings_data)
-	print("Einstellungen gespeichert! Sprache:", current_language)
 
 func load_settings() -> void:
 	if FileAccess.file_exists("user://settings.dat"):
@@ -155,9 +135,7 @@ func load_settings() -> void:
 		
 		apply_settings()
 		TranslationServer.set_locale(current_language)
-		print("Einstellungen geladen! Sprache:", current_language)
 	else:
-		print("Keine Einstellungen gefunden, verwende Standardwerte")
 		current_language = "de"
 		TranslationServer.set_locale("de")
 
@@ -185,24 +163,23 @@ func apply_settings() -> void:
 func set_touch_buttons_visible(visible: bool) -> void:
 	if touch_buttons:
 		touch_buttons.visible = visible
-		print("Touch-Buttons Sichtbarkeit:", visible)
 
 func add_money(amount: int) -> void:
 	money += amount
 	GodotSteam.update_money(money)
-	print("Geld hinzugefügt:", amount, " → Neues Guthaben:", money)
 	save_game()
 
 func remove_money(amount: int) -> bool:
 	if money >= amount:
 		money -= amount
-		print("Geld ausgegeben:", amount, " → Neues Guthaben:", money)
+		GodotSteam.update_money(money)
 		save_game()
 		return true
 	return false
 
 func set_money(amount: int) -> void:
 	money = amount
+	GodotSteam.update_money(money)
 	save_game()
 
 func get_money() -> int:
@@ -220,203 +197,119 @@ func go_to_last_scene() -> void:
 	Transition.change_scene_reverse(last_scene, 0.5)
 
 func add_fish(fish_data: Dictionary) -> void:
-	# ✅ Fisch wird in Inventory.gd gespeichert
 	Inventory.add_fish(fish_data)
+	
+	# 🔧 OPTIMIERT: Ein Aufruf statt zwei
+	update_catch_count(fish_data["name"])
 	GodotSteam.update_fish(get_total_fish_caught())
-	print("Fisch ins Inventar hinzugefügt:", fish_data)
 	
 	if fish_data.has("weight"):
 		update_weight_record(fish_data["name"], fish_data["weight"])
 	
-	update_catch_count(fish_data["name"])
-	
 	if not caught_fish_species.has(fish_data["name"]):
 		caught_fish_species[fish_data["name"]] = true
-		print("🐟 Neue Fischart entdeckt:", fish_data["name"])
 		emit_signal("fish_caught", fish_data["name"])
 	
 	save_game()
 
 func update_weight_record(fish_name: String, weight: float) -> void:
-	if not fish_weight_records.has(fish_name):
+	if not fish_weight_records.has(fish_name) or weight > fish_weight_records.get(fish_name, 0.0):
 		fish_weight_records[fish_name] = weight
-		print("🏆 Neuer Gewichtsrekord für %s: %.2f kg" % [fish_name, weight])
-	elif weight > fish_weight_records[fish_name]:
-		var old_record = fish_weight_records[fish_name]
-		fish_weight_records[fish_name] = weight
-		print("🏆 NEUER REKORD für %s: %.2f kg (vorher: %.2f kg)" % [fish_name, weight, old_record])
 
 func get_max_caught_weight(fish_name: String) -> float:
 	return fish_weight_records.get(fish_name, 0.0)
 
 func update_catch_count(fish_name: String) -> void:
-	if not fish_catch_count.has(fish_name):
-		fish_catch_count[fish_name] = 1
-	else:
-		fish_catch_count[fish_name] += 1
-	print("📊 %s gefangen: %dx" % [fish_name, fish_catch_count[fish_name]])
+	fish_catch_count[fish_name] = fish_catch_count.get(fish_name, 0) + 1
 
 func get_catch_count(fish_name: String) -> int:
 	return fish_catch_count.get(fish_name, 0)
 
 func check_biome_completion(fish_data: Dictionary) -> void:
-	print("DEBUG: check_biome_completion gestartet für:", fish_data["name"])
-	
 	var biome = get_fish_biome(fish_data["name"])
-	print("DEBUG: Biom gefunden:", biome)
-	
-	if biome == "":
-		print("DEBUG: Kein Biom gefunden - Abbruch")
-		return
-	
-	if completed_biomes[biome]:
-		print("DEBUG: Biom", biome, "ist bereits komplett - Abbruch")
+	if biome == "" or completed_biomes[biome]:
 		return
 	
 	var biome_fish = get_biome_fish_list(biome)
-	print("DEBUG: Anzahl Fische im Biom", biome, ":", biome_fish.size())
-	
 	if biome_fish.is_empty():
-		print("DEBUG: Biom-Liste ist leer - Abbruch")
 		return
 	
-	var all_caught = true
 	for fish in biome_fish:
-		print("DEBUG: Prüfe Fisch:", fish["name"], "- Gefangen:", caught_fish_species.has(fish["name"]))
 		if not caught_fish_species.has(fish["name"]):
-			all_caught = false
-			break
+			return
 	
-	print("DEBUG: Alle Fische gefangen?", all_caught)
-	
-	if all_caught:
-		print("DEBUG: Triggere Biom-Completion Event!")
-		trigger_biome_completion_event(biome)
+	trigger_biome_completion_event(biome)
 
 func get_fish_biome(fish_name: String) -> String:
 	for fish in FishDB.FISH_LAKE:
 		if fish["name"] == fish_name:
 			return "lake"
-	
 	for fish in FishDB.FISH_CITY:
 		if fish["name"] == fish_name:
 			return "city"
-	
 	for fish in FishDB.FISH_SEWER:
 		if fish["name"] == fish_name:
 			return "sewer"
-	
 	for fish in FishDB.FISH_FOREST:
 		if fish["name"] == fish_name:
 			return "forest"
-	
 	for fish in FishDB.FISH_DESERT:
 		if fish["name"] == fish_name:
 			return "desert"
-	
 	for fish in FishDB.FISH_ICELAND:
 		if fish["name"] == fish_name:
 			return "iceland"
-	
 	return ""
 
 func get_biome_fish_list(biome: String) -> Array:
 	match biome:
-		"lake":
-			return FishDB.FISH_LAKE
-		"city":
-			return FishDB.FISH_CITY
-		"sewer":
-			return FishDB.FISH_SEWER
-		"forest":
-			return FishDB.FISH_FOREST
-		"desert":
-			return FishDB.FISH_DESERT
-		"iceland":
-			return FishDB.FISH_ICELAND
-		_:
-			return []
+		"lake": return FishDB.FISH_LAKE
+		"city": return FishDB.FISH_CITY
+		"sewer": return FishDB.FISH_SEWER
+		"forest": return FishDB.FISH_FOREST
+		"desert": return FishDB.FISH_DESERT
+		"iceland": return FishDB.FISH_ICELAND
+		_: return []
 
 func trigger_biome_completion_event(biome: String) -> void:
 	completed_biomes[biome] = true
 	save_game()
 	
-	print("🎉 BIOM KOMPLETT: ", biome.to_upper(), " - Alle Fische gefangen!")
+	var rewards = {
+		"lake": 500, "city": 1000, "sewer": 1500,
+		"forest": 2000, "desert": 3000, "iceland": 4000
+	}
 	
-	var reward = 0
+	var reward = rewards.get(biome, 0)
+	if reward > 0:
+		add_money(reward)
 	
-	match biome:
-		"lake":
-			print("✨ See-Meister! Belohnung: 500 Gold")
-			reward = 500
-			add_money(reward)
-		"city":
-			print("✨ Stadt-Angler! Belohnung: 1000 Gold")
-			reward = 1000
-			add_money(reward)
-		"sewer":
-			print("✨ Kanalisation-Eroberer! Belohnung: 1500 Gold")
-			reward = 1500
-			add_money(reward)
-		"forest":
-			print("✨ Wald-Experte! Belohnung: 2000 Gold")
-			reward = 2000
-			add_money(reward)
-		"desert":
-			print("✨ Wüsten-Legende! Belohnung: 3000 Gold")
-			reward = 3000
-			add_money(reward)
-		"iceland":
-			print("✨ Eis-Legende! Belohnung: 4000 Gold")
-			reward = 4000
-			add_money(reward)
-	
+	SteamAchievements.on_biome_completed(biome)
 	emit_signal("biome_completed", biome, reward)
 
 func _add_all_fish() -> void:
-	for fish in FishDB.FISH_LAKE:
-		add_fish(fish)
-	for fish in FishDB.FISH_CITY:
-		add_fish(fish)
-	for fish in FishDB.FISH_SEWER:
-		add_fish(fish)
-	for fish in FishDB.FISH_FOREST:
-		add_fish(fish)
-	for fish in FishDB.FISH_DESERT:
-		add_fish(fish)
-	for fish in FishDB.FISH_ICELAND:
+	for fish in FishDB.FISH_LAKE + FishDB.FISH_CITY + FishDB.FISH_SEWER + FishDB.FISH_FOREST + FishDB.FISH_DESERT + FishDB.FISH_ICELAND:
 		add_fish(fish)
 
 func clear_inventory():
-	# ✅ Inventar wird in Inventory.gd gecleared
 	Inventory.clear_inventory()
 	save_game()
 
 func get_inventory_value() -> int:
-	# ✅ Verwende Inventory.gd statt lokales Array
 	return Inventory.get_total_value()
 
 func save_game() -> void:
 	var save_data = {
-		"money": money,
-		"level": level,
-		"xp": xp,
-		"upgrade_grip": upgrade_grip,
-		"upgrade_bait": upgrade_bait,
-		"upgrade_line": upgrade_line,
-		"last_scene": last_scene,
-		"unlocked_spots": unlocked_spots,
-		"caught_fish_species": caught_fish_species,
-		"completed_biomes": completed_biomes,
-		"fish_weight_records": fish_weight_records,
-		"fish_catch_count": fish_catch_count,
+		"money": money, "level": level, "xp": xp,
+		"upgrade_grip": upgrade_grip, "upgrade_bait": upgrade_bait, "upgrade_line": upgrade_line,
+		"last_scene": last_scene, "unlocked_spots": unlocked_spots,
+		"caught_fish_species": caught_fish_species, "completed_biomes": completed_biomes,
+		"fish_weight_records": fish_weight_records, "fish_catch_count": fish_catch_count,
 		"used_story_items": used_story_items,
-		"bait_inventory": bait_inventory,
-		"active_bait": active_bait
+		"bait_inventory": bait_inventory, "active_bait": active_bait
 	}
 	var file = FileAccess.open("user://savegame.dat", FileAccess.WRITE)
 	file.store_var(save_data)
-	print("Spiel gespeichert!")
 
 func load_game() -> void:
 	if FileAccess.file_exists("user://savegame.dat"):
@@ -437,7 +330,6 @@ func load_game() -> void:
 		used_story_items = save_data.get("used_story_items", [])
 		bait_inventory = save_data.get("bait_inventory", bait_inventory)
 		active_bait = save_data.get("active_bait", "")
-		print("Spiel geladen!")
 
 func reset():
 	money = 0
@@ -452,33 +344,15 @@ func reset():
 	fish_weight_records.clear()
 	fish_catch_count.clear()
 	used_story_items.clear()
-	completed_biomes = {
-		"lake": false,
-		"city": false,
-		"sewer": false,
-		"forest": false,
-		"desert": false,
-		"iceland": false,
-		"home": true,
-	}
-	unlocked_spots = {
-		"lake": true,
-		"city": false,
-		"sewer": false,
-		"forest": false,
-		"desert": false,
-		"iceland": false,
-		"home": true,
-	}
-	bait_inventory = {
-		"Uncommon": 0,
-		"Rare": 0,
-		"Epic": 0,
-		"Legendary": 0,
-		"Exotic": 0
-	}
+	completed_biomes = {"lake": false, "city": false, "sewer": false, "forest": false, "desert": false, "iceland": false, "home": true}
+	unlocked_spots = {"lake": true, "city": false, "sewer": false, "forest": false, "desert": false, "iceland": false, "home": true}
+	bait_inventory = {"Uncommon": 0, "Rare": 0, "Epic": 0, "Legendary": 0, "Exotic": 0}
 	active_bait = ""
+	
+	GodotSteam.update_fish(0)
+	GodotSteam.update_money(0)
 	save_game()
+	GodotSteam.flush_scores()
 
 func get_total_fish_caught() -> int:
 	var total := 0

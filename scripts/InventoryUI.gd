@@ -275,6 +275,8 @@ func _sell_single_fish(index: int) -> void:
 	var rarity = fish.get("rarity", FishDB.RARITY.NORMAL)
 	var rarity_data = FishDB.RARITY_DATA[rarity]
 	var value = int(fish["base_value"] * rarity_data["value"])
+	if  Player.get_total_fish_caught() > 0:
+		SteamAchievements.on_first_sale()
 
 	Inventory.remove_fish(index)
 	Player.add_money(value)
@@ -298,7 +300,8 @@ func _on_sell_all_pressed() -> void:
 
 	var money := Inventory.get_total_value()
 	var fish_count := Inventory.fish_inventory.size()
-
+	if  Player.get_total_fish_caught() > 0:
+		SteamAchievements.on_first_sale()
 	Inventory.clear_inventory()
 	Player.add_money(money)
 

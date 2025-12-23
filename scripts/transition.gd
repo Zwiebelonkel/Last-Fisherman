@@ -184,6 +184,7 @@ func back_to_main(duration: float = 0.4) -> void:
 
 # Reverse Transition (von oben nach unten - für "Zurück") mit Async Loading
 func change_scene_reverse(target_scene: String, duration: float = 0.5) -> void:
+	GodotSteam.flush_scores()
 	if is_transitioning:
 		print("⚠️ Transition läuft bereits!")
 		return
@@ -309,7 +310,6 @@ func load_scene_async(path: String) -> void:
 		
 		if progress.size() > 0:
 			loading_label.text = "Loading... %d%%" % int(progress[0] * 100)
-			print("📊 Loading Progress:", int(progress[0] * 100), "%")
 		
 		await get_tree().process_frame
 	

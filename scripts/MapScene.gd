@@ -167,6 +167,7 @@ func buy_spot(spot_name: String):
 	Player.save_game()
 	interact.play()
 	print("Ort gekauft:", spot_name)
+	SteamAchievements.on_biome_bought(spot_name)
 	# Popup schließen
 	hide_popup()
 	# Buttons neu einfärben

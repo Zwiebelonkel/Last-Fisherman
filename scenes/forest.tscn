@@ -1042,6 +1042,9 @@ func end_catch_minigame(success: bool) -> void:
 		Player.add_fish(fish)
 		Player.caught_fish_species[fish[\"name\"]] = true
 		success_sound.play()
+		SteamAchievements.on_fish_caught(fish)
+		SteamAchievements.check_total_fish_caught()
+		SteamAchievements.check_species_discovered()
 		
 		# 🆕 Köder VERBRAUCHEN
 		if Player.has_active_bait():
