@@ -25,7 +25,7 @@
 [ext_resource type="Texture2D" uid="uid://e7t33pnr13bp" path="res://textures/These-images-of-clouds-are-created-exclusively-using-Perlin-noise-It-simulates-the_Q320.jpg" id="18_yles7"]
 [ext_resource type="AudioStream" uid="uid://esyv0p374c5j" path="res://sounds/bite.mp3" id="20_ikoiv"]
 [ext_resource type="AudioStream" uid="uid://cldy38iwm8ovi" path="res://sounds/cast.mp3" id="21_kg0fi"]
-[ext_resource type="AudioStream" uid="uid://26m0pjkxve85" path="res://sounds/sucess.mp3" id="22_0orsp"]
+[ext_resource type="AudioStream" uid="uid://26m0pjkxve85" path="res://sounds/rarity/normal.mp3" id="22_0orsp"]
 [ext_resource type="AudioStream" uid="uid://cmr6cded4l11v" path="res://sounds/whoosh.mp3" id="23_h3250"]
 [ext_resource type="AudioStream" uid="uid://djac3dtda2yhn" path="res://sounds/city.mp3" id="24_my70f"]
 [ext_resource type="PackedScene" uid="uid://dguwyn5rc7uog" path="res://scenes/splash.tscn" id="25_kg0fi"]

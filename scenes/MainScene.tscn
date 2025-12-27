@@ -1,4 +1,4 @@
-[gd_scene load_steps=71 format=3 uid="uid://cx2sffjjdjuw5"]
+[gd_scene load_steps=75 format=3 uid="uid://cx2sffjjdjuw5"]
 
 [ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="1_2phbr"]
 [ext_resource type="PackedScene" uid="uid://b5ew1rfc8ow8g" path="res://scenes/fishingRod.tscn" id="1_echbf"]
@@ -7,9 +7,7 @@
 [ext_resource type="Shader" uid="uid://c140kjbm2bot5" path="res://shader/buckshot.gdshader" id="1_u55b3"]
 [ext_resource type="PackedScene" uid="uid://cqtn78ty1fa7" path="res://scenes/CatchResultUI.tscn" id="2_o3jky"]
 [ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="3_8wjpf"]
-[ext_resource type="Texture2D" uid="uid://cvllk03mhtybp" path="res://textures/723-normal.jpg" id="6_x537r"]
 [ext_resource type="PackedScene" uid="uid://be7bs5po2ukhi" path="res://scenes/FishBook.tscn" id="7_a7pbh"]
-[ext_resource type="Texture2D" uid="uid://d31603nl8y0gd" path="res://textures/Water_preview.jpgC878A51E-2B84-45CA-85CB-75E5BC88EEC8Large.jpg" id="7_cfq0f"]
 [ext_resource type="PackedScene" uid="uid://b08obrprd472u" path="res://scenes/OptionsControl.tscn" id="9_ye0jt"]
 [ext_resource type="PackedScene" uid="uid://ckje0fw3pep83" path="res://assets/skyscaper.glb" id="10_7wwop"]
 [ext_resource type="Script" uid="uid://bymrcyid32xsp" path="res://scripts/line.gd" id="10_pjux3"]
@@ -21,22 +19,30 @@
 [ext_resource type="PackedScene" uid="uid://brmbdno888s38" path="res://assets/tree.glb" id="14_08o8g"]
 [ext_resource type="PackedScene" uid="uid://bw80sbvfcwe1p" path="res://scenes/cigarette.tscn" id="14_fto0a"]
 [ext_resource type="PackedScene" uid="uid://cfptx2e41wve1" path="res://scenes/shop.tscn" id="15_0cxu4"]
+[ext_resource type="Material" uid="uid://bsr3yycic2g0q" path="res://materials/water.tres" id="16_wsqty"]
 [ext_resource type="AudioStream" uid="uid://esyv0p374c5j" path="res://sounds/bite.mp3" id="18_2phbr"]
 [ext_resource type="PackedScene" uid="uid://8ljq0dpgsno5" path="res://scenes/bait.tscn" id="18_l3o4o"]
 [ext_resource type="AudioStream" uid="uid://cldy38iwm8ovi" path="res://sounds/cast.mp3" id="19_mkg2b"]
-[ext_resource type="AudioStream" uid="uid://26m0pjkxve85" path="res://sounds/sucess.mp3" id="20_1ns3k"]
+[ext_resource type="AudioStream" uid="uid://26m0pjkxve85" path="res://sounds/rarity/normal.mp3" id="20_1ns3k"]
 [ext_resource type="AudioStream" uid="uid://cmr6cded4l11v" path="res://sounds/whoosh.mp3" id="21_a7pbh"]
 [ext_resource type="PackedScene" uid="uid://dedujdavqgnhc" path="res://scenes/clouds.tscn" id="24_a7pbh"]
+[ext_resource type="AudioStream" uid="uid://bm2wkiirbpowg" path="res://sounds/rarity/uncommon.mp3" id="25_2so2y"]
 [ext_resource type="PackedScene" uid="uid://dguwyn5rc7uog" path="res://scenes/splash.tscn" id="25_ye0jt"]
+[ext_resource type="AudioStream" uid="uid://bpy3o38b3nar3" path="res://sounds/rarity/rare.mp3" id="26_7yh6i"]
 [ext_resource type="AudioStream" uid="uid://b7ifxd818oete" path="res://sounds/line.mp3" id="26_mekmn"]
 [ext_resource type="PackedScene" uid="uid://bej6o0ysl85et" path="res://assets/rock.glb" id="27_jcw2p"]
+[ext_resource type="AudioStream" uid="uid://rcuhs2eom22x" path="res://sounds/rarity/epic.mp3" id="27_pwxld"]
 [ext_resource type="AudioStream" uid="uid://b4h6tfle8d5uh" path="res://sounds/NERVES.mp3" id="27_wsqty"]
+[ext_resource type="AudioStream" uid="uid://c0e0t3u3yvvhg" path="res://sounds/rarity/legendary.mp3" id="28_cw1g3"]
 [ext_resource type="PackedScene" uid="uid://bmbrqb7ef6c5i" path="res://assets/tripod.glb" id="28_qavw1"]
 [ext_resource type="PackedScene" uid="uid://bw4vof4oddwco" path="res://assets/ödland.glb" id="29_i7ifx"]
+[ext_resource type="AudioStream" uid="uid://qeh48myqvc8p" path="res://sounds/rarity/exotic.mp3" id="29_yc0gu"]
+[ext_resource type="AudioStream" uid="uid://6a3ro0nq1u4" path="res://sounds/rarity/antique.mp3" id="30_qnen4"]
 [ext_resource type="PackedScene" uid="uid://xjntcu6j0ri0" path="res://scenes/explosion.tscn" id="31_fto0a"]
 [ext_resource type="PackedScene" uid="uid://7g6l5pa83hrt" path="res://assets/boat.glb" id="34_kwqb8"]
 [ext_resource type="Material" uid="uid://cj86wv7c01tef" path="res://materials/outlineWhite.tres" id="35_y15d6"]
 [ext_resource type="PackedScene" uid="uid://ctqxalvjd2b1k" path="res://assets/palm.glb" id="36_u55b3"]
+[ext_resource type="PackedScene" uid="uid://bswqivqayur26" path="res://scenes/fireflies.tscn" id="38_oiest"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1wiy7"]
 shader = ExtResource("1_u55b3")
@@ -220,7 +226,14 @@ script/source = "extends Node3D
 @onready var catch_progress: ProgressBar = catch_ui.get_node(\"CatchProgress\")
 @onready var bite_sound: AudioStreamPlayer = get_node(\"../../Audio/bite\")
 @onready var cast_sound: AudioStreamPlayer = get_node(\"../../Audio/cast\")
-@onready var success_sound: AudioStreamPlayer = get_node(\"../../Audio/success\")
+@onready var normal_sound: AudioStreamPlayer = get_node(\"../../Audio/normal\")
+@onready var uncommon_sound: AudioStreamPlayer = get_node(\"../../Audio/uncommon\")
+@onready var rare_sound: AudioStreamPlayer = get_node(\"../../Audio/rare\")
+@onready var epic_sound: AudioStreamPlayer = get_node(\"../../Audio/epic\")
+@onready var legendary_sound: AudioStreamPlayer = get_node(\"../../Audio/legendary\")
+@onready var exotic_sound: AudioStreamPlayer = get_node(\"../../Audio/exotic\")
+@onready var antique_sound: AudioStreamPlayer = get_node(\"../../Audio/antique\")
+
 @onready var whoosh_sound: AudioStreamPlayer = get_node(\"../../Audio/whoosh\")
 @onready var line_sound: AudioStreamPlayer = get_node(\"../../Audio/line\")
 
@@ -940,7 +953,10 @@ func end_catch_minigame(success: bool) -> void:
 		var fish = current_fish
 		Player.add_fish(fish)
 		Player.caught_fish_species[fish[\"name\"]] = true
-		success_sound.play()
+		
+		# 🎵 Spiele Rarität-spezifischen Sound
+		play_rarity_sound(fish.get(\"rarity\", FishDB.RARITY.NORMAL))
+		
 		SteamAchievements.on_fish_caught(fish)
 		SteamAchievements.check_total_fish_caught()
 		SteamAchievements.check_species_discovered()
@@ -960,6 +976,35 @@ func end_catch_minigame(success: bool) -> void:
 
 	catch_ui.visible = false
 	await reset_line()
+	
+# 🎵 Spiele den passenden Sound basierend auf Rarität
+func play_rarity_sound(rarity: int) -> void:
+	match rarity:
+		FishDB.RARITY.NORMAL:
+			if normal_sound:
+				normal_sound.play()
+		FishDB.RARITY.UNGEWOEHNLICH:
+			if uncommon_sound:
+				normal_sound.play()
+		FishDB.RARITY.SELTEN:
+			if rare_sound:
+				normal_sound.play()
+		FishDB.RARITY.EPISCH:
+			if epic_sound:
+				normal_sound.play()
+		FishDB.RARITY.LEGENDAER:
+			if legendary_sound:
+				legendary_sound.play()
+		FishDB.RARITY.EXOTISCH:
+			if exotic_sound:
+				exotic_sound.play()
+		FishDB.RARITY.ANTIK:
+			if antique_sound:
+				antique_sound.play()
+		_:
+			# Fallback auf normal sound
+			if normal_sound:
+				normal_sound.play()
 
 func trigger_splash_burst() -> void:
 	if not splash:
@@ -974,447 +1019,9 @@ func trigger_splash_burst() -> void:
 		
 "
 
-[sub_resource type="Shader" id="Shader_muv0v"]
-code = "// The following shader is used in order to simulate a simple ocean using Gerstner waves.
-// This shader can be added in a plane mesh. For a more detailed ocean, increase the width and depth subdivision.
-// Note 1: On larger planes ex. 500x500, increasing the subdivision above 1000 comes at great performance cost
-// Note 2: Special thanks to @ninetailsrabbit for fixing a caustics projection issue!
-
-shader_type spatial;
-
-// Set render modes: always draw depth and disable backface culling
-render_mode depth_draw_always, cull_disabled;
-
-// Uniforms for screen and depth textures
-uniform sampler2D SCREEN_TEXTURE : hint_screen_texture, filter_linear_mipmap;
-uniform sampler2D DEPTH_TEXTURE : hint_depth_texture, filter_linear_mipmap;
-
-// Group uniforms for wave parameters
-group_uniforms Waves;
-// Each wave is defined by a vec4: direction (x,y), amplitude, frequency
-uniform vec4 wave_1 = vec4(0.3, 4.0, 0.2, 0.6);
-uniform vec4 wave_2 = vec4(-0.26, -0.19, 0.01, 0.47);
-uniform vec4 wave_3 = vec4(-7.67, 5.63, 0.1, 0.38);
-uniform vec4 wave_4 = vec4(-0.42, -1.63, 0.1, 0.28);
-uniform vec4 wave_5 = vec4(1.66, 0.07, 0.15, 1.81);
-uniform vec4 wave_6 = vec4(1.20, 1.14, 0.01, 0.33);
-uniform vec4 wave_7 = vec4(-1.6, 7.3, 0.11, 0.73);
-uniform vec4 wave_8 = vec4(-0.42, -1.63, 0.15, 1.52);
-
-// Uniforms for time factor, noise zoom, and noise amplitude
-uniform float time_factor = 2.5;
-uniform float noise_zoom = 2.0;
-uniform float noise_amp = 1.0;
-
-// Group uniforms for water colors
-group_uniforms Water_colours;
-uniform vec3 base_water_color:source_color;
-uniform vec3 fresnel_water_color:source_color;
-uniform vec4 deep_water_color : source_color;
-uniform vec4 shallow_water_color : source_color;
-
-// Group uniforms for depth-related parameters
-group_uniforms Depth;
-uniform float beers_law = 0.5;
-uniform float depth_offset = -1.2;
-uniform float near = 7.0;
-uniform float far = 10000.0;
-
-// Group uniforms for edge detection and foam effects
-group_uniforms Edge_Detection;
-uniform float edge_texture_scale = 3.5;
-uniform float edge_texture_offset = 1.0;
-uniform float edge_texture_speed = 0.1;
-uniform float edge_foam_intensity = 2.0;
-uniform float edge_fade_start = -3.0;
-uniform float edge_fade_end = 6.6;
-uniform sampler2D edge_foam_texture;
-
-// Group uniforms for wave peak effects
-group_uniforms WavePeakEffect;
-uniform float peak_height_threshold = 1.0;
-uniform vec3 peak_color = vec3(1.0, 1.0, 1.0);
-uniform float peak_intensity = 1.0;
-uniform sampler2D foam_texture;
-uniform float foam_intensity = 1.0;
-uniform float foam_scale = 1.0;
-
-// Group uniforms for surface details
-group_uniforms Surface_details;
-uniform float metallic = 0.6;
-uniform float roughness = 0.045;
-uniform float uv_scale_text_a = 0.1;
-uniform vec2 uv_speed_text_a = vec2(0.42, 0.3);
-uniform float uv_scale_text_b = 0.6;
-uniform vec2 uv_speed_text_b = vec2(0.15, 0.1);
-uniform float normal_strength = 1.0;
-uniform float uv_sampler_scale = 0.3;
-uniform float blend_factor = 0.28;
-uniform float perturbation_strength = 1.0; // Adjust this value to tile/de-tile the oceans surface.
-uniform float perturbation_time = 0.3; // // Offset perturbation_time for patern variation
-uniform sampler2D normalmap_a;
-uniform sampler2D normalmap_b;
-uniform sampler2D uv_sampler;
-uniform sampler2DArray caustic_sampler : hint_default_black;
-uniform float caustics_intensity = 15.0;
-
-uniform float num_caustic_layers = 16.0; // <<< IMPORTANT: DOUBLE CHECK THIS against your Texture2DArray's actual slices!
-uniform float caustic_distortion_strength = 0.001; // Keep this value within a range of 0.001 to 0.009
-
-// Fresnel function to calculate the reflection/refraction effect
-float fresnel(float amount, vec3 normal, vec3 view) {
-    return pow((1.0 - clamp(dot(normalize(normal), normalize(view)), 0.0, 1.0)), amount);
-}
-
-// Function to calculate edge depth
-float edge(float depth) {
-    depth = 2.0 * depth - 1.0;
-    return near * far / (far - depth * (near - far));
-}
-
-// Function to calculate dynamic amplitude based on position and time
-float dynamic_amplitude(vec2 pos, float time) {
-    return 1.0 + 0.5 * sin(time + length(pos) * 0.1);
-}
-
-// Hash function for noise generation
-float hash(vec2 p) {
-    return fract(sin(dot(p * 17.17, vec2(14.91, 67.31))) * 4791.9511);
-}
-
-// 2D noise function
-float noise(vec2 x) {
-    vec2 p = floor(x);
-    vec2 f = fract(x);
-    f = f * f * (3.0 - 2.0 * f);
-    vec2 a = vec2(1.0, 0.0);
-    return mix(mix(hash(p + a.yy), hash(p + a.xy), f.x),
-               mix(hash(p + a.yx), hash(p + a.xx), f.x), f.y);
-}
-
-// Fractional Brownian Motion (fBM) function for generating complex noise
-float fbm(vec2 x) {
-    float height = 0.0;
-    float amplitude = 0.5;
-    float frequency = 3.0;
-    for (int i = 0; i < 6; i++) {
-        height += noise(x * frequency) * amplitude;
-        amplitude *= 0.5;
-        frequency *= 2.0;
-    }
-    return height;
-}
-
-// Structure to hold wave results: displacement, tangent, binormal, and normal
-struct WaveResult {
-    vec3 displacement;
-    vec3 tangent;
-    vec3 binormal;
-    vec3 normal;
-};
-
-// Gerstner wave function to calculate wave displacement and normals
-WaveResult gerstner_wave(vec4 params, vec2 pos, float time) {
-    float steepness = params.z * dynamic_amplitude(pos, time);
-    float wavelength = params.w;
-    float k = 2.0 * PI / wavelength;
-    float c = sqrt(9.81 / k);
-    vec2 d = normalize(params.xy);
-    float f = k * (dot(d, pos.xy) - c * time);
-    float a = steepness / k;
-
-    vec3 displacement = vec3(d.x * (a * cos(f)), a * sin(f), d.y * (a * cos(f)));
-
-    vec3 tangent = vec3(1.0 - d.x * d.x * steepness * sin(f), steepness * cos(f), -d.x * d.y * steepness * sin(f));
-    vec3 binormal = vec3(-d.x * d.y * steepness * sin(f), steepness * cos(f), 1.0 - d.y * d.y * steepness * sin(f));
-    vec3 normal = normalize(cross(tangent, binormal));
-
-    return WaveResult(displacement, tangent, binormal, normal);
-}
-
-// Function to combine multiple Gerstner waves
-WaveResult wave(vec2 pos, float time) {
-    WaveResult waveResult;
-    waveResult.displacement = vec3(0.0);
-    waveResult.tangent = vec3(1.0, 0.0, 0.0);
-    waveResult.binormal = vec3(0.0, 0.0, 1.0);
-    waveResult.normal = vec3(0.0, 1.0, 0.0);
-
-    WaveResult wr;
-    wr = gerstner_wave(wave_1, pos, time);
-    waveResult.displacement += wr.displacement;
-    waveResult.tangent += wr.tangent;
-    waveResult.binormal += wr.binormal;
-    waveResult.normal += wr.normal;
-
-    wr = gerstner_wave(wave_2, pos, time);
-    waveResult.displacement += wr.displacement;
-    waveResult.tangent += wr.tangent;
-    waveResult.binormal += wr.binormal;
-    waveResult.normal += wr.normal;
-
-    wr = gerstner_wave(wave_3, pos, time);
-    waveResult.displacement += wr.displacement;
-    waveResult.tangent += wr.tangent;
-    waveResult.binormal += wr.binormal;
-    waveResult.normal += wr.normal;
-
-    wr = gerstner_wave(wave_4, pos, time);
-    waveResult.displacement += wr.displacement;
-    waveResult.tangent += wr.tangent;
-    waveResult.binormal += wr.binormal;
-    waveResult.normal += wr.normal;
-
-    wr = gerstner_wave(wave_5, pos, time);
-    waveResult.displacement += wr.displacement;
-    waveResult.tangent += wr.tangent;
-    waveResult.binormal += wr.binormal;
-    waveResult.normal += wr.normal;
-
-    wr = gerstner_wave(wave_6, pos, time);
-    waveResult.displacement += wr.displacement;
-    waveResult.tangent += wr.tangent;
-    waveResult.binormal += wr.binormal;
-    waveResult.normal += wr.normal;
-
-    wr = gerstner_wave(wave_7, pos, time);
-    waveResult.displacement += wr.displacement;
-    waveResult.tangent += wr.tangent;
-    waveResult.binormal += wr.binormal;
-    waveResult.normal += wr.normal;
-
-    wr = gerstner_wave(wave_8, pos, time);
-    waveResult.displacement += wr.displacement;
-    waveResult.tangent += wr.tangent;
-    waveResult.binormal += wr.binormal;
-    waveResult.normal += wr.normal;
-
-    // Add noise to the wave displacement for more natural look
-    waveResult.displacement.y += fbm(pos.xy * (noise_zoom / 50.0)) * noise_amp;
-
-    return waveResult;
-}
-
-// Varying variables to pass data from vertex to fragment shader
-varying float height;
-varying vec3 world_position;
-varying mat3 tbn_matrix;
-varying mat4 inv_mvp;
-
-// Vertex shader function
-void vertex() {
-    // Calculate time based on the global TIME variable and time_factor
-    float time = TIME / time_factor;
-    // Calculate wave displacement and normals
-    WaveResult waveResult = wave(VERTEX.xz, time);
-    // Apply wave displacement to the vertex position
-    VERTEX += waveResult.displacement;
-    // Store the height of the wave displacement
-    height = waveResult.displacement.y;
-
-    // Transform normals, tangents, and binormals to world space
-    vec3 n = normalize((MODELVIEW_MATRIX * vec4(waveResult.normal, 0.0)).xyz);
-    vec3 t = normalize((MODELVIEW_MATRIX * vec4(waveResult.tangent.xyz, 0.0)).xyz);
-    vec3 b = normalize((MODELVIEW_MATRIX * vec4((cross(waveResult.normal, waveResult.tangent.xyz)), 0.0)).xyz);
-    // Calculate world position of the vertex
-    world_position = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
-    // Create TBN matrix for normal mapping
-    tbn_matrix = mat3(t, b, n);
-    // Calculate inverse MVP matrix for screen space transformations
-    inv_mvp = inverse(PROJECTION_MATRIX * MODELVIEW_MATRIX);
-}
-
-
-// 2D Random hash function
-float random(vec2 p) {
-    return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
-}
-
-// Smooth noise function
-float smooth_noise(vec2 p) {
-    vec2 i = floor(p);
-    vec2 f = fract(p);
-    vec2 u = f * f * (3.0 - 2.0 * f);
-    return mix(
-        mix(random(i + vec2(0.0, 0.0)), random(i + vec2(1.0, 0.0)), u.x),
-        mix(random(i + vec2(0.0, 1.0)), random(i + vec2(1.0, 1.0)), u.x),
-        u.y
-    );
-}
-
-// Layered noise for detiling
-float layered_noise(vec2 p, float scale) {
-    float n = 0.0;
-    n += smooth_noise(p * scale) * 0.5;
-    n += smooth_noise(p * scale * 2.0) * 0.25;
-    n += smooth_noise(p * scale * 4.0) * 0.125;
-    return n;
-}
-
-// Perturb UV coordinates for detiling
-vec2 perturb_uv(vec2 uv, vec2 world_pos, float time, float strength) {
-    // Use world position to generate unique noise patterns
-    vec2 noise_offset = vec2(
-        layered_noise(world_pos * 0.3 + time * 0.06, 1.0),
-        layered_noise(world_pos * 0.3 + time * 0.06 + vec2(10.0), 1.0)
-    );
-    // Apply subtle distortion to UVs
-    return uv + noise_offset * strength;
-}
-
-
-// Fragment shader function
-void fragment() {
-    // Calculate UV coordinates based on world position
-    vec2 uv = world_position.xz;
-
-    // Sample UV offset texture
-    vec2 uv_offset = texture(uv_sampler, uv * uv_sampler_scale).rg;
-
-    // Calculate base UV coordinates for normal maps
-    vec2 base_uv_a = (uv + uv_speed_text_a * TIME + uv_offset) * uv_scale_text_a;
-    vec2 base_uv_b = (uv + uv_speed_text_b * TIME + uv_offset) * uv_scale_text_b;
-
-    // Apply noise-based perturbation to UVs
-    vec2 animated_uv_a = perturb_uv(base_uv_a, world_position.xz, TIME, perturbation_strength);
-    vec2 animated_uv_b = perturb_uv(base_uv_b, world_position.xz, TIME + 0.0, perturbation_time);
-
-    // Sample normal maps
-    vec3 normal_sample_a = texture(normalmap_a, animated_uv_a).rgb;
-    vec3 normal_sample_b = texture(normalmap_b, animated_uv_b).rgb;
-
-    // Normalize normal samples and combine them
-    normal_sample_a = normalize(normal_sample_a * 2.0 - 1.0);
-    normal_sample_b = normalize(normal_sample_b * 2.0 - 1.0);
-    vec3 combined_normal = normalize(mix(normal_sample_a, normal_sample_b, blend_factor));
-
-    // Perturb the normal using the TBN matrix
-    vec3 perturbed_normal = normalize(tbn_matrix * (combined_normal * normal_strength));
-
-    // Sample depth texture
-    float depth_raw = texture(DEPTH_TEXTURE, SCREEN_UV).r;
-    float depth = PROJECTION_MATRIX[3][2] / (depth_raw + PROJECTION_MATRIX[2][2]);
-
-    // Calculate the distance from the camera to the water surface
-    float camera_depth = INV_VIEW_MATRIX[3].y - world_position.y;
-    if (camera_depth < 0.0) { // Camera is underwater
-        // Map the depth to a range where deeper = positive beers_law, closer = negative beers_law
-        float depth_factor = smoothstep(-10.0, 0.0, camera_depth); // Adjust -10.0 for the depth range
-        ALPHA -= depth_factor * 0.3;
-        }
-    // Calculate depth blend factor using Beer's law
-    float depth_blend = exp((depth + VERTEX.z + depth_offset) * -beers_law);
-    depth_blend = clamp(1.0 - depth_blend, 0.0, 1.0);
-    float depth_blend_power = clamp(pow(depth_blend, 2.5), 0.0, 1.0);
-
-    // Sample screen color and blend it with depth color
-    vec3 screen_color = textureLod(SCREEN_TEXTURE, SCREEN_UV, depth_blend_power * 2.5).rgb;
-    vec3 depth_color = mix(shallow_water_color.rgb, deep_water_color.rgb, depth_blend_power);
-    vec3 color = mix(screen_color * depth_color, depth_color * 0.25, depth_blend_power * 0.5);
-
-    // Calculate depth difference for edge detection
-    float z_depth = edge(texture(DEPTH_TEXTURE, SCREEN_UV).x);
-    float z_pos = edge(FRAGCOORD.z);
-    float z_dif = z_depth - z_pos;
-
-	// Calculate caustic effect
-	vec4 caustic_screenPos = vec4(SCREEN_UV * 2.0 - 1.0, depth_raw, 1.0);
-	vec4 caustic_localPos = inv_mvp * caustic_screenPos;
-	caustic_localPos = vec4(caustic_localPos.xyz / caustic_localPos.w, caustic_localPos.w);
-
-	vec2 caustic_Uv = caustic_localPos.xz / vec2(1024.0) + 0.5;
-	caustic_Uv += perturbed_normal.xz * caustic_distortion_strength;
-
-	float caustic_layer_index = floor(mod(TIME * 26.0, num_caustic_layers)); // Use floor for integer index
-
-	vec4 caustic_color = texture(caustic_sampler, vec3(caustic_Uv * 660.0, caustic_layer_index));
-	float caustic_intensity_multiplier = (1.0 - depth_blend_power) * caustics_intensity;
-
-	color *= 1.0 + pow(caustic_color.r, 1.50) * caustic_intensity_multiplier;
-
-    // Calculate fresnel effect
-    float fresnel = fresnel(5.0, NORMAL, VIEW);
-    vec3 surface_color = mix(base_water_color, fresnel_water_color, fresnel);
-
-    // Calculate edge foam effect
-    vec2 edge_uv = world_position.xz * edge_texture_scale + edge_texture_offset + TIME * edge_texture_speed;
-    float edge_fade = smoothstep(edge_fade_start, edge_fade_end, z_dif);
-    vec3 depth_color_adj = mix(texture(edge_foam_texture, edge_uv).rgb * edge_foam_intensity, color, edge_fade);
-
-    // Apply peak color effect based on height with noise
-    float peak_factor = smoothstep(peak_height_threshold, peak_height_threshold + 0.2, height);
-    float noise_factor = fbm(world_position.xz * 0.1 + TIME * 0.1);
-    peak_factor = peak_factor * noise_factor;
-
-    vec3 final_color = mix(surface_color, peak_color * peak_intensity, peak_factor);
-
-    // Sample the foam texture and blend it with the final color
-    vec2 foam_uv = world_position.xz * foam_scale + TIME * 0.1;
-    float foam_sample = texture(foam_texture, foam_uv).r;
-    float foam_blend_factor = smoothstep(0.0, 1.0, peak_factor) * foam_sample * foam_intensity;
-
-    final_color = mix(final_color, vec3(1.0), foam_blend_factor);
-
-    // Set the final color, metallic, roughness, and normal
-    ALBEDO = clamp(final_color + depth_color_adj, vec3(0.0), vec3(1.0));
-    METALLIC = metallic;
-    ROUGHNESS = roughness;
-    NORMAL = perturbed_normal;
-}"
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_k24pf"]
-render_priority = -128
-shader = SubResource("Shader_muv0v")
-shader_parameter/wave_1 = Vector4(0.3, 4, 0.2, 0.6)
-shader_parameter/wave_2 = Vector4(-0.26, -0.19, 0.01, 0.47)
-shader_parameter/wave_3 = Vector4(-7.67, 5.63, 0.1, 0.38)
-shader_parameter/wave_4 = Vector4(-0.42, -1.63, 0.1, 0.28)
-shader_parameter/wave_5 = Vector4(1.66, 0.07, 0.15, 1.81)
-shader_parameter/wave_6 = Vector4(1.2, 1.14, 0.01, 0.33)
-shader_parameter/wave_7 = Vector4(-1.6, 7.3, 0.11, 0.73)
-shader_parameter/wave_8 = Vector4(-0.42, -1.63, 0.15, 1.52)
-shader_parameter/time_factor = 6.975
-shader_parameter/noise_zoom = 3.885
-shader_parameter/noise_amp = 1.545
-shader_parameter/base_water_color = Color(0.188235, 0.537255, 0.282353, 1)
-shader_parameter/fresnel_water_color = Color(0.338312, 0.553894, 0.419979, 1)
-shader_parameter/deep_water_color = Color(0.116021, 0.237972, 0.128846, 1)
-shader_parameter/shallow_water_color = Color(0.56641, 0.833903, 0.620567, 1)
-shader_parameter/beers_law = 0.405
-shader_parameter/depth_offset = 0.095
-shader_parameter/near = 7.0
-shader_parameter/far = 10000.0
-shader_parameter/edge_texture_scale = 4.715
-shader_parameter/edge_texture_offset = 1.0
-shader_parameter/edge_texture_speed = 0.1
-shader_parameter/edge_foam_intensity = 2.0
-shader_parameter/edge_fade_start = -3.0
-shader_parameter/edge_fade_end = 6.6
-shader_parameter/peak_height_threshold = 1.0
-shader_parameter/peak_color = Vector3(1, 1, 1)
-shader_parameter/peak_intensity = 1.0
-shader_parameter/foam_intensity = 1.0
-shader_parameter/foam_scale = 1.0
-shader_parameter/metallic = 1.79
-shader_parameter/roughness = 0.07
-shader_parameter/uv_scale_text_a = 0.23
-shader_parameter/uv_speed_text_a = Vector2(0.015, -0.03)
-shader_parameter/uv_scale_text_b = 0.36
-shader_parameter/uv_speed_text_b = Vector2(-0.025, 0.1)
-shader_parameter/normal_strength = 1.28
-shader_parameter/uv_sampler_scale = 0.3
-shader_parameter/blend_factor = 0.795
-shader_parameter/perturbation_strength = 0.37
-shader_parameter/perturbation_time = 0.3
-shader_parameter/normalmap_a = ExtResource("6_x537r")
-shader_parameter/normalmap_b = ExtResource("7_cfq0f")
-shader_parameter/caustics_intensity = 14.48
-shader_parameter/num_caustic_layers = 16.0
-shader_parameter/caustic_distortion_strength = 0.001
-
 [sub_resource type="PlaneMesh" id="PlaneMesh_qg23i"]
 lightmap_size_hint = Vector2i(251, 1001)
-material = SubResource("ShaderMaterial_k24pf")
+material = ExtResource("16_wsqty")
 uv2_padding = 1.41
 size = Vector2(200, 200)
 
@@ -1931,8 +1538,36 @@ bus = &"SFX"
 stream = ExtResource("19_mkg2b")
 bus = &"SFX"
 
-[node name="success" type="AudioStreamPlayer" parent="Audio"]
+[node name="normal" type="AudioStreamPlayer" parent="Audio"]
 stream = ExtResource("20_1ns3k")
+bus = &"SFX"
+
+[node name="uncommon" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("25_2so2y")
+bus = &"SFX"
+
+[node name="rare" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("26_7yh6i")
+bus = &"SFX"
+
+[node name="epic" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("27_pwxld")
+bus = &"SFX"
+
+[node name="legendary" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("28_cw1g3")
+pitch_scale = 0.93
+bus = &"SFX"
+
+[node name="exotic" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("29_yc0gu")
+pitch_scale = 0.8
+bus = &"SFX"
+
+[node name="antique" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("30_qnen4")
+volume_db = -6.82
+pitch_scale = 0.67
 bus = &"SFX"
 
 [node name="whoosh" type="AudioStreamPlayer" parent="Audio"]
@@ -2031,6 +1666,9 @@ libraries = {
 
 [node name="palm" parent="." instance=ExtResource("36_u55b3")]
 transform = Transform3D(-0.100218, 0, -0.319658, 0, 0.335, 0, 0.319658, 0, -0.100218, 3.40289, 4.76837e-07, -9.29504)
+
+[node name="Fireflies" parent="." instance=ExtResource("38_oiest")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.93227, 0)
 
 [editable path="UI/Touch"]
 [editable path="PlayerCamera/FishingRod"]

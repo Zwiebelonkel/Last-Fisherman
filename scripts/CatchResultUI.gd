@@ -10,9 +10,14 @@ extends Control
 @onready var continue_button: Button = $ContinueButton
 @onready var anim: AnimationPlayer = $VBoxContainer/AnimationPlayer
 @onready var splash: GPUParticles2D = $Splash
+@onready var confetti: Control = $ConfettiBurst
+
 
 # 🆕 Story-Text Label (in der Scene anlegen!)
 @onready var story_label: Label = $StoryLabel if has_node("StoryLabel") else null
+
+# ⚡ Lightning Effect Node (wird dynamisch erstellt)
+var lightning_node: ColorRect
 
 var detail_popup: Control
 var fish_detail_popup_scene
@@ -29,11 +34,18 @@ const SPLASH_LEGENDARY   := preload("res://assets/particles/dropletLegendary.png
 const SPLASH_EXOTIC      := preload("res://assets/particles/dropletExotic.png")
 const SPLASH_ANTIK       := preload("res://assets/particles/dropletExotic.png")  # 🆕 Nutze vorhandene Textur
 const SHINE_SHADER       := preload("res://shader/2DShine.gdshader")
+const LIGHTNING_SHADER   := preload("res://shader/lightning.gdshader")  # ⚡ Besserer Shader
 
 
 func _ready() -> void:
 	visible = false
 	continue_button.pressed.connect(_on_continue_pressed)
+	
+	# ⚡ Lightning Node erstellen
+	_create_lightning_node()
+	
+	# 💦 Stelle sicher, dass Splash richtig konfiguriert ist
+	_ensure_splash_configured()
 	
 	if fish_icon:
 		fish_icon.mouse_filter = Control.MOUSE_FILTER_STOP
@@ -46,6 +58,89 @@ func _ready() -> void:
 		detail_popup = fish_detail_popup_scene.instantiate()
 		add_child(detail_popup)
 		detail_popup.visible = false
+
+
+# 💦 Splash Partikel Setup
+func _ensure_splash_configured() -> void:
+	if not splash:
+		push_warning("⚠️ Splash node nicht gefunden - wird übersprungen")
+		return
+	
+	# Wenn kein Process Material vorhanden, erstelle eins
+	if not splash.process_material:
+		var mat = ParticleProcessMaterial.new()
+		
+		# Basis-Konfiguration
+		mat.particle_flag_disable_z = true
+		mat.emission_shape = ParticleProcessMaterial.EMISSION_SHAPE_SPHERE
+		mat.emission_sphere_radius = 100.0
+		
+		mat.direction = Vector3(0, 0, 0)
+		mat.spread = 180.0
+		mat.initial_velocity_min = 150.0
+		mat.initial_velocity_max = 250.0
+		
+		mat.angular_velocity_min = -180.0
+		mat.angular_velocity_max = 180.0
+		
+		mat.gravity = Vector3(0, 200, 0)
+		
+		mat.scale_min = 1.0
+		mat.scale_max = 2.0
+		
+		# Scale Curve
+		var scale_curve = Curve.new()
+		scale_curve.add_point(Vector2(0, 1))
+		scale_curve.add_point(Vector2(0.5, 1.2))
+		scale_curve.add_point(Vector2(1, 0))
+		var scale_texture = CurveTexture.new()
+		scale_texture.curve = scale_curve
+		mat.scale_curve = scale_texture
+		
+		# Color Gradient
+		var gradient = Gradient.new()
+		gradient.set_color(0, Color(1, 1, 1, 1))
+		gradient.set_color(1, Color(1, 1, 1, 0))
+		gradient.add_point(0.3, Color(1, 1, 1, 1))
+		gradient.add_point(0.7, Color(1, 1, 1, 0.8))
+		var gradient_texture = GradientTexture1D.new()
+		gradient_texture.gradient = gradient
+		mat.color_ramp = gradient_texture
+		
+		splash.process_material = mat
+	
+	# Basis-Eigenschaften
+	splash.emitting = false
+	splash.amount = 50
+	splash.lifetime = 1.2
+	splash.one_shot = true
+	splash.explosiveness = 1.0
+	splash.randomness = 0.5
+	
+	# Texture laden falls vorhanden
+	if ResourceLoader.exists("res://assets/particles/dropletNormal.png"):
+		splash.texture = load("res://assets/particles/dropletNormal.png")
+
+
+# ⚡ Lightning Node Setup
+func _create_lightning_node() -> void:
+	lightning_node = ColorRect.new()
+	lightning_node.name = "LightningEffect"
+	lightning_node.mouse_filter = Control.MOUSE_FILTER_IGNORE
+
+	# ⚠️ WICHTIG: exakt gleiche Größe wie Panel
+	lightning_node.size = panel.size
+	lightning_node.position = Vector2.ZERO
+
+	add_child(lightning_node)
+
+	lightning_node.color = Color(0, 0, 0, 0)
+
+	var lightning_mat = ShaderMaterial.new()
+	lightning_mat.shader = LIGHTNING_SHADER
+	lightning_node.material = lightning_mat
+
+	lightning_node.visible = false
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -82,7 +177,8 @@ func show_fish(fish: Dictionary) -> void:
 	# 🔒 FIX: Sichere Zugriffe
 	var rarity_data: Dictionary = FishDB.RARITY_DATA[rarity]
 	var rarity_color: Color = rarity_data["color"]
-	
+	confetti.play_confetti(rarity, rarity_color)
+
 	# -----------------------------------
 	# Button-Text & Story-Label
 	# -----------------------------------
@@ -136,6 +232,11 @@ func show_fish(fish: Dictionary) -> void:
 		fish_weight.text = "Gewicht: %.2f kg" % fish["weight"]
 	
 	# -----------------------------------
+	# ⚡ LIGHTNING/GLOW EFFEKT basierend auf Rarität
+	# -----------------------------------
+	_setup_lightning_for_rarity(rarity, rarity_color)
+	
+	# -----------------------------------
 	# Panel-Rand + Shine-Farbe
 	# -----------------------------------
 	var style := StyleBoxFlat.new()
@@ -150,11 +251,66 @@ func show_fish(fish: Dictionary) -> void:
 	panel.material.set_shader_parameter("ShineColor", rarity_color)
 	
 	# -----------------------------------
-	# Partikel-Textur nach Rarität
+	# 💦 SPLASH PARTIKEL - Konfiguration nach Rarität
 	# -----------------------------------
 	_set_splash_texture_for_rarity(rarity)
+	
+	# Positioniere Splash-Partikel in der Mitte des Panels
+	splash.position = Vector2(120, 145)
+	
+	# Konfiguriere Partikel-Menge und Eigenschaften basierend auf Rarität
+	if splash.process_material is ParticleProcessMaterial:
+		var splash_mat: ParticleProcessMaterial = splash.process_material as ParticleProcessMaterial
+		
+		match rarity:
+			FishDB.RARITY.NORMAL:
+				splash.amount = 20
+				splash_mat.initial_velocity_min = 80.0
+				splash_mat.initial_velocity_max = 120.0
+				splash_mat.scale_min = 0.8
+				splash_mat.scale_max = 1.2
+			FishDB.RARITY.UNGEWOEHNLICH:
+				splash.amount = 30
+				splash_mat.initial_velocity_min = 100.0
+				splash_mat.initial_velocity_max = 150.0
+				splash_mat.scale_min = 1.0
+				splash_mat.scale_max = 1.5
+			FishDB.RARITY.SELTEN:
+				splash.amount = 40
+				splash_mat.initial_velocity_min = 120.0
+				splash_mat.initial_velocity_max = 180.0
+				splash_mat.scale_min = 1.2
+				splash_mat.scale_max = 1.8
+			FishDB.RARITY.EPISCH:
+				splash.amount = 50
+				splash_mat.initial_velocity_min = 150.0
+				splash_mat.initial_velocity_max = 220.0
+				splash_mat.scale_min = 1.5
+				splash_mat.scale_max = 2.2
+			FishDB.RARITY.LEGENDAER:
+				splash.amount = 60
+				splash_mat.initial_velocity_min = 180.0
+				splash_mat.initial_velocity_max = 260.0
+				splash_mat.scale_min = 1.8
+				splash_mat.scale_max = 2.5
+			FishDB.RARITY.EXOTISCH:
+				splash.amount = 75
+				splash_mat.initial_velocity_min = 220.0
+				splash_mat.initial_velocity_max = 300.0
+				splash_mat.scale_min = 2.0
+				splash_mat.scale_max = 3.0
+			FishDB.RARITY.ANTIK:
+				splash.amount = 100
+				splash_mat.initial_velocity_min = 250.0
+				splash_mat.initial_velocity_max = 350.0
+				splash_mat.scale_min = 2.5
+				splash_mat.scale_max = 3.5
+	
+	# Starte Partikel-Emission
 	splash.emitting = false
+	await get_tree().process_frame
 	splash.restart()
+	splash.emitting = true
 	
 	# -----------------------------------
 	# Popup-Animation
@@ -188,6 +344,85 @@ func show_fish(fish: Dictionary) -> void:
 		shadow_mat.set_shader_parameter("pulse_speed", 2.5)
 	
 	fish_icon.material = shadow_mat
+
+
+# ⚡ Lightning Setup basierend auf Rarität
+func _setup_lightning_for_rarity(rarity: int, color: Color) -> void:
+	if not lightning_node or not lightning_node.material:
+		return
+	
+	var mat: ShaderMaterial = lightning_node.material as ShaderMaterial
+	
+	# Konfiguration basierend auf Rarität
+	match rarity:
+		FishDB.RARITY.NORMAL:
+			# Kein Effekt für normal
+			lightning_node.visible = false
+			return
+			
+		FishDB.RARITY.UNGEWOEHNLICH:
+			# Wenige, langsame Lichter
+			lightning_node.visible = true
+			mat.set_shader_parameter("intensity", 0.5)
+			mat.set_shader_parameter("light_count", 2)
+			mat.set_shader_parameter("rotation_speed", 0.3)
+			mat.set_shader_parameter("light_size", 0.006)
+			mat.set_shader_parameter("trail_length", 0.1)
+			mat.set_shader_parameter("flicker_intensity", 0.2)
+			
+		FishDB.RARITY.SELTEN:
+			# Mehr Lichter, schneller
+			lightning_node.visible = true
+			mat.set_shader_parameter("intensity", 0.6)
+			mat.set_shader_parameter("light_count", 3)
+			mat.set_shader_parameter("rotation_speed", 0.4)
+			mat.set_shader_parameter("light_size", 0.007)
+			mat.set_shader_parameter("trail_length", 0.15)
+			mat.set_shader_parameter("flicker_intensity", 0.25)
+			
+		FishDB.RARITY.EPISCH:
+			# Viele Lichter, schnell
+			lightning_node.visible = true
+			mat.set_shader_parameter("intensity", 0.8)
+			mat.set_shader_parameter("light_count", 4)
+			mat.set_shader_parameter("rotation_speed", 0.5)
+			mat.set_shader_parameter("light_size", 0.008)
+			mat.set_shader_parameter("trail_length", 0.2)
+			mat.set_shader_parameter("flicker_intensity", 0.3)
+			
+		FishDB.RARITY.LEGENDAER:
+			# Sehr viele Lichter, sehr schnell
+			lightning_node.visible = true
+			mat.set_shader_parameter("intensity", 1.0)
+			mat.set_shader_parameter("light_count", 5)
+			mat.set_shader_parameter("rotation_speed", 0.6)
+			mat.set_shader_parameter("light_size", 0.009)
+			mat.set_shader_parameter("trail_length", 0.25)
+			mat.set_shader_parameter("flicker_intensity", 0.35)
+			
+		FishDB.RARITY.EXOTISCH:
+			# Extrem viele Lichter, extrem schnell
+			lightning_node.visible = true
+			mat.set_shader_parameter("intensity", 1.2)
+			mat.set_shader_parameter("light_count", 6)
+			mat.set_shader_parameter("rotation_speed", 0.7)
+			mat.set_shader_parameter("light_size", 0.01)
+			mat.set_shader_parameter("trail_length", 0.3)
+			mat.set_shader_parameter("flicker_intensity", 0.4)
+			
+		FishDB.RARITY.ANTIK:
+			# Maximale Anzahl, maximale Geschwindigkeit
+			lightning_node.visible = true
+			mat.set_shader_parameter("intensity", 1.5)
+			mat.set_shader_parameter("light_count", 8)
+			mat.set_shader_parameter("rotation_speed", 0.8)
+			mat.set_shader_parameter("light_size", 0.012)
+			mat.set_shader_parameter("trail_length", 0.35)
+			mat.set_shader_parameter("flicker_intensity", 0.5)
+	
+	# Farbe setzen
+	mat.set_shader_parameter("glow_color", color)
+
 
 # ---------------------------------------------------------
 # Continue/Use Button Handler

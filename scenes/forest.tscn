@@ -1,4 +1,4 @@
-[gd_scene load_steps=64 format=3 uid="uid://bru2npwxw6p10"]
+[gd_scene load_steps=67 format=3 uid="uid://bru2npwxw6p10"]
 
 [ext_resource type="Shader" uid="uid://c140kjbm2bot5" path="res://shader/buckshot.gdshader" id="1_u01n2"]
 [ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="2_8wf4g"]
@@ -22,7 +22,7 @@
 [ext_resource type="PackedScene" uid="uid://8ljq0dpgsno5" path="res://scenes/bait.tscn" id="16_u01n2"]
 [ext_resource type="AudioStream" uid="uid://esyv0p374c5j" path="res://sounds/bite.mp3" id="18_a8hxt"]
 [ext_resource type="AudioStream" uid="uid://cldy38iwm8ovi" path="res://sounds/cast.mp3" id="19_eomrh"]
-[ext_resource type="AudioStream" uid="uid://26m0pjkxve85" path="res://sounds/sucess.mp3" id="20_a88r6"]
+[ext_resource type="AudioStream" uid="uid://26m0pjkxve85" path="res://sounds/rarity/normal.mp3" id="20_a88r6"]
 [ext_resource type="AudioStream" uid="uid://cmr6cded4l11v" path="res://sounds/whoosh.mp3" id="21_okwed"]
 [ext_resource type="PackedScene" uid="uid://dguwyn5rc7uog" path="res://scenes/splash.tscn" id="23_7jawt"]
 [ext_resource type="AudioStream" uid="uid://b7ifxd818oete" path="res://sounds/line.mp3" id="23_soql2"]
@@ -33,6 +33,7 @@
 [ext_resource type="PackedScene" uid="uid://bej6o0ysl85et" path="res://assets/rock.glb" id="27_37aet"]
 [ext_resource type="PackedScene" uid="uid://bw4vof4oddwco" path="res://assets/ödland.glb" id="28_bjond"]
 [ext_resource type="PackedScene" uid="uid://b5t6amrp7aa7m" path="res://scenes/shark.tscn" id="28_g34gq"]
+[ext_resource type="PackedScene" uid="uid://bswqivqayur26" path="res://scenes/fireflies.tscn" id="34_4uh7g"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_lvx2t"]
 shader = ExtResource("1_u01n2")
@@ -1673,6 +1674,22 @@ _data = {
 &"attack": SubResource("Animation_soql2")
 }
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_len2l"]
+transparency = 1
+blend_mode = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_color = Color(0.340345, 0.668768, 0, 1)
+billboard_mode = 3
+billboard_keep_scale = true
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="QuadMesh" id="QuadMesh_fcatt"]
+material = SubResource("StandardMaterial3D_len2l")
+size = Vector2(0.5, 0.5)
+
 [node name="MainScene3" type="Node3D"]
 
 [node name="Filter" type="CanvasLayer" parent="."]
@@ -1991,9 +2008,14 @@ libraries = {
 &"": SubResource("AnimationLibrary_qu0hn")
 }
 
+[node name="Fireflies" parent="." instance=ExtResource("34_4uh7g")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.45726, 0)
+draw_pass_1 = SubResource("QuadMesh_fcatt")
+
 [editable path="UI/Touch"]
 [editable path="PlayerCamera/FishingRod"]
 [editable path="Shop"]
 [editable path="Shop/shop"]
 [editable path="Shop/cigs"]
 [editable path="lake"]
+[editable path="Fireflies"]

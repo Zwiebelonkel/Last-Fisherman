@@ -1,4 +1,4 @@
-[gd_scene load_steps=34 format=4 uid="uid://bw5el7n36awdr"]
+[gd_scene load_steps=35 format=4 uid="uid://bw5el7n36awdr"]
 
 [ext_resource type="Script" uid="uid://cslkhtib5limu" path="res://scripts/mainMenu.gd" id="1_tov5d"]
 [ext_resource type="Shader" uid="uid://c140kjbm2bot5" path="res://shader/buckshot.gdshader" id="2_l4mxc"]
@@ -14,6 +14,7 @@
 [ext_resource type="PackedScene" uid="uid://brmbdno888s38" path="res://assets/tree.glb" id="14_3wx87"]
 [ext_resource type="Script" uid="uid://cl0pxnxn7ux1x" path="res://scripts/checker.gd" id="14_lam2r"]
 [ext_resource type="PackedScene" uid="uid://b5ew1rfc8ow8g" path="res://scenes/fishingRod.tscn" id="15_5p8yk"]
+[ext_resource type="PackedScene" uid="uid://bswqivqayur26" path="res://scenes/fireflies.tscn" id="15_amia2"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_l4mxc"]
 shader = ExtResource("2_l4mxc")
@@ -424,6 +425,9 @@ transform = Transform3D(0.452642, 0, -0.275709, 0, 0.53, 0, 0.275709, 0, 0.45264
 
 [node name="Checker" type="Node" parent="."]
 script = ExtResource("14_lam2r")
+
+[node name="Fireflies" parent="." instance=ExtResource("15_amia2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.18802, 0)
 
 [connection signal="pressed" from="UI/Start" to="." method="_on_button_pressed"]
 [connection signal="pressed" from="UI/ResetButton" to="." method="_on_reset_button_pressed"]
