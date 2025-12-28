@@ -1,4 +1,4 @@
-[gd_scene load_steps=75 format=3 uid="uid://cx2sffjjdjuw5"]
+[gd_scene load_steps=76 format=3 uid="uid://cx2sffjjdjuw5"]
 
 [ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="1_2phbr"]
 [ext_resource type="PackedScene" uid="uid://b5ew1rfc8ow8g" path="res://scenes/fishingRod.tscn" id="1_echbf"]
@@ -16,6 +16,7 @@
 [ext_resource type="PackedScene" uid="uid://xt7f7m4i2iwi" path="res://scenes/touch.tscn" id="11_r3sjc"]
 [ext_resource type="PackedScene" uid="uid://bgnalk1ruht4d" path="res://scenes/bait_hud.tscn" id="12_wsqty"]
 [ext_resource type="Shader" uid="uid://cfsuhiaq15sgu" path="res://shader/outline.gdshader" id="13_0ehpd"]
+[ext_resource type="PackedScene" uid="uid://ws4ms8iq4gg4" path="res://scenes/clock.tscn" id="13_7yh6i"]
 [ext_resource type="PackedScene" uid="uid://brmbdno888s38" path="res://assets/tree.glb" id="14_08o8g"]
 [ext_resource type="PackedScene" uid="uid://bw80sbvfcwe1p" path="res://scenes/cigarette.tscn" id="14_fto0a"]
 [ext_resource type="PackedScene" uid="uid://cfptx2e41wve1" path="res://scenes/shop.tscn" id="15_0cxu4"]
@@ -1496,6 +1497,11 @@ transform = Transform3D(-0.391098, 0, 0.372347, 0, 0.54, 0, -0.372347, 0, -0.391
 [node name="BaitHUD" parent="UI" instance=ExtResource("12_wsqty")]
 offset_top = 47.52
 offset_bottom = 82.52
+
+[node name="Clock" parent="UI" node_paths=PackedStringArray("animation_player") instance=ExtResource("13_7yh6i")]
+animation_player = NodePath("../../DirectionalLight3D/AnimationPlayer")
+animation_name = "circle"
+day_time_offset_seconds = 30.0
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_cfq0f")
