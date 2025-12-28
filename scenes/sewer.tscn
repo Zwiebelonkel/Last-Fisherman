@@ -251,6 +251,9 @@ var marker_speed: float = 350.0
 var marker_slow_factor: float = 0.3
 var input_active: bool = false
 var current_fish: Dictionary = {}
+var sweet_pos: float = 0.0
+var sweet_speed: float = 120.0
+var sweet_direction: int = 1
 
 # Erweiterte Rotation Variables (4 Richtungen)
 var current_rotation: float = 180.0
@@ -840,70 +843,121 @@ func start_catch_minigame() -> void:
 	state = STATE_MINIGAME
 	catch_ui.visible = true
 	anim.play(\"fight\")
-	camera.start_screenshake(0.1, 1)
+	camera.start_screenshake(0.1, 1.0)
 	splash.visible = true
 	splash.emitting = true
-	
-	# 🆕 Köder aktiv → garantiert Seltenheit
-	var target_rarity = \"\"
+
+	# ---------------------------
+	# Fisch bestimmen
+	# ---------------------------
+	var target_rarity: String = \"\"
 	if Player.has_active_bait():
 		target_rarity = Player.get_active_bait_rarity()
-		print(\"🎣 Köder aktiv! Ziel:\", target_rarity)
-	
-	# ✅ NERF: Prozentual statt additiv (max +15% bei perfektem Wurf)
-	var quality_multiplier = 1.0 + (last_cast_quality * 0.15)
-	var effective_bait = max(1, int(Player.upgrade_bait * quality_multiplier))
-	
-	print(\"🎯 Cast Quality: %.2f | Bait Level: %d → %d (%.1f%%)\" % [
-		last_cast_quality, 
-		Player.upgrade_bait, 
-		effective_bait,
-		(quality_multiplier - 1.0) * 100
-	])
-	
+
+	var quality_multiplier: float = 1.0 + (last_cast_quality * 0.15)
+	var effective_bait: int = max(1, int(Player.upgrade_bait * quality_multiplier))
+
 	if target_rarity != \"\":
 		current_fish = FishDB.get_random_fish_by_rarity(FishDB.FISH_SEWER, target_rarity)
 	else:
 		current_fish = FishDB.get_random_from_list(FishDB.FISH_SEWER, effective_bait)
-	
-	marker_speed = FishDB.get_marker_speed_for_fish(current_fish)
-	print(\"Gefangen: \", current_fish[\"name\"])
-	
-	catch_progress.value = 50.0
+
+	print(\"🎣 Gefangen:\", str(current_fish.get(\"name\", \"Unknown\")))
+
+	# ---------------------------
+	# Marker Setup
+	# ---------------------------
 	marker_pos = 0.0
 	marker.position.x = 0.0
+	marker_speed = FishDB.get_marker_speed_for_fish(current_fish)
 
+	# ---------------------------
+	# SweetSpot Größe & Speed nach Rarity
+	# ---------------------------
+	var bar_width: float = float(bar_background.size.x)
+	var rarity: int = int(current_fish.get(\"rarity\", FishDB.RARITY.NORMAL))
+
+	match rarity:
+		FishDB.RARITY.NORMAL:
+			sweet_spot.size.x = bar_width * 0.35
+		FishDB.RARITY.UNGEWOEHNLICH:
+			sweet_spot.size.x = bar_width * 0.25
+		FishDB.RARITY.SELTEN:
+			sweet_spot.size.x = bar_width * 0.18
+		FishDB.RARITY.EPISCH:
+			sweet_spot.size.x = bar_width * 0.12
+		FishDB.RARITY.LEGENDAER:
+			sweet_spot.size.x = bar_width * 0.08
+		FishDB.RARITY.EXOTISCH:
+			sweet_spot.size.x = bar_width * 0.06
+		FishDB.RARITY.ANTIK:
+			sweet_spot.size.x = bar_width * 0.05
+		_:
+			sweet_spot.size.x = bar_width * 0.25
+
+	# Minimum Breite
+	sweet_spot.size.x = max(sweet_spot.size.x, 55.0)
+
+	# Startposition zufällig
+	var max_x: float = bar_width - float(sweet_spot.size.x)
+	sweet_pos = randf_range(0.0, max_x)
+	sweet_spot.position.x = sweet_pos
+
+	# SweetSpot Geschwindigkeit (abhängig von Rarity, relativ zum Marker)
+	match rarity:
+		FishDB.RARITY.NORMAL:
+			sweet_speed = marker_speed * 0.15
+		FishDB.RARITY.UNGEWOEHNLICH:
+			sweet_speed = marker_speed * 0.20
+		FishDB.RARITY.SELTEN:
+			sweet_speed = marker_speed * 0.25
+		FishDB.RARITY.EPISCH:
+			sweet_speed = marker_speed * 0.30
+		FishDB.RARITY.LEGENDAER:
+			sweet_speed = marker_speed * 0.35
+		FishDB.RARITY.EXOTISCH:
+			sweet_speed = marker_speed * 0.40
+		FishDB.RARITY.ANTIK:
+			sweet_speed = marker_speed * 0.45
+		_:
+			sweet_speed = marker_speed * 0.25
+
+	# Richtung zufällig
+	sweet_direction = -1 if randi() % 2 == 0 else 1
+
+	# ---------------------------
+	# Progress Reset
+	# ---------------------------
+	catch_progress.value = 50.0
+	input_active = false
+	
 func update_catch_minigame(delta: float) -> void:
+	# -------------------------
+	# SweetSpot Bewegung
+	# -------------------------
+	sweet_pos += sweet_speed * delta * sweet_direction
+
+	var sweet_max_x := bar_background.size.x - sweet_spot.size.x
+
+	if sweet_pos <= 0.0:
+		sweet_pos = 0.0
+		sweet_direction = 1
+	elif sweet_pos >= sweet_max_x:
+		sweet_pos = sweet_max_x
+		sweet_direction = -1
+
+	sweet_spot.position.x = sweet_pos
+
+	# -------------------------
+	# Marker & Hook Bewegung
+	# -------------------------
 	var current_speed = marker_speed
-
-	# Progress → 0–1
+	
+	# ✅ Hook bewegt sich basierend auf Progress
 	var t := catch_progress.value / 100.0
-
-	# Interpolation
 	var new_pos := hook_start_position.lerp(hook_end_position, t)
-
-	# Auf Wasserhöhe fixieren
-	new_pos.y = waterplane.global_position.y  
+	new_pos.y = waterplane.global_position.y - 7.0  # Bleib auf Wasserhöhe
 	hook.global_position = new_pos
-
-	# ----------------------------------------------------
-	# 🔍 DEBUGGING – HOOK POSITION
-	# ----------------------------------------------------
-	if Engine.is_editor_hint() == false:  # In exported game immer aktiv
-		print(
-			\"\\n--- HOOK DEBUG ---\",
-			\"\\nStartPos:   \", hook_start_position,
-			\"\\nEndPos:     \", hook_end_position,
-			\"\\nNewPos:     \", new_pos,
-			\"\\nWater Y:    \", waterplane.global_position.y,
-			\"\\nProgress:   \", catch_progress.value,
-			\"\\nt:          \", t
-		)
-
-		if abs(new_pos.y - waterplane.global_position.y) > 0.01:
-			print(\"⚠️ WARNUNG: Hook-Y stimmt nicht mit Wasserhöhe überein!\")
-
-	# ----------------------------------------------------
 
 	if input_active:
 		current_speed *= marker_slow_factor
@@ -921,15 +975,17 @@ func update_catch_minigame(delta: float) -> void:
 
 	marker.position.x = marker_pos
 
-	var in_spot := (
-		marker.position.x >= sweet_spot.position.x
+	# -------------------------
+	# Collision Detection
+	# -------------------------
+	var in_spot := marker.position.x >= sweet_spot.position.x \\
 		and marker.position.x <= sweet_spot.position.x + sweet_spot.size.x
-	)
 
 	if in_spot:
 		var grip_multiplier := 1.0 + (Player.upgrade_grip - 1) * 0.05
 		catch_progress.value += 40.0 * grip_multiplier * delta
 		
+		# Splash Particles immer am Hook spawnen wenn im Sweet Spot
 		if splash:
 			splash.global_position = hook.global_position
 			if not splash.emitting:
@@ -939,6 +995,7 @@ func update_catch_minigame(delta: float) -> void:
 	else:
 		catch_progress.value = max(0.0, catch_progress.value - 25.0 * delta)
 		
+		# Splash stoppen wenn außerhalb des Sweet Spots
 		if splash and splash.emitting:
 			splash.emitting = false
 
@@ -946,7 +1003,7 @@ func update_catch_minigame(delta: float) -> void:
 		end_catch_minigame(true)
 	elif catch_progress.value <= 0.0:
 		end_catch_minigame(false)
-
+		
 func end_catch_minigame(success: bool) -> void:
 	camera.start_screenshake(0.4,0.3)
 	if success:

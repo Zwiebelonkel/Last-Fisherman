@@ -15,7 +15,7 @@ uniform float intensity = 4.0;
 
 uniform float border_thickness_px = 2.0;
 uniform float border_softness_px  = 0.0;
-uniform float corner_radius_px    = 3.0;
+uniform float corner_radius_px    = 2.0;
 
 // ==============================
 // FLICKER

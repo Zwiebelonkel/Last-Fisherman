@@ -1,5 +1,8 @@
 extends Control
 
+@onready var type_timer: Timer = Timer.new()
+
+
 # ------------------------------
 #   EXPORT VARIABLES
 # ------------------------------
@@ -66,10 +69,17 @@ var timer := 0.0
 var typing := false
 var current_text := ""
 var current_dialog_key := ""  # 🌍 NEU - Speichert den Dialog-Key
+var _type_text := ""
+var _type_index := 0
+
 
 
 func _ready() -> void:
+	add_child(type_timer)
+	type_timer.one_shot = false
+	type_timer.timeout.connect(_on_type_timer_timeout)
 	_show_new_random_dialog()
+
 
 
 func _process(delta: float) -> void:
@@ -124,35 +134,39 @@ func _start_typewriter(text: String) -> void:
 	typing = true
 	dialog_label.text = ""
 	var char_index := 0
-
+	
 	while char_index <= text.length():
-
-		# Wenn ein Klick typwriter abbricht → sofort Loop verlassen
-		if not typing:
+		# ✅ Prüfe ob Node noch im Tree ist
+		if not is_inside_tree() or not typing:
+			typing = false
 			return
-
+		
 		dialog_label.text = text.substr(0, char_index)
 		await get_tree().process_frame
 		_update_panel_size()
-
 		char_index += 1
+		
+		# ✅ Nochmal prüfen vor Timer-Erstellung
+		if not is_inside_tree():
+			typing = false
+			return
+			
 		await get_tree().create_timer(typewriter_speed).timeout
 
 	typing = false
 
-
 func _on_Panel_gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed:
 
-		# 1) Wenn gerade geschrieben wird → Typing abbrechen & Text sofort vollständig anzeigen
 		if typing:
 			typing = false
+			type_timer.stop()
 			dialog_label.text = current_text
 			_update_panel_size()
 			return
 
-		# 2) Wenn NICHT geschrieben wird → neuen Dialog starten
 		_show_new_random_dialog()
+
 
 
 # ---------------------------------------------------------------
@@ -161,3 +175,22 @@ func _on_Panel_gui_input(event: InputEvent) -> void:
 func _update_panel_size() -> void:
 	var needed_height := dialog_label.get_content_height()
 	panel.custom_minimum_size.y = needed_height + 60  # etwas Padding
+	
+func _on_type_timer_timeout() -> void:
+	# Node wurde entfernt → sofort abbrechen
+	if not is_inside_tree():
+		type_timer.stop()
+		return
+
+	if not typing:
+		type_timer.stop()
+		return
+
+	if _type_index >= _type_text.length():
+		type_timer.stop()
+		typing = false
+		return
+
+	_type_index += 1
+	dialog_label.text = _type_text.substr(0, _type_index)
+	_update_panel_size()

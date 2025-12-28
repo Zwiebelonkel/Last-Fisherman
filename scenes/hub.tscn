@@ -1,4 +1,4 @@
-[gd_scene load_steps=40 format=3 uid="uid://cor735uf1n5si"]
+[gd_scene load_steps=41 format=3 uid="uid://cor735uf1n5si"]
 
 [ext_resource type="Script" uid="uid://cjxfvb4fkjrhh" path="res://scripts/note_manager.gd" id="1_8hrlh"]
 [ext_resource type="Shader" uid="uid://c140kjbm2bot5" path="res://shader/buckshot.gdshader" id="1_d1od2"]
@@ -19,6 +19,7 @@
 [ext_resource type="PackedScene" uid="uid://sxspmj8y0jsf" path="res://scenes/note_ui.tscn" id="15_3q32m"]
 [ext_resource type="Texture2D" uid="uid://5olhq7vqrcxm" path="res://textures/map3.png" id="17_5ox4q"]
 [ext_resource type="Script" uid="uid://fqcrjuca5d75" path="res://scripts/leaderboard.gd" id="19_7t3s2"]
+[ext_resource type="PackedScene" uid="uid://b5ew1rfc8ow8g" path="res://scenes/fishingRod.tscn" id="20_7n2o6"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_w6xti"]
 shader = ExtResource("1_d1od2")
@@ -468,6 +469,10 @@ texture = ExtResource("17_5ox4q")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.06163, -0.905232, -0.200498)
 script = ExtResource("19_7t3s2")
 board_size = Vector2(2, 1.2)
+
+[node name="FishingRod" parent="." instance=ExtResource("20_7n2o6")]
+transform = Transform3D(0.00275756, 0.673487, 0.739194, 7.36642e-09, 0.739196, -0.67349, -0.999996, 0.00185719, 0.00203838, 0.737115, 0.438908, -1.81165)
+script = null
 
 [editable path="UI/NodeUI"]
 [editable path="UI/FishBook"]

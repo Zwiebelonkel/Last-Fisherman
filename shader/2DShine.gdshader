@@ -28,7 +28,7 @@ uniform vec4 ShineColor : source_color = vec4(1.0, 1.0, 1.0, 1.0);
 // ROUNDED CORNER (PIXELGENAU)
 // ==============================
 
-uniform float Corner_Radius_PX = 3.0;   // 👈 DEIN PANEL-RADIUS
+uniform float Corner_Radius_PX = 2.0;   // 👈 DEIN PANEL-RADIUS
 uniform float Edge_Softness_PX = 1.5;   // kleine Kantenweichheit
 
 

@@ -135,6 +135,9 @@ var marker_speed: float = 350.0
 var marker_slow_factor: float = 0.3
 var input_active: bool = false
 var current_fish: Dictionary = {}
+var sweet_pos: float = 0.0
+var sweet_speed: float = 120.0
+var sweet_direction: int = 1
 
 # Erweiterte Rotation Variables (4 Richtungen)
 var current_rotation: float = 180.0
@@ -717,40 +720,107 @@ func start_catch_minigame() -> void:
 	state = STATE_MINIGAME
 	catch_ui.visible = true
 	anim.play(\"fight\")
-	camera.start_screenshake(0.1, 1)
+	camera.start_screenshake(0.1, 1.0)
 	splash.visible = true
 	splash.emitting = true
-	
-	# 🆕 Köder aktiv → garantiert Seltenheit
-	var target_rarity = \"\"
+
+	# ---------------------------
+	# Fisch bestimmen
+	# ---------------------------
+	var target_rarity: String = \"\"
 	if Player.has_active_bait():
 		target_rarity = Player.get_active_bait_rarity()
-		print(\"🎣 Köder aktiv! Ziel:\", target_rarity)
-	
-	# ✅ NERF: Prozentual statt additiv (max +15% bei perfektem Wurf)
-	var quality_multiplier = 1.0 + (last_cast_quality * 0.15)
-	var effective_bait = max(1, int(Player.upgrade_bait * quality_multiplier))
-	
-	print(\"🎯 Cast Quality: %.2f | Bait Level: %d → %d (%.1f%%)\" % [
-		last_cast_quality, 
-		Player.upgrade_bait, 
-		effective_bait,
-		(quality_multiplier - 1.0) * 100
-	])
-	
+
+	var quality_multiplier: float = 1.0 + (last_cast_quality * 0.15)
+	var effective_bait: int = max(1, int(Player.upgrade_bait * quality_multiplier))
+
 	if target_rarity != \"\":
 		current_fish = FishDB.get_random_fish_by_rarity(FishDB.FISH_CITY, target_rarity)
 	else:
 		current_fish = FishDB.get_random_from_list(FishDB.FISH_CITY, effective_bait)
-	
-	marker_speed = FishDB.get_marker_speed_for_fish(current_fish)
-	print(\"Gefangen: \", current_fish[\"name\"])
-	
-	catch_progress.value = 50.0
+
+	print(\"🎣 Gefangen:\", str(current_fish.get(\"name\", \"Unknown\")))
+
+	# ---------------------------
+	# Marker Setup
+	# ---------------------------
 	marker_pos = 0.0
 	marker.position.x = 0.0
+	marker_speed = FishDB.get_marker_speed_for_fish(current_fish)
 
+	# ---------------------------
+	# SweetSpot Größe & Speed nach Rarity
+	# ---------------------------
+	var bar_width: float = float(bar_background.size.x)
+	var rarity: int = int(current_fish.get(\"rarity\", FishDB.RARITY.NORMAL))
+
+	match rarity:
+		FishDB.RARITY.NORMAL:
+			sweet_spot.size.x = bar_width * 0.35
+		FishDB.RARITY.UNGEWOEHNLICH:
+			sweet_spot.size.x = bar_width * 0.25
+		FishDB.RARITY.SELTEN:
+			sweet_spot.size.x = bar_width * 0.18
+		FishDB.RARITY.EPISCH:
+			sweet_spot.size.x = bar_width * 0.12
+		FishDB.RARITY.LEGENDAER:
+			sweet_spot.size.x = bar_width * 0.08
+		FishDB.RARITY.EXOTISCH:
+			sweet_spot.size.x = bar_width * 0.06
+		FishDB.RARITY.ANTIK:
+			sweet_spot.size.x = bar_width * 0.05
+		_:
+			sweet_spot.size.x = bar_width * 0.25
+
+	# Minimum Breite
+	sweet_spot.size.x = max(sweet_spot.size.x, 55.0)
+
+	# Startposition zufällig
+	var max_x: float = bar_width - float(sweet_spot.size.x)
+	sweet_pos = randf_range(0.0, max_x)
+	sweet_spot.position.x = sweet_pos
+
+	# SweetSpot Geschwindigkeit (abhängig von Rarity, relativ zum Marker)
+	match rarity:
+		FishDB.RARITY.NORMAL:
+			sweet_speed = marker_speed * 0.15
+		FishDB.RARITY.UNGEWOEHNLICH:
+			sweet_speed = marker_speed * 0.20
+		FishDB.RARITY.SELTEN:
+			sweet_speed = marker_speed * 0.25
+		FishDB.RARITY.EPISCH:
+			sweet_speed = marker_speed * 0.30
+		FishDB.RARITY.LEGENDAER:
+			sweet_speed = marker_speed * 0.35
+		FishDB.RARITY.EXOTISCH:
+			sweet_speed = marker_speed * 0.40
+		FishDB.RARITY.ANTIK:
+			sweet_speed = marker_speed * 0.45
+		_:
+			sweet_speed = marker_speed * 0.25
+
+	# Richtung zufällig
+	sweet_direction = -1 if randi() % 2 == 0 else 1
+
+	# ---------------------------
+	# Progress Reset
+	# ---------------------------
+	catch_progress.value = 50.0
+	input_active = false
+	
 func update_catch_minigame(delta: float) -> void:
+	sweet_pos += sweet_speed * delta * sweet_direction
+
+	var sweet_max_x := bar_background.size.x - sweet_spot.size.x
+
+	if sweet_pos <= 0.0:
+		sweet_pos = 0.0
+		sweet_direction = 1
+	elif sweet_pos >= sweet_max_x:
+		sweet_pos = sweet_max_x
+		sweet_direction = -1
+
+	sweet_spot.position.x = sweet_pos
 	var current_speed = marker_speed
 	
 	# ✅ FIX: Progress = 0% → Hook bleibt weit draußen (max_distance)

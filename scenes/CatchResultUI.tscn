@@ -155,6 +155,11 @@ size_flags_vertical = 4
 theme = SubResource("Theme_nvhde")
 script = ExtResource("1_dnped")
 
+[node name="Panel2" type="Panel" parent="."]
+layout_mode = 0
+offset_right = 240.0
+offset_bottom = 290.0
+
 [node name="ConfettiBurst" parent="." instance=ExtResource("3_ksy5q")]
 layout_mode = 1
 anchors_preset = 15
@@ -170,11 +175,6 @@ grow_vertical = 2
 [node name="Splash" parent="." instance=ExtResource("5_e4ghr")]
 position = Vector2(111.58, 87.46)
 scale = Vector2(3.5, 3.5)
-
-[node name="Panel2" type="Panel" parent="."]
-layout_mode = 0
-offset_right = 240.0
-offset_bottom = 290.0
 
 [node name="Panel" type="Panel" parent="."]
 layout_mode = 2
@@ -287,6 +287,7 @@ theme_override_font_sizes/font_size = 26
 text = "Continue"
 
 [node name="NewLabel" type="Label" parent="."]
+z_index = 40
 layout_mode = 2
 offset_left = 191.0
 offset_top = 2.0
