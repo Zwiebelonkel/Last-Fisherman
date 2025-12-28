@@ -1,4 +1,4 @@
-[gd_scene load_steps=63 format=3 uid="uid://bnj4irwko1m1j"]
+[gd_scene load_steps=64 format=3 uid="uid://bnj4irwko1m1j"]
 
 [ext_resource type="Shader" uid="uid://bso2ewb2ieq7x" path="res://shader/warp.gdshader" id="1_tx5p3"]
 [ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="2_acjgc"]
@@ -15,6 +15,7 @@
 [ext_resource type="PackedScene" uid="uid://b5ew1rfc8ow8g" path="res://scenes/fishingRod.tscn" id="11_y20ih"]
 [ext_resource type="PackedScene" uid="uid://bgnalk1ruht4d" path="res://scenes/bait_hud.tscn" id="12_8cl07"]
 [ext_resource type="Texture2D" uid="uid://cvllk03mhtybp" path="res://textures/723-normal.jpg" id="12_tcwwm"]
+[ext_resource type="PackedScene" uid="uid://ws4ms8iq4gg4" path="res://scenes/clock.tscn" id="13_it8te"]
 [ext_resource type="Texture2D" uid="uid://d31603nl8y0gd" path="res://textures/Water_preview.jpgC878A51E-2B84-45CA-85CB-75E5BC88EEC8Large.jpg" id="13_xyw1b"]
 [ext_resource type="Shader" uid="uid://cfsuhiaq15sgu" path="res://shader/outline.gdshader" id="14_6d2g4"]
 [ext_resource type="Script" uid="uid://bymrcyid32xsp" path="res://scripts/line.gd" id="15_wbcdt"]
@@ -1948,6 +1949,11 @@ visible = false
 [node name="BaitHUD" parent="UI" instance=ExtResource("12_8cl07")]
 offset_top = 47.52
 offset_bottom = 82.52
+
+[node name="Clock" parent="UI" node_paths=PackedStringArray("animation_player") instance=ExtResource("13_it8te")]
+animation_player = NodePath("../../DirectionalLight3D/AnimationPlayer")
+animation_name = "circle"
+day_time_offset_seconds = 30.0
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_cfq0f")

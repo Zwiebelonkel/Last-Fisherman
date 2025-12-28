@@ -1,4 +1,4 @@
-[gd_scene load_steps=60 format=3 uid="uid://cvkrlt4ri1i2u"]
+[gd_scene load_steps=61 format=3 uid="uid://cvkrlt4ri1i2u"]
 
 [ext_resource type="Shader" uid="uid://c140kjbm2bot5" path="res://shader/buckshot.gdshader" id="1_nmpot"]
 [ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="2_ikoiv"]
@@ -15,6 +15,7 @@
 [ext_resource type="PackedScene" uid="uid://xt7f7m4i2iwi" path="res://scenes/touch.tscn" id="10_my70f"]
 [ext_resource type="Texture2D" uid="uid://d31603nl8y0gd" path="res://textures/Water_preview.jpgC878A51E-2B84-45CA-85CB-75E5BC88EEC8Large.jpg" id="11_0orsp"]
 [ext_resource type="PackedScene" uid="uid://bgnalk1ruht4d" path="res://scenes/bait_hud.tscn" id="11_hks51"]
+[ext_resource type="PackedScene" uid="uid://ws4ms8iq4gg4" path="res://scenes/clock.tscn" id="12_gi457"]
 [ext_resource type="Shader" uid="uid://cfsuhiaq15sgu" path="res://shader/outline.gdshader" id="12_h3250"]
 [ext_resource type="Script" uid="uid://bymrcyid32xsp" path="res://scripts/line.gd" id="13_my70f"]
 [ext_resource type="PackedScene" uid="uid://cfptx2e41wve1" path="res://scenes/shop.tscn" id="15_nmpot"]
@@ -1799,6 +1800,8 @@ visible = false
 [node name="BaitHUD" parent="UI" instance=ExtResource("11_hks51")]
 offset_top = 47.52
 offset_bottom = 82.52
+
+[node name="Clock" parent="UI" instance=ExtResource("12_gi457")]
 
 [node name="PlayerCamera" type="Camera3D" parent="."]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 12.867, 0.0447942)

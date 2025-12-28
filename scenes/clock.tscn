@@ -39,4 +39,4 @@ offset_right = 23.5
 grow_horizontal = 2
 grow_vertical = 0
 theme_override_fonts/font = ExtResource("2_y58p0")
-text = "12:00"
+text = "00:00"
