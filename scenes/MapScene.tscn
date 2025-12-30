@@ -198,6 +198,14 @@ offset_right = 340.0
 offset_bottom = 383.5
 text = "HOME"
 
+[node name="RestaurantButton" type="Button" parent="layout/Locations"]
+layout_mode = 0
+offset_left = 193.0
+offset_top = 390.5
+offset_right = 260.0
+offset_bottom = 421.5
+text = "VAN"
+
 [node name="Popup" type="Panel" parent="layout"]
 layout_mode = 0
 offset_left = -32.0

@@ -6,6 +6,8 @@ extends Control
 @onready var desert_btn = $layout/Locations/DesertButton
 @onready var iceland_btn = $layout/Locations/IcelandButton
 @onready var home_btn = $layout/Locations/HomeButton
+@onready var van_btn = $layout/Locations/RestaurantButton
+
 @onready var passwordField = $password
 
 @onready var popup = $layout/Popup
@@ -47,6 +49,10 @@ var location_names := {
 	"home": {
 		"de": "Zuhause",
 		"en": "Home"
+	},
+	"van": {
+		"de": "Imbiss",
+		"en": "Van"
 	}
 }
 
@@ -75,6 +81,8 @@ func _ready():
 	assign_button(desert_btn, "desert")
 	assign_button(iceland_btn, "iceland")
 	assign_button(home_btn, "home")
+	assign_button(van_btn, "van")
+
 
 	popup.visible = false
 	popup_close_btn.pressed.connect(hide_popup)
@@ -178,6 +186,8 @@ func buy_spot(spot_name: String):
 	assign_button(desert_btn, "desert")
 	assign_button(iceland_btn, "iceland")
 	assign_button(home_btn, "home")
+	assign_button(van_btn, "van")
+
 
 func go_to_spot(spot_name: String):
 	interact.play()
@@ -204,6 +214,9 @@ func go_to_spot(spot_name: String):
 		"home":
 			Player.update_last_scene("res://scenes/hub.tscn")
 			Transition.change_scene("res://scenes/hub.tscn", 0.8)
+		"van":
+			Player.update_last_scene("res://scenes/fischbude.tscn")
+			Transition.change_scene("res://scenes/fischbude.tscn", 0.8)
 
 # Helferfunktion zum sicheren Trennen der Signale
 func _disconnect_all(btn: Button):

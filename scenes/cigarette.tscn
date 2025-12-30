@@ -1,29 +1,30 @@
 [gd_scene load_steps=10 format=3 uid="uid://bw80sbvfcwe1p"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fixyv"]
-metallic_specular = 1.0
+albedo_color = Color(1, 0.584314, 0, 1)
 
-[sub_resource type="BoxMesh" id="BoxMesh_fixyv"]
+[sub_resource type="CylinderMesh" id="CylinderMesh_cpquw"]
 material = SubResource("StandardMaterial3D_fixyv")
-size = Vector3(0.02, 0.02, 0.165)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cpquw"]
-emission_enabled = true
-emission = Color(1, 0.321569, 0, 1)
-emission_energy_multiplier = 16.0
-
-[sub_resource type="BoxMesh" id="BoxMesh_tqdhk"]
-material = SubResource("StandardMaterial3D_cpquw")
-size = Vector3(0.02, 0.02, 0.02)
+height = 1.5
+radial_segments = 6
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gii23"]
-albedo_color = Color(1, 0.623529, 0, 1)
-emission = Color(1, 0.321569, 0, 1)
-emission_energy_multiplier = 16.0
+emission_enabled = true
+emission = Color(0.909804, 0.662745, 0, 1)
+emission_energy_multiplier = 11.67
 
-[sub_resource type="BoxMesh" id="BoxMesh_f8ih2"]
+[sub_resource type="CylinderMesh" id="CylinderMesh_f8ih2"]
 material = SubResource("StandardMaterial3D_gii23")
-size = Vector3(0.02, 0.02, 0.04)
+height = 0.607
+radial_segments = 6
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jti3x"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_u2eie"]
+material = SubResource("StandardMaterial3D_jti3x")
+height = 5.5
+radial_segments = 6
+cap_bottom = false
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_fixyv"]
 lifetime_randomness = 1.0
@@ -32,8 +33,9 @@ spread = 107.339
 gravity = Vector3(0, 0.05, 0)
 linear_accel_min = -0.100002
 linear_accel_max = 0.299998
+scale_min = 0.5
 turbulence_enabled = true
-turbulence_noise_strength = 4.7
+turbulence_noise_strength = 2.7
 turbulence_noise_scale = 4.994
 turbulence_noise_speed_random = 0.52
 turbulence_influence_min = 0.0
@@ -47,21 +49,25 @@ albedo_color = Color(0.703808, 0.703808, 0.703808, 0.290196)
 material = SubResource("StandardMaterial3D_tqdhk")
 size = Vector3(0.015, 0.015, 0.015)
 
-[node name="cigaratte" type="MeshInstance3D"]
-mesh = SubResource("BoxMesh_fixyv")
+[node name="cigaratte" type="Node3D"]
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.0928409)
-mesh = SubResource("BoxMesh_tqdhk")
+[node name="filter" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.03, 0, 0, 0, -1.31134e-09, -0.03, 0, 0.03, -1.31134e-09, 0, 0, 0.102506)
+mesh = SubResource("CylinderMesh_cpquw")
 
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.102506)
-mesh = SubResource("BoxMesh_f8ih2")
+[node name="filter3" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.03, 0, 0, 0, -1.31134e-09, -0.03, 0, 0.03, -1.31134e-09, 0, 0, -0.0927285)
+mesh = SubResource("CylinderMesh_f8ih2")
+
+[node name="filter2" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.03, 0, 0, 0, -1.31134e-09, -0.03, 0, 0.03, -1.31134e-09, 0, 0, -0.00105873)
+mesh = SubResource("CylinderMesh_u2eie")
 
 [node name="GPUParticles3D" type="GPUParticles3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.0956775)
 amount = 18
 lifetime = 2.47
+speed_scale = 0.9
 explosiveness = 0.08
 randomness = 1.0
 process_material = SubResource("ParticleProcessMaterial_fixyv")

@@ -1,0 +1,23 @@
+[gd_scene load_steps=2 format=3 uid="uid://cgx4m5clsd3v7"]
+
+[ext_resource type="PackedScene" uid="uid://cid1kquf7ak5" path="res://assets/truck/scene.gltf" id="1_ry7qk"]
+
+[node name="Foodtruck" type="Node3D"]
+
+[node name="Sketchfab_Scene" parent="." instance=ExtResource("1_ry7qk")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.134849, 0, -0.0121789)
+
+[node name="Object_15" parent="Sketchfab_Scene/Sketchfab_model/root/GLTF_SceneRootNode/assets_5" index="0"]
+visible = false
+
+[node name="OmniLight3D" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.93766, 0)
+light_color = Color(1, 1, 0.568627, 1)
+omni_range = 1.706
+
+[node name="OmniLight3D2" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.93766, -1.96831)
+light_color = Color(1, 1, 0.568627, 1)
+omni_range = 1.706
+
+[editable path="Sketchfab_Scene"]

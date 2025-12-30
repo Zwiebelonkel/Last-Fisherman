@@ -1,0 +1,370 @@
+[gd_scene load_steps=13 format=3 uid="uid://bqhxfk3g8vxn7"]
+
+[ext_resource type="Script" uid="uid://cqgu3f2n1rg1p" path="res://scripts/Fishbudecontroller.gd" id="1"]
+[ext_resource type="Script" uid="uid://bfajhux4gse13" path="res://scripts/tray.gd" id="2"]
+[ext_resource type="Script" uid="uid://d3sami34i2b7c" path="res://scripts/fryer.gd" id="3"]
+[ext_resource type="Script" uid="uid://nif1hbs6jred" path="res://scripts/sushi.gd" id="4"]
+[ext_resource type="Script" uid="uid://qoarxse5jwpj" path="res://scripts/drinks.gd" id="5"]
+
+[sub_resource type="Shader" id="Shader_u55b3"]
+code = "shader_type sky;
+
+group_uniforms Sky;
+/**
+ * Use directional light for sun color
+*/
+uniform bool use_directional_light = true;
+uniform vec4 sun_color : source_color = vec4(1.0);
+uniform float sun_energy = 15.0;
+uniform vec4 cloud_color : source_color = vec4(0.296, 0.402, 0.521, 1.0);
+/**
+ * Determines how much light the clouds absorb
+*/
+uniform float cloud_density = 5.0;
+/**
+ * Depth of the parallax effect
+*/
+uniform float cloud_depth = 2.0;
+/**
+ * Higher values give the clouds a heavier appearance
+*/
+uniform float cloud_sag = 2.0;
+uniform sampler2D noise_texture;
+uniform vec2 noise_tiling = vec2(1.0);
+uniform vec2 wind_speed = vec2(0.5);
+group_uniforms;
+
+group_uniforms Ground;
+uniform vec4 ground_bottom_color : source_color = vec4(0.2, 0.169, 0.133, 1.0);
+uniform float ground_curve : hint_range(0, 1) = 0.04;
+group_uniforms;
+
+uniform float exposure : hint_range(0, 128) = 1.0;
+
+// https://www.scratchapixel.com/lessons/3d-basic-rendering/minimal-ray-tracer-rendering-simple-shapes/ray-plane-and-ray-disk-intersection.html
+float ray_plane_intersection(vec3 origin, vec3 normal, vec3 ray_start, vec3 ray_dir) {
+	return dot(origin - ray_start, normal) / dot(ray_dir, normal);
+}
+
+float sample_height(vec2 uv) {
+	float height = texture(noise_texture, uv).r;
+	return pow(height, cloud_sag);
+}
+
+float beers_law(float absorption, float dist) {
+	return exp(-absorption * dist);
+}
+
+void sky() {
+	vec3 light_color = vec3(0.0);
+	if (use_directional_light)
+		light_color = LIGHT0_COLOR * LIGHT0_ENERGY * dot(LIGHT0_DIRECTION, vec3(0.0, 1.0, 0.0));
+	else
+		light_color = sun_color.rgb * sun_energy;
+
+	vec3 sky = cloud_color.rgb;
+
+	// Find view ray intersection with cloud layer
+	float t = ray_plane_intersection(vec3(0.0, 1.0, 0.0), vec3(0.0, -1.0, 0.0), vec3(0.0), EYEDIR);
+	if (t >= 0.0) {
+		vec3 wind = vec3(wind_speed.x, 0.0, wind_speed.y) * TIME * 0.1;
+		vec3 tiling = vec3(noise_tiling.x, 1.0, noise_tiling.y) * 0.2;
+		vec3 cloud_pos = EYEDIR * t * tiling + wind;
+
+		// Parallax mapping
+		float height = sample_height(cloud_pos.xz);
+		cloud_pos += EYEDIR * height * cloud_depth * 0.1;
+		height = sample_height(cloud_pos.xz);
+
+		// Attenuate light by view angle to simulate occlusion
+		float n_dot_v = dot(vec3(0.0, 1.0, 0.0), EYEDIR);
+		sky += light_color * beers_law(cloud_density, 1.0 - height * n_dot_v);
+	}
+	vec3 horizon = cloud_color.rgb + light_color * beers_law(cloud_density, 1.0);
+	vec3 ground = mix(horizon, ground_bottom_color.rgb, clamp(1.0 - pow(1.0 + EYEDIR.y, 1.0 / ground_curve), 0.0, 1.0));
+	COLOR = mix(ground, sky, step(0.0, EYEDIR.y)) * exposure;
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_42vc7"]
+shader = SubResource("Shader_u55b3")
+shader_parameter/use_directional_light = false
+shader_parameter/sun_color = Color(0.0605303, 0.0605303, 0.0605303, 1)
+shader_parameter/sun_energy = 8.525
+shader_parameter/cloud_color = Color(0, 0, 0, 1)
+shader_parameter/cloud_density = 5.0
+shader_parameter/cloud_depth = 2.0
+shader_parameter/cloud_sag = 2.0
+shader_parameter/noise_tiling = Vector2(1, 1)
+shader_parameter/wind_speed = Vector2(0.5, 0.5)
+shader_parameter/ground_bottom_color = Color(0.2, 0.169, 0.133, 1)
+shader_parameter/ground_curve = 0.04
+shader_parameter/exposure = 1.0
+
+[sub_resource type="Sky" id="Sky_wsqty"]
+sky_material = SubResource("ShaderMaterial_42vc7")
+radiance_size = 0
+
+[sub_resource type="Environment" id="Environment_ato2i"]
+background_mode = 2
+background_energy_multiplier = 0.14
+sky = SubResource("Sky_wsqty")
+glow_enabled = true
+glow_intensity = 0.05
+glow_strength = 0.29
+glow_hdr_scale = 1.17
+glow_hdr_luminance_cap = 4.75
+glow_map_strength = 0.0
+fog_light_color = Color(0.808262, 0.429746, 0.296975, 1)
+fog_light_energy = 0.0
+fog_sun_scatter = 1.0
+fog_density = 0.0
+fog_sky_affect = 0.0
+volumetric_fog_enabled = true
+volumetric_fog_length = 42.44
+volumetric_fog_ambient_inject = 0.2
+
+[sub_resource type="BoxMesh" id="BoxMesh_floor"]
+size = Vector3(10, 0.1, 10)
+
+[sub_resource type="BoxMesh" id="BoxMesh_counter"]
+size = Vector3(5, 1, 1.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_1"]
+size = Vector3(1.5, 1, 1)
+
+[node name="FishBude" type="Node3D"]
+script = ExtResource("1")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_ato2i")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 4, 6)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, -0.75, 0.433013, 0, 8, 0)
+light_energy = 1.5
+shadow_enabled = true
+
+[node name="Floor" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, 0)
+mesh = SubResource("BoxMesh_floor")
+
+[node name="Counter" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 1.5)
+mesh = SubResource("BoxMesh_counter")
+
+[node name="CustomerSpawnPoint" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3)
+
+[node name="StationFryer" type="StaticBody3D" parent="."]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 3.5, 0, 0)
+script = ExtResource("3")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StationFryer"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StationFryer"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("BoxShape3D_1")
+
+[node name="TimerLabel3D" type="Label3D" parent="StationFryer"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+pixel_size = 0.01
+billboard = 1
+text = "0.0s"
+font_size = 48
+
+[node name="InteractionPrompt" type="Label3D" parent="StationFryer"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.3, 0)
+billboard = 1
+text = "Klicken zum Frittieren"
+
+[node name="StationSushi" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -3.5)
+script = ExtResource("4")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StationSushi"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StationSushi"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0)
+shape = SubResource("BoxShape3D_1")
+
+[node name="TimerLabel3D" type="Label3D" parent="StationSushi"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+pixel_size = 0.01
+billboard = 1
+text = "0.0s"
+font_size = 48
+
+[node name="InteractionPrompt" type="Label3D" parent="StationSushi"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.3, 0)
+billboard = 1
+text = "Klicken für Sushi"
+
+[node name="StationDrinks" type="StaticBody3D" parent="."]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -3.5, 0, 0)
+script = ExtResource("5")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StationDrinks"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StationDrinks"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+shape = SubResource("BoxShape3D_1")
+
+[node name="InteractionPrompt" type="Label3D" parent="StationDrinks"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.3, 0)
+billboard = 1
+text = "Klicken für Getränke"
+
+[node name="Tray" type="Node" parent="."]
+script = ExtResource("2")
+
+[node name="UI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="MoneyLabel" type="Label" parent="UI"]
+layout_mode = 0
+offset_left = 30.0
+offset_top = 30.0
+offset_right = 250.0
+offset_bottom = 80.0
+theme_override_colors/font_color = Color(1, 0.9, 0.3, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 32
+text = "Geld: $0"
+
+[node name="OrderPanel" type="PanelContainer" parent="UI"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -250.0
+offset_top = 30.0
+offset_right = 250.0
+offset_bottom = 230.0
+grow_horizontal = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/OrderPanel"]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="UI/OrderPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.8, 0.2, 1)
+theme_override_font_sizes/font_size = 28
+text = "BESTELLUNG"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="UI/OrderPanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="FishLabel" type="Label" parent="UI/OrderPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Fisch: -"
+
+[node name="PrepLabel" type="Label" parent="UI/OrderPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Art: -"
+
+[node name="DrinkLabel" type="Label" parent="UI/OrderPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Getränk: -"
+
+[node name="HSeparator2" type="HSeparator" parent="UI/OrderPanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="PatienceLabel" type="Label" parent="UI/OrderPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
+theme_override_font_sizes/font_size = 18
+text = "Geduld: 100%"
+horizontal_alignment = 1
+
+[node name="TrayPanel" type="PanelContainer" parent="UI"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -250.0
+offset_top = -180.0
+offset_right = 250.0
+offset_bottom = -30.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/TrayPanel"]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="UI/TrayPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.9, 1, 1)
+theme_override_font_sizes/font_size = 24
+text = "TABLETT"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="UI/TrayPanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="TrayContent" type="Label" parent="UI/TrayPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Leer (0/4)"
+horizontal_alignment = 1
+
+[node name="ServeButton" type="Button" parent="UI/TrayPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_hover_color = Color(1, 0.9, 0.3, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 24
+text = "SERVIEREN"
+
+[node name="HelpLabel" type="Label" parent="UI"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 30.0
+offset_top = -150.0
+offset_right = 450.0
+offset_bottom = -30.0
+grow_vertical = 0
+theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/font_size = 18
+text = "Linksklick - Station nutzen
+Space - Tablett leeren
+ESC - Zurück zum Spiel"
+
+[node name="DebugLabel" type="Label" parent="UI"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -350.0
+offset_top = 30.0
+offset_right = -30.0
+offset_bottom = 150.0
+grow_horizontal = 0
+theme_override_colors/font_color = Color(0.5, 0.5, 0.5, 1)
+theme_override_font_sizes/font_size = 16
+text = "DEBUG:
+Inventar: 0 Fische
+Kunde: Nein"

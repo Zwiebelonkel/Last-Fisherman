@@ -1655,12 +1655,12 @@ shader_parameter/ground_bottom_color = Color(0, 0, 0, 1)
 shader_parameter/ground_curve = 0.04
 shader_parameter/exposure = 5.741
 
-[sub_resource type="Sky" id="Sky_dqb0a"]
+[sub_resource type="Sky" id="Sky_gi457"]
 sky_material = SubResource("ShaderMaterial_ibljb")
 
 [sub_resource type="Environment" id="Environment_agolw"]
 background_mode = 2
-sky = SubResource("Sky_dqb0a")
+sky = SubResource("Sky_gi457")
 glow_enabled = true
 glow_intensity = 8.0
 glow_strength = 0.94

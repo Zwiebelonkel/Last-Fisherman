@@ -1,4 +1,4 @@
-[gd_scene load_steps=76 format=3 uid="uid://cx2sffjjdjuw5"]
+[gd_scene load_steps=77 format=3 uid="uid://cx2sffjjdjuw5"]
 
 [ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="1_2phbr"]
 [ext_resource type="PackedScene" uid="uid://b5ew1rfc8ow8g" path="res://scenes/fishingRod.tscn" id="1_echbf"]
@@ -44,6 +44,7 @@
 [ext_resource type="Material" uid="uid://cj86wv7c01tef" path="res://materials/outlineWhite.tres" id="35_y15d6"]
 [ext_resource type="PackedScene" uid="uid://ctqxalvjd2b1k" path="res://assets/palm.glb" id="36_u55b3"]
 [ext_resource type="PackedScene" uid="uid://bswqivqayur26" path="res://scenes/fireflies.tscn" id="38_oiest"]
+[ext_resource type="PackedScene" uid="uid://ng3k0vguw2ww" path="res://assets/chair.glb" id="45_pwxld"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1wiy7"]
 shader = ExtResource("1_u55b3")
@@ -71,7 +72,7 @@ default_font = ExtResource("3_8wjpf")
 [sub_resource type="Theme" id="Theme_2phbr"]
 default_font = ExtResource("3_8wjpf")
 
-[sub_resource type="Shader" id="Shader_u55b3"]
+[sub_resource type="Shader" id="Shader_pwxld"]
 code = "shader_type sky;
 
 group_uniforms Sky;
@@ -152,7 +153,7 @@ void sky() {
 "
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_cfq0f"]
-shader = SubResource("Shader_u55b3")
+shader = SubResource("Shader_pwxld")
 shader_parameter/use_directional_light = false
 shader_parameter/sun_color = Color(0.0605303, 0.0605303, 0.0605303, 1)
 shader_parameter/sun_energy = 8.525
@@ -166,14 +167,14 @@ shader_parameter/ground_bottom_color = Color(0.2, 0.169, 0.133, 1)
 shader_parameter/ground_curve = 0.04
 shader_parameter/exposure = 1.0
 
-[sub_resource type="Sky" id="Sky_wsqty"]
+[sub_resource type="Sky" id="Sky_cw1g3"]
 sky_material = SubResource("ShaderMaterial_cfq0f")
 radiance_size = 0
 
 [sub_resource type="Environment" id="Environment_cfq0f"]
 background_mode = 2
 background_energy_multiplier = 0.14
-sky = SubResource("Sky_wsqty")
+sky = SubResource("Sky_cw1g3")
 glow_enabled = true
 glow_intensity = 0.05
 glow_strength = 0.29
@@ -1755,6 +1756,13 @@ transform = Transform3D(-0.100218, 0, -0.319658, 0, 0.335, 0, 0.319658, 0, -0.10
 [node name="Fireflies" parent="." instance=ExtResource("38_oiest")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.93227, 0)
 
+[node name="chair" parent="." instance=ExtResource("45_pwxld")]
+transform = Transform3D(-0.114778, 0.0021709, -0.157627, 0.00289339, 0.194978, 0.000578471, 0.157615, -0.00199834, -0.114797, -0.300581, 1.28907, -3.80087)
+
+[node name="Cube" parent="chair" index="0"]
+transform = Transform3D(0.993955, 3.71821e-05, -0.109791, -0.000236018, 0.0894958, 0.00164719, 0.109791, -0.000144207, 0.993953, -2.93301, 0.0474119, -1.31001)
+surface_material_override/0 = ExtResource("35_y15d6")
+
 [editable path="UI/Touch"]
 [editable path="PlayerCamera/FishingRod"]
 [editable path="Shop"]
@@ -1763,3 +1771,4 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.93227, 0)
 [editable path="Explosion"]
 [editable path="Explosion/Sketchfab_Scene"]
 [editable path="boat"]
+[editable path="chair"]

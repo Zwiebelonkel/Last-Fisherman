@@ -2,6 +2,8 @@ extends Node
 
 signal biome_completed(biome_name: String, reward: int)
 signal fish_caught(fish_name: String)
+signal money_gained(amount: int)
+
 
 var touch_buttons: Node = null
 
@@ -38,12 +40,12 @@ var completed_biomes: Dictionary = {
 
 var unlocked_spots = {
 	"lake": true, "city": false, "sewer": false,
-	"forest": false, "desert": false, "iceland": false, "home": true,
+	"forest": false, "desert": false, "iceland": false, "home": true, "van": true
 }
 
 var spot_prices = {
 	"lake": 0, "city": 500, "sewer": 1200,
-	"forest": 2000, "desert": 4000, "iceland": 6000, "home": 0,
+	"forest": 2000, "desert": 4000, "iceland": 6000, "home": 0, "van": 0
 }
 
 # Köder-Inventar
@@ -165,9 +167,15 @@ func set_touch_buttons_visible(visible: bool) -> void:
 		touch_buttons.visible = visible
 
 func add_money(amount: int) -> void:
+	if amount <= 0:
+		return
+
 	money += amount
 	GodotSteam.update_money(money)
 	save_game()
+
+	emit_signal("money_gained", amount)
+
 
 func remove_money(amount: int) -> bool:
 	if money >= amount:
@@ -344,8 +352,8 @@ func reset():
 	fish_weight_records.clear()
 	fish_catch_count.clear()
 	used_story_items.clear()
-	completed_biomes = {"lake": false, "city": false, "sewer": false, "forest": false, "desert": false, "iceland": false, "home": true}
-	unlocked_spots = {"lake": true, "city": false, "sewer": false, "forest": false, "desert": false, "iceland": false, "home": true}
+	completed_biomes = {"lake": false, "city": false, "sewer": false, "forest": false, "desert": false, "iceland": false, "home": true, "van":true}
+	unlocked_spots = {"lake": true, "city": false, "sewer": false, "forest": false, "desert": false, "iceland": false, "home": true, "van":true}
 	bait_inventory = {"Uncommon": 0, "Rare": 0, "Epic": 0, "Legendary": 0, "Exotic": 0}
 	active_bait = ""
 	

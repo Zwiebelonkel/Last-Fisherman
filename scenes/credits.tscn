@@ -120,6 +120,12 @@ theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "Cozy wooden cabin by Katydid
 https://sketchfab.com/3d-models/cozy-wooden-cabin-ea61e027c4d9475eadec8a2097336e9a"
 
+[node name="Label13" type="Label" parent="VScrollBar/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "Food Truck Textured by Arrangemonk
+https://skfb.ly/psuUB"
+
 [node name="Label10" type="Label" parent="VScrollBar/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)

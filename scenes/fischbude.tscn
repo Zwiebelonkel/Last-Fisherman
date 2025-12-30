@@ -1,0 +1,920 @@
+[gd_scene load_steps=46 format=3 uid="uid://bqhxfk3g8vxn7"]
+
+[ext_resource type="Script" uid="uid://cqgu3f2n1rg1p" path="res://scripts/Fishbudecontroller.gd" id="1"]
+[ext_resource type="Script" uid="uid://bfajhux4gse13" path="res://scripts/tray.gd" id="2"]
+[ext_resource type="Shader" uid="uid://c140kjbm2bot5" path="res://shader/buckshot.gdshader" id="2_wpubn"]
+[ext_resource type="Script" uid="uid://d3sami34i2b7c" path="res://scripts/fryer.gd" id="3"]
+[ext_resource type="Shader" uid="uid://dmg556n5nwodi" path="res://shader/pixelate.gdshader" id="3_4hlsc"]
+[ext_resource type="Script" uid="uid://nif1hbs6jred" path="res://scripts/sushi.gd" id="4"]
+[ext_resource type="Script" uid="uid://mmhe1dmq4ipf" path="res://scripts/StationSecurity.gd" id="4_ewdra"]
+[ext_resource type="Script" uid="uid://qoarxse5jwpj" path="res://scripts/drinks.gd" id="5"]
+[ext_resource type="Script" uid="uid://bl1xotduehieu" path="res://scripts/camera_sway.gd" id="6_3wc6y"]
+[ext_resource type="PackedScene" uid="uid://bw80sbvfcwe1p" path="res://scenes/cigarette.tscn" id="7_gpyn8"]
+[ext_resource type="PackedScene" uid="uid://b5ew1rfc8ow8g" path="res://scenes/fishingRod.tscn" id="8_wpubn"]
+[ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="9_jcqa2"]
+[ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="10_36inu"]
+[ext_resource type="PackedScene" uid="uid://dxxrhs12x2m2c" path="res://scenes/InventoryUI.tscn" id="12_4hlsc"]
+[ext_resource type="PackedScene" uid="uid://cdb3sodlv6np7" path="res://scenes/MoneyHUD.tscn" id="13_bl06e"]
+[ext_resource type="PackedScene" uid="uid://be7bs5po2ukhi" path="res://scenes/FishBook.tscn" id="14_85lqq"]
+[ext_resource type="PackedScene" uid="uid://b08obrprd472u" path="res://scenes/OptionsControl.tscn" id="16_te6ua"]
+[ext_resource type="Shader" uid="uid://of02kbc2kqkw" path="res://shader/sky2.gdshader" id="18_uanbt"]
+[ext_resource type="PackedScene" uid="uid://xt7f7m4i2iwi" path="res://scenes/touch.tscn" id="18_yh6ru"]
+[ext_resource type="PackedScene" uid="uid://dqoq3miv3jfjd" path="res://scenes/FishSelectionUI.tscn" id="19_36inu"]
+[ext_resource type="Texture2D" uid="uid://e7t33pnr13bp" path="res://textures/These-images-of-clouds-are-created-exclusively-using-Perlin-noise-It-simulates-the_Q320.jpg" id="19_wpubn"]
+[ext_resource type="PackedScene" uid="uid://fhdcihlq4hwo" path="res://scenes/MoneyPopup.tscn" id="20_ewdra"]
+[ext_resource type="PackedScene" uid="uid://ws4ms8iq4gg4" path="res://scenes/clock.tscn" id="20_snqa0"]
+[ext_resource type="PackedScene" uid="uid://cgx4m5clsd3v7" path="res://scenes/foodtruck.tscn" id="21_jcqa2"]
+[ext_resource type="Script" uid="uid://djiw13hd2jw5k" path="res://scenes/security_ui.gd" id="24_4hlsc"]
+[ext_resource type="Script" uid="uid://dggy0f358bhxd" path="res://scenes/rec.gd" id="26_85lqq"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_4hlsc"]
+shader = ExtResource("2_wpubn")
+shader_parameter/exposure = 1.0
+shader_parameter/contrast = 1.1
+shader_parameter/saturation = 1.12
+shader_parameter/enable_pixelate = true
+shader_parameter/pixel_factor = 3.0
+shader_parameter/enable_posterize = true
+shader_parameter/color_levels = 16.0
+shader_parameter/dither_strength = 0.35
+shader_parameter/chrom_aberration = 0.01
+shader_parameter/vignette_strength = 1.0
+shader_parameter/grain_strength = 0.2
+shader_parameter/tint_color = Vector3(0.95, 1.03, 0.9)
+shader_parameter/tint_strength = 0.15
+shader_parameter/viewport_size_override = Vector2(0, 0)
+
+[sub_resource type="BoxMesh" id="BoxMesh_floor"]
+size = Vector3(10, 0.1, 10)
+
+[sub_resource type="BoxMesh" id="BoxMesh_36inu"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ewdra"]
+cull_mode = 1
+shading_mode = 0
+albedo_color = Color(1, 1, 0, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_4hlsc"]
+material = SubResource("StandardMaterial3D_ewdra")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_1"]
+size = Vector3(1.03601, 1.00287, 0.539185)
+
+[sub_resource type="BoxMesh" id="BoxMesh_bl06e"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_85lqq"]
+cull_mode = 1
+shading_mode = 0
+albedo_color = Color(1, 1, 0, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wpubn"]
+material = SubResource("StandardMaterial3D_85lqq")
+
+[sub_resource type="BoxMesh" id="BoxMesh_jcqa2"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a3cxi"]
+cull_mode = 1
+shading_mode = 0
+albedo_color = Color(1, 1, 0, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_te6ua"]
+material = SubResource("StandardMaterial3D_a3cxi")
+
+[sub_resource type="GDScript" id="GDScript_vx235"]
+script/source = "extends Node3D
+
+# NODE-REFERENCES
+@export var rotation_speed: float = 2.0
+@export var camera: Camera3D
+@export var fishbook_ui: Control
+@export var options: Control
+
+# UI Buttons
+@export var journal_button: Button
+@export var inventory_button: Button
+@export var map_button: Button
+@export var left_button: Button
+@export var right_button: Button
+@export var interact_button: Button
+@export var settings_button: Button
+
+#@onready var whoosh_sound: AudioStreamPlayer = get_node(\"../../Audio/whoosh\")
+
+@export var inventory_ui: Node
+
+# STATE MACHINE
+enum {
+	STATE_IDLE,
+	STATE_ROTATING
+}
+
+var state: int = STATE_IDLE
+var paused: bool = false
+
+# Rotation Variables (4 Richtungen)
+var current_rotation: float = 180.0
+var target_rotation: float = 180.0
+var is_rotating: bool = false
+
+# Definierte Rotationspositionen
+const ROTATION_PLAYER_START: float = 180.0  # Spieler schaut nach vorne
+const ROTATION_DRINKS: float = 90.0         # Rechts = Getränke (90°)
+const ROTATION_SUSHI: float = 0.0           # Hinten = Sushi (0°)
+const ROTATION_FRYER: float = 270.0         # Links = Fritteuse (270°)
+
+func _ready() -> void:
+	setup_buttons()
+	Player.biome_completed.connect(_on_biome_completed)
+
+func _on_biome_completed(biome_name: String, reward: int) -> void:
+	print(\"Biom abgeschlossen: \", biome_name, \" | Belohnung: \", reward, \" Gold\")
+
+func setup_buttons() -> void:
+	if journal_button:
+		journal_button.pressed.connect(toggle_fishbook)
+	
+	if inventory_button:
+		inventory_button.pressed.connect(toggle_inventory)
+	
+	if map_button:
+		map_button.pressed.connect(open_map)
+	
+	if left_button:
+		left_button.pressed.connect(rotate_camera_left)
+	
+	if right_button:
+		right_button.pressed.connect(rotate_camera_right)
+	
+	if interact_button:
+		interact_button.pressed.connect(_on_interact_pressed)
+		
+	if settings_button:
+		settings_button.pressed.connect(handle_pause_input)
+
+func _on_interact_pressed() -> void:
+	# Getränke-Station bei 90° (rechts)
+	if abs(current_rotation - ROTATION_DRINKS) < 1.0:
+		print(\"Interact mit Getränke-Station\")
+		# Hier könnte Interaktion mit Drinks-Station kommen
+		return
+	
+	# Sushi-Station bei 0° (hinten)
+	if abs(current_rotation - ROTATION_SUSHI) < 1.0:
+		print(\"Interact mit Sushi-Station\")
+		# Hier könnte Interaktion mit Sushi-Station kommen
+		return
+	
+	# Fritteuse bei 270° (links)
+	if abs(current_rotation - ROTATION_FRYER) < 1.0:
+		print(\"Interact mit Fritteuse\")
+		# Hier könnte Interaktion mit Fryer-Station kommen
+		return
+
+func _unhandled_input(event: InputEvent) -> void:
+	# ESC/Pause behandeln
+	if event.is_action_released(\"pause\"):
+		handle_pause_input()
+		return
+	
+	# Während Pause keine anderen Inputs
+	if paused:
+		return
+	
+	# Rotation
+	if event.is_action_pressed(\"left\"):
+		rotate_camera_left()
+		return
+	
+	if event.is_action_pressed(\"right\"):
+		rotate_camera_right()
+		return
+	
+	if event.is_action_pressed(\"map_open\"):
+		open_map()
+		return
+	
+	if event.is_action_pressed(\"journal\"):
+		toggle_fishbook()
+		return
+	
+	if event.is_action_pressed(\"inventory_toggle\"):
+		toggle_inventory()
+		return
+
+	# Interact bei verschiedenen Positionen
+	if event.is_action_pressed(\"cast\"):
+		if abs(current_rotation - ROTATION_DRINKS) < 1.0:
+			print(\"Interact mit Getränke-Station\")
+		elif abs(current_rotation - ROTATION_SUSHI) < 1.0:
+			print(\"Interact mit Sushi-Station\")
+		elif abs(current_rotation - ROTATION_FRYER) < 1.0:
+			print(\"Interact mit Fritteuse\")
+
+# ---------------------------------------------------------
+# MENÜ-MANAGEMENT
+# ---------------------------------------------------------
+func handle_pause_input() -> void:
+	# Fishbook hat Priorität
+	if fishbook_ui and fishbook_ui.visible:
+		close_fishbook()
+		return
+	
+	# Dann Inventory
+	if inventory_ui and inventory_ui.visible:
+		close_inventory()
+		return
+	
+	# Dann Options
+	if options and options.visible:
+		close_options()
+		return
+	
+	# Alle zu -> Options öffnen
+	open_options()
+
+func toggle_fishbook() -> void:
+	if fishbook_ui.visible:
+		close_fishbook()
+	else:
+		open_fishbook()
+
+func toggle_inventory() -> void:
+	if inventory_ui.visible:
+		close_inventory()
+	else:
+		open_inventory()
+
+func open_fishbook() -> void:
+	close_inventory()
+	close_options()
+	fishbook_ui.visible = true
+	paused = false
+	Engine.time_scale = 1
+
+func close_fishbook() -> void:
+	fishbook_ui.visible = false
+	paused = false
+	Engine.time_scale = 1
+
+func open_inventory() -> void:
+	close_fishbook()
+	close_options()
+	inventory_ui.show()
+	paused = false
+	Engine.time_scale = 1
+
+func close_inventory() -> void:
+	inventory_ui.hide()
+	paused = false
+	Engine.time_scale = 1
+
+func open_options() -> void:
+	close_fishbook()
+	close_inventory()
+	options.show()
+	paused = true
+	Engine.time_scale = 0
+
+func close_options() -> void:
+	options.hide()
+	paused = false
+	Engine.time_scale = 1
+
+# ---------------------------------------------------------
+# 4-RICHTUNGS ROTATION
+# ---------------------------------------------------------
+func rotate_camera_left() -> void:
+	if is_rotating:
+		return
+	
+	#if whoosh_sound:
+		#whoosh_sound.play()
+	
+	# Im Uhrzeigersinn: 180 → 270 (Fryer) → 0 (Sushi) → 90 (Drinks) → 180
+	if current_rotation == ROTATION_PLAYER_START:
+		target_rotation = ROTATION_FRYER
+	elif current_rotation == ROTATION_FRYER:
+		target_rotation = ROTATION_SUSHI
+	elif current_rotation == ROTATION_SUSHI:
+		target_rotation = ROTATION_DRINKS
+	elif current_rotation == ROTATION_DRINKS:
+		target_rotation = ROTATION_PLAYER_START
+	
+	start_rotation()
+
+func rotate_camera_right() -> void:
+	if is_rotating:
+		return
+	
+	#if whoosh_sound:
+		#whoosh_sound.play()
+	
+	# Gegen Uhrzeigersinn: 180 → 90 (Drinks) → 0 (Sushi) → 270 (Fryer) → 180
+	if current_rotation == ROTATION_PLAYER_START:
+		target_rotation = ROTATION_DRINKS
+	elif current_rotation == ROTATION_DRINKS:
+		target_rotation = ROTATION_SUSHI
+	elif current_rotation == ROTATION_SUSHI:
+		target_rotation = ROTATION_FRYER
+	elif current_rotation == ROTATION_FRYER:
+		target_rotation = ROTATION_PLAYER_START
+	
+	start_rotation()
+
+func start_rotation() -> void:
+	state = STATE_ROTATING
+	is_rotating = true
+
+func _process(delta: float) -> void:
+	if state == STATE_ROTATING:
+		update_rotation(delta)
+
+func update_rotation(delta: float) -> void:
+	var rotation_step = rotation_speed * delta
+	
+	var diff = target_rotation - current_rotation
+	
+	if diff > 180.0:
+		diff -= 360.0
+	elif diff < -180.0:
+		diff += 360.0
+	
+	if abs(diff) < rotation_step:
+		current_rotation = target_rotation
+	elif diff > 0:
+		current_rotation += rotation_step
+	else:
+		current_rotation -= rotation_step
+	
+	if current_rotation >= 360.0:
+		current_rotation -= 360.0
+	elif current_rotation < 0.0:
+		current_rotation += 360.0
+
+	if camera:
+		camera.rotation.y = deg_to_rad(current_rotation)
+
+	if abs(current_rotation - target_rotation) < 0.5:
+		current_rotation = target_rotation
+		is_rotating = false
+		state = STATE_IDLE
+
+# ---------------------------------------------------------
+# SZENEN-WECHSEL
+# ---------------------------------------------------------
+func open_map() -> void:
+	Player.update_last_scene(\"res://scenes/fischbude.tscn\")
+	Transition.change_scene(\"res://scenes/MapScene.tscn\")
+"
+
+[sub_resource type="Theme" id="Theme_u47el"]
+default_font = ExtResource("10_36inu")
+
+[sub_resource type="Theme" id="Theme_kylbc"]
+default_font = ExtResource("10_36inu")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_jcqa2"]
+shader = ExtResource("18_uanbt")
+shader_parameter/use_directional_light = false
+shader_parameter/sun_color = Color(0.0158297, 0.0357297, 0.0947171, 1)
+shader_parameter/sun_energy = 16.185
+shader_parameter/cloud_color = Color(0.0179562, 0.0357238, 0.0609136, 1)
+shader_parameter/cloud_density = 5.5
+shader_parameter/cloud_depth = -4.46
+shader_parameter/cloud_sag = 2.0
+shader_parameter/noise_texture = ExtResource("19_wpubn")
+shader_parameter/noise_tiling = Vector2(1, 1)
+shader_parameter/wind_speed = Vector2(-0.19, -0.26)
+shader_parameter/ground_bottom_color = Color(0, 0, 0, 1)
+shader_parameter/ground_curve = 0.04
+shader_parameter/exposure = 5.741
+
+[sub_resource type="Sky" id="Sky_dqb0a"]
+sky_material = SubResource("ShaderMaterial_jcqa2")
+
+[sub_resource type="Environment" id="Environment_36inu"]
+background_mode = 2
+sky = SubResource("Sky_dqb0a")
+glow_enabled = true
+glow_intensity = 8.0
+glow_strength = 0.94
+glow_hdr_threshold = 4.0
+glow_map_strength = 0.94
+volumetric_fog_enabled = true
+volumetric_fog_density = 0.0184
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_bl06e"]
+shader = ExtResource("3_4hlsc")
+shader_parameter/pixel_size = 200.0
+
+[node name="FishBude" type="Node3D"]
+script = ExtResource("1")
+max_queue_size = 1
+queue_spacing = 4.975
+
+[node name="Filter" type="CanvasLayer" parent="."]
+layer = 0
+
+[node name="PixelateOverlay" type="ColorRect" parent="Filter"]
+material = SubResource("ShaderMaterial_4hlsc")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 28.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, -0.75, 0.433013, 0, 8, 0)
+light_color = Color(0.70431, 0.491963, 0.457322, 1)
+light_energy = 0.0
+shadow_enabled = true
+
+[node name="Floor" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, 0)
+mesh = SubResource("BoxMesh_floor")
+
+[node name="CustomerSpawnPoint" type="Node3D" parent="."]
+transform = Transform3D(-0.958278, 0, -0.285839, 0, 1, 0, 0.285839, 0, -0.958278, 0, -0.349403, 1.67473)
+
+[node name="CustomerEntry" type="Node3D" parent="."]
+transform = Transform3D(-0.958278, 0, -0.285839, 0, 1, 0, 0.285839, 0, -0.958278, 4.00527, -0.349403, 1.67473)
+
+[node name="CustomerExit" type="Node3D" parent="."]
+transform = Transform3D(-0.958278, 0, -0.285839, 0, 1, 0, 0.285839, 0, -0.958278, -5.09966, -0.349403, 0.577135)
+
+[node name="StationFryer" type="StaticBody3D" parent="."]
+transform = Transform3D(-2.18557e-08, 0, -0.5, 0, 0.5, 0, 0.5, 0, -2.18557e-08, 2.0142, 0.785115, 0)
+script = ExtResource("3")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StationFryer"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+mesh = SubResource("BoxMesh_36inu")
+
+[node name="OutlineMesh" type="MeshInstance3D" parent="StationFryer"]
+transform = Transform3D(1.05, 0, 0, 0, 1.05, 0, 0, 0, 1.05, 0, 0.5, 0)
+visible = false
+mesh = SubResource("BoxMesh_4hlsc")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StationFryer"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("BoxShape3D_1")
+
+[node name="TimerLabel3D" type="Label3D" parent="StationFryer"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+pixel_size = 0.01
+billboard = 1
+alpha_cut = 2
+text = "0.0s"
+font_size = 48
+
+[node name="InteractionPrompt" type="Label3D" parent="StationFryer"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.91943, 0)
+billboard = 1
+text = "Klicken zum Frittieren"
+
+[node name="StationSecurity" type="StaticBody3D" parent="."]
+transform = Transform3D(-2.18557e-08, 0, -0.5, 0, 0.5, 0, 0.5, 0, -2.18557e-08, -1.0128, 1.56798, 1.00104)
+script = ExtResource("4_ewdra")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StationSecurity"]
+transform = Transform3D(0.095, 0, 0, 0, 0.785, 0, 0, 0, 0.405, 0, 0.5, 0)
+mesh = SubResource("BoxMesh_36inu")
+
+[node name="OutlineMesh" type="MeshInstance3D" parent="StationSecurity"]
+transform = Transform3D(0.1, 0, 0, 0, 0.826, 0, 0, 0, 0.426, 0, 0.5, 0)
+visible = false
+mesh = SubResource("BoxMesh_4hlsc")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StationSecurity"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -0.00628662)
+shape = SubResource("BoxShape3D_1")
+
+[node name="StationSushi" type="StaticBody3D" parent="."]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0.182382, 1.05962, -0.840849)
+script = ExtResource("4")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StationSushi"]
+transform = Transform3D(1, 0, 0, 0, 0.999908, -0.0135782, 0, 0.0135782, 0.999908, 0.0394283, 0.338337, 0.00255752)
+shape = SubResource("BoxShape3D_1")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StationSushi"]
+transform = Transform3D(1.73931, 0, 0.0205229, 0, 0.89, 0, -0.0489176, 0, 0.729711, 0, 0.283065, 0)
+mesh = SubResource("BoxMesh_bl06e")
+
+[node name="OutlineMesh" type="MeshInstance3D" parent="StationSushi"]
+transform = Transform3D(1.7743, 0, 0.0209446, 0, 0.908, 0, -0.0499015, 0, 0.744706, 0, 0.283065, 0)
+visible = false
+mesh = SubResource("BoxMesh_wpubn")
+
+[node name="TimerLabel3D" type="Label3D" parent="StationSushi"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+pixel_size = 0.01
+billboard = 1
+alpha_cut = 2
+text = "0.0s"
+font_size = 48
+
+[node name="InteractionPrompt" type="Label3D" parent="StationSushi"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.34449, 0)
+billboard = 1
+alpha_cut = 2
+text = "Klicken für Sushi"
+
+[node name="StationDrinks" type="StaticBody3D" parent="."]
+transform = Transform3D(-3.2565e-08, 0, 1, 0, 1.37, 0, -0.745, 0, -4.37114e-08, -2.20982, 1.23941, -0.0969869)
+script = ExtResource("5")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StationDrinks"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0565211, 0)
+mesh = SubResource("BoxMesh_jcqa2")
+
+[node name="OutlineMesh" type="MeshInstance3D" parent="StationDrinks"]
+transform = Transform3D(1.05, 0, 0, 0, 1.05, 0, 0, 0, 1.05, 0, 0.0565211, 0)
+visible = false
+mesh = SubResource("BoxMesh_te6ua")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StationDrinks"]
+transform = Transform3D(1, 0, -6.00409e-13, 0, 0.999989, 0, 0, 0, 1, 0.00335705, 0.0560573, 0)
+shape = SubResource("BoxShape3D_1")
+
+[node name="InteractionPrompt" type="Label3D" parent="StationDrinks"]
+transform = Transform3D(0.575, 0, 0, 0, 0.575, 0, 0, 0, 0.575, -4.47035e-08, 0.747734, 0.628482)
+billboard = 1
+alpha_cut = 2
+text = "Klicken für Getränke"
+
+[node name="Tray" type="Node" parent="."]
+script = ExtResource("2")
+
+[node name="UI" type="Control" parent="."]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="MoneyLabel" type="Label" parent="UI"]
+layout_mode = 0
+offset_left = 30.0
+offset_top = 30.0
+offset_right = 250.0
+offset_bottom = 80.0
+theme_override_colors/font_color = Color(1, 0.9, 0.3, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 32
+text = "Geld: $0"
+
+[node name="OrderPanel" type="PanelContainer" parent="UI"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -250.0
+offset_top = 30.0
+offset_right = 250.0
+offset_bottom = 230.0
+grow_horizontal = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/OrderPanel"]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="UI/OrderPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.8, 0.2, 1)
+theme_override_font_sizes/font_size = 28
+text = "BESTELLUNG"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="UI/OrderPanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="FishLabel" type="Label" parent="UI/OrderPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Fisch: -"
+
+[node name="PrepLabel" type="Label" parent="UI/OrderPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Art: -"
+
+[node name="DrinkLabel" type="Label" parent="UI/OrderPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Getränk: -"
+
+[node name="HSeparator2" type="HSeparator" parent="UI/OrderPanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="PatienceLabel" type="Label" parent="UI/OrderPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
+theme_override_font_sizes/font_size = 18
+text = "Geduld: 100%"
+horizontal_alignment = 1
+
+[node name="TrayPanel" type="PanelContainer" parent="UI"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -250.0
+offset_top = -180.0
+offset_right = 250.0
+offset_bottom = -137.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/TrayPanel"]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="UI/TrayPanel/VBoxContainer"]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.9, 1, 1)
+theme_override_font_sizes/font_size = 24
+text = "TABLETT"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="UI/TrayPanel/VBoxContainer"]
+visible = false
+layout_mode = 2
+
+[node name="TrayContent" type="Label" parent="UI/TrayPanel/VBoxContainer"]
+visible = false
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Leer (0/4)"
+horizontal_alignment = 1
+
+[node name="ServeButton" type="Button" parent="UI/TrayPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_hover_color = Color(1, 0.9, 0.3, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 24
+text = "SERVIEREN"
+
+[node name="HelpLabel" type="Label" parent="UI"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 30.0
+offset_top = -150.0
+offset_right = 450.0
+offset_bottom = -30.0
+grow_vertical = 0
+theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/font_size = 18
+text = "Linksklick - Station nutzen
+Space - Tablett leeren
+ESC - Zurück zum Spiel"
+
+[node name="DebugLabel" type="Label" parent="UI"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -350.0
+offset_top = 30.0
+offset_right = -30.0
+offset_bottom = 150.0
+grow_horizontal = 0
+theme_override_colors/font_color = Color(0.5, 0.5, 0.5, 1)
+theme_override_font_sizes/font_size = 16
+text = "DEBUG:
+Inventar: 0 Fische
+Kunde: Nein"
+
+[node name="PlayerCamera" type="Camera3D" parent="."]
+transform = Transform3D(-1, 0, -1.50996e-07, 0, 1, 0, 1.50996e-07, 0, -1, 0, 1.78351, 0.0447942)
+script = ExtResource("6_3wc6y")
+
+[node name="cigaratte" parent="PlayerCamera" instance=ExtResource("7_gpyn8")]
+transform = Transform3D(0.789812, 0.0794083, 0.274757, -0.0560458, 0.8343, -0.0800153, -0.280456, 0.0569025, 0.789751, -0.156605, -0.13869, -0.260703)
+
+[node name="FishingRod" parent="PlayerCamera" node_paths=PackedStringArray("camera", "fishbook_ui", "options", "journal_button", "inventory_button", "map_button", "left_button", "right_button", "interact_button", "settings_button", "inventory_ui") instance=ExtResource("8_wpubn")]
+transform = Transform3D(0.925417, -0.163176, -0.34202, 0.173648, 0.984808, 0, 0.336824, -0.0593912, 0.939693, 0.4, -0.40033, -1.03766)
+visible = false
+script = SubResource("GDScript_vx235")
+rotation_speed = 300.0
+camera = NodePath("..")
+fishbook_ui = NodePath("../../UI2/FishBook")
+options = NodePath("../../UI2/OptionsControl")
+journal_button = NodePath("../../UI2/Touch/TopLeftPanel/MarginContainer/VBoxContainer/JournalButton")
+inventory_button = NodePath("../../UI2/Touch/TopLeftPanel/MarginContainer/VBoxContainer/InventoryButton")
+map_button = NodePath("../../UI2/Touch/TopLeftPanel/MarginContainer/VBoxContainer/MapButton")
+left_button = NodePath("../../UI2/Touch/BottomCenterPanel/HBoxContainer/LeftButton")
+right_button = NodePath("../../UI2/Touch/BottomCenterPanel/HBoxContainer/RightButton")
+interact_button = NodePath("../../UI2/Touch/InteractButton")
+settings_button = NodePath("../../UI2/Touch/TopLeftPanel/MarginContainer/VBoxContainer/SettingsButton")
+inventory_ui = NodePath("../../UI2/InventoryUI")
+
+[node name="RodMesh" parent="PlayerCamera/FishingRod" index="0"]
+transform = Transform3D(0.8, 0, 0, 0, 0.773459, 0.204357, 0, -0.204357, 0.773459, 0, 0, -0.0166266)
+
+[node name="UI2" type="CanvasLayer" parent="."]
+
+[node name="BiteIndicator" type="TextureRect" parent="UI2"]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -185.0
+offset_top = -185.0
+offset_right = 185.0
+offset_bottom = 185.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("9_jcqa2")
+
+[node name="OrderPanel" type="PanelContainer" parent="UI2"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -250.0
+offset_top = 73.0
+offset_right = 250.0
+offset_bottom = 199.0
+grow_horizontal = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI2/OrderPanel"]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="UI2/OrderPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.8, 0.2, 1)
+theme_override_fonts/font = ExtResource("10_36inu")
+theme_override_font_sizes/font_size = 28
+text = "BESTELLUNG"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="UI2/OrderPanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="FishLabel" type="Label" parent="UI2/OrderPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("10_36inu")
+theme_override_font_sizes/font_size = 22
+text = "Fisch: -"
+
+[node name="PrepLabel" type="Label" parent="UI2/OrderPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("10_36inu")
+theme_override_font_sizes/font_size = 22
+text = "Art: -"
+
+[node name="DrinkLabel" type="Label" parent="UI2/OrderPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("10_36inu")
+theme_override_font_sizes/font_size = 22
+text = "Getränk: -"
+
+[node name="TrayPanel" type="PanelContainer" parent="UI2"]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -250.0
+offset_top = -63.695
+offset_right = 250.0
+offset_bottom = -20.695
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI2/TrayPanel"]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="UI2/TrayPanel/VBoxContainer"]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.9, 1, 1)
+theme_override_font_sizes/font_size = 24
+text = "TABLETT"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="UI2/TrayPanel/VBoxContainer"]
+visible = false
+layout_mode = 2
+
+[node name="TrayContent" type="Label" parent="UI2/TrayPanel/VBoxContainer"]
+visible = false
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Leer (0/4)"
+horizontal_alignment = 1
+
+[node name="ServeButton" type="Button" parent="UI2/TrayPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_hover_color = Color(1, 0.9, 0.3, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 24
+text = "SERVIEREN"
+
+[node name="FishSelectionUI" parent="UI2" instance=ExtResource("19_36inu")]
+
+[node name="MoneyPopup" parent="UI2" instance=ExtResource("20_ewdra")]
+
+[node name="InventoryUI" parent="UI2" instance=ExtResource("12_4hlsc")]
+visible = false
+theme = SubResource("Theme_u47el")
+
+[node name="MoneyHUD" parent="UI2" instance=ExtResource("13_bl06e")]
+offset_right = 60.0
+offset_bottom = 43.0
+theme = SubResource("Theme_kylbc")
+
+[node name="FishBook" parent="UI2" instance=ExtResource("14_85lqq")]
+visible = false
+
+[node name="OptionsControl" parent="UI2" instance=ExtResource("16_te6ua")]
+visible = false
+
+[node name="Touch" parent="UI2" instance=ExtResource("18_yh6ru")]
+
+[node name="Clock" parent="UI2" instance=ExtResource("20_snqa0")]
+visible = false
+animation_name = "circle"
+day_time_offset_seconds = 30.0
+
+[node name="DirectionalLight3D3" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.97848, -0.00843342, -0.206171, 0.0389501, 0.988751, 0.144411, 0.202634, -0.149334, 0.967801, -1.07784, 48.3065, 160.116)
+light_color = Color(0.212618, 0.391718, 0.51053, 1)
+light_energy = 0.646
+light_indirect_energy = 0.0
+light_volumetric_fog_energy = 0.485
+light_angular_distance = 13.64
+light_specular = 0.191
+shadow_enabled = true
+directional_shadow_split_1 = 0.079
+directional_shadow_split_2 = 0.352
+directional_shadow_split_3 = 0.268
+directional_shadow_fade_start = 0.507
+directional_shadow_max_distance = 83.4
+sky_mode = 1
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_36inu")
+
+[node name="Foodtruck" parent="." instance=ExtResource("21_jcqa2")]
+transform = Transform3D(-0.0383005, 0, 0.999266, 0, 1, 0, -0.999266, 0, -0.0383005, 0.727879, 0, 0.000216007)
+
+[node name="SecurityCamera" type="Camera3D" parent="."]
+transform = Transform3D(0.193807, 0.471557, -0.860275, 0.0743065, 0.867326, 0.492162, 0.978222, -0.159308, 0.133054, -2.1056, 2.6721, 1.96067)
+fov = 83.9
+
+[node name="SecurityUI" type="CanvasLayer" parent="."]
+layer = 10
+script = ExtResource("24_4hlsc")
+
+[node name="PixelateOverlay" type="ColorRect" parent="SecurityUI"]
+material = SubResource("ShaderMaterial_bl06e")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 28.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="BackButton" type="Button" parent="SecurityUI"]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -25.0
+offset_top = -62.0
+offset_right = 25.0
+offset_bottom = -31.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "BACK"
+
+[node name="RECLabel" type="Label" parent="SecurityUI"]
+offset_left = 48.0
+offset_right = 94.56
+offset_bottom = 25.04
+scale = Vector2(4.065, 4.065)
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "● REC"
+script = ExtResource("26_85lqq")
+
+[node name="Customers" type="Node3D" parent="."]
+
+[editable path="PlayerCamera/FishingRod"]
+[editable path="UI2/Touch"]

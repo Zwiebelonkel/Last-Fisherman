@@ -1,0 +1,961 @@
+[gd_scene load_steps=35 format=3 uid="uid://bqhxfk3g8vxn7"]
+
+[ext_resource type="Script" uid="uid://cqgu3f2n1rg1p" path="res://scripts/Fishbudecontroller.gd" id="1"]
+[ext_resource type="Script" uid="uid://bfajhux4gse13" path="res://scripts/tray.gd" id="2"]
+[ext_resource type="Script" uid="uid://d3sami34i2b7c" path="res://scripts/fryer.gd" id="3"]
+[ext_resource type="Script" uid="uid://nif1hbs6jred" path="res://scripts/sushi.gd" id="4"]
+[ext_resource type="Script" uid="uid://qoarxse5jwpj" path="res://scripts/drinks.gd" id="5"]
+[ext_resource type="Script" uid="uid://bl1xotduehieu" path="res://scripts/camera_sway.gd" id="6_3wc6y"]
+[ext_resource type="PackedScene" uid="uid://bw80sbvfcwe1p" path="res://scenes/cigarette.tscn" id="7_gpyn8"]
+[ext_resource type="PackedScene" uid="uid://b5ew1rfc8ow8g" path="res://scenes/fishingRod.tscn" id="8_wpubn"]
+[ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="9_jcqa2"]
+[ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="10_36inu"]
+[ext_resource type="PackedScene" uid="uid://cqtn78ty1fa7" path="res://scenes/CatchResultUI.tscn" id="11_ewdra"]
+[ext_resource type="PackedScene" uid="uid://dxxrhs12x2m2c" path="res://scenes/InventoryUI.tscn" id="12_4hlsc"]
+[ext_resource type="PackedScene" uid="uid://cdb3sodlv6np7" path="res://scenes/MoneyHUD.tscn" id="13_bl06e"]
+[ext_resource type="PackedScene" uid="uid://be7bs5po2ukhi" path="res://scenes/FishBook.tscn" id="14_85lqq"]
+[ext_resource type="PackedScene" uid="uid://je70iqlm248a" path="res://scenes/CastPowerUI.tscn" id="15_a3cxi"]
+[ext_resource type="PackedScene" uid="uid://b08obrprd472u" path="res://scenes/OptionsControl.tscn" id="16_te6ua"]
+[ext_resource type="PackedScene" uid="uid://ckje0fw3pep83" path="res://assets/skyscaper.glb" id="17_ysmne"]
+[ext_resource type="PackedScene" uid="uid://xt7f7m4i2iwi" path="res://scenes/touch.tscn" id="18_yh6ru"]
+[ext_resource type="PackedScene" uid="uid://bgnalk1ruht4d" path="res://scenes/bait_hud.tscn" id="19_kpnk1"]
+[ext_resource type="PackedScene" uid="uid://ws4ms8iq4gg4" path="res://scenes/clock.tscn" id="20_snqa0"]
+
+[sub_resource type="Shader" id="Shader_u55b3"]
+code = "shader_type sky;
+
+group_uniforms Sky;
+/**
+ * Use directional light for sun color
+*/
+uniform bool use_directional_light = true;
+uniform vec4 sun_color : source_color = vec4(1.0);
+uniform float sun_energy = 15.0;
+uniform vec4 cloud_color : source_color = vec4(0.296, 0.402, 0.521, 1.0);
+/**
+ * Determines how much light the clouds absorb
+*/
+uniform float cloud_density = 5.0;
+/**
+ * Depth of the parallax effect
+*/
+uniform float cloud_depth = 2.0;
+/**
+ * Higher values give the clouds a heavier appearance
+*/
+uniform float cloud_sag = 2.0;
+uniform sampler2D noise_texture;
+uniform vec2 noise_tiling = vec2(1.0);
+uniform vec2 wind_speed = vec2(0.5);
+group_uniforms;
+
+group_uniforms Ground;
+uniform vec4 ground_bottom_color : source_color = vec4(0.2, 0.169, 0.133, 1.0);
+uniform float ground_curve : hint_range(0, 1) = 0.04;
+group_uniforms;
+
+uniform float exposure : hint_range(0, 128) = 1.0;
+
+// https://www.scratchapixel.com/lessons/3d-basic-rendering/minimal-ray-tracer-rendering-simple-shapes/ray-plane-and-ray-disk-intersection.html
+float ray_plane_intersection(vec3 origin, vec3 normal, vec3 ray_start, vec3 ray_dir) {
+	return dot(origin - ray_start, normal) / dot(ray_dir, normal);
+}
+
+float sample_height(vec2 uv) {
+	float height = texture(noise_texture, uv).r;
+	return pow(height, cloud_sag);
+}
+
+float beers_law(float absorption, float dist) {
+	return exp(-absorption * dist);
+}
+
+void sky() {
+	vec3 light_color = vec3(0.0);
+	if (use_directional_light)
+		light_color = LIGHT0_COLOR * LIGHT0_ENERGY * dot(LIGHT0_DIRECTION, vec3(0.0, 1.0, 0.0));
+	else
+		light_color = sun_color.rgb * sun_energy;
+
+	vec3 sky = cloud_color.rgb;
+
+	// Find view ray intersection with cloud layer
+	float t = ray_plane_intersection(vec3(0.0, 1.0, 0.0), vec3(0.0, -1.0, 0.0), vec3(0.0), EYEDIR);
+	if (t >= 0.0) {
+		vec3 wind = vec3(wind_speed.x, 0.0, wind_speed.y) * TIME * 0.1;
+		vec3 tiling = vec3(noise_tiling.x, 1.0, noise_tiling.y) * 0.2;
+		vec3 cloud_pos = EYEDIR * t * tiling + wind;
+
+		// Parallax mapping
+		float height = sample_height(cloud_pos.xz);
+		cloud_pos += EYEDIR * height * cloud_depth * 0.1;
+		height = sample_height(cloud_pos.xz);
+
+		// Attenuate light by view angle to simulate occlusion
+		float n_dot_v = dot(vec3(0.0, 1.0, 0.0), EYEDIR);
+		sky += light_color * beers_law(cloud_density, 1.0 - height * n_dot_v);
+	}
+	vec3 horizon = cloud_color.rgb + light_color * beers_law(cloud_density, 1.0);
+	vec3 ground = mix(horizon, ground_bottom_color.rgb, clamp(1.0 - pow(1.0 + EYEDIR.y, 1.0 / ground_curve), 0.0, 1.0));
+	COLOR = mix(ground, sky, step(0.0, EYEDIR.y)) * exposure;
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_42vc7"]
+shader = SubResource("Shader_u55b3")
+shader_parameter/use_directional_light = false
+shader_parameter/sun_color = Color(0.0605303, 0.0605303, 0.0605303, 1)
+shader_parameter/sun_energy = 8.525
+shader_parameter/cloud_color = Color(0, 0, 0, 1)
+shader_parameter/cloud_density = 5.0
+shader_parameter/cloud_depth = 2.0
+shader_parameter/cloud_sag = 2.0
+shader_parameter/noise_tiling = Vector2(1, 1)
+shader_parameter/wind_speed = Vector2(0.5, 0.5)
+shader_parameter/ground_bottom_color = Color(0.2, 0.169, 0.133, 1)
+shader_parameter/ground_curve = 0.04
+shader_parameter/exposure = 1.0
+
+[sub_resource type="Sky" id="Sky_wsqty"]
+sky_material = SubResource("ShaderMaterial_42vc7")
+radiance_size = 0
+
+[sub_resource type="Environment" id="Environment_ato2i"]
+background_mode = 2
+background_energy_multiplier = 0.14
+sky = SubResource("Sky_wsqty")
+glow_enabled = true
+glow_intensity = 0.05
+glow_strength = 0.29
+glow_hdr_scale = 1.17
+glow_hdr_luminance_cap = 4.75
+glow_map_strength = 0.0
+fog_light_color = Color(0.808262, 0.429746, 0.296975, 1)
+fog_light_energy = 0.0
+fog_sun_scatter = 1.0
+fog_density = 0.0
+fog_sky_affect = 0.0
+volumetric_fog_enabled = true
+volumetric_fog_length = 42.44
+volumetric_fog_ambient_inject = 0.2
+
+[sub_resource type="BoxMesh" id="BoxMesh_floor"]
+size = Vector3(10, 0.1, 10)
+
+[sub_resource type="BoxMesh" id="BoxMesh_counter"]
+size = Vector3(5, 1, 1.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_1"]
+size = Vector3(1.5, 1, 1)
+
+[sub_resource type="Animation" id="Animation_lam2r"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:light_color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(0.99552, 0.467887, 0.0444731, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:light_angular_distance")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [13.64]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("../MeshInstance3D2:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(2.48185, 2.72752, 228.721)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath(".:rotation")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(-0.371406, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_vt84v"]
+resource_name = "circle"
+length = 60.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:light_color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 30, 60),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(0.99552, 0.467887, 0.0444731, 1), Color(0.0187395, 0.22427, 0.266336, 1), Color(0.99552, 0.467887, 0.0444731, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:light_angular_distance")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 30, 60),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [13.64, 0.0, 13.64]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("../MeshInstance3D2:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 30, 60),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(2.48185, 2.72752, 228.721), Vector3(2.48185, -20.6028, 228.721), Vector3(2.48185, 2.72752, 228.721)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath(".:rotation")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 29.9607, 60),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(-0.371406, 0, 0), Vector3(-1.94081, 0, 0), Vector3(-0.371406, 0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_amia2"]
+_data = {
+&"RESET": SubResource("Animation_lam2r"),
+&"circle": SubResource("Animation_vt84v")
+}
+
+[sub_resource type="GDScript" id="GDScript_vx235"]
+script/source = "extends Node3D
+
+# NODE-REFERENCES
+@export var rotation_speed: float = 2.0
+@export var camera: Camera3D
+@export var fishbook_ui: Control
+@export var options: Control
+
+# UI Buttons
+@export var journal_button: Button
+@export var inventory_button: Button
+@export var map_button: Button
+@export var left_button: Button
+@export var right_button: Button
+@export var interact_button: Button
+@export var settings_button: Button
+
+
+@export var inventory_ui: Node
+
+# STATE MACHINE
+enum {
+	STATE_IDLE,
+	STATE_ROTATING
+}
+
+var state: int = STATE_IDLE
+var paused: bool = false
+
+# Rotation Variables (4 Richtungen)
+var current_rotation: float = 180.0
+var target_rotation: float = 180.0
+var is_rotating: bool = false
+
+# Definierte Rotationspositionen
+const ROTATION_FISHING: float = 180.0
+const ROTATION_SHOP: float = 90.0
+const ROTATION_FISCHBUDE: float = 0.0  # Neue Position für Fischbude
+const ROTATION_EMPTY: float = 270.0
+
+func _ready() -> void:
+	setup_buttons()
+	Player.biome_completed.connect(_on_biome_completed)
+
+func _on_biome_completed(biome_name: String, reward: int) -> void:
+	print(\"Biom abgeschlossen: \", biome_name, \" | Belohnung: \", reward, \" Gold\")
+
+func setup_buttons() -> void:
+	if journal_button:
+		journal_button.pressed.connect(toggle_fishbook)
+	
+	if inventory_button:
+		inventory_button.pressed.connect(toggle_inventory)
+	
+	if map_button:
+		map_button.pressed.connect(open_map)
+	
+	if left_button:
+		left_button.pressed.connect(rotate_camera_left)
+	
+	if right_button:
+		right_button.pressed.connect(rotate_camera_right)
+	
+	if interact_button:
+		interact_button.pressed.connect(_on_interact_pressed)
+		
+	if settings_button:
+		settings_button.pressed.connect(handle_pause_input)
+
+func _on_interact_pressed() -> void:
+	# Shop betreten bei 90°
+	if abs(current_rotation - ROTATION_SHOP) < 1.0:
+		enter_shop()
+		return
+	
+	# Fischbude betreten bei 0°
+	if abs(current_rotation - ROTATION_FISCHBUDE) < 1.0:
+		enter_fischbude()
+		return
+
+func _unhandled_input(event: InputEvent) -> void:
+	# ESC/Pause behandeln
+	if event.is_action_released(\"pause\"):
+		handle_pause_input()
+		return
+	
+	# Während Pause keine anderen Inputs
+	if paused:
+		return
+	
+	# Rotation
+	if event.is_action_pressed(\"left\"):
+		rotate_camera_left()
+		return
+	
+	if event.is_action_pressed(\"right\"):
+		rotate_camera_right()
+		return
+	
+	if event.is_action_pressed(\"map_open\"):
+		open_map()
+		return
+	
+	if event.is_action_pressed(\"journal\"):
+		toggle_fishbook()
+		return
+	
+	if event.is_action_pressed(\"inventory_toggle\"):
+		toggle_inventory()
+		return
+
+	# Interact bei verschiedenen Positionen
+	if event.is_action_pressed(\"cast\"):
+		if abs(current_rotation - ROTATION_SHOP) < 1.0:
+			enter_shop()
+		elif abs(current_rotation - ROTATION_FISCHBUDE) < 1.0:
+			enter_fischbude()
+
+# ---------------------------------------------------------
+# MENÜ-MANAGEMENT
+# ---------------------------------------------------------
+func handle_pause_input() -> void:
+	# Fishbook hat Priorität
+	if fishbook_ui and fishbook_ui.visible:
+		close_fishbook()
+		return
+	
+	# Dann Inventory
+	if inventory_ui and inventory_ui.visible:
+		close_inventory()
+		return
+	
+	# Dann Options
+	if options and options.visible:
+		close_options()
+		return
+	
+	# Alle zu -> Options öffnen
+	open_options()
+
+func toggle_fishbook() -> void:
+	if fishbook_ui.visible:
+		close_fishbook()
+	else:
+		open_fishbook()
+
+func toggle_inventory() -> void:
+	if inventory_ui.visible:
+		close_inventory()
+	else:
+		open_inventory()
+
+func open_fishbook() -> void:
+	close_inventory()
+	close_options()
+	fishbook_ui.visible = true
+	paused = false
+	Engine.time_scale = 1
+
+func close_fishbook() -> void:
+	fishbook_ui.visible = false
+	paused = false
+	Engine.time_scale = 1
+
+func open_inventory() -> void:
+	close_fishbook()
+	close_options()
+	inventory_ui.show()
+	paused = false
+	Engine.time_scale = 1
+
+func close_inventory() -> void:
+	inventory_ui.hide()
+	paused = false
+	Engine.time_scale = 1
+
+func open_options() -> void:
+	close_fishbook()
+	close_inventory()
+	options.show()
+	paused = true
+	Engine.time_scale = 0
+
+func close_options() -> void:
+	options.hide()
+	paused = false
+	Engine.time_scale = 1
+
+# ---------------------------------------------------------
+# 4-RICHTUNGS ROTATION
+# ---------------------------------------------------------
+func rotate_camera_left() -> void:
+	if is_rotating:
+		return
+
+	
+	# Im Uhrzeigersinn: 180 → 270 → 0 → 90 → 180
+	if current_rotation == ROTATION_FISHING:
+		target_rotation = ROTATION_EMPTY
+	elif current_rotation == ROTATION_EMPTY:
+		target_rotation = ROTATION_FISCHBUDE
+	elif current_rotation == ROTATION_FISCHBUDE:
+		target_rotation = ROTATION_SHOP
+	elif current_rotation == ROTATION_SHOP:
+		target_rotation = ROTATION_FISHING
+	
+	start_rotation()
+
+func rotate_camera_right() -> void:
+	if is_rotating:
+		return
+	
+	if whoosh_sound:
+		whoosh_sound.play()
+	
+	# Gegen Uhrzeigersinn: 180 → 90 → 0 → 270 → 180
+	if current_rotation == ROTATION_FISHING:
+		target_rotation = ROTATION_SHOP
+	elif current_rotation == ROTATION_SHOP:
+		target_rotation = ROTATION_FISCHBUDE
+	elif current_rotation == ROTATION_FISCHBUDE:
+		target_rotation = ROTATION_EMPTY
+	elif current_rotation == ROTATION_EMPTY:
+		target_rotation = ROTATION_FISHING
+	
+	start_rotation()
+
+func start_rotation() -> void:
+	state = STATE_ROTATING
+	is_rotating = true
+
+func _process(delta: float) -> void:
+	if state == STATE_ROTATING:
+		update_rotation(delta)
+
+func update_rotation(delta: float) -> void:
+	var rotation_step = rotation_speed * delta
+	
+	var diff = target_rotation - current_rotation
+	
+	if diff > 180.0:
+		diff -= 360.0
+	elif diff < -180.0:
+		diff += 360.0
+	
+	if abs(diff) < rotation_step:
+		current_rotation = target_rotation
+	elif diff > 0:
+		current_rotation += rotation_step
+	else:
+		current_rotation -= rotation_step
+	
+	if current_rotation >= 360.0:
+		current_rotation -= 360.0
+	elif current_rotation < 0.0:
+		current_rotation += 360.0
+
+	if camera:
+		camera.rotation.y = deg_to_rad(current_rotation)
+
+	if abs(current_rotation - target_rotation) < 0.5:
+		current_rotation = target_rotation
+		is_rotating = false
+		state = STATE_IDLE
+
+# ---------------------------------------------------------
+# SZENEN-WECHSEL
+# ---------------------------------------------------------
+func enter_shop() -> void:
+	print(\"Betrete Shop!\")
+	Player.update_last_scene(\"res://scenes/MainScene.tscn\")
+	Transition.change_scene(\"res://scenes/shop_inside.tscn\")
+
+func enter_fischbude() -> void:
+	print(\"Betrete Fischbude!\")
+	Player.update_last_scene(\"res://scenes/MainScene.tscn\")
+	Transition.change_scene(\"res://scenes/FischBude.tscn\")
+
+func open_map() -> void:
+	Player.update_last_scene(\"res://scenes/MainScene.tscn\")
+	Transition.change_scene(\"res://scenes/MapScene.tscn\")
+"
+
+[sub_resource type="Theme" id="Theme_7euvi"]
+default_font = ExtResource("10_36inu")
+
+[sub_resource type="Theme" id="Theme_u47el"]
+default_font = ExtResource("10_36inu")
+
+[sub_resource type="Theme" id="Theme_kylbc"]
+default_font = ExtResource("10_36inu")
+
+[node name="FishBude" type="Node3D"]
+script = ExtResource("1")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_ato2i")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, -0.75, 0.433013, 0, 8, 0)
+light_energy = 1.5
+shadow_enabled = true
+
+[node name="Floor" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, 0)
+mesh = SubResource("BoxMesh_floor")
+
+[node name="Counter" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 1.5)
+mesh = SubResource("BoxMesh_counter")
+
+[node name="CustomerSpawnPoint" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3)
+
+[node name="StationFryer" type="StaticBody3D" parent="."]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 3.5, 0, 0)
+script = ExtResource("3")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StationFryer"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StationFryer"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("BoxShape3D_1")
+
+[node name="TimerLabel3D" type="Label3D" parent="StationFryer"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+pixel_size = 0.01
+billboard = 1
+text = "0.0s"
+font_size = 48
+
+[node name="InteractionPrompt" type="Label3D" parent="StationFryer"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.3, 0)
+billboard = 1
+text = "Klicken zum Frittieren"
+
+[node name="StationSushi" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -3.5)
+script = ExtResource("4")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StationSushi"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StationSushi"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0)
+shape = SubResource("BoxShape3D_1")
+
+[node name="TimerLabel3D" type="Label3D" parent="StationSushi"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+pixel_size = 0.01
+billboard = 1
+text = "0.0s"
+font_size = 48
+
+[node name="InteractionPrompt" type="Label3D" parent="StationSushi"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.3, 0)
+billboard = 1
+text = "Klicken für Sushi"
+
+[node name="StationDrinks" type="StaticBody3D" parent="."]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -3.5, 0, 0)
+script = ExtResource("5")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StationDrinks"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StationDrinks"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+shape = SubResource("BoxShape3D_1")
+
+[node name="InteractionPrompt" type="Label3D" parent="StationDrinks"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.3, 0)
+billboard = 1
+text = "Klicken für Getränke"
+
+[node name="Tray" type="Node" parent="."]
+script = ExtResource("2")
+
+[node name="UI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="MoneyLabel" type="Label" parent="UI"]
+layout_mode = 0
+offset_left = 30.0
+offset_top = 30.0
+offset_right = 250.0
+offset_bottom = 80.0
+theme_override_colors/font_color = Color(1, 0.9, 0.3, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 32
+text = "Geld: $0"
+
+[node name="OrderPanel" type="PanelContainer" parent="UI"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -250.0
+offset_top = 30.0
+offset_right = 250.0
+offset_bottom = 230.0
+grow_horizontal = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/OrderPanel"]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="UI/OrderPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.8, 0.2, 1)
+theme_override_font_sizes/font_size = 28
+text = "BESTELLUNG"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="UI/OrderPanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="FishLabel" type="Label" parent="UI/OrderPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Fisch: -"
+
+[node name="PrepLabel" type="Label" parent="UI/OrderPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Art: -"
+
+[node name="DrinkLabel" type="Label" parent="UI/OrderPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Getränk: -"
+
+[node name="HSeparator2" type="HSeparator" parent="UI/OrderPanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="PatienceLabel" type="Label" parent="UI/OrderPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
+theme_override_font_sizes/font_size = 18
+text = "Geduld: 100%"
+horizontal_alignment = 1
+
+[node name="TrayPanel" type="PanelContainer" parent="UI"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -250.0
+offset_top = -180.0
+offset_right = 250.0
+offset_bottom = -30.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/TrayPanel"]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="UI/TrayPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.9, 1, 1)
+theme_override_font_sizes/font_size = 24
+text = "TABLETT"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="UI/TrayPanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="TrayContent" type="Label" parent="UI/TrayPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Leer (0/4)"
+horizontal_alignment = 1
+
+[node name="ServeButton" type="Button" parent="UI/TrayPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_hover_color = Color(1, 0.9, 0.3, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 24
+text = "SERVIEREN"
+
+[node name="HelpLabel" type="Label" parent="UI"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 30.0
+offset_top = -150.0
+offset_right = 450.0
+offset_bottom = -30.0
+grow_vertical = 0
+theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/font_size = 18
+text = "Linksklick - Station nutzen
+Space - Tablett leeren
+ESC - Zurück zum Spiel"
+
+[node name="DebugLabel" type="Label" parent="UI"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -350.0
+offset_top = 30.0
+offset_right = -30.0
+offset_bottom = 150.0
+grow_horizontal = 0
+theme_override_colors/font_color = Color(0.5, 0.5, 0.5, 1)
+theme_override_font_sizes/font_size = 16
+text = "DEBUG:
+Inventar: 0 Fische
+Kunde: Nein"
+
+[node name="DirectionalLight3D2" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.931818, 0.362926, 0, -0.362926, 0.931818, -1.07784, 37.4465, 160.116)
+light_color = Color(0.99552, 0.467887, 0.0444731, 1)
+light_energy = 16.0
+light_volumetric_fog_energy = 0.485
+light_angular_distance = 13.64
+light_specular = 0.676
+shadow_enabled = true
+shadow_blur = 10.0
+directional_shadow_split_1 = 0.079
+directional_shadow_split_2 = 0.352
+directional_shadow_split_3 = 0.268
+directional_shadow_fade_start = 0.507
+directional_shadow_max_distance = 83.4
+sky_mode = 1
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="DirectionalLight3D2"]
+libraries = {
+&"": SubResource("AnimationLibrary_amia2")
+}
+speed_scale = 0.1
+
+[node name="PlayerCamera" type="Camera3D" parent="."]
+transform = Transform3D(-1, 0, -1.50996e-07, 0, 1, 0, 1.50996e-07, 0, -1, 0, 2.007, 0.0447942)
+script = ExtResource("6_3wc6y")
+
+[node name="cigaratte" parent="PlayerCamera" instance=ExtResource("7_gpyn8")]
+transform = Transform3D(0.789812, 0.0794083, 0.274757, -0.0560458, 0.8343, -0.0800153, -0.280456, 0.0569025, 0.789751, -0.156605, -0.13869, -0.260703)
+
+[node name="FishingRod" parent="PlayerCamera" node_paths=PackedStringArray("camera", "journal_button", "inventory_button", "map_button", "left_button", "right_button", "interact_button", "settings_button", "inventory_ui") instance=ExtResource("8_wpubn")]
+transform = Transform3D(0.925417, -0.163176, -0.34202, 0.173648, 0.984808, 0, 0.336824, -0.0593912, 0.939693, 0.4, -0.40033, -1.03766)
+script = SubResource("GDScript_vx235")
+rotation_speed = null
+camera = NodePath("..")
+journal_button = NodePath("../../UI2/Touch/TopLeftPanel/MarginContainer/VBoxContainer/JournalButton")
+inventory_button = NodePath("../../UI2/Touch/TopLeftPanel/MarginContainer/VBoxContainer/InventoryButton")
+map_button = NodePath("../../UI2/Touch/TopLeftPanel/MarginContainer/VBoxContainer/MapButton")
+left_button = NodePath("../../UI2/Touch/BottomCenterPanel/HBoxContainer/LeftButton")
+right_button = NodePath("../../UI2/Touch/BottomCenterPanel/HBoxContainer/RightButton")
+interact_button = NodePath("../../UI2/Touch/InteractButton")
+settings_button = NodePath("../../UI2/Touch/TopLeftPanel/MarginContainer/VBoxContainer/SettingsButton")
+inventory_ui = NodePath("../../UI2/InventoryUI")
+
+[node name="RodMesh" parent="PlayerCamera/FishingRod" index="0"]
+transform = Transform3D(0.8, 0, 0, 0, 0.773459, 0.204357, 0, -0.204357, 0.773459, 0, 0, -0.0166266)
+
+[node name="UI2" type="CanvasLayer" parent="."]
+
+[node name="BiteIndicator" type="TextureRect" parent="UI2"]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -185.0
+offset_top = -185.0
+offset_right = 185.0
+offset_bottom = 185.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("9_jcqa2")
+
+[node name="CatchUI" type="Control" parent="UI2"]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_7euvi")
+
+[node name="BarBackground" type="ColorRect" parent="UI2/CatchUI"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = 256.0
+offset_right = 300.0
+offset_bottom = 276.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.458405, 0.458405, 0.458405, 1)
+
+[node name="SweetSpot" type="ColorRect" parent="UI2/CatchUI/BarBackground"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -60.0
+offset_top = -10.0
+offset_right = 60.0
+offset_bottom = 10.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(1, 0.486275, 0.482353, 1)
+
+[node name="Marker" type="ColorRect" parent="UI2/CatchUI/BarBackground"]
+layout_mode = 0
+offset_right = 6.0
+offset_bottom = 20.0
+
+[node name="CatchProgress" type="ProgressBar" parent="UI2/CatchUI"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = 279.0
+offset_right = 300.0
+offset_bottom = 306.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CatchResultUI" parent="UI2" instance=ExtResource("11_ewdra")]
+offset_top = -197.0
+offset_bottom = 197.0
+
+[node name="InventoryUI" parent="UI2" instance=ExtResource("12_4hlsc")]
+theme = SubResource("Theme_u47el")
+
+[node name="MoneyHUD" parent="UI2" instance=ExtResource("13_bl06e")]
+offset_right = 60.0
+offset_bottom = 43.0
+theme = SubResource("Theme_kylbc")
+
+[node name="FishBook" parent="UI2" instance=ExtResource("14_85lqq")]
+visible = false
+
+[node name="CastPowerUI" parent="UI2" instance=ExtResource("15_a3cxi")]
+visible = false
+
+[node name="OptionsControl" parent="UI2" instance=ExtResource("16_te6ua")]
+visible = false
+
+[node name="skyscaper" parent="UI2" instance=ExtResource("17_ysmne")]
+transform = Transform3D(0.307902, 0, 0.186538, 0, 0.36, 0, -0.186538, 0, 0.307902, 41.717, 6.24582, 38.3284)
+
+[node name="skyscaper2" parent="UI2" instance=ExtResource("17_ysmne")]
+transform = Transform3D(0.307902, 0, 0.186538, 0, 0.36, 0, -0.186538, 0, 0.307902, 46.7262, 6.24582, 35.5814)
+
+[node name="skyscaper3" parent="UI2" instance=ExtResource("17_ysmne")]
+transform = Transform3D(0.461853, 0, 0.279807, 0, 0.54, 0, -0.279807, 0, 0.461853, 51.2507, 9.08063, 40.429)
+
+[node name="skyscaper4" parent="UI2" instance=ExtResource("17_ysmne")]
+transform = Transform3D(-0.260732, 0, 0.248231, 0, 0.36, 0, -0.248231, 0, -0.260732, 34.359, 6.24582, 5.22791)
+
+[node name="skyscaper5" parent="UI2" instance=ExtResource("17_ysmne")]
+transform = Transform3D(-0.260732, 0, 0.248231, 0, 0.36, 0, -0.248231, 0, -0.260732, 30.3949, 6.24582, 1.11404)
+
+[node name="skyscaper6" parent="UI2" instance=ExtResource("17_ysmne")]
+transform = Transform3D(-0.391098, 0, 0.372347, 0, 0.54, 0, -0.372347, 0, -0.391098, 33.8869, 9.08063, -4.52298)
+
+[node name="Touch" parent="UI2" instance=ExtResource("18_yh6ru")]
+
+[node name="BaitHUD" parent="UI2" instance=ExtResource("19_kpnk1")]
+offset_top = 47.52
+offset_bottom = 82.52
+
+[node name="Clock" parent="UI2" node_paths=PackedStringArray("animation_player") instance=ExtResource("20_snqa0")]
+animation_player = NodePath("")
+animation_name = "circle"
+day_time_offset_seconds = 30.0
+
+[editable path="PlayerCamera/FishingRod"]
+[editable path="UI2/Touch"]
