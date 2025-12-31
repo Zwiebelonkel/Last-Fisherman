@@ -11,7 +11,7 @@ signal order_completed(customer: Customer, payment: int, tip: int)
 # ===============================
 var order: Order
 var patience := 100.0
-var patience_decay_rate := 5.0
+var patience_decay_rate := 1.0
 var is_waiting := true
 var is_active := false
 

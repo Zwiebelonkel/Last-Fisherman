@@ -1,4 +1,4 @@
-[gd_scene load_steps=46 format=3 uid="uid://bqhxfk3g8vxn7"]
+[gd_scene load_steps=57 format=3 uid="uid://bqhxfk3g8vxn7"]
 
 [ext_resource type="Script" uid="uid://cqgu3f2n1rg1p" path="res://scripts/Fishbudecontroller.gd" id="1"]
 [ext_resource type="Script" uid="uid://bfajhux4gse13" path="res://scripts/tray.gd" id="2"]
@@ -17,15 +17,15 @@
 [ext_resource type="PackedScene" uid="uid://cdb3sodlv6np7" path="res://scenes/MoneyHUD.tscn" id="13_bl06e"]
 [ext_resource type="PackedScene" uid="uid://be7bs5po2ukhi" path="res://scenes/FishBook.tscn" id="14_85lqq"]
 [ext_resource type="PackedScene" uid="uid://b08obrprd472u" path="res://scenes/OptionsControl.tscn" id="16_te6ua"]
-[ext_resource type="Shader" uid="uid://of02kbc2kqkw" path="res://shader/sky2.gdshader" id="18_uanbt"]
 [ext_resource type="PackedScene" uid="uid://xt7f7m4i2iwi" path="res://scenes/touch.tscn" id="18_yh6ru"]
 [ext_resource type="PackedScene" uid="uid://dqoq3miv3jfjd" path="res://scenes/FishSelectionUI.tscn" id="19_36inu"]
-[ext_resource type="Texture2D" uid="uid://e7t33pnr13bp" path="res://textures/These-images-of-clouds-are-created-exclusively-using-Perlin-noise-It-simulates-the_Q320.jpg" id="19_wpubn"]
 [ext_resource type="PackedScene" uid="uid://fhdcihlq4hwo" path="res://scenes/MoneyPopup.tscn" id="20_ewdra"]
 [ext_resource type="PackedScene" uid="uid://ws4ms8iq4gg4" path="res://scenes/clock.tscn" id="20_snqa0"]
 [ext_resource type="PackedScene" uid="uid://cgx4m5clsd3v7" path="res://scenes/foodtruck.tscn" id="21_jcqa2"]
 [ext_resource type="Script" uid="uid://djiw13hd2jw5k" path="res://scenes/security_ui.gd" id="24_4hlsc"]
 [ext_resource type="Script" uid="uid://dggy0f358bhxd" path="res://scenes/rec.gd" id="26_85lqq"]
+[ext_resource type="PackedScene" uid="uid://ckje0fw3pep83" path="res://assets/skyscaper.glb" id="26_a3cxi"]
+[ext_resource type="Material" uid="uid://bsr3yycic2g0q" path="res://materials/water.tres" id="27_a3cxi"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_4hlsc"]
 shader = ExtResource("2_wpubn")
@@ -57,10 +57,20 @@ albedo_color = Color(1, 1, 0, 1)
 [sub_resource type="BoxMesh" id="BoxMesh_4hlsc"]
 material = SubResource("StandardMaterial3D_ewdra")
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_1"]
-size = Vector3(1.03601, 1.00287, 0.539185)
+[sub_resource type="BoxShape3D" id="BoxShape3D_85lqq"]
+size = Vector3(1.0212, 1.02494, 1.27131)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_a3cxi"]
+size = Vector3(0.335899, 0.788711, 0.728777)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_te6ua"]
+size = Vector3(2.29282, 0.058898, 0.728777)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_te6ua"]
+albedo_color = Color(0.379292, 0.296544, 0.220121, 1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_bl06e"]
+material = SubResource("StandardMaterial3D_te6ua")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_85lqq"]
 cull_mode = 1
@@ -79,6 +89,9 @@ albedo_color = Color(1, 1, 0, 1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_te6ua"]
 material = SubResource("StandardMaterial3D_a3cxi")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ysmne"]
+size = Vector3(0.986778, 1.02107, 0.848275)
 
 [sub_resource type="GDScript" id="GDScript_vx235"]
 script/source = "extends Node3D
@@ -373,39 +386,251 @@ default_font = ExtResource("10_36inu")
 [sub_resource type="Theme" id="Theme_kylbc"]
 default_font = ExtResource("10_36inu")
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_jcqa2"]
-shader = ExtResource("18_uanbt")
-shader_parameter/use_directional_light = false
-shader_parameter/sun_color = Color(0.0158297, 0.0357297, 0.0947171, 1)
-shader_parameter/sun_energy = 16.185
-shader_parameter/cloud_color = Color(0.0179562, 0.0357238, 0.0609136, 1)
-shader_parameter/cloud_density = 5.5
-shader_parameter/cloud_depth = -4.46
-shader_parameter/cloud_sag = 2.0
-shader_parameter/noise_texture = ExtResource("19_wpubn")
-shader_parameter/noise_tiling = Vector2(1, 1)
-shader_parameter/wind_speed = Vector2(-0.19, -0.26)
-shader_parameter/ground_bottom_color = Color(0, 0, 0, 1)
-shader_parameter/ground_curve = 0.04
-shader_parameter/exposure = 5.741
-
-[sub_resource type="Sky" id="Sky_dqb0a"]
-sky_material = SubResource("ShaderMaterial_jcqa2")
-
-[sub_resource type="Environment" id="Environment_36inu"]
-background_mode = 2
-sky = SubResource("Sky_dqb0a")
-glow_enabled = true
-glow_intensity = 8.0
-glow_strength = 0.94
-glow_hdr_threshold = 4.0
-glow_map_strength = 0.94
-volumetric_fog_enabled = true
-volumetric_fog_density = 0.0184
-
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_bl06e"]
 shader = ExtResource("3_4hlsc")
 shader_parameter/pixel_size = 200.0
+
+[sub_resource type="Shader" id="Shader_pwxld"]
+code = "shader_type sky;
+
+group_uniforms Sky;
+/**
+ * Use directional light for sun color
+*/
+uniform bool use_directional_light = true;
+uniform vec4 sun_color : source_color = vec4(1.0);
+uniform float sun_energy = 15.0;
+uniform vec4 cloud_color : source_color = vec4(0.296, 0.402, 0.521, 1.0);
+/**
+ * Determines how much light the clouds absorb
+*/
+uniform float cloud_density = 5.0;
+/**
+ * Depth of the parallax effect
+*/
+uniform float cloud_depth = 2.0;
+/**
+ * Higher values give the clouds a heavier appearance
+*/
+uniform float cloud_sag = 2.0;
+uniform sampler2D noise_texture;
+uniform vec2 noise_tiling = vec2(1.0);
+uniform vec2 wind_speed = vec2(0.5);
+group_uniforms;
+
+group_uniforms Ground;
+uniform vec4 ground_bottom_color : source_color = vec4(0.2, 0.169, 0.133, 1.0);
+uniform float ground_curve : hint_range(0, 1) = 0.04;
+group_uniforms;
+
+uniform float exposure : hint_range(0, 128) = 1.0;
+
+// https://www.scratchapixel.com/lessons/3d-basic-rendering/minimal-ray-tracer-rendering-simple-shapes/ray-plane-and-ray-disk-intersection.html
+float ray_plane_intersection(vec3 origin, vec3 normal, vec3 ray_start, vec3 ray_dir) {
+	return dot(origin - ray_start, normal) / dot(ray_dir, normal);
+}
+
+float sample_height(vec2 uv) {
+	float height = texture(noise_texture, uv).r;
+	return pow(height, cloud_sag);
+}
+
+float beers_law(float absorption, float dist) {
+	return exp(-absorption * dist);
+}
+
+void sky() {
+	vec3 light_color = vec3(0.0);
+	if (use_directional_light)
+		light_color = LIGHT0_COLOR * LIGHT0_ENERGY * dot(LIGHT0_DIRECTION, vec3(0.0, 1.0, 0.0));
+	else
+		light_color = sun_color.rgb * sun_energy;
+
+	vec3 sky = cloud_color.rgb;
+
+	// Find view ray intersection with cloud layer
+	float t = ray_plane_intersection(vec3(0.0, 1.0, 0.0), vec3(0.0, -1.0, 0.0), vec3(0.0), EYEDIR);
+	if (t >= 0.0) {
+		vec3 wind = vec3(wind_speed.x, 0.0, wind_speed.y) * TIME * 0.1;
+		vec3 tiling = vec3(noise_tiling.x, 1.0, noise_tiling.y) * 0.2;
+		vec3 cloud_pos = EYEDIR * t * tiling + wind;
+
+		// Parallax mapping
+		float height = sample_height(cloud_pos.xz);
+		cloud_pos += EYEDIR * height * cloud_depth * 0.1;
+		height = sample_height(cloud_pos.xz);
+
+		// Attenuate light by view angle to simulate occlusion
+		float n_dot_v = dot(vec3(0.0, 1.0, 0.0), EYEDIR);
+		sky += light_color * beers_law(cloud_density, 1.0 - height * n_dot_v);
+	}
+	vec3 horizon = cloud_color.rgb + light_color * beers_law(cloud_density, 1.0);
+	vec3 ground = mix(horizon, ground_bottom_color.rgb, clamp(1.0 - pow(1.0 + EYEDIR.y, 1.0 / ground_curve), 0.0, 1.0));
+	COLOR = mix(ground, sky, step(0.0, EYEDIR.y)) * exposure;
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_te6ua"]
+shader = SubResource("Shader_pwxld")
+shader_parameter/use_directional_light = false
+shader_parameter/sun_color = Color(0.0605303, 0.0605303, 0.0605303, 1)
+shader_parameter/sun_energy = 8.525
+shader_parameter/cloud_color = Color(0, 0, 0, 1)
+shader_parameter/cloud_density = 5.0
+shader_parameter/cloud_depth = 2.0
+shader_parameter/cloud_sag = 2.0
+shader_parameter/noise_tiling = Vector2(1, 1)
+shader_parameter/wind_speed = Vector2(0.5, 0.5)
+shader_parameter/ground_bottom_color = Color(0.2, 0.169, 0.133, 1)
+shader_parameter/ground_curve = 0.04
+shader_parameter/exposure = 1.0
+
+[sub_resource type="Sky" id="Sky_cw1g3"]
+sky_material = SubResource("ShaderMaterial_te6ua")
+radiance_size = 0
+
+[sub_resource type="Environment" id="Environment_ysmne"]
+background_mode = 2
+background_energy_multiplier = 0.14
+sky = SubResource("Sky_cw1g3")
+glow_enabled = true
+glow_intensity = 0.05
+glow_strength = 0.29
+glow_hdr_scale = 1.17
+glow_hdr_luminance_cap = 4.75
+glow_map_strength = 0.0
+fog_light_color = Color(0.808262, 0.429746, 0.296975, 1)
+fog_light_energy = 0.0
+fog_sun_scatter = 1.0
+fog_density = 0.0
+fog_sky_affect = 0.0
+volumetric_fog_enabled = true
+volumetric_fog_length = 42.44
+volumetric_fog_ambient_inject = 0.2
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_yh6ru"]
+lightmap_size_hint = Vector2i(251, 1001)
+material = ExtResource("27_a3cxi")
+uv2_padding = 1.41
+size = Vector2(200, 200)
+
+[sub_resource type="Animation" id="Animation_lam2r"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:light_color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(0.99552, 0.467887, 0.0444731, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:light_angular_distance")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [13.64]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("../MeshInstance3D2:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(2.48185, 2.72752, 228.721)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath(".:rotation")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(-0.371406, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_vt84v"]
+resource_name = "circle"
+length = 60.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:light_color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 30, 60),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(0.99552, 0.467887, 0.0444731, 1), Color(0.0187395, 0.22427, 0.266336, 1), Color(0.99552, 0.467887, 0.0444731, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:light_angular_distance")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 30, 60),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [13.64, 0.0, 13.64]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("../MeshInstance3D2:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 30, 60),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(2.48185, 2.72752, 228.721), Vector3(2.48185, -20.6028, 228.721), Vector3(2.48185, 2.72752, 228.721)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath(".:rotation")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 29.9607, 60),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(-0.371406, 0, 0), Vector3(-1.94081, 0, 0), Vector3(-0.371406, 0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_amia2"]
+_data = {
+&"RESET": SubResource("Animation_lam2r"),
+&"circle": SubResource("Animation_vt84v")
+}
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kp0ql"]
+emission_enabled = true
+emission = Color(1, 1, 1, 1)
+emission_energy_multiplier = 16.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_te6ua"]
+material = SubResource("StandardMaterial3D_kp0ql")
 
 [node name="FishBude" type="Node3D"]
 script = ExtResource("1")
@@ -423,12 +648,6 @@ anchor_bottom = 1.0
 offset_right = 28.0
 grow_horizontal = 2
 grow_vertical = 2
-
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, -0.75, 0.433013, 0, 8, 0)
-light_color = Color(0.70431, 0.491963, 0.457322, 1)
-light_energy = 0.0
-shadow_enabled = true
 
 [node name="Floor" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, 0)
@@ -457,8 +676,8 @@ visible = false
 mesh = SubResource("BoxMesh_4hlsc")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StationFryer"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
-shape = SubResource("BoxShape3D_1")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00815964, 0.49136, -0.0661149)
+shape = SubResource("BoxShape3D_85lqq")
 
 [node name="TimerLabel3D" type="Label3D" parent="StationFryer"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
@@ -487,16 +706,16 @@ visible = false
 mesh = SubResource("BoxMesh_4hlsc")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StationSecurity"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -0.00628662)
-shape = SubResource("BoxShape3D_1")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.145527, 0.475884, -0.00628662)
+shape = SubResource("BoxShape3D_a3cxi")
 
 [node name="StationSushi" type="StaticBody3D" parent="."]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0.182382, 1.05962, -0.840849)
 script = ExtResource("4")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StationSushi"]
-transform = Transform3D(1, 0, 0, 0, 0.999908, -0.0135782, 0, 0.0135782, 0.999908, 0.0394283, 0.338337, 0.00255752)
-shape = SubResource("BoxShape3D_1")
+transform = Transform3D(1, 0, 0, 0, 0.999908, -0.0135782, 0, 0.0135782, 0.999908, 0.264938, 0.705397, 0.0285161)
+shape = SubResource("BoxShape3D_te6ua")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="StationSushi"]
 transform = Transform3D(1.73931, 0, 0.0205229, 0, 0.89, 0, -0.0489176, 0, 0.729711, 0, 0.283065, 0)
@@ -535,8 +754,8 @@ visible = false
 mesh = SubResource("BoxMesh_te6ua")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StationDrinks"]
-transform = Transform3D(1, 0, -6.00409e-13, 0, 0.999989, 0, 0, 0, 1, 0.00335705, 0.0560573, 0)
-shape = SubResource("BoxShape3D_1")
+transform = Transform3D(1, 0, -1.06581e-12, 0, 0.999931, 0, 0, 0, 1, 0.00215542, 0.0657921, 0.0597491)
+shape = SubResource("BoxShape3D_ysmne")
 
 [node name="InteractionPrompt" type="Label3D" parent="StationDrinks"]
 transform = Transform3D(0.575, 0, 0, 0, 0.575, 0, 0, 0, 0.575, -4.47035e-08, 0.747734, 0.628482)
@@ -765,19 +984,31 @@ horizontal_alignment = 1
 [node name="HSeparator" type="HSeparator" parent="UI2/OrderPanel/VBoxContainer"]
 layout_mode = 2
 
-[node name="FishLabel" type="Label" parent="UI2/OrderPanel/VBoxContainer"]
+[node name="Fish" type="MarginContainer" parent="UI2/OrderPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 15
+
+[node name="FishLabel" type="Label" parent="UI2/OrderPanel/VBoxContainer/Fish"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("10_36inu")
 theme_override_font_sizes/font_size = 22
 text = "Fisch: -"
 
-[node name="PrepLabel" type="Label" parent="UI2/OrderPanel/VBoxContainer"]
+[node name="Prep" type="MarginContainer" parent="UI2/OrderPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 15
+
+[node name="PrepLabel" type="Label" parent="UI2/OrderPanel/VBoxContainer/Prep"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("10_36inu")
 theme_override_font_sizes/font_size = 22
 text = "Art: -"
 
-[node name="DrinkLabel" type="Label" parent="UI2/OrderPanel/VBoxContainer"]
+[node name="Drink" type="MarginContainer" parent="UI2/OrderPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 15
+
+[node name="DrinkLabel" type="Label" parent="UI2/OrderPanel/VBoxContainer/Drink"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("10_36inu")
 theme_override_font_sizes/font_size = 22
@@ -820,8 +1051,10 @@ horizontal_alignment = 1
 
 [node name="ServeButton" type="Button" parent="UI2/TrayPanel/VBoxContainer"]
 layout_mode = 2
+size_flags_vertical = 3
 theme_override_colors/font_hover_color = Color(1, 0.9, 0.3, 1)
 theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("10_36inu")
 theme_override_font_sizes/font_size = 24
 text = "SERVIEREN"
 
@@ -845,30 +1078,12 @@ visible = false
 visible = false
 
 [node name="Touch" parent="UI2" instance=ExtResource("18_yh6ru")]
-
-[node name="Clock" parent="UI2" instance=ExtResource("20_snqa0")]
 visible = false
+
+[node name="Clock" parent="UI2" node_paths=PackedStringArray("animation_player") instance=ExtResource("20_snqa0")]
+animation_player = NodePath("../../DirectionalLight3D2/AnimationPlayer")
 animation_name = "circle"
 day_time_offset_seconds = 30.0
-
-[node name="DirectionalLight3D3" type="DirectionalLight3D" parent="."]
-transform = Transform3D(0.97848, -0.00843342, -0.206171, 0.0389501, 0.988751, 0.144411, 0.202634, -0.149334, 0.967801, -1.07784, 48.3065, 160.116)
-light_color = Color(0.212618, 0.391718, 0.51053, 1)
-light_energy = 0.646
-light_indirect_energy = 0.0
-light_volumetric_fog_energy = 0.485
-light_angular_distance = 13.64
-light_specular = 0.191
-shadow_enabled = true
-directional_shadow_split_1 = 0.079
-directional_shadow_split_2 = 0.352
-directional_shadow_split_3 = 0.268
-directional_shadow_fade_start = 0.507
-directional_shadow_max_distance = 83.4
-sky_mode = 1
-
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource("Environment_36inu")
 
 [node name="Foodtruck" parent="." instance=ExtResource("21_jcqa2")]
 transform = Transform3D(-0.0383005, 0, 0.999266, 0, 1, 0, -0.999266, 0, -0.0383005, 0.727879, 0, 0.000216007)
@@ -879,6 +1094,7 @@ fov = 83.9
 
 [node name="SecurityUI" type="CanvasLayer" parent="."]
 layer = 10
+visible = false
 script = ExtResource("24_4hlsc")
 
 [node name="PixelateOverlay" type="ColorRect" parent="SecurityUI"]
@@ -915,6 +1131,47 @@ text = "● REC"
 script = ExtResource("26_85lqq")
 
 [node name="Customers" type="Node3D" parent="."]
+
+[node name="WorldEnvironment2" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_ysmne")
+
+[node name="WaterPlane" type="MeshInstance3D" parent="."]
+transform = Transform3D(-1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0, 0, 1, 0, 1.31409, 91.1433)
+mesh = SubResource("PlaneMesh_yh6ru")
+
+[node name="DirectionalLight3D2" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.931818, 0.362926, 0, -0.362926, 0.931818, -1.07784, 37.4465, 160.116)
+light_color = Color(0.99552, 0.467887, 0.0444731, 1)
+light_energy = 16.0
+light_volumetric_fog_energy = 0.485
+light_angular_distance = 13.64
+light_specular = 0.676
+shadow_enabled = true
+shadow_blur = 10.0
+directional_shadow_split_1 = 0.079
+directional_shadow_split_2 = 0.352
+directional_shadow_split_3 = 0.268
+directional_shadow_fade_start = 0.507
+directional_shadow_max_distance = 83.4
+sky_mode = 1
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="DirectionalLight3D2"]
+libraries = {
+&"": SubResource("AnimationLibrary_amia2")
+}
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(26.165, 0, 0, 0, 26.165, 0, 0, 0, 26.165, 2.48185, 2.72752, 228.721)
+mesh = SubResource("SphereMesh_te6ua")
+
+[node name="skyscaper" parent="." instance=ExtResource("26_a3cxi")]
+transform = Transform3D(-0.794976, 0, 0.606641, 0, 1, 0, -0.606641, 0, -0.794976, 21.7867, 0, -2.8442)
+
+[node name="skyscaper2" parent="." instance=ExtResource("26_a3cxi")]
+transform = Transform3D(-0.794976, 0, 0.606641, 0, 1, 0, -0.606641, 0, -0.794976, 26.325, 0, 31.0798)
+
+[node name="skyscaper3" parent="." instance=ExtResource("26_a3cxi")]
+transform = Transform3D(0.415551, 0, 0.90957, 0, 1, 0, -0.90957, 0, 0.415551, -18.456, 0, 61.003)
 
 [editable path="PlayerCamera/FishingRod"]
 [editable path="UI2/Touch"]

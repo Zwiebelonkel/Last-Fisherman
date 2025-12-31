@@ -13,6 +13,9 @@ class_name FishBudeController
 @export var max_queue_size := 3
 @export var queue_spacing := 1.4
 
+@onready var dayNightAni: AnimationPlayer = $DirectionalLight3D2/AnimationPlayer
+
+
 @onready var entry_point: Node3D = $CustomerEntry
 @onready var exit_point: Node3D = $CustomerExit
 
@@ -36,6 +39,7 @@ var customer_spawn_timer: float = 0.0
 var customer_spawn_interval: float = 15.0
 
 func _ready() -> void:
+	dayNightAni.play("circle")
 	setup_inventory()
 	setup_ui()
 	setup_tray_visual()
@@ -156,7 +160,7 @@ func update_station_hover() -> void:
 			station_sushi.set_hover(true)
 		elif collider == station_drinks:
 			station_drinks.set_hover(true)
-		elif collider == station_drinks:
+		elif collider == station_security:
 			station_security.set_hover(true)
 
 func handle_customer_spawning(delta: float) -> void:
@@ -215,10 +219,7 @@ func _reorder_queue() -> void:
 		show_order_ui(current_customer.order)
 	else:
 		current_customer = null
-		ui.get_node("OrderPanel").visible = false
-
-
-
+		show_order_ui(null)
 
 
 func get_available_fish_types() -> Array:
@@ -272,15 +273,29 @@ func get_fish_data(fish_name: String) -> Dictionary:
 	return {}
 
 func show_order_ui(order: Order) -> void:
-	var order_panel = ui.get_node("OrderPanel")
+	var order_panel := ui.get_node("OrderPanel") as Control
+
+	# ✅ Wenn keine Order: Panel ausblenden und raus
+	if order == null:
+		order_panel.visible = false
+		return
+
 	order_panel.visible = true
-	order_panel.get_node("VBoxContainer/FishLabel").text = "Fisch: %s" % order.fish_type
-	order_panel.get_node("VBoxContainer/PrepLabel").text = "Art: %s" % order.preparation_type
-	
-	if order.wants_drink:
-		order_panel.get_node("VBoxContainer/DrinkLabel").text = "Getraenk: Ja"
-	else:
-		order_panel.get_node("VBoxContainer/DrinkLabel").text = "Getraenk: Nein"
+
+	# 🐟 FISCHNAME
+	var fish_label := order_panel.get_node("VBoxContainer/Fish/FishLabel") as Label
+	fish_label.text = "Fisch: %s" % order.fish_type
+
+	# 🍳 ZUBEREITUNG
+	var prep_label := order_panel.get_node("VBoxContainer/Prep/PrepLabel") as Label
+	prep_label.text = "Art: %s" % order.preparation_type
+
+	# 🥤 GETRÄNK
+	var drink_label := order_panel.get_node("VBoxContainer/Drink/DrinkLabel") as Label
+	drink_label.text = "Getränk: Ja" if order.wants_drink else "Getränk: Nein"
+
+
+
 
 func update_customer_patience(delta: float) -> void:
 	if current_customer:
@@ -290,25 +305,36 @@ func serve_customer() -> void:
 	if not current_customer:
 		print("Kein Kunde zum Bedienen!")
 		return
-	
+
 	if not tray.has_items():
 		print("Tablett ist leer!")
 		return
-	
-	# Überprüfe ob Bestellung korrekt ist
-	var order = current_customer.order
-	var correct = tray.matches_order(order)
-	
+
+	# 🔒 Order einmal sichern
+	var order: Order = current_customer.order
+	if order == null:
+		push_warning("⚠️ Kunde hat keine Order mehr!")
+		return
+
+	var correct := tray.matches_order(order)
+
+	# 🔒 UI sofort schließen – danach KEIN Zugriff mehr auf order!
+	ui.get_node("OrderPanel").visible = false
+
 	if correct:
 		print("Bestellung korrekt!")
-		# Entferne Fisch aus Inventar
+
 		var payment := calculate_fish_payment(order)
-		remove_fish_from_inventory(order.fish_type)
+		var fish_name := order.fish_type  # 🔒 sichern!
+
+		remove_fish_from_inventory(fish_name)
+
+		# ❗ LETZTER Zugriff auf current_customer
 		current_customer.complete_order_with_payment(payment)
 	else:
 		print("Falsche Bestellung!")
 		current_customer.complete_order(false)
-		# Tablett wird geleert, aber Fisch bleibt im Inventar
+
 
 func _on_customer_order_completed(customer: Customer, payment: int, tip: int) -> void:
 	Player.add_money(payment + tip)
@@ -317,10 +343,9 @@ func _on_customer_order_completed(customer: Customer, payment: int, tip: int) ->
 	customer.leave_to(exit_point.global_position)
 
 	tray.clear_all()
-	ui.get_node("OrderPanel").visible = false
-
 	current_customer = null
 	_reorder_queue()
+
 
 func _on_tray_item_added(_item) -> void:
 	update_tray_ui()
