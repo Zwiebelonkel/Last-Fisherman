@@ -26,6 +26,9 @@ class_name FishBudeController
 
 var security_view_active := false
 
+# Neu: Aktuell gehoverte Station/Kunde
+var hovered_station: Node = null
+var hovered_customer: Customer = null
 
 
 # Inventar-Referenz (wird von außen gesetzt oder gesucht)
@@ -91,6 +94,11 @@ func setup_inventory() -> void:
 
 func setup_ui() -> void:
 	ui.get_node("OrderPanel").visible = false
+	
+	# Verstecke Servieren-Button (wird nicht mehr gebraucht)
+	var serve_button = ui.get_node_or_null("TrayPanel/VBoxContainer/ServeButton")
+	if serve_button:
+		serve_button.visible = false
 
 func connect_stations() -> void:
 	# Hole Fish Selection UI
@@ -113,10 +121,7 @@ func connect_stations() -> void:
 
 
 func connect_ui_signals() -> void:
-	# Servieren-Button
-	var serve_button = ui.get_node("TrayPanel/VBoxContainer/ServeButton")
-	if serve_button:
-		serve_button.pressed.connect(serve_customer)
+	# Servieren-Button wird nicht mehr verbunden (deprecated)
 	
 	# Tablett-Updates
 	tray.item_added.connect(_on_tray_item_added)
@@ -127,10 +132,10 @@ func connect_ui_signals() -> void:
 func _process(delta: float) -> void:
 	handle_customer_spawning(delta)
 	update_customer_patience(delta)
-	update_station_hover()
+	update_hover()  # Aktualisiert Hover für Stationen UND Kunden
 
-func update_station_hover() -> void:
-	"""Prüft welche Station die Maus gerade hovert"""
+func update_hover() -> void:
+	"""Prüft was die Maus gerade hovert (Station oder Kunde)"""
 	var camera = get_viewport().get_camera_3d()
 	if not camera:
 		return
@@ -143,12 +148,14 @@ func update_station_hover() -> void:
 	var query = PhysicsRayQueryParameters3D.create(from, to)
 	var result = space_state.intersect_ray(query)
 	
-	# Alle Stationen auf "nicht hovering" setzen
+	# Reset alle Hover-States
 	station_fryer.set_hover(false)
 	station_sushi.set_hover(false)
 	station_drinks.set_hover(false)
 	station_security.set_hover(false)
-
+	
+	hovered_station = null
+	hovered_customer = null
 	
 	if result and result.collider:
 		var collider = result.collider
@@ -156,12 +163,21 @@ func update_station_hover() -> void:
 		# Prüfe ob es eine Station ist
 		if collider == station_fryer:
 			station_fryer.set_hover(true)
+			hovered_station = station_fryer
 		elif collider == station_sushi:
 			station_sushi.set_hover(true)
+			hovered_station = station_sushi
 		elif collider == station_drinks:
 			station_drinks.set_hover(true)
+			hovered_station = station_drinks
 		elif collider == station_security:
 			station_security.set_hover(true)
+			hovered_station = station_security
+		# Prüfe ob es ein Kunde ist
+		elif collider is Customer:
+			hovered_customer = collider
+			# Optional: Visuelles Feedback für gehoverter Kunde
+			# (z.B. Outline oder Highlight)
 
 func handle_customer_spawning(delta: float) -> void:
 	customer_spawn_timer += delta
@@ -368,9 +384,9 @@ func update_tray_ui() -> void:
 				item_texts.append(item.get_description())
 			tray_content.text = "\n".join(item_texts) + "\n(%d/4)" % items.size()
 
-# === DEBUG FUNKTIONEN ===
+# === INPUT HANDLING ===
 func _input(event: InputEvent) -> void:
-	# Mausklick auf Stationen
+	# Mausklick auf Stationen (funktioniert weiterhin)
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		handle_station_click()
 		return
@@ -379,14 +395,30 @@ func _input(event: InputEvent) -> void:
 		toggle_security_camera()
 		return
 	
-	# Debug: Tablett leeren mit Space
-	if event.is_action_pressed("ui_select"):  # Space
-		tray.clear_all()
-		print("Tablett geleert")
+	# NEU: Leertaste für Interaktion
+	if event.is_action_pressed("ui_accept"):  # Leertaste = ui_accept
+		handle_spacebar_interaction()
 	
-	# Debug: Inventar anzeigen mit I
+	# Debug: Inventar anzeigen mit Tab
 	if event.is_action_pressed("ui_text_completion_query"):  # Tab
 		print_inventory_status()
+
+func handle_spacebar_interaction() -> void:
+	"""Behandelt Leertaste-Interaktionen"""
+	
+	# 1. Prüfe ob wir einen Kunden anschauen
+	if hovered_customer and hovered_customer == current_customer:
+		serve_customer()
+		return
+	
+	# 2. Prüfe ob wir eine Station anschauen
+	if hovered_station and hovered_station.has_method("interact"):
+		hovered_station.interact()
+		print("Station interagiert: %s" % hovered_station.name)
+		return
+	
+	# 3. Nichts gehovered
+	print("Nichts zum Interagieren gefunden!")
 
 func handle_station_click() -> void:
 	"""Führt Interaktion mit der Station aus, die gerade unter der Maus ist"""

@@ -10,14 +10,19 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.134849, 0, -0.0121789)
 [node name="Object_15" parent="Sketchfab_Scene/Sketchfab_model/root/GLTF_SceneRootNode/assets_5" index="0"]
 visible = false
 
+[node name="Object_17" parent="Sketchfab_Scene/Sketchfab_model/root/GLTF_SceneRootNode/INTERIEUR_6" index="0"]
+visible = false
+
 [node name="OmniLight3D" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.93766, 0)
 light_color = Color(1, 1, 0.568627, 1)
+light_energy = 0.418
 omni_range = 1.706
 
 [node name="OmniLight3D2" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.93766, -1.96831)
 light_color = Color(1, 1, 0.568627, 1)
+light_energy = 0.127
 omni_range = 1.706
 
 [editable path="Sketchfab_Scene"]

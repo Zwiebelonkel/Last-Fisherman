@@ -172,6 +172,7 @@ func add_money(amount: int) -> void:
 
 	money += amount
 	GodotSteam.update_money(money)
+	print("Added: " + str(amount) + " money")
 	save_game()
 
 	emit_signal("money_gained", amount)

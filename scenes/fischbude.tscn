@@ -1,4 +1,4 @@
-[gd_scene load_steps=57 format=3 uid="uid://bqhxfk3g8vxn7"]
+[gd_scene load_steps=70 format=3 uid="uid://bqhxfk3g8vxn7"]
 
 [ext_resource type="Script" uid="uid://cqgu3f2n1rg1p" path="res://scripts/Fishbudecontroller.gd" id="1"]
 [ext_resource type="Script" uid="uid://bfajhux4gse13" path="res://scripts/tray.gd" id="2"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" uid="uid://d3sami34i2b7c" path="res://scripts/fryer.gd" id="3"]
 [ext_resource type="Shader" uid="uid://dmg556n5nwodi" path="res://shader/pixelate.gdshader" id="3_4hlsc"]
 [ext_resource type="Script" uid="uid://nif1hbs6jred" path="res://scripts/sushi.gd" id="4"]
+[ext_resource type="PackedScene" uid="uid://cfnh7vm4vbwi8" path="res://scenes/fryer.tscn" id="4_4cgah"]
 [ext_resource type="Script" uid="uid://mmhe1dmq4ipf" path="res://scripts/StationSecurity.gd" id="4_ewdra"]
 [ext_resource type="Script" uid="uid://qoarxse5jwpj" path="res://scripts/drinks.gd" id="5"]
 [ext_resource type="Script" uid="uid://bl1xotduehieu" path="res://scripts/camera_sway.gd" id="6_3wc6y"]
@@ -23,9 +24,20 @@
 [ext_resource type="PackedScene" uid="uid://ws4ms8iq4gg4" path="res://scenes/clock.tscn" id="20_snqa0"]
 [ext_resource type="PackedScene" uid="uid://cgx4m5clsd3v7" path="res://scenes/foodtruck.tscn" id="21_jcqa2"]
 [ext_resource type="Script" uid="uid://djiw13hd2jw5k" path="res://scenes/security_ui.gd" id="24_4hlsc"]
+[ext_resource type="Texture2D" uid="uid://e7t33pnr13bp" path="res://textures/These-images-of-clouds-are-created-exclusively-using-Perlin-noise-It-simulates-the_Q320.jpg" id="25_85lqq"]
 [ext_resource type="Script" uid="uid://dggy0f358bhxd" path="res://scenes/rec.gd" id="26_85lqq"]
-[ext_resource type="PackedScene" uid="uid://ckje0fw3pep83" path="res://assets/skyscaper.glb" id="26_a3cxi"]
-[ext_resource type="Material" uid="uid://bsr3yycic2g0q" path="res://materials/water.tres" id="27_a3cxi"]
+[ext_resource type="AudioStream" uid="uid://esyv0p374c5j" path="res://sounds/bite.mp3" id="27_4cgah"]
+[ext_resource type="AudioStream" uid="uid://cldy38iwm8ovi" path="res://sounds/cast.mp3" id="28_qwiaf"]
+[ext_resource type="AudioStream" uid="uid://26m0pjkxve85" path="res://sounds/rarity/normal.mp3" id="29_44cek"]
+[ext_resource type="AudioStream" uid="uid://bm2wkiirbpowg" path="res://sounds/rarity/uncommon.mp3" id="30_uyjbj"]
+[ext_resource type="AudioStream" uid="uid://bpy3o38b3nar3" path="res://sounds/rarity/rare.mp3" id="31_dv6yl"]
+[ext_resource type="AudioStream" uid="uid://rcuhs2eom22x" path="res://sounds/rarity/epic.mp3" id="32_tttq7"]
+[ext_resource type="AudioStream" uid="uid://c0e0t3u3yvvhg" path="res://sounds/rarity/legendary.mp3" id="33_evyhm"]
+[ext_resource type="AudioStream" uid="uid://qeh48myqvc8p" path="res://sounds/rarity/exotic.mp3" id="34_vu6nq"]
+[ext_resource type="AudioStream" uid="uid://6a3ro0nq1u4" path="res://sounds/rarity/antique.mp3" id="35_a7fsk"]
+[ext_resource type="AudioStream" uid="uid://cmr6cded4l11v" path="res://sounds/whoosh.mp3" id="36_kh0h8"]
+[ext_resource type="AudioStream" uid="uid://dnaarmpt3ge3b" path="res://sounds/lastFisherman.mp3" id="37_5bpro"]
+[ext_resource type="AudioStream" uid="uid://b7ifxd818oete" path="res://sounds/line.mp3" id="38_5r7ds"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_4hlsc"]
 shader = ExtResource("2_wpubn")
@@ -44,7 +56,11 @@ shader_parameter/tint_color = Vector3(0.95, 1.03, 0.9)
 shader_parameter/tint_strength = 0.15
 shader_parameter/viewport_size_override = Vector2(0, 0)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ysmne"]
+albedo_color = Color(0.233925, 0.233925, 0.233925, 1)
+
 [sub_resource type="BoxMesh" id="BoxMesh_floor"]
+material = SubResource("StandardMaterial3D_ysmne")
 size = Vector3(10, 0.1, 10)
 
 [sub_resource type="BoxMesh" id="BoxMesh_36inu"]
@@ -54,11 +70,16 @@ cull_mode = 1
 shading_mode = 0
 albedo_color = Color(1, 1, 0, 1)
 
-[sub_resource type="BoxMesh" id="BoxMesh_4hlsc"]
+[sub_resource type="BoxMesh" id="BoxMesh_4cgah"]
 material = SubResource("StandardMaterial3D_ewdra")
+size = Vector3(1.125, 1.615, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_85lqq"]
-size = Vector3(1.0212, 1.02494, 1.27131)
+size = Vector3(1.05901, 1.49868, 1.27131)
+
+[sub_resource type="BoxMesh" id="BoxMesh_qwiaf"]
+material = SubResource("StandardMaterial3D_ewdra")
+size = Vector3(0.5, 1.02, 1.17)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_a3cxi"]
 size = Vector3(0.335899, 0.788711, 0.728777)
@@ -472,47 +493,44 @@ void sky() {
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_te6ua"]
 shader = SubResource("Shader_pwxld")
-shader_parameter/use_directional_light = false
+shader_parameter/use_directional_light = true
 shader_parameter/sun_color = Color(0.0605303, 0.0605303, 0.0605303, 1)
-shader_parameter/sun_energy = 8.525
+shader_parameter/sun_energy = 8.75
 shader_parameter/cloud_color = Color(0, 0, 0, 1)
 shader_parameter/cloud_density = 5.0
 shader_parameter/cloud_depth = 2.0
 shader_parameter/cloud_sag = 2.0
+shader_parameter/noise_texture = ExtResource("25_85lqq")
 shader_parameter/noise_tiling = Vector2(1, 1)
 shader_parameter/wind_speed = Vector2(0.5, 0.5)
 shader_parameter/ground_bottom_color = Color(0.2, 0.169, 0.133, 1)
 shader_parameter/ground_curve = 0.04
-shader_parameter/exposure = 1.0
+shader_parameter/exposure = 3.0
 
 [sub_resource type="Sky" id="Sky_cw1g3"]
 sky_material = SubResource("ShaderMaterial_te6ua")
 radiance_size = 0
 
-[sub_resource type="Environment" id="Environment_ysmne"]
+[sub_resource type="Environment" id="Environment_4cgah"]
 background_mode = 2
-background_energy_multiplier = 0.14
+background_energy_multiplier = 4.31
 sky = SubResource("Sky_cw1g3")
 glow_enabled = true
-glow_intensity = 0.05
-glow_strength = 0.29
+glow_intensity = 8.0
+glow_strength = 0.61
 glow_hdr_scale = 1.17
 glow_hdr_luminance_cap = 4.75
 glow_map_strength = 0.0
-fog_light_color = Color(0.808262, 0.429746, 0.296975, 1)
+fog_light_color = Color(0.562858, 0.545887, 0.541806, 1)
 fog_light_energy = 0.0
-fog_sun_scatter = 1.0
-fog_density = 0.0
-fog_sky_affect = 0.0
+fog_sun_scatter = 0.08
+fog_density = 0.6887
+fog_aerial_perspective = 0.085
+fog_height = -1024.0
+fog_height_density = 16.0
 volumetric_fog_enabled = true
 volumetric_fog_length = 42.44
 volumetric_fog_ambient_inject = 0.2
-
-[sub_resource type="PlaneMesh" id="PlaneMesh_yh6ru"]
-lightmap_size_hint = Vector2i(251, 1001)
-material = ExtResource("27_a3cxi")
-uv2_padding = 1.41
-size = Vector2(200, 200)
 
 [sub_resource type="Animation" id="Animation_lam2r"]
 length = 0.001
@@ -576,10 +594,10 @@ tracks/0/path = NodePath(".:light_color")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 30, 60),
-"transitions": PackedFloat32Array(1, 1, 1),
+"times": PackedFloat32Array(0, 21.1, 30, 39.1, 60),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
 "update": 0,
-"values": [Color(0.99552, 0.467887, 0.0444731, 1), Color(0.0187395, 0.22427, 0.266336, 1), Color(0.99552, 0.467887, 0.0444731, 1)]
+"values": [Color(0.340913, 0.811787, 0.932253, 1), Color(0.449403, 0.214344, 0.132041, 1), Color(0.010603, 0.164782, 0.197878, 1), Color(0.449403, 0.214344, 0.132041, 1), Color(0, 0.723271, 0.805163, 1)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -603,7 +621,7 @@ tracks/2/keys = {
 "times": PackedFloat32Array(0, 30, 60),
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
-"values": [Vector3(2.48185, 2.72752, 228.721), Vector3(2.48185, -20.6028, 228.721), Vector3(2.48185, 2.72752, 228.721)]
+"values": [Vector3(-23.483, 2.728, 228.721), Vector3(-23.483, -20.603, 228.721), Vector3(2.48185, 2.72752, 228.721)]
 }
 tracks/3/type = "value"
 tracks/3/imported = false
@@ -649,8 +667,17 @@ offset_right = 28.0
 grow_horizontal = 2
 grow_vertical = 2
 
+[node name="PixelateOverlay2" type="ColorRect" parent="Filter"]
+material = SubResource("ShaderMaterial_4hlsc")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 28.0
+grow_horizontal = 2
+grow_vertical = 2
+
 [node name="Floor" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, 0)
+transform = Transform3D(5.39, 0, 0, 0, 5.39, 0, 0, 0, 5.39, 0, -0.267353, 0)
 mesh = SubResource("BoxMesh_floor")
 
 [node name="CustomerSpawnPoint" type="Node3D" parent="."]
@@ -663,24 +690,25 @@ transform = Transform3D(-0.958278, 0, -0.285839, 0, 1, 0, 0.285839, 0, -0.958278
 transform = Transform3D(-0.958278, 0, -0.285839, 0, 1, 0, 0.285839, 0, -0.958278, -5.09966, -0.349403, 0.577135)
 
 [node name="StationFryer" type="StaticBody3D" parent="."]
-transform = Transform3D(-2.18557e-08, 0, -0.5, 0, 0.5, 0, 0.5, 0, -2.18557e-08, 2.0142, 0.785115, 0)
+transform = Transform3D(-2.18557e-08, 0, -0.5, 0, 0.5, 0, 0.5, 0, -2.18557e-08, 1.37979, 0.557862, 0)
 script = ExtResource("3")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="StationFryer"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+visible = false
 mesh = SubResource("BoxMesh_36inu")
 
 [node name="OutlineMesh" type="MeshInstance3D" parent="StationFryer"]
-transform = Transform3D(1.05, 0, 0, 0, 1.05, 0, 0, 0, 1.05, 0, 0.5, 0)
+transform = Transform3D(1.05, 0, 0, 0, 1.05, 0, 0, 0, 1.05, 0.0606674, 0.776311, -0.20139)
 visible = false
-mesh = SubResource("BoxMesh_4hlsc")
+mesh = SubResource("BoxMesh_4cgah")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StationFryer"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00815964, 0.49136, -0.0661149)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.107843, 0.728228, -0.0661149)
 shape = SubResource("BoxShape3D_85lqq")
 
 [node name="TimerLabel3D" type="Label3D" parent="StationFryer"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.88291, 0)
 pixel_size = 0.01
 billboard = 1
 alpha_cut = 2
@@ -688,9 +716,13 @@ text = "0.0s"
 font_size = 48
 
 [node name="InteractionPrompt" type="Label3D" parent="StationFryer"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.91943, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.105572, 2.25535, 0.10065)
 billboard = 1
+alpha_cut = 1
 text = "Klicken zum Frittieren"
+
+[node name="Fryer" parent="StationFryer" instance=ExtResource("4_4cgah")]
+transform = Transform3D(1.365, 0, 0, 0, 1.365, 0, 0, 0, 1.365, -0.0827243, 0, 0)
 
 [node name="StationSecurity" type="StaticBody3D" parent="."]
 transform = Transform3D(-2.18557e-08, 0, -0.5, 0, 0.5, 0, 0.5, 0, -2.18557e-08, -1.0128, 1.56798, 1.00104)
@@ -703,7 +735,7 @@ mesh = SubResource("BoxMesh_36inu")
 [node name="OutlineMesh" type="MeshInstance3D" parent="StationSecurity"]
 transform = Transform3D(0.1, 0, 0, 0, 0.826, 0, 0, 0, 0.426, 0, 0.5, 0)
 visible = false
-mesh = SubResource("BoxMesh_4hlsc")
+mesh = SubResource("BoxMesh_qwiaf")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StationSecurity"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.145527, 0.475884, -0.00628662)
@@ -758,9 +790,9 @@ transform = Transform3D(1, 0, -1.06581e-12, 0, 0.999931, 0, 0, 0, 1, 0.00215542,
 shape = SubResource("BoxShape3D_ysmne")
 
 [node name="InteractionPrompt" type="Label3D" parent="StationDrinks"]
-transform = Transform3D(0.575, 0, 0, 0, 0.575, 0, 0, 0, 0.575, -4.47035e-08, 0.747734, 0.628482)
+transform = Transform3D(0.785, 0, -7.10543e-15, 0, 0.59, 0, 0, 0, 0.59, -4.47035e-08, 0.646483, 0.628482)
 billboard = 1
-alpha_cut = 2
+alpha_cut = 1
 text = "Klicken für Getränke"
 
 [node name="Tray" type="Node" parent="."]
@@ -1078,7 +1110,6 @@ visible = false
 visible = false
 
 [node name="Touch" parent="UI2" instance=ExtResource("18_yh6ru")]
-visible = false
 
 [node name="Clock" parent="UI2" node_paths=PackedStringArray("animation_player") instance=ExtResource("20_snqa0")]
 animation_player = NodePath("../../DirectionalLight3D2/AnimationPlayer")
@@ -1133,16 +1164,12 @@ script = ExtResource("26_85lqq")
 [node name="Customers" type="Node3D" parent="."]
 
 [node name="WorldEnvironment2" type="WorldEnvironment" parent="."]
-environment = SubResource("Environment_ysmne")
-
-[node name="WaterPlane" type="MeshInstance3D" parent="."]
-transform = Transform3D(-1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0, 0, 1, 0, 1.31409, 91.1433)
-mesh = SubResource("PlaneMesh_yh6ru")
+environment = SubResource("Environment_4cgah")
 
 [node name="DirectionalLight3D2" type="DirectionalLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.931818, 0.362926, 0, -0.362926, 0.931818, -1.07784, 37.4465, 160.116)
+transform = Transform3D(1, 0, 0, 0, 0.931818, 0.362926, 0, -0.362926, 0.931818, -1.07784, 37.4465, 0.29068)
 light_color = Color(0.99552, 0.467887, 0.0444731, 1)
-light_energy = 16.0
+light_energy = 2.341
 light_volumetric_fog_energy = 0.485
 light_angular_distance = 13.64
 light_specular = 0.676
@@ -1164,14 +1191,70 @@ libraries = {
 transform = Transform3D(26.165, 0, 0, 0, 26.165, 0, 0, 0, 26.165, 2.48185, 2.72752, 228.721)
 mesh = SubResource("SphereMesh_te6ua")
 
-[node name="skyscaper" parent="." instance=ExtResource("26_a3cxi")]
-transform = Transform3D(-0.794976, 0, 0.606641, 0, 1, 0, -0.606641, 0, -0.794976, 21.7867, 0, -2.8442)
+[node name="environemt" type="Node" parent="."]
 
-[node name="skyscaper2" parent="." instance=ExtResource("26_a3cxi")]
-transform = Transform3D(-0.794976, 0, 0.606641, 0, 1, 0, -0.606641, 0, -0.794976, 26.325, 0, 31.0798)
+[node name="Audio" type="Node" parent="."]
 
-[node name="skyscaper3" parent="." instance=ExtResource("26_a3cxi")]
-transform = Transform3D(0.415551, 0, 0.90957, 0, 1, 0, -0.90957, 0, 0.415551, -18.456, 0, 61.003)
+[node name="bite" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("27_4cgah")
+volume_db = -2.811
+bus = &"SFX"
 
+[node name="cast" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("28_qwiaf")
+bus = &"SFX"
+
+[node name="normal" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("29_44cek")
+bus = &"SFX"
+
+[node name="uncommon" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("30_uyjbj")
+bus = &"SFX"
+
+[node name="rare" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("31_dv6yl")
+bus = &"SFX"
+
+[node name="epic" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("32_tttq7")
+bus = &"SFX"
+
+[node name="legendary" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("33_evyhm")
+pitch_scale = 0.93
+bus = &"SFX"
+
+[node name="exotic" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("34_vu6nq")
+pitch_scale = 0.8
+bus = &"SFX"
+
+[node name="antique" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("35_a7fsk")
+volume_db = -6.82
+pitch_scale = 0.67
+bus = &"SFX"
+
+[node name="whoosh" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("36_kh0h8")
+bus = &"SFX"
+
+[node name="music" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("37_5bpro")
+volume_db = -0.178
+pitch_scale = 1.49
+autoplay = true
+bus = &"Music"
+
+[node name="line" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("38_5r7ds")
+volume_db = -2.735
+pitch_scale = 1.1
+autoplay = true
+bus = &"SFX"
+
+[editable path="StationFryer/Fryer"]
+[editable path="StationFryer/Fryer/Sketchfab_Scene"]
 [editable path="PlayerCamera/FishingRod"]
 [editable path="UI2/Touch"]

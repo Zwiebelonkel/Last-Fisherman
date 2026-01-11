@@ -126,6 +126,12 @@ theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "Food Truck Textured by Arrangemonk
 https://skfb.ly/psuUB"
 
+[node name="Label14" type="Label" parent="VScrollBar/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "Low poly - Deep Fryer, Basket, Skimmer Set by JJangdol
+https://skfb.ly/pAXsw"
+
 [node name="Label10" type="Label" parent="VScrollBar/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)

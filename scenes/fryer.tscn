@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://cfnh7vm4vbwi8"]
+
+[ext_resource type="PackedScene" uid="uid://52b6edfg76p4" path="res://assets/low_poly_-_deep_fryer_basket_skimmer_set/scene.gltf" id="1_efp1m"]
+
+[node name="Fryer" type="Node3D"]
+
+[node name="Sketchfab_Scene" parent="." instance=ExtResource("1_efp1m")]
+transform = Transform3D(1.655, 0, 0, 0, 1.655, 0, 0, 0, 1.655, 0, 0, 0)
+
+[editable path="Sketchfab_Scene"]
