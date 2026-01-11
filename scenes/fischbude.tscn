@@ -907,6 +907,7 @@ text = "Leer (0/4)"
 horizontal_alignment = 1
 
 [node name="ServeButton" type="Button" parent="UI/TrayPanel/VBoxContainer"]
+visible = false
 layout_mode = 2
 theme_override_colors/font_hover_color = Color(1, 0.9, 0.3, 1)
 theme_override_colors/font_color = Color(1, 1, 1, 1)
@@ -1047,6 +1048,7 @@ theme_override_font_sizes/font_size = 22
 text = "Getränk: -"
 
 [node name="TrayPanel" type="PanelContainer" parent="UI2"]
+visible = false
 anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
@@ -1060,6 +1062,7 @@ grow_horizontal = 2
 grow_vertical = 0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="UI2/TrayPanel"]
+visible = false
 layout_mode = 2
 
 [node name="TitleLabel" type="Label" parent="UI2/TrayPanel/VBoxContainer"]
@@ -1082,6 +1085,7 @@ text = "Leer (0/4)"
 horizontal_alignment = 1
 
 [node name="ServeButton" type="Button" parent="UI2/TrayPanel/VBoxContainer"]
+visible = false
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_colors/font_hover_color = Color(1, 0.9, 0.3, 1)

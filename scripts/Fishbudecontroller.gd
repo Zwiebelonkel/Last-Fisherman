@@ -26,9 +26,8 @@ class_name FishBudeController
 
 var security_view_active := false
 
-# Neu: Aktuell gehoverte Station/Kunde
-var hovered_station: Node = null
-var hovered_customer: Customer = null
+# Neu: Kamera-Richtung für Interaktion
+var current_camera_direction: Vector3 = Vector3.FORWARD
 
 
 # Inventar-Referenz (wird von außen gesetzt oder gesucht)
@@ -55,7 +54,7 @@ func _ready() -> void:
 	spawn_customer()
 
 func setup_tray_visual() -> void:
-	"""Erstellt das 3D Tablett in der Hand des Spielers"""
+	# Erstellt das 3D Tablett in der Hand des Spielers
 	var camera = get_viewport().get_camera_3d()
 	if not camera:
 		print("Keine Kamera gefunden!")
@@ -132,52 +131,57 @@ func connect_ui_signals() -> void:
 func _process(delta: float) -> void:
 	handle_customer_spawning(delta)
 	update_customer_patience(delta)
-	update_hover()  # Aktualisiert Hover für Stationen UND Kunden
+	update_camera_direction()
+	update_hover_by_direction()
 
-func update_hover() -> void:
-	"""Prüft was die Maus gerade hovert (Station oder Kunde)"""
+func update_camera_direction() -> void:
+	# Berechnet die Blickrichtung der Kamera (4 Richtungen)
 	var camera = get_viewport().get_camera_3d()
 	if not camera:
 		return
 	
-	var mouse_pos = get_viewport().get_mouse_position()
-	var from = camera.project_ray_origin(mouse_pos)
-	var to = from + camera.project_ray_normal(mouse_pos) * 1000
+	# Hole Rotation der Kamera (in Grad)
+	var rotation_deg = camera.global_rotation_degrees.y
 	
-	var space_state = get_world_3d().direct_space_state
-	var query = PhysicsRayQueryParameters3D.create(from, to)
-	var result = space_state.intersect_ray(query)
+	# Normalisiere auf 0-360
+	rotation_deg = fmod(rotation_deg, 360.0)
+	if rotation_deg < 0:
+		rotation_deg += 360.0
 	
-	# Reset alle Hover-States
+	# Bestimme Richtung basierend auf Rotation
+	# 0° = Nord (Forward, -Z), 90° = Ost (+X), 180° = Süd (+Z), 270° = West (-X)
+	if rotation_deg >= 315 or rotation_deg < 45:
+		current_camera_direction = Vector3.FORWARD  # 0° (Nord)
+	elif rotation_deg >= 45 and rotation_deg < 135:
+		current_camera_direction = Vector3.RIGHT  # 90° (Ost)
+	elif rotation_deg >= 135 and rotation_deg < 225:
+		current_camera_direction = Vector3.BACK  # 180° (Süd) - KUNDE
+	elif rotation_deg >= 225 and rotation_deg < 315:
+		current_camera_direction = Vector3.LEFT  # 270° (West)
+
+func update_hover_by_direction() -> void:
+	# Aktualisiert Hover basierend auf Kamera-Richtung
+	# Reset alle Hover
 	station_fryer.set_hover(false)
 	station_sushi.set_hover(false)
 	station_drinks.set_hover(false)
 	station_security.set_hover(false)
 	
-	hovered_station = null
-	hovered_customer = null
+	# Bestimme welche Station in welcher Richtung ist
+	# DU MUSST DIESE WERTE AN DEINE SZENE ANPASSEN!
 	
-	if result and result.collider:
-		var collider = result.collider
-		
-		# Prüfe ob es eine Station ist
-		if collider == station_fryer:
-			station_fryer.set_hover(true)
-			hovered_station = station_fryer
-		elif collider == station_sushi:
-			station_sushi.set_hover(true)
-			hovered_station = station_sushi
-		elif collider == station_drinks:
-			station_drinks.set_hover(true)
-			hovered_station = station_drinks
-		elif collider == station_security:
-			station_security.set_hover(true)
-			hovered_station = station_security
-		# Prüfe ob es ein Kunde ist
-		elif collider is Customer:
-			hovered_customer = collider
-			# Optional: Visuelles Feedback für gehoverter Kunde
-			# (z.B. Outline oder Highlight)
+	# Beispiel (passe an deine Positionen an):
+	if current_camera_direction == Vector3.FORWARD:  # 0° Nord
+		station_fryer.set_hover(true)
+	elif current_camera_direction == Vector3.RIGHT:  # 90° Ost
+		station_sushi.set_hover(true)
+	elif current_camera_direction == Vector3.LEFT:  # 270° West
+		station_drinks.set_hover(true)
+	# 180° (Süd) = Kunde, keine Station
+
+func is_looking_at_customer() -> bool:
+	# Prüft ob Kamera bei 180° (Süd) schaut = Kunde
+	return current_camera_direction == Vector3.BACK
 
 func handle_customer_spawning(delta: float) -> void:
 	customer_spawn_timer += delta
@@ -239,7 +243,7 @@ func _reorder_queue() -> void:
 
 
 func get_available_fish_types() -> Array:
-	"""Gibt alle unterschiedlichen Fischarten zurück die im Inventar sind"""
+	# Gibt alle unterschiedlichen Fischarten zurück die im Inventar sind
 	var fish_types = []
 	
 	if not inventory_manager:
@@ -253,7 +257,7 @@ func get_available_fish_types() -> Array:
 	return fish_types
 
 func has_fish_in_inventory(fish_name: String) -> bool:
-	"""Prüft ob ein bestimmter Fisch im Inventar ist"""
+	# Prüft ob ein bestimmter Fisch im Inventar ist
 	if not inventory_manager:
 		return false
 	
@@ -264,7 +268,7 @@ func has_fish_in_inventory(fish_name: String) -> bool:
 	return false
 
 func remove_fish_from_inventory(fish_name: String) -> bool:
-	"""Entfernt einen Fisch aus dem Inventar"""
+	# Entfernt einen Fisch aus dem Inventar
 	if not inventory_manager:
 		return false
 	
@@ -278,7 +282,7 @@ func remove_fish_from_inventory(fish_name: String) -> bool:
 	return false
 
 func get_fish_data(fish_name: String) -> Dictionary:
-	"""Holt die Daten eines Fisches aus dem Inventar"""
+	# Holt die Daten eines Fisches aus dem Inventar
 	if not inventory_manager:
 		return {}
 	
@@ -291,22 +295,22 @@ func get_fish_data(fish_name: String) -> Dictionary:
 func show_order_ui(order: Order) -> void:
 	var order_panel := ui.get_node("OrderPanel") as Control
 
-	# ✅ Wenn keine Order: Panel ausblenden und raus
+	# Wenn keine Order: Panel ausblenden und raus
 	if order == null:
 		order_panel.visible = false
 		return
 
 	order_panel.visible = true
 
-	# 🐟 FISCHNAME
+	# FISCHNAME
 	var fish_label := order_panel.get_node("VBoxContainer/Fish/FishLabel") as Label
 	fish_label.text = "Fisch: %s" % order.fish_type
 
-	# 🍳 ZUBEREITUNG
+	# ZUBEREITUNG
 	var prep_label := order_panel.get_node("VBoxContainer/Prep/PrepLabel") as Label
 	prep_label.text = "Art: %s" % order.preparation_type
 
-	# 🥤 GETRÄNK
+	# GETRÄNK
 	var drink_label := order_panel.get_node("VBoxContainer/Drink/DrinkLabel") as Label
 	drink_label.text = "Getränk: Ja" if order.wants_drink else "Getränk: Nein"
 
@@ -326,26 +330,25 @@ func serve_customer() -> void:
 		print("Tablett ist leer!")
 		return
 
-	# 🔒 Order einmal sichern
+	# Order einmal sichern
 	var order: Order = current_customer.order
 	if order == null:
-		push_warning("⚠️ Kunde hat keine Order mehr!")
+		push_warning("Kunde hat keine Order mehr!")
 		return
 
 	var correct := tray.matches_order(order)
 
-	# 🔒 UI sofort schließen – danach KEIN Zugriff mehr auf order!
+	# UI sofort schließen
 	ui.get_node("OrderPanel").visible = false
 
 	if correct:
 		print("Bestellung korrekt!")
 
 		var payment := calculate_fish_payment(order)
-		var fish_name := order.fish_type  # 🔒 sichern!
+		var fish_name := order.fish_type
 
 		remove_fish_from_inventory(fish_name)
 
-		# ❗ LETZTER Zugriff auf current_customer
 		current_customer.complete_order_with_payment(payment)
 	else:
 		print("Falsche Bestellung!")
@@ -386,61 +389,63 @@ func update_tray_ui() -> void:
 
 # === INPUT HANDLING ===
 func _input(event: InputEvent) -> void:
-	# Mausklick auf Stationen (funktioniert weiterhin)
-	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		handle_station_click()
-		return
-		
 	if security_view_active and event.is_action_pressed("ui_cancel"):
 		toggle_security_camera()
 		return
 	
-	# NEU: Leertaste für Interaktion
-	if event.is_action_pressed("ui_accept"):  # Leertaste = ui_accept
+	# Leertaste für Interaktion
+	if event.is_action_pressed("ui_accept"):  # Leertaste
 		handle_spacebar_interaction()
 	
 	# Debug: Inventar anzeigen mit Tab
 	if event.is_action_pressed("ui_text_completion_query"):  # Tab
 		print_inventory_status()
+	
+	# Debug: Kamera-Richtung anzeigen
+	if event.is_action_pressed("ui_page_up"):  # Page Up
+		print_camera_debug()
 
 func handle_spacebar_interaction() -> void:
-	"""Behandelt Leertaste-Interaktionen"""
+	# Behandelt Leertaste-Interaktionen basierend auf Kamera-Richtung
 	
-	# 1. Prüfe ob wir einen Kunden anschauen
-	if hovered_customer and hovered_customer == current_customer:
-		serve_customer()
+	# 1. Prüfe ob wir den Kunden anschauen (180°)
+	if is_looking_at_customer():
+		if current_customer:
+			print("→ Serviere Kunde")
+			serve_customer()
+		else:
+			print("Kein Kunde da!")
 		return
 	
-	# 2. Prüfe ob wir eine Station anschauen
-	if hovered_station and hovered_station.has_method("interact"):
-		hovered_station.interact()
-		print("Station interagiert: %s" % hovered_station.name)
-		return
+	# 2. Prüfe welche Station wir anschauen (basierend auf Richtung)
+	var station: Node = null
 	
-	# 3. Nichts gehovered
-	print("Nichts zum Interagieren gefunden!")
+	# DU MUSST DIESE ZUORDNUNG AN DEINE SZENE ANPASSEN!
+	if current_camera_direction == Vector3.FORWARD:  # 0° Nord
+		station = station_sushi
+	elif current_camera_direction == Vector3.RIGHT:  # 90° Ost
+		station = station_drinks
+	elif current_camera_direction == Vector3.LEFT:  # 270° West
+		station = station_fryer
+	
+	if station and station.has_method("interact"):
+		print("→ Station interagiert: %s" % station.name)
+		station.interact()
+	else:
+		print("Keine Station in diese Richtung!")
 
-func handle_station_click() -> void:
-	"""Führt Interaktion mit der Station aus, die gerade unter der Maus ist"""
+func print_camera_debug() -> void:
+	# Debug-Info über Kamera-Richtung
 	var camera = get_viewport().get_camera_3d()
 	if not camera:
 		return
 	
-	var mouse_pos = get_viewport().get_mouse_position()
-	var from = camera.project_ray_origin(mouse_pos)
-	var to = from + camera.project_ray_normal(mouse_pos) * 1000
-	
-	var space_state = get_world_3d().direct_space_state
-	var query = PhysicsRayQueryParameters3D.create(from, to)
-	var result = space_state.intersect_ray(query)
-	
-	if result and result.collider:
-		var collider = result.collider
-		
-		# Rufe interact() auf der Station auf
-		if collider.has_method("interact"):
-			collider.interact()
-			print("Station interagiert: %s" % collider.name)
+	var rotation_deg = camera.global_rotation_degrees.y
+	print("\n=== KAMERA DEBUG ===")
+	print("Rotation: %.1f°" % rotation_deg)
+	print("Richtung: %s" % current_camera_direction)
+	print("Schaut auf Kunde: %s" % is_looking_at_customer())
+	print("===================\n")
 
 func print_inventory_status() -> void:
 	if not inventory_manager:
@@ -485,7 +490,7 @@ func get_available_fish_dicts() -> Array:
 
 		var fish_dict := get_fish_dict_from_name(fish_name)
 		if fish_dict.is_empty():
-			push_warning("⚠️ Unbekannter Fisch im Inventar: ", fish_name)
+			push_warning("Unbekannter Fisch im Inventar: ", fish_name)
 			continue
 
 		result.append(fish_dict)
@@ -496,7 +501,7 @@ func get_available_fish_dicts() -> Array:
 func calculate_fish_payment(order: Order) -> int:
 	var fish_dict := get_fish_dict_from_name(order.fish_type)
 	if fish_dict.is_empty():
-		push_error("❌ Kein FishDict für: " + order.fish_type)
+		push_error("Kein FishDict für: " + order.fish_type)
 		return 0
 
 	var base_price: float = fish_dict.get("base_value", 1)
