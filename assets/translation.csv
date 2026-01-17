@@ -122,3 +122,97 @@ I never really noticed it.
 Maybe I didn't want to."
 
 VAN, Imbiss, Vendor
+SUSHI, Sushi, Sushi
+DRINKS, Getränke, Drinks
+FRYER, Fritteuse, Fryer
+
+PREP_TYPE_FRIED_FISH,Backfisch,Fried Fish
+PREP_TYPE_SUSHI,Sushi,Sushi
+
+# ====================
+# STATION FRYER
+# ====================
+FRYER_NO_MODEL_ROOT,⚠️ Kein model_root gefunden!,⚠️ No model_root found!
+FRYER_MESHES_FOUND,✅ %d Meshes gefunden im Modell,✅ %d meshes found in model
+FRYER_NO_MESHES,⚠️ Keine MeshInstances gefunden!,⚠️ No MeshInstances found!
+FRYER_STILL_COOKING,Noch am Kochen!,Still cooking!
+FRYER_NO_FISH_INVENTORY,Keine Fische im Inventar!,No fish in inventory!
+FRYER_CUSTOMER_NO_WANT,Kunde will keinen Backfisch!,Customer doesn't want fried fish!
+FRYER_FISH_NOT_IN_INVENTORY,Fisch nicht im Inventar!,Fish not in inventory!
+FRYER_COOKING_START,Frittiere %s...,Frying %s...
+FRYER_COOKING_DONE,Backfisch fertig! Klicke erneut zum Aufnehmen,Fried fish ready! Click again to collect
+FRYER_NO_TRAY,Kein Tablett gefunden!,No tray found!
+FRYER_ITEM_ADDED_TO_TRAY,Backfisch auf Tablett gelegt!,Fried fish placed on tray!
+FRYER_PROMPT_IDLE,Klicken: Fisch waehlen,Select fish
+FRYER_PROMPT_COOKING,Kocht...,Cooking...
+FRYER_PROMPT_READY,Klicken: Aufnehmen,Collect
+
+# ====================
+# STATION SUSHI
+# ====================
+SUSHI_STILL_COOKING,Noch am Kochen!,Still cooking!
+SUSHI_NO_FISH_INVENTORY,Keine Fische im Inventar!,No fish in inventory!
+SUSHI_CUSTOMER_NO_WANT,Kunde will keinen Sushi!,Customer doesn't want sushi!
+SUSHI_FISH_NOT_IN_INVENTORY,Fisch nicht im Inventar!,Fish not in inventory!
+SUSHI_PROMPT_IDLE,Klicken: Fisch wählen,Select fish
+SUSHI_PROMPT_COOKING,Kocht...,Slicing...
+SUSHI_PROMPT_READY,Klicken: Aufnehmen,Collect
+
+# ====================
+# STATION DRINKS
+# ====================
+DRINKS_NO_CUSTOMER,Kein aktiver Kunde!,No active customer!
+DRINKS_NOT_ORDERED,Kunde hat kein Getränk bestellt!,Customer didn't order a drink!
+DRINKS_ALREADY_ON_TRAY,Getränk bereits auf dem Tablett!,Drink already on tray!
+DRINKS_PROMPT_HOVER,Klicken: Getränk hinzufügen,Add drink
+
+# ====================
+# CONTROLLER (GENERAL)
+# ====================
+CTRL_NO_CAMERA,Keine Kamera gefunden!,No camera found!
+CTRL_INVENTORY_FOUND,Inventory gefunden - Fische verfuegbar:,Inventory found - fish available:
+CTRL_INVENTORY_NOT_FOUND,Inventory Autoload nicht gefunden!,Inventory Autoload not found!
+CTRL_NO_CUSTOMER_TO_SERVE,Kein Kunde zum Bedienen!,No customer to serve!
+CTRL_TRAY_EMPTY,Tablett ist leer!,Tray is empty!
+CTRL_ORDER_CORRECT,Bestellung korrekt!,Order correct!
+CTRL_ORDER_WRONG,Falsche Bestellung!,Wrong order!
+CTRL_FISH_REMOVED,Fisch aus Inventar entfernt: %s,Fish removed from inventory: %s
+CTRL_NO_INVENTORY_MANAGER,Kein InventoryManager!,No InventoryManager!
+CTRL_UNKNOWN_FISH_IN_INVENTORY,Unbekannter Fisch im Inventar:,Unknown fish in inventory:
+CTRL_NO_FISH_DICT,Kein FishDict für:,No FishDict for:
+CTRL_SERVE_CUSTOMER,→ Serviere Kunde,→ Serve customer
+CTRL_NO_CUSTOMER,Kein Kunde da!,No customer there!
+CTRL_STATION_INTERACT,→ Station interagiert: %s,→ Station interacted: %s
+CTRL_NO_STATION_IN_DIRECTION,Keine Station in diese Richtung!,No station in this direction!
+
+# ====================
+# CONTROLLER (UI)
+# ====================
+UI_ORDER_FISH,Fisch: %s,Fish: %s
+UI_ORDER_PREP,Art: %s,Type: %s
+UI_ORDER_DRINK_YES,Getränk: Ja,Drink: Yes
+UI_ORDER_DRINK_NO,Getränk: Nein,Drink: No
+UI_TRAY_EMPTY,Leer (0/4),Empty (0/4)
+
+# ====================
+# CONTROLLER (DEBUG)
+# ====================
+DEBUG_CAMERA_HEADER,=== KAMERA DEBUG ===,=== CAMERA DEBUG ===
+DEBUG_CAMERA_ROTATION,Rotation: %.1f°,Rotation: %.1f°
+DEBUG_CAMERA_DIRECTION,Richtung:,Direction:
+DEBUG_CAMERA_LOOKING_AT_CUSTOMER,Schaut auf Kunde:,Looking at customer:
+DEBUG_CAMERA_FOOTER,===================,===================
+DEBUG_INVENTORY_HEADER,=== INVENTAR STATUS ===,=== INVENTORY STATUS ===
+DEBUG_INVENTORY_TOTAL,Fische gesamt: %d,Total fish: %d
+DEBUG_INVENTORY_FOOTER,=====================,=====================
+
+# ====================
+# CUSTOMER
+# ====================
+CUSTOMER_NO_FISH_AVAILABLE,❌ Keine Fische verfügbar für Bestellung!,❌ No fish available for order!
+CHOOSE_FISH, Fisch wählen, Choose Fish
+SEARCH, Suchen..., Search...
+BESTELLUNG, Bestellung, Order
+UI_FISH_SELECT_TITLE,Fisch wählen für %s,Select fish for %s
+UI_SEARCH_PLACEHOLDER,Suchen...,Search...
+UI_CANCEL,Abbrechen,Cancel

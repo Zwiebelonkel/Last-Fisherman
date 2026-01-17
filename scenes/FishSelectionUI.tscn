@@ -44,13 +44,13 @@ layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.8, 0.2, 1)
 theme_override_fonts/font = ExtResource("2_7uxpq")
 theme_override_font_sizes/font_size = 24
-text = "Fisch waehlen"
+text = "CHOOSE_FISH"
 horizontal_alignment = 1
 
 [node name="SearchBar" type="LineEdit" parent="Panel/VBoxContainer"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("2_7uxpq")
-placeholder_text = "Suchen..."
+placeholder_text = "SEARCH"
 
 [node name="HSeparator" type="HSeparator" parent="Panel/VBoxContainer"]
 layout_mode = 2

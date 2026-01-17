@@ -1,4 +1,4 @@
-[gd_scene load_steps=70 format=3 uid="uid://bqhxfk3g8vxn7"]
+[gd_scene load_steps=73 format=3 uid="uid://bqhxfk3g8vxn7"]
 
 [ext_resource type="Script" uid="uid://cqgu3f2n1rg1p" path="res://scripts/Fishbudecontroller.gd" id="1"]
 [ext_resource type="Script" uid="uid://bfajhux4gse13" path="res://scripts/tray.gd" id="2"]
@@ -27,6 +27,7 @@
 [ext_resource type="Texture2D" uid="uid://e7t33pnr13bp" path="res://textures/These-images-of-clouds-are-created-exclusively-using-Perlin-noise-It-simulates-the_Q320.jpg" id="25_85lqq"]
 [ext_resource type="Script" uid="uid://dggy0f358bhxd" path="res://scenes/rec.gd" id="26_85lqq"]
 [ext_resource type="AudioStream" uid="uid://esyv0p374c5j" path="res://sounds/bite.mp3" id="27_4cgah"]
+[ext_resource type="PackedScene" uid="uid://ckje0fw3pep83" path="res://assets/skyscaper.glb" id="27_qwiaf"]
 [ext_resource type="AudioStream" uid="uid://cldy38iwm8ovi" path="res://sounds/cast.mp3" id="28_qwiaf"]
 [ext_resource type="AudioStream" uid="uid://26m0pjkxve85" path="res://sounds/rarity/normal.mp3" id="29_44cek"]
 [ext_resource type="AudioStream" uid="uid://bm2wkiirbpowg" path="res://sounds/rarity/uncommon.mp3" id="30_uyjbj"]
@@ -528,7 +529,6 @@ fog_density = 0.6887
 fog_aerial_perspective = 0.085
 fog_height = -1024.0
 fog_height_density = 16.0
-volumetric_fog_enabled = true
 volumetric_fog_length = 42.44
 volumetric_fog_ambient_inject = 0.2
 
@@ -650,10 +650,15 @@ emission_energy_multiplier = 16.0
 [sub_resource type="SphereMesh" id="SphereMesh_te6ua"]
 material = SubResource("StandardMaterial3D_kp0ql")
 
+[sub_resource type="BoxMesh" id="BoxMesh_44cek"]
+size = Vector3(28.525, 8.575, 0.175)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qwiaf"]
+albedo_color = Color(0, 0, 0, 1)
+
 [node name="FishBude" type="Node3D"]
 script = ExtResource("1")
-max_queue_size = 1
-queue_spacing = 4.975
+queue_spacing = -0.795
 
 [node name="Filter" type="CanvasLayer" parent="."]
 layer = 0
@@ -719,7 +724,7 @@ font_size = 48
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.105572, 2.25535, 0.10065)
 billboard = 1
 alpha_cut = 1
-text = "Klicken zum Frittieren"
+text = "FRYER"
 
 [node name="Fryer" parent="StationFryer" instance=ExtResource("4_4cgah")]
 transform = Transform3D(1.365, 0, 0, 0, 1.365, 0, 0, 0, 1.365, -0.0827243, 0, 0)
@@ -770,7 +775,7 @@ font_size = 48
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.34449, 0)
 billboard = 1
 alpha_cut = 2
-text = "Klicken für Sushi"
+text = "SUSHI"
 
 [node name="StationDrinks" type="StaticBody3D" parent="."]
 transform = Transform3D(-3.2565e-08, 0, 1, 0, 1.37, 0, -0.745, 0, -4.37114e-08, -2.20982, 1.23941, -0.0969869)
@@ -793,7 +798,7 @@ shape = SubResource("BoxShape3D_ysmne")
 transform = Transform3D(0.785, 0, -7.10543e-15, 0, 0.59, 0, 0, 0, 0.59, -4.47035e-08, 0.646483, 0.628482)
 billboard = 1
 alpha_cut = 1
-text = "Klicken für Getränke"
+text = "DRINKS"
 
 [node name="Tray" type="Node" parent="."]
 script = ExtResource("2")
@@ -1095,8 +1100,10 @@ theme_override_font_sizes/font_size = 24
 text = "SERVIEREN"
 
 [node name="FishSelectionUI" parent="UI2" instance=ExtResource("19_36inu")]
+visible = false
 
 [node name="MoneyPopup" parent="UI2" instance=ExtResource("20_ewdra")]
+visible = false
 
 [node name="InventoryUI" parent="UI2" instance=ExtResource("12_4hlsc")]
 visible = false
@@ -1197,6 +1204,44 @@ mesh = SubResource("SphereMesh_te6ua")
 
 [node name="environemt" type="Node" parent="."]
 
+[node name="skyscaper" parent="environemt" instance=ExtResource("27_qwiaf")]
+transform = Transform3D(0.42, 0, 0, 0, 0.42, 0, 0, 0, 0.42, 13.9799, -7.52018, 14.5887)
+
+[node name="skyscaper11" parent="environemt" instance=ExtResource("27_qwiaf")]
+transform = Transform3D(0.0724768, 0, 0.0444086, 0, 0.085, 0, -0.0444086, 0, 0.0724768, 14.6757, -0.769065, -2.12555)
+
+[node name="skyscaper2" parent="environemt" instance=ExtResource("27_qwiaf")]
+transform = Transform3D(0.42, 0, 0, 0, 0.42, 0, 0, 0, 0.42, 0.422775, -7.52018, 14.5887)
+
+[node name="skyscaper3" parent="environemt" instance=ExtResource("27_qwiaf")]
+transform = Transform3D(0.42, 0, 0, 0, 0.42, 0, 0, 0, 0.42, -7.3907, -7.52018, 14.5887)
+
+[node name="skyscaper4" parent="environemt" instance=ExtResource("27_qwiaf")]
+transform = Transform3D(0.42, 0, 0, 0, 0.42, 0, 0, 0, 0.42, -14.6163, -7.52018, 14.5887)
+
+[node name="skyscaper5" parent="environemt" instance=ExtResource("27_qwiaf")]
+transform = Transform3D(0.42, 0, 0, 0, 0.42, 0, 0, 0, 0.42, 6.69477, -7.52018, 14.5887)
+
+[node name="skyscaper6" parent="environemt" instance=ExtResource("27_qwiaf")]
+transform = Transform3D(0.42, 0, 0, 0, 0.42, 0, 0, 0, 0.42, 12.5052, -2.46686, 20.4247)
+
+[node name="skyscaper7" parent="environemt" instance=ExtResource("27_qwiaf")]
+transform = Transform3D(0.42, 0, 0, 0, 0.42, 0, 0, 0, 0.42, -1.05194, -2.46686, 20.4247)
+
+[node name="skyscaper8" parent="environemt" instance=ExtResource("27_qwiaf")]
+transform = Transform3D(0.42, 0, 0, 0, 0.42, 0, 0, 0, 0.42, -8.86542, -2.46686, 20.4247)
+
+[node name="skyscaper9" parent="environemt" instance=ExtResource("27_qwiaf")]
+transform = Transform3D(0.42, 0, 0, 0, 0.42, 0, 0, 0, 0.42, -16.0911, -2.46686, 20.4247)
+
+[node name="skyscaper10" parent="environemt" instance=ExtResource("27_qwiaf")]
+transform = Transform3D(0.42, 0, 0, 0, 0.42, 0, 0, 0, 0.42, 5.22005, -2.46686, 20.4247)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="environemt"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.203063, 2.75712, 22.7485)
+mesh = SubResource("BoxMesh_44cek")
+surface_material_override/0 = SubResource("StandardMaterial3D_qwiaf")
+
 [node name="Audio" type="Node" parent="."]
 
 [node name="bite" type="AudioStreamPlayer" parent="Audio"]
@@ -1257,6 +1302,9 @@ volume_db = -2.735
 pitch_scale = 1.1
 autoplay = true
 bus = &"SFX"
+
+[node name="CustomerDialogLayer" type="CanvasLayer" parent="."]
+layer = 0
 
 [editable path="StationFryer/Fryer"]
 [editable path="StationFryer/Fryer/Sketchfab_Scene"]

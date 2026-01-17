@@ -10,7 +10,7 @@ signal cancelled()
 @onready var cancel_button: Button = $Panel/VBoxContainer/CancelButton
 @onready var custom_font := preload("res://fonts/VCR_OSD_MONO_1.001.ttf")
 
-# Erwartet: Array<Dictionary> aus FishDB
+# Expected: Array<Dictionary> from FishDB
 var available_fish: Array = []
 
 # ===============================
@@ -18,34 +18,38 @@ var available_fish: Array = []
 # ===============================
 func _ready() -> void:
 	cancel_button.pressed.connect(_on_cancel_pressed)
+	cancel_button.text = tr("UI_CANCEL")
 	search_bar.text_changed.connect(_on_search_changed)
+	search_bar.placeholder_text = tr("UI_SEARCH_PLACEHOLDER")
 	hide()
 
 # ===============================
-#  INPUT (blockiert Leertaste wenn UI offen)
+#  INPUT (blocks spacebar when UI is open)
 # ===============================
 func _input(event: InputEvent) -> void:
 	if not visible:
 		return
 	
-	# Blockiere Leertaste komplett wenn dieses UI offen ist
-	if event.is_action_pressed("ui_accept"):  # Leertaste
+	# Block spacebar completely when this UI is open
+	if event.is_action_pressed("ui_accept"):  # Spacebar
 		get_viewport().set_input_as_handled()
+		
 
 # ===============================
 #  PUBLIC API
 # ===============================
 func show_fish_selection(fish_array: Array, station_name: String) -> void:
 	available_fish = fish_array
-	title_label.text = "Fisch wählen für %s" % station_name
+	title_label.text = tr("UI_FISH_SELECT_TITLE") % station_name
 	search_bar.text = ""
 	_rebuild_list("")
 	show()
+	print("should be visible")
 	
-	# Warte einen Frame damit die Leertaste vom Öffnen nicht registriert wird
+	# Wait one frame so spacebar from opening isn't registered
 	await get_tree().process_frame
 	
-	# Suchfeld aktivieren
+	# Activate search field
 	search_bar.editable = true
 	search_bar.grab_focus()
 
@@ -53,14 +57,14 @@ func show_fish_selection(fish_array: Array, station_name: String) -> void:
 #  LIST BUILDING
 # ===============================
 func _rebuild_list(filter_text: String) -> void:
-	# Alte Einträge löschen
+	# Delete old entries
 	for child in fish_list.get_children():
 		child.queue_free()
 	
 	filter_text = filter_text.to_lower()
 	
 	for fish in available_fish:
-		# Harte Validierung
+		# Hard validation
 		if not (fish is Dictionary):
 			continue
 		if not fish.has("name"):
@@ -68,7 +72,7 @@ func _rebuild_list(filter_text: String) -> void:
 		
 		var fish_name: String = fish["name"]
 		
-		# Suchfilter
+		# Search filter
 		if filter_text != "" and not fish_name.to_lower().contains(filter_text):
 			continue
 		
@@ -107,7 +111,7 @@ func _create_fish_entry(fish: Dictionary) -> Control:
 	label.add_theme_font_override("font", custom_font)
 	label.add_theme_font_size_override("font_size", 18)
 	
-	# Rarity-Farbe aus FishDB
+	# Rarity color from FishDB
 	if FishDB.RARITY_DATA.has(rarity):
 		label.add_theme_color_override(
 			"font_color",

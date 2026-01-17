@@ -287,7 +287,6 @@ theme_override_font_sizes/font_size = 26
 text = "Continue"
 
 [node name="NewLabel" type="Label" parent="."]
-z_index = 40
 layout_mode = 2
 offset_left = 191.0
 offset_top = 2.0

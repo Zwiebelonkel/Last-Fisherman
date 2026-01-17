@@ -5,13 +5,12 @@ signal cooking_started(fish_type: String)
 signal cooking_finished(fish_type: String)
 signal item_collected()
 
-# Statt einem Mesh haben wir jetzt mehrere
+# Instead of one mesh, we now have multiple
 @onready var model_root: Node3D = $Fryer
 @onready var collision_shape: CollisionShape3D = $CollisionShape3D
 @onready var timer_label: Label3D = $TimerLabel3D
 @onready var interaction_prompt: Label3D = $InteractionPrompt
 @onready var outline_mesh: MeshInstance3D = $OutlineMesh
-
 
 var cooking_time: float = 8.0
 var current_cooking_time: float = 0.0
@@ -26,7 +25,7 @@ var tray: Tray = null
 var controller: Node = null
 var fish_selection_ui: Control = null
 
-# Materials - jetzt für alle Meshes
+# Materials - now for all meshes
 var original_materials: Dictionary = {}  # mesh -> original material
 var cooking_material: StandardMaterial3D
 
@@ -48,21 +47,21 @@ func _process(delta: float) -> void:
 			finish_cooking()
 
 func get_all_meshes() -> Array[MeshInstance3D]:
-	"""Findet alle MeshInstance3D Nodes im GLTF-Modell"""
+	"""Finds all MeshInstance3D nodes in GLTF model"""
 	var meshes: Array[MeshInstance3D] = []
 	
 	if not model_root:
-		print("⚠️ Kein model_root gefunden!")
+		print(tr("FRYER_NO_MODEL_ROOT"))
 		return meshes
 	
-	# Rekursiv alle MeshInstance3D finden
+	# Recursively find all MeshInstance3D
 	find_meshes_recursive(model_root, meshes)
 	
-	print("✅ %d Meshes gefunden im Modell" % meshes.size())
+	print(tr("FRYER_MESHES_FOUND") % meshes.size())
 	return meshes
 
 func find_meshes_recursive(node: Node, meshes: Array[MeshInstance3D]) -> void:
-	"""Durchsucht rekursiv alle Kinder nach MeshInstance3D"""
+	"""Recursively searches all children for MeshInstance3D"""
 	if node is MeshInstance3D:
 		meshes.append(node)
 	
@@ -73,62 +72,26 @@ func setup_materials() -> void:
 	var meshes = get_all_meshes()
 	
 	if meshes.size() == 0:
-		print("⚠️ Keine MeshInstances gefunden!")
+		print(tr("FRYER_NO_MESHES"))
 		return
 	
-	# Speichere Original-Materialien von allen Meshes
+	# Save original materials from all meshes
 	for mesh in meshes:
 		if mesh.get_surface_override_material_count() > 0:
 			original_materials[mesh] = mesh.get_surface_override_material(0)
 		else:
-			# Fallback: Standard-Material
+			# Fallback: standard material
 			var mat = StandardMaterial3D.new()
 			mat.albedo_color = Color(0.8, 0.8, 0.8)
 			mesh.set_surface_override_material(0, mat)
 			original_materials[mesh] = mat
 	
-	# Koch-Material (für alle Meshes gleich)
+	# Cooking material (same for all meshes)
 	cooking_material = StandardMaterial3D.new()
 	cooking_material.albedo_color = Color.ORANGE
 	cooking_material.emission_enabled = true
 	cooking_material.emission = Color.ORANGE_RED
 	cooking_material.emission_energy = 2.0
-
-#func setup_outlines() -> void:
-	#"""Erstellt Outlines für ALLE Meshes im Modell"""
-	#var meshes = get_all_meshes()
-	#
-	#if meshes.size() == 0:
-		#return
-	#
-	#for mesh in meshes:
-		#if not mesh.mesh:
-			#continue
-		#
-		#var outline_mesh = MeshInstance3D.new()
-		#add_child(outline_mesh)
-		#
-		## Kopiere Transform vom Original-Mesh (relativ zum Fryer-Node)
-		#outline_mesh.global_transform = mesh.global_transform
-		#outline_mesh.scale = mesh.scale * 1.05  # 5% größer
-		#outline_mesh.mesh = mesh.mesh
-		#
-		## Outline-Material
-		#var outline_material = StandardMaterial3D.new()
-		#outline_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-		#outline_material.albedo_color = Color.YELLOW
-		#outline_material.cull_mode = BaseMaterial3D.CULL_FRONT
-		#outline_material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-		#outline_material.albedo_color.a = 0.8
-		#
-		## Setze Material für alle Surfaces dieses Meshes
-		#for i in range(mesh.get_surface_override_material_count()):
-			#outline_mesh.set_surface_override_material(i, outline_material)
-		#
-		#outline_mesh.visible = false
-		#outline_meshes.append(outline_mesh)
-	#
-	#print("✅ %d Outline-Meshes erstellt" % outline_meshes.size())
 
 func set_tray(tray_ref: Tray) -> void:
 	tray = tray_ref
@@ -148,7 +111,7 @@ func _on_selection_cancelled() -> void:
 		update_prompt()
 
 func set_hover(hovering: bool) -> void:
-	"""Zeigt/versteckt ALLE Outlines"""
+	"""Shows/hides ALL outlines"""
 	is_hovering = hovering
 	if current_state == State.IDLE:
 		outline_mesh.visible = hovering
@@ -158,7 +121,7 @@ func interact() -> void:
 		State.IDLE:
 			open_fish_selection()
 		State.COOKING:
-			print("Noch am Kochen!")
+			print(tr("FRYER_STILL_COOKING"))
 		State.READY:
 			collect_item()
 
@@ -168,12 +131,12 @@ func open_fish_selection() -> void:
 	
 	var available_fish = controller.get_available_fish_types()
 	if available_fish.size() == 0:
-		print("Keine Fische im Inventar!")
+		print(tr("FRYER_NO_FISH_INVENTORY"))
 		return
 	
 	fish_selection_ui.show_fish_selection(
 		controller.get_available_fish_dicts(),
-		"Fritteuse"
+		tr("PREP_TYPE_FRIED_FISH")
 	)
 
 	current_state = State.WAITING_FOR_FISH
@@ -189,21 +152,21 @@ func _on_fish_selected(fish_name: String) -> void:
 
 	var order = controller.current_customer.order
 
-	# Station prüft NUR, ob sie die richtige Zubereitungsart ist
+	# ✅ FIXED: Prüfe gegen "Backfisch" statt tr("PREP_TYPE_FRIED_FISH")
 	if order.preparation_type != "Backfisch":
-		print("Kunde will keinen Backfisch!")
+		print(tr("FRYER_CUSTOMER_NO_WANT"))
 		current_state = State.IDLE
 		update_prompt()
 		return
 
-	# Inventar-Prüfung
+	# Inventory check
 	if not controller.has_fish_in_inventory(fish_name):
-		print("Fisch nicht im Inventar!")
+		print(tr("FRYER_FISH_NOT_IN_INVENTORY"))
 		current_state = State.IDLE
 		update_prompt()
 		return
 
-	# IMMER kochen – auch falscher Fisch
+	# ALWAYS cook - even wrong fish
 	start_cooking(fish_name)
 
 func start_cooking(fish_type: String) -> void:
@@ -211,7 +174,7 @@ func start_cooking(fish_type: String) -> void:
 	current_cooking_time = 0.0
 	current_state = State.COOKING
 	
-	# Setze Koch-Material für ALLE Meshes
+	# Set cooking material for ALL meshes
 	var meshes = get_all_meshes()
 	for mesh in meshes:
 		mesh.set_surface_override_material(0, cooking_material)
@@ -219,17 +182,17 @@ func start_cooking(fish_type: String) -> void:
 	if timer_label:
 		timer_label.visible = true
 	
-	# Verstecke alle Outlines während dem Kochen
+	# Hide all outlines while cooking
 	outline_mesh.visible = false
 	
 	update_prompt()
 	cooking_started.emit(fish_type)
-	print("Frittiere %s..." % fish_type)
+	print(tr("FRYER_COOKING_START") % fish_type)
 
 func finish_cooking() -> void:
 	current_state = State.READY
 	
-	# Setze Original-Materialien zurück
+	# Reset original materials
 	for mesh in original_materials.keys():
 		mesh.set_surface_override_material(0, original_materials[mesh])
 	
@@ -238,15 +201,16 @@ func finish_cooking() -> void:
 	
 	update_prompt()
 	cooking_finished.emit(current_fish_type)
-	print("Backfisch fertig! Klicke erneut zum Aufnehmen")
+	print(tr("FRYER_COOKING_DONE"))
 
 func collect_item() -> void:
 	if not tray:
-		print("Kein Tablett gefunden!")
+		print(tr("FRYER_NO_TRAY"))
 		return
 	
+	# ✅ FIXED: Nutze "Backfisch" statt tr("PREP_TYPE_FRIED_FISH")
 	if tray.add_item(current_fish_type, "Backfisch"):
-		print("Backfisch auf Tablett gelegt!")
+		print(tr("FRYER_ITEM_ADDED_TO_TRAY"))
 		current_state = State.IDLE
 		current_fish_type = ""
 		update_prompt()
@@ -258,13 +222,13 @@ func update_prompt() -> void:
 	
 	match current_state:
 		State.IDLE:
-			interaction_prompt.text = "Klicken: Fisch waehlen"
+			interaction_prompt.text = tr("FRYER_PROMPT_IDLE")
 			interaction_prompt.visible = true
 		State.COOKING:
-			interaction_prompt.text = "Kocht..."
+			interaction_prompt.text = tr("FRYER_PROMPT_COOKING")
 			interaction_prompt.visible = true
 		State.READY:
-			interaction_prompt.text = "Klicken: Aufnehmen"
+			interaction_prompt.text = tr("FRYER_PROMPT_READY")
 			interaction_prompt.visible = true
 		_:
 			interaction_prompt.visible = false

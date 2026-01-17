@@ -25,6 +25,9 @@ class_name FishBudeController
 @onready var security_ui: SecurityUI = $SecurityUI
 
 var security_view_active := false
+var hovered_object: Node = null
+var is_mouse_hovering: bool = false
+
 
 # Neu: Kamera-Richtung für Interaktion
 var current_camera_direction: Vector3 = Vector3.FORWARD
@@ -81,6 +84,28 @@ func setup_tray_visual() -> void:
 	
 	# Verbinde Tablett mit Tray-System
 	tray.set_tray_mesh(tray_visual)
+	
+func get_mouse_raycast_target(max_distance: float = 10.0) -> Node:
+	var camera = get_viewport().get_camera_3d()
+	if not camera:
+		return null
+
+	var mouse_pos = get_viewport().get_mouse_position()
+	var ray_origin = camera.project_ray_origin(mouse_pos)
+	var ray_end = ray_origin + camera.project_ray_normal(mouse_pos) * max_distance
+
+	var space_state = get_world_3d().direct_space_state
+	var ray_params = PhysicsRayQueryParameters3D.new()
+	ray_params.from = ray_origin
+	ray_params.to = ray_end
+	ray_params.collision_mask = 1  # Passe an deine Collision-Layer an!
+
+	var ray_result = space_state.intersect_ray(ray_params)
+
+	if ray_result and ray_result.collider:
+		return ray_result.collider
+	return null
+
 
 func setup_inventory() -> void:
 	# Nutze das Inventory Autoload
@@ -133,6 +158,24 @@ func _process(delta: float) -> void:
 	update_customer_patience(delta)
 	update_camera_direction()
 	update_hover_by_direction()
+
+	# --- NEU: Maus-Hover-Logik ---
+	var target = get_mouse_raycast_target()
+	if target:
+		if target == station_security or target.get_parent() == station_security:
+			station_security.set_hover(true)
+			hovered_object = station_security
+			is_mouse_hovering = true
+			$StationSecurity/OutlineMesh.show()
+		else:
+			station_security.set_hover(false)
+			$StationSecurity/OutlineMesh.hide()
+			is_mouse_hovering = false
+	else:
+		station_security.set_hover(false)
+		is_mouse_hovering = false
+		$StationSecurity/OutlineMesh.hide()
+
 
 func update_camera_direction() -> void:
 	# Berechnet die Blickrichtung der Kamera (4 Richtungen)
@@ -294,25 +337,33 @@ func get_fish_data(fish_name: String) -> Dictionary:
 
 func show_order_ui(order: Order) -> void:
 	var order_panel := ui.get_node("OrderPanel") as Control
-
+	
 	# Wenn keine Order: Panel ausblenden und raus
 	if order == null:
 		order_panel.visible = false
 		return
-
+	
 	order_panel.visible = true
-
+	
 	# FISCHNAME
 	var fish_label := order_panel.get_node("VBoxContainer/Fish/FishLabel") as Label
-	fish_label.text = "Fisch: %s" % order.fish_type
-
+	fish_label.text = tr("UI_ORDER_FISH") % order.fish_type
+	
 	# ZUBEREITUNG
 	var prep_label := order_panel.get_node("VBoxContainer/Prep/PrepLabel") as Label
-	prep_label.text = "Art: %s" % order.preparation_type
-
+	
+	# Übersetze Zubereitungsart
+	var prep_type_translated = order.preparation_type
+	if order.preparation_type == "Backfisch":
+		prep_type_translated = tr("PREP_TYPE_FRIED_FISH")
+	elif order.preparation_type == "Sushi":
+		prep_type_translated = tr("PREP_TYPE_SUSHI")
+	
+	prep_label.text = tr("UI_ORDER_PREP") % prep_type_translated
+	
 	# GETRÄNK
 	var drink_label := order_panel.get_node("VBoxContainer/Drink/DrinkLabel") as Label
-	drink_label.text = "Getränk: Ja" if order.wants_drink else "Getränk: Nein"
+	drink_label.text = tr("UI_ORDER_DRINK_YES") if order.wants_drink else tr("UI_ORDER_DRINK_NO")
 
 
 
@@ -392,18 +443,26 @@ func _input(event: InputEvent) -> void:
 	if security_view_active and event.is_action_pressed("ui_cancel"):
 		toggle_security_camera()
 		return
-	
-	# Leertaste für Interaktion
-	if event.is_action_pressed("ui_accept"):  # Leertaste
+
+	# --- NEU: Maus-Klick-Interaktion ---
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		if is_mouse_hovering and hovered_object == station_security:
+			print("→ Security-Station interagiert!")
+			station_security.interact()
+			return
+
+	# Leertaste für Interaktion (wie bisher)
+	if event.is_action_pressed("ui_accept"):
 		handle_spacebar_interaction()
-	
+
 	# Debug: Inventar anzeigen mit Tab
-	if event.is_action_pressed("ui_text_completion_query"):  # Tab
+	if event.is_action_pressed("ui_text_completion_query"):
 		print_inventory_status()
-	
+
 	# Debug: Kamera-Richtung anzeigen
-	if event.is_action_pressed("ui_page_up"):  # Page Up
+	if event.is_action_pressed("ui_page_up"):
 		print_camera_debug()
+
 
 func handle_spacebar_interaction() -> void:
 	# Behandelt Leertaste-Interaktionen basierend auf Kamera-Richtung
@@ -413,6 +472,7 @@ func handle_spacebar_interaction() -> void:
 		if current_customer:
 			print("→ Serviere Kunde")
 			serve_customer()
+			money_popup_layer.show()
 		else:
 			print("Kein Kunde da!")
 		return
@@ -544,6 +604,7 @@ func enter_security_view() -> void:
 		return
 
 	security_view_active = true
+	$CustomerDialogLayer.hide()
 
 	main_camera.current = false
 	security_camera.current = true
@@ -558,6 +619,7 @@ func exit_security_view() -> void:
 		return
 
 	security_view_active = false
+	$CustomerDialogLayer.show()
 
 	security_camera.current = false
 	main_camera.current = true

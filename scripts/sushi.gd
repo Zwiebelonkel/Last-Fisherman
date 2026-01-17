@@ -86,8 +86,6 @@ func _on_selection_cancelled() -> void:
 		current_state = State.IDLE
 		update_prompt()
 
-
-
 func set_hover(hovering: bool) -> void:
 	if outline_mesh and current_state == State.IDLE:
 		outline_mesh.visible = hovering
@@ -96,11 +94,12 @@ func set_hover(hovering: bool) -> void:
 #  INTERACTION
 # ===============================
 func interact() -> void:
+	print("interact")
 	match current_state:
 		State.IDLE:
 			open_fish_selection()
 		State.COOKING:
-			print("Noch am Kochen!")
+			print(tr("SUSHI_STILL_COOKING"))
 		State.READY:
 			collect_item()
 
@@ -109,12 +108,12 @@ func open_fish_selection() -> void:
 		return
 
 	if controller.get_available_fish_types().is_empty():
-		print("Keine Fische im Inventar!")
+		print(tr("SUSHI_NO_FISH_INVENTORY"))
 		return
 
 	fish_selection_ui.show_fish_selection(
 		controller.get_available_fish_dicts(),
-		"Sushi"
+		tr("PREP_TYPE_SUSHI")
 	)
 
 	current_state = State.WAITING_FOR_FISH
@@ -133,21 +132,21 @@ func _on_fish_selected(fish_name: String) -> void:
 
 	var order = controller.current_customer.order
 
-	# ❗ Station prüft NUR, ob sie die richtige Zubereitungsart ist
+	# ✅ FIXED: Prüfe gegen "Sushi" statt tr("PREP_TYPE_SUSHI")
 	if order.preparation_type != "Sushi":
-		print("Kunde will keinen Sushi!")
+		print(tr("SUSHI_CUSTOMER_NO_WANT"))
 		current_state = State.IDLE
 		update_prompt()
 		return
 
-	# ❗ Inventar-Prüfung bleibt
+	# Inventory check remains
 	if not controller.has_fish_in_inventory(fish_name):
-		print("Fisch nicht im Inventar!")
+		print(tr("SUSHI_FISH_NOT_IN_INVENTORY"))
 		current_state = State.IDLE
 		update_prompt()
 		return
 
-	# ✅ IMMER kochen – auch falscher Fisch
+	# ALWAYS cook - even wrong fish
 	start_cooking(fish_name)
 
 func start_cooking(fish_type: String) -> void:
@@ -180,6 +179,7 @@ func collect_item() -> void:
 	if not tray:
 		return
 
+	# ✅ FIXED: Nutze "Sushi" statt tr("PREP_TYPE_SUSHI")
 	if tray.add_item(current_fish_type, "Sushi"):
 		current_state = State.IDLE
 		current_fish_type = ""
@@ -195,13 +195,13 @@ func update_prompt() -> void:
 
 	match current_state:
 		State.IDLE:
-			interaction_prompt.text = "Klicken: Fisch wählen"
+			interaction_prompt.text = tr("SUSHI_PROMPT_IDLE")
 			interaction_prompt.visible = true
 		State.COOKING:
-			interaction_prompt.text = "Kocht..."
+			interaction_prompt.text = tr("SUSHI_PROMPT_COOKING")
 			interaction_prompt.visible = true
 		State.READY:
-			interaction_prompt.text = "Klicken: Aufnehmen"
+			interaction_prompt.text = tr("SUSHI_PROMPT_READY")
 			interaction_prompt.visible = true
 		_:
 			interaction_prompt.visible = false
