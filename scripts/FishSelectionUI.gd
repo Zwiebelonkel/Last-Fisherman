@@ -1,7 +1,7 @@
 extends Control
 class_name FishSelectionUI
 
-signal fish_selected(fish_name: String)
+signal fish_selected(fish_id: String)  # ✅ FIX: Signal gibt jetzt fish_id zurück
 signal cancelled()
 
 @onready var title_label: Label = $Panel/VBoxContainer/TitleLabel
@@ -33,7 +33,6 @@ func _input(event: InputEvent) -> void:
 	# Block spacebar completely when this UI is open
 	if event.is_action_pressed("ui_accept"):  # Spacebar
 		get_viewport().set_input_as_handled()
-		
 
 # ===============================
 #  PUBLIC API
@@ -67,10 +66,11 @@ func _rebuild_list(filter_text: String) -> void:
 		# Hard validation
 		if not (fish is Dictionary):
 			continue
-		if not fish.has("name"):
+		if not fish.has("id"):  # ✅ FIX: Prüfe auf "id" statt "name"
 			continue
 		
-		var fish_name: String = fish["name"]
+		# ✅ FIX: Hole Display-Namen über FishDB
+		var fish_name: String = FishDB.get_fish_name(fish)
 		
 		# Search filter
 		if filter_text != "" and not fish_name.to_lower().contains(filter_text):
@@ -82,14 +82,16 @@ func _rebuild_list(filter_text: String) -> void:
 #  SINGLE ENTRY
 # ===============================
 func _create_fish_entry(fish: Dictionary) -> Control:
-	var fish_name: String = fish["name"]
+	# ✅ FIX: Hole ID und Display-Namen
+	var fish_id: String = fish.get("id", "")
+	var fish_name: String = FishDB.get_fish_name(fish)
 	var icon_path: String = fish.get("icon", "")
 	var rarity: int = fish.get("rarity", FishDB.RARITY.NORMAL)
 	
 	var button := Button.new()
 	button.custom_minimum_size = Vector2(260, 48)
 	button.focus_mode = Control.FOCUS_NONE
-	button.pressed.connect(_on_fish_selected.bind(fish_name))
+	button.pressed.connect(_on_fish_selected.bind(fish_id))  # ✅ FIX: Sende fish_id
 	
 	var hbox := HBoxContainer.new()
 	hbox.alignment = BoxContainer.ALIGNMENT_BEGIN
@@ -103,7 +105,7 @@ func _create_fish_entry(fish: Dictionary) -> Control:
 		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		hbox.add_child(icon)
 	
-	# Name
+	# ✅ FIX: Name - verwende display name
 	var label := Label.new()
 	label.text = fish_name
 	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
@@ -128,8 +130,9 @@ func _create_fish_entry(fish: Dictionary) -> Control:
 func _on_search_changed(text: String) -> void:
 	_rebuild_list(text)
 
-func _on_fish_selected(fish_name: String) -> void:
-	fish_selected.emit(fish_name)
+# ✅ FIX: Parameter ist jetzt fish_id
+func _on_fish_selected(fish_id: String) -> void:
+	fish_selected.emit(fish_id)
 	hide()
 
 func _on_cancel_pressed() -> void:

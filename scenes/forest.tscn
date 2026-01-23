@@ -408,7 +408,7 @@ func _ready() -> void:
 	Player.biome_completed.connect(_on_biome_completed)
 
 
-# 🆕 Story-Item wurde \\\"verwendet\\\"
+# 🆕 Story-Item wurde \"verwendet\"
 func _on_story_item_used(biome: String) -> void:
 	print(\"🎭 Story-Item Event ausgelöst für Biom:\", biome)
 	
@@ -503,7 +503,33 @@ func _on_biome_completed(biome_name: String, reward: int) -> void:
 			scare.play()
 			camera.start_screenshake(0.02,10)
 			await ani.animation_finished
-			open_map()
+
+			var echo := preload(\"res://scenes/event_echo.tscn\").instantiate()
+			get_tree().current_scene.add_child(echo)
+			AudioServer.set_bus_mute(
+				AudioServer.get_bus_index(\"Music\"),
+				true
+			)
+			AudioServer.set_bus_mute(
+				AudioServer.get_bus_index(\"SFX\"),
+				true
+			)
+			echo.set_event(
+				EventEcho.EventType.FOREST,
+				tr(\"EVENT_FOREST\")
+			)
+
+			await get_tree().create_timer(10).timeout
+			AudioServer.set_bus_mute(
+			AudioServer.get_bus_index(\"Music\"),
+			false
+			)
+			AudioServer.set_bus_mute(
+				AudioServer.get_bus_index(\"SFX\"),
+			false
+			)
+			Player.update_last_scene(\"res://scenes/forest.tscn\")
+			Transition.change_scene(\"res://scenes/MapScene.tscn\")
 			
 		
 		\"desert\":
@@ -850,21 +876,41 @@ func cast_line(power: float = 1.0) -> void:
 	if waterplane:
 		water_height = waterplane.global_position.y
 	
-	# Hook landet weit weg (Start Position)
-	hook.position = Vector3(x, water_height, z)
+	# ✅ Hook landet weit weg (Start Position bei max_distance)
+	# WICHTIG: Setze Position GLOBAL, nicht lokal!
+	var cast_forward = -camera.global_transform.basis.z  # Kamera schaut in -Z
+	cast_forward.y = 0  # Nur horizontal
+	cast_forward = cast_forward.normalized()
+	
+	# ✅ FIX: Seitlicher Offset muss auch in die richtige Richtung rotiert werden
+	var cast_right = camera.global_transform.basis.x  # Rechts-Vektor der Kamera
+	cast_right.y = 0
+	cast_right = cast_right.normalized()
+	
+	hook.global_position = rod_tip.global_position + cast_right * x + cast_forward * distance
+	hook.global_position.y = water_height
 	hook.visible = true
-	hook_start_position = hook.global_position  # Weit weg im Wasser
+	hook_start_position = hook.global_position  # Weit weg im Wasser (0% Progress)
 	
-	# ✅ FIX: End Position ist bei min_distance (nicht ganz zur Angel!)
-	# Berechne Position bei min_distance in Richtung der Angel
-	var direction_to_rod = (rod_tip.global_position - hook.global_position).normalized()
-	direction_to_rod.y = 0  # Nur horizontale Bewegung
+	# 🔍 DEBUG: Überprüfe tatsächliche Distanz
+	var actual_distance = rod_tip.global_position.distance_to(hook_start_position)
+	print(\"🎣 Cast Distance:\")
+	print(\"  - Gewünschte Distanz: \", distance)
+	print(\"  - Tatsächliche Distanz: \", actual_distance)
+	print(\"  - Rod Tip Position: \", rod_tip.global_position)
+	print(\"  - Hook Start Position: \", hook_start_position)
 	
-	# End Position = min_distance vor der Angel
-	hook_end_position = rod_tip.global_position - direction_to_rod * min_distance
+	# ✅ FIX: End Position = min_distance vom Cast-Punkt (100% Progress)
+	# Berechne Richtung von Angel zum Hook (Cast-Richtung)
+	var cast_direction = (hook.global_position - rod_tip.global_position).normalized()
+	cast_direction.y = 0  # Nur horizontale Bewegung
+	
+	# End Position = min_distance in Cast-Richtung von der Angel
+	# Bei 100% Progress ist der Hook bei min_distance vom Ursprung
+	hook_end_position = rod_tip.global_position + cast_direction * min_distance
 	hook_end_position.y = water_height  # Bleib auf Wasserhöhe
 
-	splash.position = Vector3(x, water_height, z)
+	splash.global_position = hook_start_position
 	splash.visible = true
 	splash.emitting = true
 	splash.restart()
@@ -973,11 +1019,12 @@ func start_catch_minigame() -> void:
 	var effective_bait: int = max(1, int(Player.upgrade_bait * quality_multiplier))
 
 	if target_rarity != \"\":
-		current_fish = FishDB.get_random_fish_by_rarity(FishDB.FISH_FOREST, target_rarity)
+		current_fish = FishDB.get_random_fish_by_rarity(FishDB.get_fish_list_for_biome(fishing_location),target_rarity)
+
 	else:
 		current_fish = FishDB.get_random_from_list(FishDB.FISH_FOREST, effective_bait)
 
-	print(\"🎣 Gefangen:\", str(current_fish.get(\"name\", \"Unknown\")))
+	print(\"🎣 Gefangen:\", FishDB.get_fish_name(current_fish))
 
 	# ---------------------------
 	# Marker Setup
@@ -1069,10 +1116,13 @@ func update_catch_minigame(delta: float) -> void:
 	var current_speed = marker_speed
 	
 	# ✅ Hook bewegt sich basierend auf Progress
+	# 0% = hook_start_position (weit weg bei max_distance)
+	# 100% = hook_end_position (nah bei min_distance)
 	var t := catch_progress.value / 100.0
 	var new_pos := hook_start_position.lerp(hook_end_position, t)
-	new_pos.y = waterplane.global_position.y - 7.0  # Bleib auf Wasserhöhe
+	new_pos.y = waterplane.global_position.y  # Bleib auf Wasserhöhe
 	hook.global_position = new_pos
+
 
 	if input_active:
 		current_speed *= marker_slow_factor
@@ -1124,9 +1174,9 @@ func end_catch_minigame(success: bool) -> void:
 	if success:
 		var fish = current_fish
 		Player.add_fish(fish)
-		Player.caught_fish_species[fish[\"name\"]] = true
+		Player.caught_fish_species[fish[\"id\"]] = true
 		success_sound.play()
-		SteamAchievements.on_fish_caught(fish)
+		SteamAchievements.on_fish_caught(fish[\"id\"])
 		SteamAchievements.check_total_fish_caught()
 		SteamAchievements.check_species_discovered()
 		
@@ -1137,11 +1187,11 @@ func end_catch_minigame(success: bool) -> void:
 		if catch_result_ui:
 			catch_result_ui.show_fish(fish)
 
-		print(\"Erfolgreich gefangen: \", fish[\"name\"])
 		Player.save_game()
 	else:
-		print(\"Fisch entwischt! (\", current_fish[\"name\"], \")\")
+		print(\"Fisch entwischt!\")
 		line_sound.play()
+		print(\"⚠️ Köder bleibt aktiv!\")
 
 	catch_ui.visible = false
 	await reset_line()
@@ -1725,7 +1775,7 @@ tracks/1/keys = {
 
 [sub_resource type="Animation" id="Animation_soql2"]
 resource_name = "attack"
-length = 10.0
+length = 6.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -1733,10 +1783,10 @@ tracks/0/path = NodePath(".:position")
 tracks/0/interp = 2
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 3, 6.41, 6.89333, 9.5, 9.93333),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"times": PackedFloat32Array(0, 3, 5.5, 5.93333),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
 "update": 0,
-"values": [Vector3(0, -4.31979, 43.319), Vector3(0, -4.32, 15.699), Vector3(0, -6.05, 10.285), Vector3(0, -5.755, 13.765), Vector3(0, -5.755, 13.765), Vector3(0.2, 0.16, 5.922)]
+"values": [Vector3(0, -4.31979, 43.319), Vector3(0, -4.32, 15.699), Vector3(0, -5.755, 13.765), Vector3(0.2, 0.16, 5.922)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -1745,7 +1795,7 @@ tracks/1/path = NodePath(".:rotation")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(9.5, 9.67903, 9.93333),
+"times": PackedFloat32Array(5.5, 5.67903, 5.93333),
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
 "values": [Vector3(0, 3.14159, 0), Vector3(-0.315905, 3.14159, 0), Vector3(0.0915425, 3.14159, -1.38613e-08)]
@@ -2088,7 +2138,6 @@ transform = Transform3D(0.495, 0, 0, 0, 1.01, 0, 0, 0, 0.105, 0.0924568, -2.0766
 
 [node name="shark" parent="." instance=ExtResource("28_g34gq")]
 transform = Transform3D(-0.15, 0, 3.80277e-07, 0, 0.15, 0, -3.80277e-07, 0, -0.15, 0, -4.31979, 43.319)
-visible = false
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="shark"]
 libraries = {

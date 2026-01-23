@@ -43,7 +43,7 @@ func update_stats() -> void:
 	
 	for rarity in FishDB.RARITY_DATA.keys():
 		var rarity_data = FishDB.RARITY_DATA[rarity]
-		var rarity_name: String = rarity_data["name"]
+		var rarity_name: String = tr(rarity_data["name_key"])
 		var rarity_color: Color = rarity_data["color"]
 		var caught_count: int = catch_stats.get(rarity, 0)
 		var spawn_chance: float = spawn_chances.get(rarity, 0.0)
@@ -86,6 +86,7 @@ func _create_biome_completion_stats() -> void:
 		"iceland": "BIOME_ICELAND"
 	}
 	
+	# ✅ FIX 1: Nutze get_fish_name() statt get_translated_name()
 	for biome in Player.completed_biomes.keys():
 		var is_complete: bool = Player.completed_biomes[biome]
 		var biome_display: String = tr(biome_keys.get(biome, biome.to_upper()))
@@ -94,8 +95,8 @@ func _create_biome_completion_stats() -> void:
 		var caught_fish: int = 0
 		
 		for fish in biome_fish_list:
-			var fish_name = FishDB.get_translated_name(fish) if fish.has("name_key") else fish["name"]
-			if Player.caught_fish_species.has(fish_name):
+			var display_name := FishDB.get_fish_name(fish)
+			if Player.caught_fish_species.has(display_name):
 				caught_fish += 1
 		
 		var progress_text := tr("STATS_BIOME_PROGRESS").format({
@@ -111,10 +112,15 @@ func _create_biome_completion_stats() -> void:
 func _create_weight_records() -> void:
 	var records: Array = []
 	
-	for fish_name in Player.fish_weight_records.keys():
+	for fish_key in Player.fish_weight_records.keys():
+		var weight: float = Player.fish_weight_records[fish_key]
+		
+		# 🔑 Key → FishDB → Anzeigenname
+		var display_name: String = FishDB.get_fish_name_by_id(fish_key)
+		
 		records.append({
-			"name": fish_name,
-			"weight": Player.fish_weight_records[fish_name]
+			"name": display_name,
+			"weight": weight
 		})
 	
 	records.sort_custom(func(a, b): return a["weight"] > b["weight"])
@@ -123,6 +129,7 @@ func _create_weight_records() -> void:
 	for record in records:
 		if count >= 5:
 			break
+		
 		var text := tr("STATS_WEIGHT_ENTRY").format({
 			"rank": str(count + 1),
 			"name": record["name"],
@@ -136,27 +143,46 @@ func _create_weight_records() -> void:
 
 func _create_most_caught_fish() -> void:
 	var catch_counts: Array = []
-	
-	for fish_name in Player.fish_catch_count.keys():
+
+	# 🔁 ID-basierte Auswertung (Source of Truth = fish_id)
+	for fish_id in Player.fish_catch_count.keys():
+		var count: int = Player.fish_catch_count[fish_id]
+
+		# 🔒 Fischdaten sicher holen
+		var fish := FishDB.get_fish_by_id(fish_id)
+		if fish.is_empty():
+			push_warning("⚠️ Unbekannte Fish-ID in Most-Caught-Stats: %s" % fish_id)
+			continue
+
+		var display_name := FishDB.get_fish_name(fish)
+
 		catch_counts.append({
-			"name": fish_name,
-			"count": Player.fish_catch_count[fish_name]
+			"id": fish_id,
+			"name": display_name,
+			"count": count
 		})
-	
-	catch_counts.sort_custom(func(a, b): return a["count"] > b["count"])
-	
-	var count := 0
+
+	# 📊 Nach Häufigkeit sortieren (absteigend)
+	catch_counts.sort_custom(func(a, b):
+		return a["count"] > b["count"]
+	)
+
+	# 🏆 Top 5 anzeigen
+	var rank := 0
 	for fish_data in catch_counts:
-		if count >= 5:
+		if rank >= 5:
 			break
+
 		var text := tr("STATS_CAUGHT_ENTRY").format({
-			"rank": str(count + 1),
+			"rank": str(rank + 1),
 			"name": fish_data["name"],
 			"count": str(fish_data["count"])
 		})
-		_create_simple_entry(text, Color(0.3, 1, 0.3))
-		count += 1
-	
+
+		_create_simple_entry(text, Color(0.3, 1.0, 0.3))
+		rank += 1
+
+	# 💤 Fallback: noch kein Fisch gefangen
 	if catch_counts.is_empty():
 		_create_simple_entry(tr("STATS_NO_CATCHES"), Color.GRAY)
 
@@ -168,8 +194,11 @@ func _create_bait_inventory() -> void:
 		
 		if amount > 0:
 			has_baits = true
+			var rarity_enum := FishDB.rarity_string_to_enum(rarity)
+			var rarity_key: String = FishDB.RARITY_DATA[rarity_enum]["name_key"]
+			var rarity_text := tr(rarity_key)
 			var text := tr("STATS_BAIT_AMOUNT").format({
-				"rarity": rarity,
+				"rarity": rarity_text,
 				"amount": str(amount)
 			})
 			var color := _get_rarity_color_by_name(rarity)
@@ -254,35 +283,58 @@ func _calculate_spawn_chances(bait_level: int) -> Dictionary:
 	
 	return percentages
 
+# ✅ FIX 2: Komplett überarbeitete _get_catch_statistics() - effizienter und sicherer
 func _get_catch_statistics() -> Dictionary:
 	var stats: Dictionary = {}
 	
+	# ----------------------------
+	# Alle Rarities initialisieren
+	# ----------------------------
 	for rarity in FishDB.RARITY_DATA.keys():
 		stats[rarity] = 0
 	
-	for fish_name in Player.fish_catch_count.keys():
-		var count = Player.fish_catch_count[fish_name]
-		var biome := Player.get_fish_biome(fish_name)
-		if biome == "":
-			continue
-		
-		var fish_list := Player.get_biome_fish_list(biome)
+	# ----------------------------
+	# Alle Biome (Source of Truth)
+	# ----------------------------
+	var all_lists := [
+		FishDB.FISH_LAKE,
+		FishDB.FISH_CITY,
+		FishDB.FISH_SEWER,
+		FishDB.FISH_FOREST,
+		FishDB.FISH_DESERT,
+		FishDB.FISH_ICELAND
+	]
+	
+	# ----------------------------
+	# Durch alle Fische iterieren
+	# ----------------------------
+	for fish_list in all_lists:
 		for fish in fish_list:
-			var current_fish_name = FishDB.get_translated_name(fish) if fish.has("name_key") else fish["name"]
-			if current_fish_name == fish_name:
-				# 🔒 CRITICAL FIX: Sichere rarity-Zugriffe
-				if not fish.has("rarity"):
-					push_warning("⚠️ Fish ohne rarity in Statistics: %s" % fish_name)
-					continue
-				
-				var rarity: int = fish["rarity"]
-				
-				if not FishDB.RARITY_DATA.has(rarity):
-					push_warning("⚠️ Ungültige rarity in Statistics: %s" % rarity)
-					continue
-				
-				stats[rarity] = stats.get(rarity, 0) + count
-				break
+			# 🔒 ID ist die einzige logische Referenz
+			if not fish.has("id"):
+				push_warning("⚠️ Fish ohne ID in Statistics")
+				continue
+			
+			var fish_id: String = str(fish["id"])
+			
+			# Wurde dieser Fisch gefangen?
+			if not Player.fish_catch_count.has(fish_id):
+				continue
+			
+			var count: int = Player.fish_catch_count[fish_id]
+			
+			# 🔒 Sichere rarity-Zugriffe
+			if not fish.has("rarity"):
+				push_warning("⚠️ Fish ohne rarity in Statistics: %s" % fish_id)
+				continue
+			
+			var rarity: int = fish["rarity"]
+			
+			if not FishDB.RARITY_DATA.has(rarity):
+				push_warning("⚠️ Ungültige rarity in Statistics: %s" % rarity)
+				continue
+			
+			stats[rarity] += count
 	
 	return stats
 

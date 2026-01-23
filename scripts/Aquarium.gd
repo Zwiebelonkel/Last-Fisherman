@@ -11,7 +11,7 @@ var min_bounds: Vector3
 var max_bounds: Vector3
 
 # Alle aktiven Fische im Aquarium
-var active_fish: Dictionary = {}  # {"FischName": Sprite3D_Node}
+var active_fish: Dictionary = {}  # {"FischID": Sprite3D_Node}
 
 func _ready() -> void:
 	# Berechne Grenzen
@@ -27,14 +27,16 @@ func _ready() -> void:
 	print("🐠 Aquarium initialisiert mit %d Fischen" % active_fish.size())
 
 func spawn_all_caught_fish() -> void:
-	# Hole alle gefangenen Fische aus Player
-	for fish_name in Player.caught_fish_species.keys():
-		if Player.caught_fish_species[fish_name]:
-			spawn_fish_by_name(fish_name)
+	# ✅ FIX: Player.caught_fish_species speichert jetzt IDs statt Namen
+	for fish_id in Player.caught_fish_species.keys():
+		if Player.caught_fish_species[fish_id]:
+			spawn_fish_by_id(fish_id)
 
-func spawn_fish_by_name(fish_name: String) -> void:
+# ✅ FIX: Umbenennung von spawn_fish_by_name zu spawn_fish_by_id
+func spawn_fish_by_id(fish_id: String) -> void:
 	# Prüfe ob Fisch bereits im Aquarium ist
-	if active_fish.has(fish_name):
+	if active_fish.has(fish_id):
+		var fish_name := _get_display_name_for_id(fish_id)
 		print("🐟 %s ist bereits im Aquarium" % fish_name)
 		return
 	
@@ -43,32 +45,28 @@ func spawn_fish_by_name(fish_name: String) -> void:
 		print("⚠️ Aquarium voll! Maximum %d Fische erreicht" % max_fish)
 		return
 	
-	# Finde Fisch-Daten in FishDB
-	var fish_data = find_fish_data(fish_name)
+	# ✅ FIX: Hole Fisch-Daten via ID
+	var fish_data := FishDB.get_fish_by_id(fish_id)
 	if fish_data.is_empty():
-		print("⚠️ Fisch nicht gefunden:", fish_name)
+		print("⚠️ Fisch nicht gefunden für ID:", fish_id)
 		return
 	
 	spawn_fish(fish_data)
 
-func find_fish_data(fish_name: String) -> Dictionary:
-	var all_lists = [
-		FishDB.FISH_LAKE,
-		FishDB.FISH_CITY,
-		FishDB.FISH_SEWER,
-		FishDB.FISH_FOREST,
-		FishDB.FISH_DESERT,
-		FishDB.FISH_ICELAND
-	]
-	
-	for fish_list in all_lists:
-		for fish in fish_list:
-			if fish["name"] == fish_name:
-				return fish
-	
-	return {}
+# ✅ HELPER: Hole Display-Namen für Logging
+func _get_display_name_for_id(fish_id: String) -> String:
+	var fish_data := FishDB.get_fish_by_id(fish_id)
+	if fish_data.is_empty():
+		return fish_id
+	return FishDB.get_fish_name(fish_data)
 
 func spawn_fish(fish_data: Dictionary) -> void:
+	# ✅ FIX: Hole ID statt Name
+	var fish_id: String = fish_data.get("id", "")
+	if fish_id == "":
+		print("⚠️ Fish ohne ID kann nicht gespawnt werden")
+		return
+	
 	# Erstelle Sprite3D
 	var fish_sprite = Sprite3D.new()
 	fish_sprite.billboard = BaseMaterial3D.BILLBOARD_ENABLED
@@ -76,12 +74,8 @@ func spawn_fish(fish_data: Dictionary) -> void:
 	fish_sprite.pixel_size = 0.01
 	fish_sprite.shaded = false  # Keine 3D-Beleuchtung
 	
-	# Icon laden
-	var icon_path = fish_data.get("icon", "res://assets/fish/unknown.png")
-	if ResourceLoader.exists(icon_path):
-		fish_sprite.texture = load(icon_path)
-	else:
-		fish_sprite.texture = load("res://assets/fish/unknown.png")
+	# ✅ FIX: Icon über FishDB.get_fish_icon()
+	fish_sprite.texture = FishDB.get_fish_icon(fish_data)
 	
 	# 🎨 Größe basierend auf Rarity
 	var rarity = fish_data.get("rarity", FishDB.RARITY.NORMAL)
@@ -89,7 +83,7 @@ func spawn_fish(fish_data: Dictionary) -> void:
 	fish_sprite.scale = Vector3.ONE * fish_scale * size_multiplier
 	
 	# 🎨 Farb-Modulation für Rarity
-	var rarity_color = FishDB.RARITY_DATA[rarity]["color"]
+	var rarity_color = FishDB.get_rarity_color(fish_data)
 	fish_sprite.modulate = rarity_color.lerp(Color.WHITE, 0.5)  # 50% Mix mit Weiß
 	
 	# Zufällige Startposition
@@ -100,12 +94,13 @@ func spawn_fish(fish_data: Dictionary) -> void:
 	if script:
 		fish_sprite.set_script(script)
 		
-		# Bewegungsparameter setzen
+		# ✅ FIX: Bewegungsparameter setzen mit ID und Display-Namen
 		fish_sprite.set("target_position", get_random_position())
 		fish_sprite.set("movement_speed", randf_range(0.3, 1.5))
 		fish_sprite.set("min_bounds", min_bounds)
 		fish_sprite.set("max_bounds", max_bounds)
-		fish_sprite.set("fish_name", fish_data["name"])
+		fish_sprite.set("fish_id", fish_id)  # ✅ Speichere ID
+		fish_sprite.set("fish_display_name", FishDB.get_fish_name(fish_data))  # ✅ Display
 		fish_sprite.set("rarity", rarity)
 	
 	# 💡 Licht für seltene Fische
@@ -119,9 +114,12 @@ func spawn_fish(fish_data: Dictionary) -> void:
 	
 	# Zur Scene hinzufügen
 	add_child(fish_sprite)
-	active_fish[fish_data["name"]] = fish_sprite
+	active_fish[fish_id] = fish_sprite
 	
-	print("🐟 Spawned: %s (Rarity: %s)" % [fish_data["name"], FishDB.RARITY_DATA[rarity]["name"]])
+	# ✅ FIX: Logging mit Display-Namen
+	var fish_name := FishDB.get_fish_name(fish_data)
+	var rarity_key := FishDB.get_rarity_name_key(fish_data)
+	print("🐟 Spawned: %s (Rarity: %s)" % [fish_name, tr(rarity_key)])
 
 func get_size_for_rarity(rarity: int) -> float:
 	match rarity:
@@ -149,6 +147,8 @@ func get_random_position() -> Vector3:
 	)
 
 # 🆕 Wird aufgerufen wenn neuer Fisch gefangen wurde
-func _on_fish_caught(fish_name: String) -> void:
+# ✅ FIX: Parameter ist jetzt fish_id
+func _on_fish_caught(fish_id: String) -> void:
+	var fish_name := _get_display_name_for_id(fish_id)
 	print("🎣 Aquarium: Neuer Fisch gefangen:", fish_name)
-	spawn_fish_by_name(fish_name)
+	spawn_fish_by_id(fish_id)

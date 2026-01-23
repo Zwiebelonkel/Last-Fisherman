@@ -51,8 +51,9 @@ func _sort_fish_by_rarity(fish_list: Array) -> Array:
 # ===========================
 #  CAUGHT CHECK
 # ===========================
-func is_fish_caught(fish_name: String) -> bool:
-	return Player.caught_fish_species.get(fish_name, false)
+func is_fish_caught(fish_id: String) -> bool:
+	return Player.caught_fish_species.has(fish_id)
+
 
 
 
@@ -76,22 +77,23 @@ func get_bestiary_entries(location: String) -> Array:
 	for fish in fish_list:
 		# 🔒 CRITICAL FIX: Prüfe rarity VOR Zugriff
 		if not fish.has("rarity"):
-			push_warning("⚠️ Fish ohne rarity im Bestiary: %s" % fish.get("name", "Unknown"))
+			push_warning("⚠️ Fish ohne rarity im Bestiary: %s" % fish.get("id", "UNKNOWN"))
 			continue
 		
 		if not FishDB.RARITY_DATA.has(fish["rarity"]):
 			push_warning("⚠️ Ungültige rarity im Bestiary: %s" % fish["rarity"])
 			continue
 		
-		var caught = is_fish_caught(fish["name"])
-		
-		var entry = {
-			"name": fish["name"] if caught else "???",
-			"rarity": fish["rarity"] if caught else FishDB.RARITY.NORMAL,  # 🔒 FIX: Fallback zu NORMAL
+		var fish_id: String = String(fish.get("id", ""))
+		var caught := is_fish_caught(fish_id)
+
+		var entry := {
+			"id": fish_id,
+			"name": FishDB.get_fish_name(fish) if caught else "???",
+			"rarity": fish["rarity"] if caught else FishDB.RARITY.NORMAL,
 			"base_value": fish["base_value"] if caught else 0,
 			"icon": fish["icon"] if caught else "res://assets/fish/unknown.png",
-			"caught": caught,
-			"original_name": fish["name"]
+			"caught": caught
 		}
 		
 		entries.append(entry)
@@ -108,7 +110,7 @@ func get_bestiary_stats(location: String) -> Dictionary:
 	var total_count = fish_list.size()
 	
 	for fish in fish_list:
-		if is_fish_caught(fish["name"]):
+		if is_fish_caught(fish.get("id", "")):
 			caught_count += 1
 	
 	var completion = int((float(caught_count) / float(total_count)) * 100) if total_count > 0 else 0

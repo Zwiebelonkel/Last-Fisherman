@@ -141,8 +141,7 @@ func update_display():
 		name_label.add_theme_font_size_override("font_size", 15)
 		
 		# 🌍 SELTENHEIT (Übersetzt)
-		var rarity_name = rarity_data["name"]
-		var rarity_key = _get_rarity_key(rarity_name)
+		var rarity_key: String = rarity_data["name_key"]
 		rarity_label.text = tr(rarity_key)
 		rarity_label.modulate = rarity_color
 		separator.modulate = rarity_color
@@ -282,60 +281,76 @@ func _notification(what):
 func _on_mouse_entered():
 	if not fish_data.get("caught", false):
 		return
-	
+
 	is_hovering = true
-	
-	var description = fish_data.get("description", "")
-	if description == "":
-		description = get_description_from_fishdb()
-	
-	var tooltip_text = ""
-	tooltip_text += "[b][font_size=16]%s[/font_size][/b]\n" % fish_data["name"]
-	
-	# 🌍 Rarity im Tooltip übersetzt
-	var rarity_data = FishDB.RARITY_DATA[fish_data["rarity"]]
-	var rarity_name = rarity_data["name"]
-	var rarity_key = _get_rarity_key(rarity_name)
-	var rarity_translated = tr(rarity_key)
-	
-	tooltip_text += "[color=%s]%s[/color]" % [rarity_data["color"].to_html(), rarity_translated]
-	tooltip_text += " • 💰 %d\n" % fish_data["base_value"]
-	
-	# 🌍 Rekord-Text übersetzt
-	var max_weight = Player.get_max_caught_weight(fish_data["name"])
+
+	# ----------------------------
+	# Vollständige FishDB-Daten
+	# ----------------------------
+	var fish_id: String = fish_data.get("id", "")
+	if fish_id == "":
+		return
+
+	var full_fish: Dictionary = FishDB.get_fish_by_id(fish_id)
+	if full_fish.is_empty():
+		return
+
+	# ----------------------------
+	# Name (lokalisiert)
+	# ----------------------------
+	var fish_name := FishDB.get_fish_name(full_fish)
+
+	# ----------------------------
+	# Beschreibung (lokalisiert)
+	# ----------------------------
+	var description := FishDB.get_fish_description(full_fish)
+
+	# ----------------------------
+	# Rarity
+	# ----------------------------
+	var rarity: int = full_fish["rarity"]
+	var rarity_data: Dictionary = FishDB.RARITY_DATA[rarity]
+	var rarity_color: Color = rarity_data["color"]
+	var rarity_text: String = tr(rarity_data["name_key"])
+
+	# ----------------------------
+	# Tooltip Text
+	# ----------------------------
+	var tooltip_text := ""
+	tooltip_text += "[b][font_size=16]%s[/font_size][/b]\n" % fish_name
+	tooltip_text += "[color=%s]%s[/color]" % [rarity_color.to_html(), rarity_text]
+	tooltip_text += " • 💰 %d\n" % FishDB.get_fish_value(full_fish)
+
+	# ----------------------------
+	# Rekord-Gewicht (ID!)
+	# ----------------------------
+	var max_weight := Player.get_max_caught_weight(fish_id)
 	if max_weight > 0:
-		var record_text = get_text("record") % max_weight
+		var record_text := get_text("record") % max_weight
 		tooltip_text += "\n[color=#FFD700]%s[/color]\n" % record_text
-	
+
+	# ----------------------------
+	# Beschreibung
+	# ----------------------------
 	if description != "":
 		tooltip_text += "\n[color=#CCCCCC]%s[/color]" % description
 	else:
 		tooltip_text += "\n[color=#888888][i]%s[/i][/color]" % get_text("no_description")
-	
+
 	tooltip_label.text = tooltip_text
 	tooltip_panel.visible = true
 	update_tooltip_position()
 
 func get_description_from_fishdb() -> String:
-	var fish_name = fish_data.get("name", "")
-	if fish_name == "":
+	var fish_id: String = fish_data.get("id", "")
+	if fish_id == "":
 		return ""
-	
-	var all_lists = [
-		FishDB.FISH_LAKE,
-		FishDB.FISH_CITY,
-		FishDB.FISH_SEWER,
-		FishDB.FISH_FOREST,
-		FishDB.FISH_DESERT,
-		FishDB.FISH_ICELAND
-	]
-	
-	for fish_list in all_lists:
-		for fish in fish_list:
-			if fish["name"] == fish_name:
-				return fish.get("description", "")
-	
-	return ""
+
+	var full_fish: Dictionary = FishDB.get_fish_by_id(fish_id)
+	if full_fish.is_empty():
+		return ""
+
+	return FishDB.get_fish_description(full_fish)
 
 func _on_mouse_exited():
 	is_hovering = false

@@ -135,6 +135,18 @@ https://skfb.ly/pAXsw"
 [node name="Label10" type="Label" parent="VScrollBar/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "Octopus Cargo Ship by KurumA
+https://skfb.ly/psXDo"
+
+[node name="Label16" type="Label" parent="VScrollBar/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "Sea ​​container - Low Poly by Mozhet_Moroz
+https://skfb.ly/oRLDX"
+
+[node name="Label15" type="Label" parent="VScrollBar/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "Sprite helpers <3:
 Julia, Daniel"
 

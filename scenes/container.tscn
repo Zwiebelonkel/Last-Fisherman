@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://b3yoisdl8hw18"]
+
+[ext_resource type="PackedScene" uid="uid://bmd6vgm34eod0" path="res://assets/container/scene.gltf" id="1_1syo6"]
+
+[node name="Node3D" type="Node3D"]
+
+[node name="Sketchfab_Scene" parent="." instance=ExtResource("1_1syo6")]

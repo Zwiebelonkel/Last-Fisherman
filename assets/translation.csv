@@ -6,6 +6,11 @@ SETTINGS,Einstellungen,Settings
 CREDITS,Credits,Credits
 GRIP,Griff,Grip
 BAIT,Köder,Bait
+BAIT_SUFFIX,Köder,Bait
+BAIT_ACTIVATE,Aktivieren,Activate
+BAIT_ACTIVE,Aktiv,Active
+ACTIVE_BAIT_LABEL,Köder: {bait},Bait: {bait}
+BAIT_NONE,Kein Köder,No Bait
 LINE,Faden,Line
 GRIP_DESC,Bereichsfortschritt,Sweetspot Progress
 BAIT_DESC,Seltene Items Chance,Rare Items Chance
@@ -40,13 +45,13 @@ INVENTORY,Inventar,Inventory
 FISHBOOK,Fischbuch,Fishbook
 MAP,Karte,Map
 MENU,Menü,Menu
-NORMAL,Normal,Common
-UNCOMMON,Ungewöhnlich,Uncommon
-RARE,Selten,Rare
-EPIC,Episch,Epic
-LEGENDARY,Legendär,Legendary
-EXOTIC,Exotisch,Exotic
-ANTIQUE,Antik,Antique
+RARITY_NORMAL,Normal,Common
+RARITY_UNCOMMON,Ungewöhnlich,Uncommon
+RARITY_RARE,Selten,Rare
+RARITY_EPIC,Episch,Epic
+RARITY_LEGENDARY,Legendär,Legendary
+RARITY_EXOTIC,Exotisch,Exotic
+RARITY_ANTIQUE,Antik,Antique
 DESCRIPTION,Beschreibung,Description
 BASEVALUE,Basiswert,Base Value
 WEIGHT1,Gewicht (Rekord),Weight (Record)
@@ -120,6 +125,11 @@ Ich habe es nie richtig bemerkt.
 Vielleicht wollte ich es nicht bemerken.","Everyone says the world died slowly.
 I never really noticed it.
 Maybe I didn't want to."
+
+INVENTORY_TITLE,Inventar,Inventory
+INVENTORY_TOTAL_VALUE,Gesamtwert,Total Value
+INVENTORY_SELL_ALL,Alle verkaufen,Sell All
+INVENTORY_NO_FISH,Keine Fische zum Verkaufen,No Fish to Sell
 
 VAN, Imbiss, Vendor
 SUSHI, Sushi, Sushi
@@ -216,3 +226,258 @@ BESTELLUNG, Bestellung, Order
 UI_FISH_SELECT_TITLE,Fisch wählen für %s,Select fish for %s
 UI_SEARCH_PLACEHOLDER,Suchen...,Search...
 UI_CANCEL,Abbrechen,Cancel
+
+FISH_LAKE_SEETANG_NAME,Seetang,Seaweed
+FISH_LAKE_SEETANG_DESC,"Technisch gesehen kein Fisch. Aber mach erstmal weiter.","Technically not a fish. But keep going anyway."
+FISH_LAKE_SEETANG_SCIENCE,"Seetang betreibt Fotosynthese und liefert wertvollen Sauerstoff, auch wenn er sich nicht wie ein Fisch verhält.","Seaweed performs photosynthesis and provides valuable oxygen, even though it does not behave like a fish."
+
+FISH_LAKE_MAKRELE_NAME,Makrele,Mackerel
+FISH_LAKE_MAKRELE_DESC,"Der Toyota Corolla unter den Fischen. Zuverlässig langweilig.","The Toyota Corolla of fish. Reliably boring."
+FISH_LAKE_MAKRELE_SCIENCE,"Makrelen besitzen einen stromlinienförmigen Körper, der hydrodynamisch optimiert ist und energieeffizientes Schwimmen ermöglicht.","Mackerel have a streamlined, hydrodynamically optimized body that allows energy-efficient swimming."
+
+FISH_LAKE_ROTAUGE_NAME,Rotauge,Roach
+FISH_LAKE_ROTAUGE_DESC,"Starrt dich vorwurfsvoll an. Hat wahrscheinlich Recht damit.","Stares at you judgmentally. It's probably right."
+FISH_LAKE_ROTAUGE_SCIENCE,"Rotaugen sind Schwarmfische, die visuelle Signale nutzen, um sich synchron zu bewegen – effizienter als du beim Autofahren.","Roach are schooling fish that use visual signals to move synchronously – more efficient than you driving."
+
+FISH_LAKE_BARSCH_NAME,Barsch,Perch
+FISH_LAKE_BARSCH_DESC,"Etwas stacheliger als deine Ex, aber weniger giftig.","A bit spikier than your ex, but less toxic."
+FISH_LAKE_BARSCH_SCIENCE,"Barsche nutzen ihr Seitenlinienorgan, um feinste Wasserbewegungen wahrzunehmen – praktisch wie ein eingebautes Sonar.","Perch use their lateral line organ to detect subtle water movements – basically built-in sonar."
+
+FISH_LAKE_THUNFISCH_NAME,Thunfisch,Tuna
+FISH_LAKE_THUNFISCH_DESC,"Keine Ahnung wie der hier rein passt... Der ist viel zu fett.","No idea how this fits in here… it's way too fat."
+FISH_LAKE_THUNFISCH_SCIENCE,"Thunfische gehören zu den wenigen warmblütigen Fischen, was ihnen enorme Geschwindigkeit verschafft.","Tuna are among the few warm-blooded fish, giving them tremendous speed."
+
+FISH_LAKE_HECHT_NAME,Hecht,Pike
+FISH_LAKE_HECHT_DESC,"Sieht aus wie ein Unterwasser-Torpedo mit Zahnarztphobie.","Looks like an underwater torpedo with a fear of dentists."
+FISH_LAKE_HECHT_SCIENCE,"Hechte beschleunigen in Millisekunden, da ihre Muskulatur auf explosive Schnellkraft ausgelegt ist.","Pike can accelerate in milliseconds because their muscles are built for explosive power."
+
+FISH_LAKE_EINSIEDLER_NAME,Einsiedler,Hermit Crab
+FISH_LAKE_EINSIEDLER_DESC,"Der chillt einfach. Fühlst du dich nicht schlecht, dass du ihn gestört hast?","He's just chilling. Don't you feel bad for disturbing him?"
+FISH_LAKE_EINSIEDLER_SCIENCE,"Einsiedlerkrebse leben in leeren Schneckenhäusern, um ihren weichen Körper vor Fressfeinden zu schützen, und wechseln mit dem Wachstum in größere Häuser, oft in Symbiose mit Seeanemonen.","Hermit crabs live in empty shells to protect their soft bodies and move to larger ones as they grow, often forming symbiotic relationships with sea anemones."
+
+FISH_LAKE_MANTA_NAME,Manta,Manta Ray
+FISH_LAKE_MANTA_DESC,"Einer von vielen. Aber er ist sehr süß.","One of many. But this one is very cute."
+FISH_LAKE_MANTA_SCIENCE,"Mantas gehören zu den größten Rochenarten und filtern winzige Planktonpartikel aus dem Wasser – sie sind quasi Staubsauger mit Eleganz.","Manta rays are among the largest rays and filter tiny plankton particles from the water – basically elegant vacuum cleaners."
+
+FISH_LAKE_ZANDER_NAME,Zander,Zander
+FISH_LAKE_ZANDER_DESC,"Der Hipster-Fisch. War schon cool, bevor es mainstream wurde.","The hipster fish. Was cool before it went mainstream."
+FISH_LAKE_ZANDER_SCIENCE,"Zander sehen im Dunkeln besonders gut, da ihre Netzhaut stark lichtverstärkend aufgebaut ist.","Zander see exceptionally well in the dark due to their light-amplifying retina."
+
+FISH_LAKE_KAUGUMMIKARPFEN_NAME,Kaugummikarpfen,Gum Carp
+FISH_LAKE_KAUGUMMIKARPFEN_DESC,"Schmeckt nach Erdbeere und existenzieller Krise.","Tastes like strawberry and existential crisis."
+FISH_LAKE_KAUGUMMIKARPFEN_SCIENCE,"Karpfen besitzen über 100.000 Geschmacksknospen, was sie zu wahren Gourmets des Süßwassers macht.","Carp have over 100,000 taste buds, making them true freshwater gourmets."
+
+FISH_LAKE_GLUBSCHI_NAME,Glubschi,Bugeye
+FISH_LAKE_GLUBSCHI_DESC,"Seine Augen machen 95% seines Körpergewichts aus.","Its eyes make up 95% of its body weight."
+FISH_LAKE_GLUBSCHI_SCIENCE,"Fische mit großen Augen sind oft an lichtarme Umgebungen angepasst, um möglichst viel Licht aufzunehmen.","Fish with large eyes are often adapted to low-light environments to maximize light intake."
+
+FISH_LAKE_KARPENKOENIGIN_NAME,Karpfenkönigin,Carp Queen
+FISH_LAKE_KARPENKOENIGIN_DESC,"Erwartet, dass du kniest. Und das zu Recht.","Expects you to kneel. And rightfully so."
+FISH_LAKE_KARPENKOENIGIN_SCIENCE,"Große Karpfen entwickeln komplexe soziale Hierarchien, in denen dominante Tiere bevorzugte Futterplätze erhalten.","Large carp develop complex social hierarchies where dominant individuals control preferred feeding spots."
+
+FISH_LAKE_GEISTERFORELLE_NAME,Geisterforelle,Ghost Trout
+FISH_LAKE_GEISTERFORELLE_DESC,"Ist tot. Schwimmt trotzdem. Frag nicht.","It's dead. Still swimming. Don't ask."
+FISH_LAKE_GEISTERFORELLE_SCIENCE,"Forellen reagieren extrem empfindlich auf Sauerstoffgehalt im Wasser – manche Arten benötigen nahezu Trinkwasserqualität.","Trout are extremely sensitive to oxygen levels – some species require near drinking-water quality."
+
+FISH_LAKE_PLUTONIUM_NAME,Plutonium,Plutonium
+FISH_LAKE_PLUTONIUM_DESC,"Leuchtet im Dunkeln. FDA-Zulassung ausstehend. Nicht essbar.","Glows in the dark. FDA approval pending. Not edible."
+FISH_LAKE_PLUTONIUM_SCIENCE,"Radioaktive Stoffe können Organismen zum Leuchten bringen, allerdings nicht ohne signifikante Nebenwirkungen.","Radioactive substances can cause organisms to glow – though not without significant side effects."
+
+FISH_LAKE_ROTER_KNOPF_NAME,Roter Knopf,Red Button
+FISH_LAKE_ROTER_KNOPF_DESC,"Ist tot. Schwimmt trotzdem. Frag nicht.","It's dead. Still floating. Don't ask."
+FISH_LAKE_ROTER_KNOPF_SCIENCE,"Forellen reagieren extrem empfindlich auf Sauerstoffgehalt im Wasser.","Trout are extremely sensitive to oxygen levels in water."
+FISH_LAKE_ROTER_KNOPF_STORY,"Die Geisterforelle leuchtet in deinen Händen auf. Eine alte Macht erwacht...","The ghost trout glows in your hands. An ancient power awakens..."
+
+
+FISH_CITY_SAND_AAL_NAME,Sand-Aal,Sand Eel
+FISH_CITY_SAND_AAL_DESC,Schlüpfriger als ein Politiker im Wahlkampf.,More slippery than a politician during election campaign.
+FISH_CITY_SAND_AAL_SCIENCE,Aale können über ihre Haut Sauerstoff aufnehmen – praktisch wenn man in Schadensbegrenzung leben muss.,Eels can absorb oxygen through their skin - practical when living in damage control mode.
+FISH_CITY_SIGNALFAENGER_NAME,Signalfänger,Signal Catcher
+FISH_CITY_SIGNALFAENGER_DESC,Hat besseren Empfang als dein Handy. Niemand mag den Bastard,Has better reception than your phone. Nobody likes the bastard
+FISH_CITY_SIGNALFAENGER_SCIENCE,Viele Fische besitzen Elektrorezeptoren mit denen sie elektrische Felder wahrnehmen – sozusagen eingebaute Antennen.,Many fish possess electroreceptors that detect electrical fields - built-in antennas basically.
+FISH_CITY_TRUEMMERKABEL_FISCH_NAME,Trümmerkabel-Fisch,Debris Cable Fish
+FISH_CITY_TRUEMMERKABEL_FISCH_DESC,Ernährt sich von HDMI-Kabeln und zerbrochenen Träumen.,Feeds on HDMI cables and broken dreams.
+FISH_CITY_TRUEMMERKABEL_FISCH_SCIENCE,Metallverschlingende Organismen existieren wirklich – bestimmte Bakterien nutzen Metallionen wie Nährstoffe.,Metal-devouring organisms really exist - certain bacteria use metal ions as nutrients.
+FISH_CITY_DORSCH_NAME,Dorsch,Cod
+FISH_CITY_DORSCH_DESC,Heißt auch Kabeljau. Hat eine Identitätskrise.,Also called Atlantic cod. Has an identity crisis.
+FISH_CITY_DORSCH_SCIENCE,Dorsche verändern ihr Wanderverhalten abhängig von Wassertemperaturen – ziemlich sensibel für so einen Brocken.,Cod change their migration behavior based on water temperatures - quite sensitive for such a chunk.
+FISH_CITY_DISKUSFISCH_NAME,Diskusfisch,Discus Fish
+FISH_CITY_DISKUSFISCH_DESC,Flach wie deine Ausreden aber deutlich bunter.,Flat like your excuses but much more colorful.
+FISH_CITY_DISKUSFISCH_SCIENCE,Diskusfische füttern ihren Nachwuchs mit einer speziellen Schleimschicht – quasi Stillen für Fische.,Discus fish feed their offspring with a special mucus layer - basically breastfeeding for fish.
+FISH_CITY_BARRAKUDA_NAME,Barrakuda,Barracuda
+FISH_CITY_BARRAKUDA_DESC,Schwimmt schneller als du vor Verantwortung fliehst.,Swims faster than you flee from responsibility.
+FISH_CITY_BARRAKUDA_SCIENCE,Barrakudas erreichen dank Muskelzusammensetzung und Körperform extreme Beschleunigung in Sekundenbruchteilen.,Barracudas achieve extreme acceleration in split seconds thanks to muscle composition and body shape.
+FISH_CITY_LOAF_FISH_NAME,Loaf-fish,Loaf-fish
+FISH_CITY_LOAF_FISH_DESC,Ist halt ein Brot mit Flossen und Kiemen. Übelst sauer und schlecht gelaunt.,It's just bread with fins and gills. Super sour and in a bad mood.
+FISH_CITY_LOAF_FISH_SCIENCE,Ein Fleisch-Sandwich kann bis zu 15.544 Liter Wasser verbrauchen während ein Gurken-Sandwich (aus 1 kg Gurken) nur etwa 28 Liter Wasser benötigt.,A meat sandwich can consume up to 15544 liters of water while a cucumber sandwich (from 1 kg cucumbers) only needs about 28 liters of water.
+FISH_CITY_NEONFLOSSER_NAME,Neonflosser,Neon Fin
+FISH_CITY_NEONFLOSSER_DESC,Sieht aus wie ein Rave im Aquarium.,Looks like a rave in an aquarium.
+FISH_CITY_NEONFLOSSER_SCIENCE,Biolumineszenz bei Fischen entsteht häufig durch symbiotische Bakterien – Natur die Party macht.,Bioluminescence in fish often occurs through symbiotic bacteria - nature throwing a party.
+FISH_CITY_ZIGARETTEN_NAME,Zigaretten,Cigarettes
+FISH_CITY_ZIGARETTEN_DESC,Marlboro Menthol. Seit 1987 im Wasser. Noch immer brennend aktuell.,Marlboro Menthol. In the water since 1987. Still burning hot topic.
+FISH_CITY_ZIGARETTEN_SCIENCE,Zigarettenfilter bestehen aus Zelluloseacetat – sie zersetzen sich extrem langsam und verschmutzen Gewässer über Jahrzehnte.,Cigarette filters consist of cellulose acetate - they decompose extremely slowly and pollute waters for decades.
+FISH_CITY_ALTSTADTGEIST_NAME,Altstadtgeist,Old Town Ghost
+FISH_CITY_ALTSTADTGEIST_DESC,Erzählt dir Geschichten von früher. Alle langweilig.,Tells you stories from the past. All boring.
+FISH_CITY_ALTSTADTGEIST_SCIENCE,Viele Tiefseefische nutzen transparente Gewebe um unsichtbar zu wirken – quasi biologische Tarnkappen.,Many deep-sea fish use transparent tissue to appear invisible - biological invisibility cloaks basically.
+FISH_CITY_BULLENHAI_NAME,Bullenhai,Bull Shark
+FISH_CITY_BULLENHAI_DESC,Sehr bulliger Hai. Ein Bullenhai eben.,Very bulky shark. A bull shark indeed.
+FISH_CITY_BULLENHAI_SCIENCE,Bullenhaie sind bekannt für ihre Fähigkeit sowohl im Salzwasser als auch in Süßwasser zu leben und bis zu 3.5 Meter lang zu werden. Sie haben eine der stärksten Beißkräfte aller Haie.,Bull sharks are known for their ability to live in both saltwater and freshwater and grow up to 3.5 meters long. They have one of the strongest bite forces of all sharks.
+FISH_CITY_PLATZHALTER_NAME,Platzhalter,Placeholder
+FISH_CITY_PLATZHALTER_DESC,Existiert eigentlich nicht. Trotzdem gefangen. Paradox!,Doesn't actually exist. Still caught. Paradox!
+FISH_CITY_PLATZHALTER_SCIENCE,In der Biologie gibt es Placeholder species wenn Forscher eine Art vermuten aber noch nicht belegt haben.,In biology there are placeholder species when researchers suspect a species but haven't proven it yet.
+FISH_CITY_LEICHE_NAME,Leiche,Corpse
+FISH_CITY_LEICHE_DESC,Markus?! Bitte nicht...,Markus?! Please no...
+FISH_CITY_LEICHE_SCIENCE,Im Wasser sinken Körper erst ab steigen dann durch Gasbildung wieder auf – makaber aber wissenschaftlich korrekt.,Bodies first sink in water then rise again through gas formation - macabre but scientifically correct.
+FISH_CITY_DATENKRAKE_NAME,Datenkrake,Data Octopus
+FISH_CITY_DATENKRAKE_DESC,Kennt deine Suchanfragen. Alle. Ja auch die. Sicher das der Name richtig ist?,Knows your search queries. All of them. Yes even those. Sure the name is correct?
+FISH_CITY_DATENKRAKE_SCIENCE,Oktopusse besitzen eines der komplexesten Nervensysteme aller Wirbellosen – acht Arme achtmal so viel Chaos.,Octopuses possess one of the most complex nervous systems of all invertebrates - eight arms eight times the chaos.
+FISH_CITY_STOEPSEL_NAME,Stöpsel,Plug
+FISH_CITY_STOEPSEL_DESC,Ist tot. Schwimmt trotzdem. Frag nicht.,Is dead. Still swimming. Don't ask.
+FISH_CITY_STOEPSEL_SCIENCE,Forellen reagieren extrem empfindlich auf Sauerstoffgehalt im Wasser.,Trout react extremely sensitively to oxygen content in water.
+FISH_CITY_STOEPSEL_STORY,Die Geisterforelle leuchtet in deinen Händen auf. Eine alte Macht erwacht...,The ghost trout glows in your hands. An ancient power awakens...
+FISH_SEWER_KACKWURST_NAME,Kackwurst,Poop Sausage
+FISH_SEWER_KACKWURST_DESC,Exakt das wonach es aussieht. Verkauf es schnell.,Exactly what it looks like. Sell it quickly.
+FISH_SEWER_KACKWURST_SCIENCE,Organische Abfälle werden im Wasser von Mikroorganismen zersetzt – nicht schön aber effizient.,Organic waste is decomposed by microorganisms in water - not pretty but efficient.
+FISH_SEWER_SARDINE_NAME,Sardine,Sardine
+FISH_SEWER_SARDINE_DESC,Möchte intensiv in eine Dose gepresst werden.,Intensely wants to be pressed into a can.
+FISH_SEWER_SARDINE_SCIENCE,Sardinen bilden riesige Schwärme zur Abschreckung von Räubern – Sicherheit durch Masse.,Sardines form huge schools to deter predators - safety in numbers.
+FISH_SEWER_FORELLE_NAME,Forelle,Trout
+FISH_SEWER_FORELLE_DESC,Hat schon bessere Tage gesehen. Und bessere Gewässer.,Has seen better days. And better waters.
+FISH_SEWER_FORELLE_SCIENCE,Forellen benötigen extrem sauberes sauerstoffreiches Wasser – Abwasser ist eher… suboptimal.,Trout need extremely clean oxygen-rich water - sewage is rather... suboptimal.
+FISH_SEWER_WELS_NAME,Wels,Catfish
+FISH_SEWER_WELS_DESC,Sieht aus wie dein Schnurrbart nach drei Wochen Quarantäne.,Looks like your mustache after three weeks of quarantine.
+FISH_SEWER_WELS_SCIENCE,Welse nutzen Barteln als Tast- und Geruchsorgane ideal für dunkle oder schlammige Gewässer.,Catfish use barbels as tactile and olfactory organs ideal for dark or muddy waters.
+FISH_SEWER_TEERFISCH_NAME,Teerfisch,Tar Fish
+FISH_SEWER_TEERFISCH_DESC,50% Fisch 50% Industrieabfall 100% unverdaulich.,50% fish 50% industrial waste 100% indigestible.
+FISH_SEWER_TEERFISCH_SCIENCE,Viele Schadstoffe binden sich an Fettgewebe von Fischen – Bioakkumulation lässt grüßen.,Many pollutants bind to fish fatty tissue - bioaccumulation says hello.
+FISH_SEWER_KARTOFFEL_NAME,Kartoffel,Potato
+FISH_SEWER_KARTOFFEL_DESC,Diese Kartoffel wirkt erstaunlich glücklich,This potato seems surprisingly happy
+FISH_SEWER_KARTOFFEL_SCIENCE,Kartoffeln sind nährstoffreiche Knollen mit viel Wasser Stärke Kalium Vitamin C und B-Vitaminen die ursprünglich aus Südamerika stammen.,Potatoes are nutrient-rich tubers with lots of water starch potassium vitamin C and B vitamins originally from South America.
+FISH_SEWER_MONDFISCH_NAME,Mondfisch,Sunfish
+FISH_SEWER_MONDFISCH_DESC,Hat die Form einer Vollmondnacht und den IQ eines Kieselsteins.,Has the shape of a full moon night and the IQ of a pebble.
+FISH_SEWER_MONDFISCH_SCIENCE,Mondfische sind die schwersten Knochenfische der Welt – trotz ihres… kreativen Designs.,Sunfish are the heaviest bony fish in the world - despite their... creative design.
+FISH_SEWER_KATZENHAI_NAME,Katzenhai,Catshark
+FISH_SEWER_KATZENHAI_DESC,Miaut unter Wasser. Wissenschaft kann es nicht erklären.,Meows underwater. Science can't explain it.
+FISH_SEWER_KATZENHAI_SCIENCE,Katzenhaie besitzen leuchtende Muster die sie im Dunkeln sichtbar machen – biologische Partybeleuchtung.,Catsharks possess glowing patterns that make them visible in the dark - biological party lighting.
+FISH_SEWER_FUEHRERSCHEIN_NAME,Führerschein,Driver's License
+FISH_SEWER_FUEHRERSCHEIN_DESC,Abgelaufen seit 2003. Gehörte vermutlich Rainer 52.,Expired since 2003. Probably belonged to Rainer 52.
+FISH_SEWER_FUEHRERSCHEIN_SCIENCE,Plastikkarten zerfallen im Wasser extrem langsam – Mikroplastik ahoi.,Plastic cards decompose extremely slowly in water - microplastics ahoy.
+FISH_SEWER_GIFT_MANTA_NAME,Gift-Manta,Poison Manta
+FISH_SEWER_GIFT_MANTA_DESC,Man sollte diesen Manta doppelt nicht berühren!,You should definitely not touch this manta twice!
+FISH_SEWER_GIFT_MANTA_SCIENCE,Es gibt tatsächlich Rochenarten mit giftigen Stacheln – eine evolutionäre Kombination aus Majestät und Fass mich nicht an.,There actually are stingray species with poisonous stingers - an evolutionary combination of majesty and don't touch me.
+FISH_SEWER_BILDERBUCHFISCH_NAME,Bilderbuchfisch,Picture Book Fish
+FISH_SEWER_BILDERBUCHFISCH_DESC,Die einzige Hoffnung in diesem Drecksloch.,The only hope in this cesspool.
+FISH_SEWER_BILDERBUCHFISCH_SCIENCE,Viele Zierfische werden durch gezielte Züchtung farbintensiver – quasi Kunstwerke mit Kiemen.,Many ornamental fish become more colorful through selective breeding - basically artworks with gills.
+FISH_SEWER_WUETENDE_SCHOLLE_NAME,Wütende Scholle,Angry Flounder
+FISH_SEWER_WUETENDE_SCHOLLE_DESC,Hat valide Gründe für ihre Wut. Glaub mir.,Has valid reasons for her anger. Trust me.
+FISH_SEWER_WUETENDE_SCHOLLE_SCIENCE,Schollen wandern während des Wachstums – und ihre Augen wandern gleich mit.,Flounders migrate during growth - and their eyes migrate along with them.
+FISH_SEWER_KONDOM_NAME,Kondom,Condom
+FISH_SEWER_KONDOM_DESC,Gebraucht. Wirf es zurück. WIRF. ES. ZURÜCK.,Used. Throw it back. THROW. IT. BACK.
+FISH_SEWER_KONDOM_SCIENCE,Latex zerfällt im Wasser sehr langsam und kann Tiere gefährlich verwickeln – bitte kein Souvenir.,Latex decomposes very slowly in water and can dangerously entangle animals - please no souvenir.
+FISH_SEWER_BAHNKARTE_NAME,Bahnkarte,Train Ticket
+FISH_SEWER_BAHNKARTE_DESC,Seit 37 Jahren ungültig,Invalid for 37 years
+FISH_SEWER_BAHNKARTE_SCIENCE,Dieses Relikt stammt in einer Zeit wo die Erde noch komplett war.,This relic comes from a time when the Earth was still whole.
+FISH_SEWER_BAHNKARTE_STORY,Die Geisterforelle leuchtet in deinen Händen auf. Eine alte Macht erwacht...,The ghost trout glows in your hands. An ancient power awakens...
+FISH_FOREST_KARPFEN_NAME,Karpfen,Carp
+FISH_FOREST_KARPFEN_DESC,Meditiert unter Wasser. Unc ist vegetarisch.,Meditates underwater. Uncle is vegetarian.
+FISH_FOREST_KARPFEN_SCIENCE,Karpfen können Geräusche unterscheiden und sogar auf Futtergeräusche konditioniert werden.,Carp can distinguish sounds and can even be conditioned to feeding sounds.
+FISH_FOREST_WELS_NAME,Wels,Catfish
+FISH_FOREST_WELS_DESC,Der Bartwuchs ist legendär. Der Rest? Naja.,The beard growth is legendary. The rest? Well.
+FISH_FOREST_WELS_SCIENCE,Welse können elektrische Felder wahrnehmen – ein Vorteil in trüben Gewässern.,Catfish can perceive electrical fields - an advantage in murky waters.
+FISH_FOREST_KOI_NAME,Koi,Koi
+FISH_FOREST_KOI_DESC,Kostet in Japan ein Vermögen. Hier? Mittwochsangebot.,Costs a fortune in Japan. Here? Wednesday special.
+FISH_FOREST_KOI_SCIENCE,Koi können über 50 Jahre alt werden – manche sogar über 200 laut historischen Aufzeichnungen.,Koi can live over 50 years - some even over 200 according to historical records.
+FISH_FOREST_ROHRSCHATTEN_NAME,Rohrschatten,Reed Shadow
+FISH_FOREST_ROHRSCHATTEN_DESC,Versteckt sich zwischen Schilf. Stealth Level 100.,Hides among reeds. Stealth Level 100.
+FISH_FOREST_ROHRSCHATTEN_SCIENCE,Viele Süßwasserfische nutzen Vegetation als Tarnung um Räubern zu entkommen – natürliche Camouflage.,Many freshwater fish use vegetation as camouflage to escape predators - natural camo.
+FISH_FOREST_ANGEL_NAME,Angel,Fishing Rod
+FISH_FOREST_ANGEL_DESC,Schöne Angel! Oder ist das vielleicht doch eine Peitsche? Du kannst sie jedenfalls NICHT verwenden.,Beautiful fishing rod! Or is that maybe a whip? In any case you CANNOT use it.
+FISH_FOREST_ANGEL_SCIENCE,Angelhaken wurden historisch aus Knochen Holz oder Muschelschalen gefertigt – MacGyver wäre stolz.,Fish hooks were historically made from bones wood or shells - MacGyver would be proud.
+FISH_FOREST_WALDAAL_NAME,Waldaal,Forest Eel
+FISH_FOREST_WALDAAL_DESC,Elektrisierend. Wörtlich.,Electrifying. Literally.
+FISH_FOREST_WALDAAL_SCIENCE,Elektrische Aale können Stromstöße von über 600 Volt erzeugen – Naturgewalten im Mini-Format.,Electric eels can generate electric shocks of over 600 volts - forces of nature in mini format.
+FISH_FOREST_WALDFRESSER_NAME,Waldfresser,Forest Eater
+FISH_FOREST_WALDFRESSER_DESC,Vegetarier. Frisst buchstäblich den Wald. Irgendwie ironisch.,Vegetarian. Literally eats the forest. Somehow ironic.
+FISH_FOREST_WALDFRESSER_SCIENCE,Holzfresser gibt es wirklich: Manche Welse ernähren sich von Treibholz und Mikroorganismen darauf.,Wood eaters really exist: Some catfish feed on driftwood and microorganisms on it.
+FISH_FOREST_BAMBUSHAI_NAME,Bambushai,Bamboo Shark
+FISH_FOREST_BAMBUSHAI_DESC,Ernährt sich von Bambus und innerer Ruhe.,Feeds on bamboo and inner peace.
+FISH_FOREST_BAMBUSHAI_SCIENCE,Einige Haiarten können kurze Strecken an Land zurücklegen indem sie ihre Flossen als Stützen verwenden.,Some shark species can cover short distances on land by using their fins as supports.
+FISH_FOREST_ANGEPISSTE_MAKRELE_NAME,Angepisste Makrele,Pissed Mackerel
+FISH_FOREST_ANGEPISSTE_MAKRELE_DESC,Diese Makrele ist wahrlich angepisst.,This mackerel is truly pissed off.
+FISH_FOREST_ANGEPISSTE_MAKRELE_SCIENCE,Hier gibt es nichts schlaues zu sagen. Das ist einfach nur ekelig,There's nothing smart to say here. This is just gross
+FISH_FOREST_WURZELFISCH_NAME,Wurzelfisch,Root Fish
+FISH_FOREST_WURZELFISCH_DESC,Halb Fisch halb Baum komplett verstörend.,Half fish half tree completely disturbing.
+FISH_FOREST_WURZELFISCH_SCIENCE,Einige Fischarten leben in symbiotischen Beziehungen mit Pflanzen – z.B. schützen Wurzeln Laichplätze.,Some fish species live in symbiotic relationships with plants - e.g. roots protect spawning grounds.
+FISH_FOREST_MARKUS_NAME,Markus,Markus
+FISH_FOREST_MARKUS_DESC,Schon wieder? Ernsthaft?,Again? Seriously?
+FISH_FOREST_MARKUS_SCIENCE,Verwesungsprozesse im Wasser laufen langsamer ab da weniger Sauerstoff vorhanden ist – gruselig effizient.,Decomposition processes in water run slower as less oxygen is present - eerily efficient.
+FISH_FOREST_HAIZAHN_NAME,Haizahn,Shark Tooth
+FISH_FOREST_HAIZAHN_DESC,Ein schönes Souvenir. Aber auch bisschen krank wenn man darüber nachdenkt.,A nice souvenir. But also a bit sick when you think about it.
+FISH_FOREST_HAIZAHN_SCIENCE,Haie haben ein sogenanntes Revolvergebiss mit mehreren Zahnreihen wodurch sie im Laufe ihres Lebens Tausende von Zähnen verlieren.,Sharks have a so-called revolving jaw with multiple rows of teeth losing thousands of teeth in their lifetime.
+FISH_FOREST_HAIZAHN_STORY,Die Geisterforelle leuchtet in deinen Händen auf. Eine alte Macht erwacht...,The ghost trout glows in your hands. An ancient power awakens...
+FISH_DESERT_SCHMUTZGRUNDEL_NAME,Schmutzgrundel,Dirt Goby
+FISH_DESERT_SCHMUTZGRUNDEL_DESC,Lebt im Dreck. Buchstäblich. Wie deine Ernährungsgewohnheiten.,Lives in dirt. Literally. Like your eating habits.
+FISH_DESERT_SCHMUTZGRUNDEL_SCIENCE,Grundeln können in extrem trübem Wasser überleben und sind wahre Anpassungsmeister.,Gobies can survive in extremely murky water and are true adaptation masters.
+FISH_DESERT_SOLARFAENGER_NAME,Solarfänger,Solar Catcher
+FISH_DESERT_SOLARFAENGER_DESC,Lädt sich über Sonnenlicht auf. Tesla wäre neidisch.,Charges via sunlight. Tesla would be jealous.
+FISH_DESERT_SOLARFAENGER_SCIENCE,Bestimmte Meeresorganismen nutzen tatsächlich Licht für chemische Prozesse – Bio-Solarzellen der Natur.,Certain marine organisms actually use light for chemical processes - nature's bio-solar cells.
+FISH_DESERT_ROSTFLOSSER_NAME,Rostflosser,Rust Fin
+FISH_DESERT_ROSTFLOSSER_DESC,Braucht dringend eine Tetanus-Impfung.,Urgently needs a tetanus shot.
+FISH_DESERT_ROSTFLOSSER_SCIENCE,Rost ist im Wasser weit verbreitet – Eisenbakterien erzeugen ganze rot gefärbte Zonen.,Rust is widespread in water - iron bacteria create entire red-colored zones.
+FISH_DESERT_SANDSTREIFER_NAME,Sandstreifer,Sand Striper
+FISH_DESERT_SANDSTREIFER_DESC,Getarnt wie ein Sandsturm. Mit Flossen.,Camouflaged like a sandstorm. With fins.
+FISH_DESERT_SANDSTREIFER_SCIENCE,Viele Wüstenfische – ja die gibt es – leben in kurzzeitig wasserführenden Oasen oder Flussläufen.,Many desert fish - yes they exist - live in temporarily water-bearing oases or riverbeds.
+FISH_DESERT_AGGRESIVE_GARNELE_NAME,Aggressive Garnele,Aggressive Shrimp
+FISH_DESERT_AGGRESIVE_GARNELE_DESC,Winzig aber verdammt wütend. Wie ein Chihuahua.,Tiny but damn angry. Like a Chihuahua.
+FISH_DESERT_AGGRESIVE_GARNELE_SCIENCE,Knallkrebse erzeugen durch ihre Scheren Schockwellen die Beute betäuben – kleine Wutpakete.,Pistol shrimp create shock waves with their claws that stun prey - little rage packets.
+FISH_DESERT_STAUBHAI_NAME,Staubhai,Dust Shark
+FISH_DESERT_STAUBHAI_DESC,Schwimmt durch Sand. Physik hat aufgegeben.,Swims through sand. Physics has given up.
+FISH_DESERT_STAUBHAI_SCIENCE,Einige Tiere bewegen sich tatsächlich wellenförmig durch Sand – ähnlich wie Fische im Wasser.,Some animals actually move through sand in wave-like motions - similar to fish in water.
+FISH_DESERT_WASSERFISCH_NAME,Wasserfisch,Water Fish
+FISH_DESERT_WASSERFISCH_DESC,Der einzige Fisch mit Wasser in der Wüste. Ein Held.,The only fish with water in the desert. A hero.
+FISH_DESERT_WASSERFISCH_SCIENCE,Wüstenseen können uralte Wasserkörper enthalten die über Jahrtausende isoliert waren.,Desert lakes can contain ancient bodies of water that have been isolated for millennia.
+FISH_DESERT_FEUER_MANTA_NAME,Feuer-Manta,Fire Manta
+FISH_DESERT_FEUER_MANTA_DESC,Ein sehr sehr heißer Manta. Boah,A very very hot manta. Wow
+FISH_DESERT_FEUER_MANTA_SCIENCE,Temperaturresistente Meeresbewohner existieren wirklich: Einige Arten überleben nahe Vulkanquellen,Temperature-resistant marine creatures really exist: Some species survive near volcanic vents
+FISH_DESERT_SONNENFRAGMENT_NAME,Sonnenfragment,Sun Fragment
+FISH_DESERT_SONNENFRAGMENT_DESC,Ein Stück Sonne. Anfassen nicht empfohlen.,A piece of sun. Touching not recommended.
+FISH_DESERT_SONNENFRAGMENT_SCIENCE,Sonnenlicht enthält Energie die in Milliarden Jahren Fusionsprozessen entstand – heißer gehts nicht.,Sunlight contains energy that arose in billions of years of fusion processes - it doesn't get hotter.
+FISH_DESERT_GOLDHAI_NAME,Goldhai,Gold Shark
+FISH_DESERT_GOLDHAI_DESC,Aus echtem Gold. Oder Messing. Vermutlich Messing.,Made of real gold. Or brass. Probably brass.
+FISH_DESERT_GOLDHAI_SCIENCE,Gold kommt tatsächlich in Spuren im Meerwasser vor – nur leider nicht in Hai-Form.,Gold actually occurs in traces in seawater - just unfortunately not in shark form.
+FISH_DESERT_BENZIN_NAME,Benzin,Gasoline
+FISH_DESERT_BENZIN_DESC,Das wird nicht lange reichen...,This won't last long...
+FISH_DESERT_BENZIN_SCIENCE,Benzin ist ein hochentzündliches flüchtiges Gemisch aus über 100 verschiedenen Kohlenwasserstoffen gewonnen aus Erdöl.,Gasoline is a highly flammable volatile mixture of over 100 different hydrocarbons derived from petroleum.
+FISH_DESERT_BENZIN_STORY,Die Geisterforelle leuchtet in deinen Händen auf. Eine alte Macht erwacht...,The ghost trout glows in your hands. An ancient power awakens...
+FISH_ICELAND_EISFISCH_NAME,Eisfisch,Ice Fish
+FISH_ICELAND_EISFISCH_DESC,Durchsichtiger Fisch ohne rote Blutkörperchen - fast wie aus Glas gemacht.,Transparent fish without red blood cells - almost made of glass.
+FISH_ICELAND_EISFISCH_SCIENCE,Antarktische Eisfische haben kein Hämoglobin im Blut und erscheinen daher fast transparent.,Antarctic ice fish have no hemoglobin in their blood and therefore appear almost transparent.
+FISH_ICELAND_ANGLERFISCH_NAME,Anglerfisch,Anglerfish
+FISH_ICELAND_ANGLERFISCH_DESC,Das Glühwürmchen der Tiefsee. Mit Tollwut...,The firefly of the deep sea. With rabies...
+FISH_ICELAND_ANGLERFISCH_SCIENCE,Das viel kleinere Männchen findet das Weibchen beißt sich fest und verschmilzt mit ihr zu einer Lebensgemeinschaft.,The much smaller male finds the female bites on and fuses with her into a life partnership.
+FISH_ICELAND_BLOBFISCH_NAME,Blobfisch,Blobfish
+FISH_ICELAND_BLOBFISCH_DESC,Wenn Alpträume schwimmen könnten würden sie so aussehen.,If nightmares could swim they would look like this.
+FISH_ICELAND_BLOBFISCH_SCIENCE,Sein berühmtes matschiges Aussehen entsteht erst an der Oberfläche da er in der Tiefsee durch den extremen Wasserdruck seine normale Form behält.,Its famous mushy appearance only occurs at the surface as it maintains its normal form in the deep sea through extreme water pressure.
+FISH_ICELAND_BLAUER_MARLIN_NAME,Blauer Marlin,Blue Marlin
+FISH_ICELAND_BLAUER_MARLIN_DESC,Ein Basic Fisch. Nur diese lange Nase macht ihn besonders.,A basic fish. Only this long nose makes it special.
+FISH_ICELAND_BLAUER_MARLIN_SCIENCE,Sie sind extrem schnelle Jäger der Hochsee die ihren langen speerähnlichen Oberkiefer zum Aufspießen ihrer Beute nutzen.,They are extremely fast hunters of the high seas who use their long spear-like upper jaw to skewer their prey.
+FISH_ICELAND_SCHWARZER_MARLIN_NAME,Schwarzer Marlin,Black Marlin
+FISH_ICELAND_SCHWARZER_MARLIN_DESC,Man könnte sagen dass der Entwickler zu faul gewesen ist um ein neues Asset zu erstellen,One could say the developer was too lazy to create a new asset
+FISH_ICELAND_SCHWARZER_MARLIN_SCIENCE,Der schwarze Marlin gilt als der schnellste Fisch der Welt mit dokumentierten Spitzengeschwindigkeiten von bis zu 129 km/h.,The black marlin is considered the fastest fish in the world with documented top speeds of up to 129 km/h.
+FISH_ICELAND_MEGALODON_NAME,Megalodon,Megalodon
+FISH_ICELAND_MEGALODON_DESC,Ein prähistorischer Riesenhai. Sollte eigentlich ausgestorben sein... sollte.,A prehistoric giant shark. Should actually be extinct... should be.
+FISH_ICELAND_MEGALODON_SCIENCE,Der Megalodon lebte vor 23-3.6 Millionen Jahren und hatte eine Beißkraft von geschätzten 18 Tonnen.,The Megalodon lived 23-3.6 million years ago and had a bite force of an estimated 18 tons.
+FISH_ICELAND_PINGUIN_NAME,Pinguin,Penguin
+FISH_ICELAND_PINGUIN_DESC,Der arme Bursche hat seine Familie verloren.,The poor fellow has lost his family.
+FISH_ICELAND_PINGUIN_SCIENCE,Pinguine kommunizieren durch Schreie leben in großen Kolonien trinken Salzwasser.,Penguins communicate through calls live in large colonies drink saltwater.
+FISH_ICELAND_PINGUIN_STORY,Die Geisterforelle leuchtet in deinen Händen auf. Eine alte Macht erwacht...,The ghost trout glows in your hands. An ancient power awakens...
+
+FISH_VALUE_PRICELESS,Unbezahlbar,Priceless
+FISH_WEIGHT,Gewicht,Weight
+
+EVENT_LAKE,Das Wasser war bis jetzt immer ruhig.\nIch weiß nicht was mit dieser Welle nicht stimmt.,The water has always been calm until now.\nI don't know what's wrong with this wave.
+EVENT_CITY,Hier habe ich damals Thunfischbrötchen geklaut.\nDaraus wird wohl nie wieder etwas.,I used to steal tuna sandwiches here.\nI guess that'll never happen again.
+EVENT_SEWER,Die Ratten werden immer größer.\nIch glaube da unten lebt etwas das nicht da sein sollte.,The rats are getting bigger.\nI think something lives down there that shouldn't be there.
+EVENT_FOREST,Der Wald ist zu still geworden.\nSelbst die Vögel haben aufgehört zu singen.,The forest has become too quiet.\nEven the birds have stopped singing.
+EVENT_DESERT,Die Hitze spielt mir Streiche.\nOder war das gerade wirklich eine Flosse im Sand?,The heat is playing tricks on me.\nOr was that really a fin in the sand?
+EVENT_ICELAND,Das Eis knackt anders als sonst.\nEs fühlt sich an als würde etwas darunter warten.,The ice is cracking differently than usual.\nIt feels like something is waiting beneath.

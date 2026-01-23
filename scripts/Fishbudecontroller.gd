@@ -15,7 +15,6 @@ class_name FishBudeController
 
 @onready var dayNightAni: AnimationPlayer = $DirectionalLight3D2/AnimationPlayer
 
-
 @onready var entry_point: Node3D = $CustomerEntry
 @onready var exit_point: Node3D = $CustomerExit
 
@@ -28,10 +27,8 @@ var security_view_active := false
 var hovered_object: Node = null
 var is_mouse_hovering: bool = false
 
-
 # Neu: Kamera-Richtung für Interaktion
 var current_camera_direction: Vector3 = Vector3.FORWARD
-
 
 # Inventar-Referenz (wird von außen gesetzt oder gesucht)
 var inventory_manager: Node = null
@@ -106,7 +103,6 @@ func get_mouse_raycast_target(max_distance: float = 10.0) -> Node:
 		return ray_result.collider
 	return null
 
-
 func setup_inventory() -> void:
 	# Nutze das Inventory Autoload
 	inventory_manager = Inventory
@@ -143,7 +139,6 @@ func connect_stations() -> void:
 	station_drinks.set_controller(self)
 	station_security.set_controller(self)
 
-
 func connect_ui_signals() -> void:
 	# Servieren-Button wird nicht mehr verbunden (deprecated)
 	
@@ -175,7 +170,6 @@ func _process(delta: float) -> void:
 		station_security.set_hover(false)
 		is_mouse_hovering = false
 		$StationSecurity/OutlineMesh.hide()
-
 
 func update_camera_direction() -> void:
 	# Berechnet die Blickrichtung der Kamera (4 Richtungen)
@@ -245,7 +239,6 @@ func toggle_security_camera() -> void:
 		main_camera.current = true
 		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 
-
 func spawn_customer() -> void:
 	if customers.size() >= max_queue_size:
 		return
@@ -260,7 +253,6 @@ func spawn_customer() -> void:
 	var customer_scene := preload("res://scenes/Customer.tscn")
 	var customer := customer_scene.instantiate()
 	customers_root.add_child(customer)
-
 
 	# Start links (Entry)
 	customer.global_position = entry_point.global_position
@@ -284,53 +276,53 @@ func _reorder_queue() -> void:
 		current_customer = null
 		show_order_ui(null)
 
-
+# ✅ FIX: Gibt Array von Fisch-IDs zurück (nicht Namen)
 func get_available_fish_types() -> Array:
-	# Gibt alle unterschiedlichen Fischarten zurück die im Inventar sind
-	var fish_types = []
+	var fish_ids = []
 	
 	if not inventory_manager:
-		return fish_types
+		return fish_ids
 	
 	for fish_data in inventory_manager.fish_inventory:
-		var fish_name = fish_data.get("name", "")
-		if fish_name != "" and not fish_types.has(fish_name):
-			fish_types.append(fish_name)
+		var fish_id = fish_data.get("id", "")
+		if fish_id != "" and not fish_ids.has(fish_id):
+			fish_ids.append(fish_id)
 	
-	return fish_types
+	return fish_ids
 
-func has_fish_in_inventory(fish_name: String) -> bool:
-	# Prüft ob ein bestimmter Fisch im Inventar ist
+# ✅ FIX: Prüft über ID statt Namen
+func has_fish_in_inventory(fish_id: String) -> bool:
 	if not inventory_manager:
 		return false
 	
 	for fish_data in inventory_manager.fish_inventory:
-		if fish_data.get("name", "") == fish_name:
+		if fish_data.get("id", "") == fish_id:
 			return true
 	
 	return false
 
-func remove_fish_from_inventory(fish_name: String) -> bool:
-	# Entfernt einen Fisch aus dem Inventar
+# ✅ FIX: Entfernt über ID statt Namen
+func remove_fish_from_inventory(fish_id: String) -> bool:
 	if not inventory_manager:
 		return false
 	
 	for i in range(inventory_manager.fish_inventory.size()):
 		var fish_data = inventory_manager.fish_inventory[i]
-		if fish_data.get("name", "") == fish_name:
+		if fish_data.get("id", "") == fish_id:
 			inventory_manager.remove_fish(i)
+			var fish_name := FishDB.get_fish_name(fish_data)
 			print("Fisch aus Inventar entfernt: %s" % fish_name)
 			return true
 	
 	return false
 
-func get_fish_data(fish_name: String) -> Dictionary:
-	# Holt die Daten eines Fisches aus dem Inventar
+# ✅ FIX: Holt über ID statt Namen
+func get_fish_data(fish_id: String) -> Dictionary:
 	if not inventory_manager:
 		return {}
 	
 	for fish_data in inventory_manager.fish_inventory:
-		if fish_data.get("name", "") == fish_name:
+		if fish_data.get("id", "") == fish_id:
 			return fish_data
 	
 	return {}
@@ -345,9 +337,11 @@ func show_order_ui(order: Order) -> void:
 	
 	order_panel.visible = true
 	
-	# FISCHNAME
+	# ✅ FIX: FISCHNAME - hole über fish_id aus FishDB
 	var fish_label := order_panel.get_node("VBoxContainer/Fish/FishLabel") as Label
-	fish_label.text = tr("UI_ORDER_FISH") % order.fish_type
+	var fish_dict := FishDB.get_fish_by_id(order.fish_type)
+	var fish_name := FishDB.get_fish_name(fish_dict) if not fish_dict.is_empty() else order.fish_type
+	fish_label.text = tr("UI_ORDER_FISH") % fish_name
 	
 	# ZUBEREITUNG
 	var prep_label := order_panel.get_node("VBoxContainer/Prep/PrepLabel") as Label
@@ -364,9 +358,6 @@ func show_order_ui(order: Order) -> void:
 	# GETRÄNK
 	var drink_label := order_panel.get_node("VBoxContainer/Drink/DrinkLabel") as Label
 	drink_label.text = tr("UI_ORDER_DRINK_YES") if order.wants_drink else tr("UI_ORDER_DRINK_NO")
-
-
-
 
 func update_customer_patience(delta: float) -> void:
 	if current_customer:
@@ -396,15 +387,14 @@ func serve_customer() -> void:
 		print("Bestellung korrekt!")
 
 		var payment := calculate_fish_payment(order)
-		var fish_name := order.fish_type
+		var fish_id := order.fish_type
 
-		remove_fish_from_inventory(fish_name)
+		remove_fish_from_inventory(fish_id)
 
 		current_customer.complete_order_with_payment(payment)
 	else:
 		print("Falsche Bestellung!")
 		current_customer.complete_order(false)
-
 
 func _on_customer_order_completed(customer: Customer, payment: int, tip: int) -> void:
 	Player.add_money(payment + tip)
@@ -415,7 +405,6 @@ func _on_customer_order_completed(customer: Customer, payment: int, tip: int) ->
 	tray.clear_all()
 	current_customer = null
 	_reorder_queue()
-
 
 func _on_tray_item_added(_item) -> void:
 	update_tray_ui()
@@ -462,7 +451,6 @@ func _input(event: InputEvent) -> void:
 	# Debug: Kamera-Richtung anzeigen
 	if event.is_action_pressed("ui_page_up"):
 		print_camera_debug()
-
 
 func handle_spacebar_interaction() -> void:
 	# Behandelt Leertaste-Interaktionen basierend auf Kamera-Richtung
@@ -516,52 +504,41 @@ func print_inventory_status() -> void:
 	print("Fische gesamt: %d" % inventory_manager.fish_inventory.size())
 	var fish_counts = {}
 	for fish_data in inventory_manager.fish_inventory:
-		var name = fish_data.get("name", "Unknown")
-		fish_counts[name] = fish_counts.get(name, 0) + 1
+		var fish_name = FishDB.get_fish_name(fish_data)
+		fish_counts[fish_name] = fish_counts.get(fish_name, 0) + 1
 	
 	for fish_name in fish_counts:
 		print("  - %s: %dx" % [fish_name, fish_counts[fish_name]])
 	print("=====================\n")
-	
-func get_fish_dict_from_name(fish_name: String) -> Dictionary:
-	var all_lists = [
-		FishDB.FISH_LAKE,
-		FishDB.FISH_CITY,
-		FishDB.FISH_SEWER,
-		FishDB.FISH_FOREST,
-		FishDB.FISH_DESERT,
-		FishDB.FISH_ICELAND
-	]
 
-	for list in all_lists:
-		for fish in list:
-			if fish.get("name", "") == fish_name:
-				return fish
+# ✅ FIX: Suche über ID statt Name
+func get_fish_dict_from_id(fish_id: String) -> Dictionary:
+	return FishDB.get_fish_by_id(fish_id)
 
-	return {}
-	
+# ✅ FIX: Gibt Array von Fish-Dicts zurück (basierend auf IDs im Inventar)
 func get_available_fish_dicts() -> Array:
 	var result: Array = []
 	var used := {}
 
-	for fish_name in get_available_fish_types():
-		if used.has(fish_name):
+	for fish_id in get_available_fish_types():
+		if used.has(fish_id):
 			continue
 
-		var fish_dict := get_fish_dict_from_name(fish_name)
+		var fish_dict := FishDB.get_fish_by_id(fish_id)
 		if fish_dict.is_empty():
-			push_warning("Unbekannter Fisch im Inventar: ", fish_name)
+			push_warning("Unbekannter Fisch im Inventar: ", fish_id)
 			continue
 
 		result.append(fish_dict)
-		used[fish_name] = true
+		used[fish_id] = true
 
 	return result
-	
+
+# ✅ FIX: Order.fish_type ist jetzt fish_id
 func calculate_fish_payment(order: Order) -> int:
-	var fish_dict := get_fish_dict_from_name(order.fish_type)
+	var fish_dict := FishDB.get_fish_by_id(order.fish_type)
 	if fish_dict.is_empty():
-		push_error("Kein FishDict für: " + order.fish_type)
+		push_error("Kein FishDict für ID: " + order.fish_type)
 		return 0
 
 	var base_price: float = fish_dict.get("base_value", 1)
@@ -576,8 +553,7 @@ func calculate_fish_payment(order: Order) -> int:
 
 	var result := base_price * rarity_multiplier * prep_multiplier * 1.5
 	return int(result)
-	
-	
+
 func _on_money_gained(amount: int) -> void:
 	show_money_popup(amount)
 
@@ -597,7 +573,6 @@ func show_money_popup(amount: int) -> void:
 
 func get_queue_position(index: int) -> Vector3:
 	return customer_spawn_point.global_position + Vector3(-queue_spacing * index, 0, 0)
-	
 
 func enter_security_view() -> void:
 	if security_view_active:

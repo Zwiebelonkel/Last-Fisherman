@@ -1,9 +1,8 @@
 extends Node
 
 signal biome_completed(biome_name: String, reward: int)
-signal fish_caught(fish_name: String)
+signal fish_caught(fish_id: String)
 signal money_gained(amount: int)
-
 
 var touch_buttons: Node = null
 
@@ -16,7 +15,7 @@ var upgrade_bait: int = 1
 var upgrade_line: int = 1
 var last_scene: String = "res://scenes/MainScene.tscn"
 var options: String = "res://scenes/OptionsCOntrol.tscn"
-var caught_fish_species: Dictionary = {}
+var caught_fish_species: Dictionary = {}  # ✅ Speichert fish_id: bool
 var used_story_items: Array = []
 
 # --- SETTINGS ---
@@ -28,9 +27,9 @@ var frame_limit: int = 0
 var fullscreen: bool = false
 var current_language: String = "de"
 
-# Gewichtsrekorde pro Fischart
+# Gewichtsrekorde pro Fischart (✅ fish_id als Key)
 var fish_weight_records: Dictionary = {}
-var fish_catch_count: Dictionary = {}
+var fish_catch_count: Dictionary = {}  # ✅ fish_id als Key
 
 # Biom-Completion Tracking
 var completed_biomes: Dictionary = {
@@ -177,7 +176,6 @@ func add_money(amount: int) -> void:
 
 	emit_signal("money_gained", amount)
 
-
 func remove_money(amount: int) -> bool:
 	if money >= amount:
 		money -= amount
@@ -205,37 +203,50 @@ func update_last_scene(scene_path: String) -> void:
 func go_to_last_scene() -> void:
 	Transition.change_scene_reverse(last_scene, 0.5)
 
+# ✅ Bereits korrekt: Nutzt fish_data["id"]
 func add_fish(fish_data: Dictionary) -> void:
 	Inventory.add_fish(fish_data)
 	
+	# ✅ Validierung: Prüfe ob ID vorhanden
+	if not fish_data.has("id"):
+		push_error("❌ add_fish: Fish ohne ID!")
+		return
+	
+	var fish_id: String = fish_data["id"]
+	
 	# 🔧 OPTIMIERT: Ein Aufruf statt zwei
-	update_catch_count(fish_data["name"])
+	update_catch_count(fish_id)
 	GodotSteam.update_fish(get_total_fish_caught())
 	
 	if fish_data.has("weight"):
-		update_weight_record(fish_data["name"], fish_data["weight"])
+		update_weight_record(fish_id, fish_data["weight"])
 	
-	if not caught_fish_species.has(fish_data["name"]):
-		caught_fish_species[fish_data["name"]] = true
-		emit_signal("fish_caught", fish_data["name"])
+	if not caught_fish_species.has(fish_id):
+		caught_fish_species[fish_id] = true
+		emit_signal("fish_caught", fish_id)
 	
 	save_game()
 
-func update_weight_record(fish_name: String, weight: float) -> void:
-	if not fish_weight_records.has(fish_name) or weight > fish_weight_records.get(fish_name, 0.0):
-		fish_weight_records[fish_name] = weight
+# ✅ Bereits korrekt: fish_id als Parameter
+func update_weight_record(fish_id: String, weight: float) -> void:
+	if not fish_weight_records.has(fish_id) or weight > fish_weight_records.get(fish_id, 0.0):
+		fish_weight_records[fish_id] = weight
 
-func get_max_caught_weight(fish_name: String) -> float:
-	return fish_weight_records.get(fish_name, 0.0)
+# ✅ Bereits korrekt: fish_id als Parameter
+func get_max_caught_weight(fish_id: String) -> float:
+	return fish_weight_records.get(fish_id, 0.0)
 
-func update_catch_count(fish_name: String) -> void:
-	fish_catch_count[fish_name] = fish_catch_count.get(fish_name, 0) + 1
+# ✅ Bereits korrekt: fish_id als Parameter
+func update_catch_count(fish_id: String) -> void:
+	fish_catch_count[fish_id] = fish_catch_count.get(fish_id, 0) + 1
 
-func get_catch_count(fish_name: String) -> int:
-	return fish_catch_count.get(fish_name, 0)
+# ✅ Bereits korrekt: fish_id als Parameter
+func get_catch_count(fish_id: String) -> int:
+	return fish_catch_count.get(fish_id, 0)
 
+# ✅ Bereits korrekt: Nutzt fish["id"]
 func check_biome_completion(fish_data: Dictionary) -> void:
-	var biome = get_fish_biome(fish_data["name"])
+	var biome = fish_data.get("biome", "")
 	if biome == "" or completed_biomes[biome]:
 		return
 	
@@ -244,31 +255,10 @@ func check_biome_completion(fish_data: Dictionary) -> void:
 		return
 	
 	for fish in biome_fish:
-		if not caught_fish_species.has(fish["name"]):
+		if not caught_fish_species.has(fish["id"]):
 			return
 	
 	trigger_biome_completion_event(biome)
-
-func get_fish_biome(fish_name: String) -> String:
-	for fish in FishDB.FISH_LAKE:
-		if fish["name"] == fish_name:
-			return "lake"
-	for fish in FishDB.FISH_CITY:
-		if fish["name"] == fish_name:
-			return "city"
-	for fish in FishDB.FISH_SEWER:
-		if fish["name"] == fish_name:
-			return "sewer"
-	for fish in FishDB.FISH_FOREST:
-		if fish["name"] == fish_name:
-			return "forest"
-	for fish in FishDB.FISH_DESERT:
-		if fish["name"] == fish_name:
-			return "desert"
-	for fish in FishDB.FISH_ICELAND:
-		if fish["name"] == fish_name:
-			return "iceland"
-	return ""
 
 func get_biome_fish_list(biome: String) -> Array:
 	match biome:
@@ -297,7 +287,17 @@ func trigger_biome_completion_event(biome: String) -> void:
 	emit_signal("biome_completed", biome, reward)
 
 func _add_all_fish() -> void:
-	for fish in FishDB.FISH_LAKE + FishDB.FISH_CITY + FishDB.FISH_SEWER + FishDB.FISH_FOREST + FishDB.FISH_DESERT + FishDB.FISH_ICELAND:
+	for fish in FishDB.FISH_LAKE:
+		add_fish(fish)
+	for fish in FishDB.FISH_CITY:
+		add_fish(fish)
+	for fish in FishDB.FISH_FOREST:
+		add_fish(fish)
+	for fish in FishDB.FISH_SEWER:
+		add_fish(fish)
+	for fish in FishDB.FISH_DESERT:
+		add_fish(fish)
+	for fish in FishDB.FISH_ICELAND:
 		add_fish(fish)
 
 func clear_inventory():
@@ -353,8 +353,8 @@ func reset():
 	fish_weight_records.clear()
 	fish_catch_count.clear()
 	used_story_items.clear()
-	completed_biomes = {"lake": false, "city": false, "sewer": false, "forest": false, "desert": false, "iceland": false, "home": true, "van":true}
-	unlocked_spots = {"lake": true, "city": false, "sewer": false, "forest": false, "desert": false, "iceland": false, "home": true, "van":true}
+	completed_biomes = {"lake": false, "city": false, "sewer": false, "forest": false, "desert": false, "iceland": false}
+	unlocked_spots = {"lake": true, "city": false, "sewer": false, "forest": false, "desert": false, "iceland": false, "home": true, "van": true}
 	bait_inventory = {"Uncommon": 0, "Rare": 0, "Epic": 0, "Legendary": 0, "Exotic": 0}
 	active_bait = ""
 	

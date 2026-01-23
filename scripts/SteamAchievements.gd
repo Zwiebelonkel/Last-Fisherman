@@ -48,11 +48,13 @@ func clear_achievement(achievement_id: String) -> void:
 # RARITY ACHIEVEMENTS
 # ===========================
 
-func on_fish_caught(fish: Dictionary) -> void:
-	if not fish.has("rarity"):
+func on_fish_caught(fish_id: String) -> void:
+	var fish_data: Dictionary = FishDB.get_fish_by_id(fish_id) as Dictionary
+	if fish_data.is_empty():
+		push_warning("⚠️ Achievement: Unbekannte Fish-ID: " + fish_id)
 		return
 	
-	var rarity: int = fish["rarity"]
+	var rarity: int = fish_data["rarity"]
 	
 	match rarity:
 		FishDB.RARITY.NORMAL:

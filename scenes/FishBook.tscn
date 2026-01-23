@@ -8,6 +8,7 @@
 default_font = ExtResource("1_h6whl")
 
 [node name="FishBook" type="Control"]
+z_index = 2
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0

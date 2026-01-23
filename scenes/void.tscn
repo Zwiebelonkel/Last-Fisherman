@@ -1,0 +1,330 @@
+[gd_scene load_steps=22 format=3 uid="uid://dqmo56vfuit3s"]
+
+[ext_resource type="Shader" uid="uid://c140kjbm2bot5" path="res://shader/buckshot.gdshader" id="1_vlvct"]
+[ext_resource type="Script" uid="uid://bl1xotduehieu" path="res://scripts/camera_sway.gd" id="14_202s0"]
+[ext_resource type="PackedScene" uid="uid://b5ew1rfc8ow8g" path="res://scenes/fishingRod.tscn" id="15_m0gwj"]
+[ext_resource type="AudioStream" uid="uid://cjeyon43ov7km" path="res://sounds/echos.mp3" id="22_fm51i"]
+[ext_resource type="AudioStream" uid="uid://esyv0p374c5j" path="res://sounds/bite.mp3" id="22_fveit"]
+[ext_resource type="AudioStream" uid="uid://cldy38iwm8ovi" path="res://sounds/cast.mp3" id="23_01i0b"]
+[ext_resource type="AudioStream" uid="uid://26m0pjkxve85" path="res://sounds/rarity/normal.mp3" id="24_ocn80"]
+[ext_resource type="PackedScene" uid="uid://c8m7pk5xvr3l0" path="res://scenes/Customer.tscn" id="25_fm51i"]
+[ext_resource type="AudioStream" uid="uid://cmr6cded4l11v" path="res://sounds/whoosh.mp3" id="25_sa7e0"]
+[ext_resource type="AudioStream" uid="uid://b7ifxd818oete" path="res://sounds/line.mp3" id="27_1uift"]
+[ext_resource type="PackedScene" uid="uid://dguwyn5rc7uog" path="res://scenes/splash.tscn" id="28_4cdul"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1wiy7"]
+shader = ExtResource("1_vlvct")
+shader_parameter/exposure = 1.0
+shader_parameter/contrast = 1.335
+shader_parameter/saturation = 1.14
+shader_parameter/enable_pixelate = true
+shader_parameter/pixel_factor = 3.0
+shader_parameter/enable_posterize = true
+shader_parameter/color_levels = 16.0
+shader_parameter/dither_strength = 0.35
+shader_parameter/chrom_aberration = 0.01
+shader_parameter/vignette_strength = 1.0
+shader_parameter/grain_strength = 0.2
+shader_parameter/tint_color = Vector3(0.95, 1.03, 0.9)
+shader_parameter/tint_strength = 0.15
+shader_parameter/viewport_size_override = Vector2(0, 0)
+
+[sub_resource type="Environment" id="Environment_d1oep"]
+background_energy_multiplier = 11.39
+fog_enabled = true
+fog_mode = 1
+fog_light_color = Color(1, 1, 1, 1)
+fog_light_energy = 16.0
+fog_sun_scatter = 1.0
+fog_density = 1.0
+fog_sky_affect = 0.0
+fog_height = 206.09
+fog_height_density = -0.4025
+fog_depth_begin = 0.0
+fog_depth_end = 135.8
+volumetric_fog_density = 0.015
+volumetric_fog_length = 42.44
+volumetric_fog_ambient_inject = 0.2
+
+[sub_resource type="GDScript" id="GDScript_8wjpf"]
+script/source = "extends Node3D
+
+@onready var anim: AnimationPlayer = $AnimationPlayer
+@onready var animVoid: AnimationPlayer = $\"../../Customer/AnimationPlayer\"
+@onready var camera: Camera3D = $\"..\"
+
+@onready var animCircle: AnimationPlayer = $\"../../DirectionalLight3D/AnimationPlayer\"
+
+
+
+
+# STATE MACHINE
+enum {
+	STATE_IDLE,
+	STATE_CHARGING,
+	STATE_CASTED,
+	STATE_BITE,
+	STATE_MINIGAME,
+	STATE_ROTATING
+}
+
+var state: int = STATE_IDLE
+
+var paused: bool = false
+
+
+
+func _ready() -> void:
+	camera. start_screenshake(0.3,15)
+	anim.play(\"idle\")
+	animVoid.play(\"walk\")
+	animCircle.play(\"circle\")
+	
+	await animVoid.animation_finished
+	var echo := preload(\"res://scenes/event_echo.tscn\").instantiate()
+	get_tree().current_scene.add_child(echo)
+	AudioServer.set_bus_mute(
+		AudioServer.get_bus_index(\"Music\"),
+		true
+	)
+	AudioServer.set_bus_mute(
+	AudioServer.get_bus_index(\"SFX\"),
+		true
+	)
+	echo.set_event(
+		EventEcho.EventType.ICE_STORM,
+		tr(\"EVENT_ICELAND\")
+	)
+
+	await get_tree().create_timer(10).timeout
+	AudioServer.set_bus_mute(
+	AudioServer.get_bus_index(\"Music\"),
+	false
+	)
+	AudioServer.set_bus_mute(
+	AudioServer.get_bus_index(\"SFX\"),
+	false
+	)
+	Player.update_last_scene(\"res://scenes/iceland.tscn\")
+	Transition.change_scene(\"res://scenes/MapScene.tscn\")
+
+		
+"
+
+[sub_resource type="Animation" id="Animation_a0dtd"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:light_color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(0.584973, 0.674503, 0.763378, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(-0.612611, 0.125699, 5.98389e-09)]
+}
+
+[sub_resource type="Animation" id="Animation_ttydn"]
+resource_name = "circle"
+length = 60.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:light_color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 30, 60),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(0.584973, 0.674503, 0.763378, 1), Color(0.113305, 0.326317, 0.783125, 1), Color(0.584973, 0.674503, 0.763378, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 30, 60),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(-0.612611, 0.125699, 5.98389e-09), Vector3(-3.7926, 0.125664, 0), Vector3(-0.612611, 0.125699, 5.98389e-09)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ynv6u"]
+_data = {
+&"RESET": SubResource("Animation_a0dtd"),
+&"circle": SubResource("Animation_ttydn")
+}
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_fm51i"]
+size = Vector2(10, 10)
+
+[sub_resource type="Animation" id="Animation_fm51i"]
+resource_name = "walk"
+length = 10.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 10),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 17.3124), Vector3(0, 0, 2.752)]
+}
+
+[sub_resource type="Animation" id="Animation_fg48o"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 17.3124)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_vrc0n"]
+_data = {
+&"RESET": SubResource("Animation_fg48o"),
+&"walk": SubResource("Animation_fm51i")
+}
+
+[node name="MainScene" type="Node3D"]
+
+[node name="Filter" type="CanvasLayer" parent="."]
+layer = 0
+
+[node name="PixelateOverlay" type="ColorRect" parent="Filter"]
+material = SubResource("ShaderMaterial_1wiy7")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 28.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_d1oep")
+
+[node name="PlayerCamera" type="Camera3D" parent="."]
+transform = Transform3D(-1, 0, -1.50996e-07, 0, 1, 0, 1.50996e-07, 0, -1, 0, 2.007, 0.0447942)
+far = 2293.99
+script = ExtResource("14_202s0")
+sway_amount = 0.115
+
+[node name="FishingRod" parent="PlayerCamera" instance=ExtResource("15_m0gwj")]
+transform = Transform3D(0.925417, -0.163176, -0.34202, 0.173648, 0.984808, 0, 0.336824, -0.0593912, 0.939693, 0.4, -0.40033, -1.03766)
+script = SubResource("GDScript_8wjpf")
+
+[node name="RodMesh" parent="PlayerCamera/FishingRod" index="0"]
+transform = Transform3D(0.8, 0, 0, 0, 0.773459, 0.204357, 0, -0.204357, 0.773459, 0, 0, -0.0166266)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.99211, -0.0720874, 0.10257, 4.89572e-09, 0.818149, 0.575006, -0.125368, -0.570469, 0.811694, 0, 7.52864, 2.88234)
+light_color = Color(0.584973, 0.674503, 0.763378, 1)
+light_energy = 14.367
+light_indirect_energy = 5.041
+light_volumetric_fog_energy = 0.0
+light_angular_distance = 9.1
+light_specular = 0.0
+shadow_bias = 0.0
+shadow_normal_bias = 6.785
+shadow_transmittance_bias = -1.025
+shadow_blur = 0.571
+directional_shadow_split_1 = 0.079
+directional_shadow_split_2 = 0.352
+directional_shadow_split_3 = 0.268
+directional_shadow_fade_start = 0.507
+directional_shadow_max_distance = 83.4
+sky_mode = 1
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="DirectionalLight3D"]
+libraries = {
+&"": SubResource("AnimationLibrary_ynv6u")
+}
+speed_scale = 0.1
+
+[node name="Audio" type="Node" parent="."]
+
+[node name="bite" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("22_fveit")
+volume_db = -2.811
+bus = &"SFX"
+
+[node name="cast" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("23_01i0b")
+bus = &"SFX"
+
+[node name="success" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("24_ocn80")
+bus = &"SFX"
+
+[node name="whoosh" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("25_sa7e0")
+bus = &"SFX"
+
+[node name="music" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("22_fm51i")
+volume_db = -2.735
+pitch_scale = 0.86
+autoplay = true
+bus = &"Music"
+
+[node name="line" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("27_1uift")
+volume_db = -2.735
+pitch_scale = 1.1
+autoplay = true
+bus = &"SFX"
+
+[node name="Splash" parent="." instance=ExtResource("28_4cdul")]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(13.55, 0, 0, 0, 13.55, 0, 0, 0, 13.55, 0, 0, 0)
+mesh = SubResource("PlaneMesh_fm51i")
+
+[node name="Customer" parent="." instance=ExtResource("25_fm51i")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 17.3124)
+script = null
+
+[node name="PatienceBar3D" parent="Customer" index="0"]
+visible = false
+
+[node name="SubViewport" parent="Customer/PatienceBar3D" index="0"]
+render_target_update_mode = 0
+
+[node name="PatienceBar" parent="Customer/PatienceBar3D/SubViewport" index="0"]
+visible = false
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Customer"]
+libraries = {
+&"": SubResource("AnimationLibrary_vrc0n")
+}
+
+[editable path="PlayerCamera/FishingRod"]
+[editable path="Customer"]
+[editable path="Customer/MeshInstance3D"]

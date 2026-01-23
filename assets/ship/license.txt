@@ -1,0 +1,11 @@
+Model Information:
+* title:	Octopus Cargo Ship
+* source:	https://sketchfab.com/3d-models/octopus-cargo-ship-4c7050163da94332a5fab662646e2984
+* author:	KurumA (https://sketchfab.com/rubenn)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Octopus Cargo Ship" (https://sketchfab.com/3d-models/octopus-cargo-ship-4c7050163da94332a5fab662646e2984) by KurumA (https://sketchfab.com/rubenn) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

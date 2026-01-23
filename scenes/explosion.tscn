@@ -119,5 +119,6 @@ mesh = SubResource("TorusMesh_17npe")
 stream = ExtResource("2_nfeox")
 volume_db = 2.557
 pitch_scale = 1.02
+bus = &"SFX"
 
 [editable path="Sketchfab_Scene"]
