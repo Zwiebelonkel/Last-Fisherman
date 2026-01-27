@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://dun1llsys5ajd"]
+
+[ext_resource type="PackedScene" uid="uid://dvwh6jxla0seg" path="res://assets/open/untitled.glb" id="1_ufkjn"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_753tl"]
+albedo_color = Color(0.878115, 0.352479, 0.466787, 1)
+emission_enabled = true
+emission = Color(0.94902, 0, 0, 1)
+emission_energy_multiplier = 8.63
+
+[node name="open" type="Node3D"]
+
+[node name="untitled" parent="." instance=ExtResource("1_ufkjn")]
+
+[node name="Text" parent="untitled" index="0"]
+surface_material_override/0 = SubResource("StandardMaterial3D_753tl")
+
+[editable path="untitled"]

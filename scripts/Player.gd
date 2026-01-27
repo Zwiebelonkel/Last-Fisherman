@@ -3,6 +3,7 @@ extends Node
 signal biome_completed(biome_name: String, reward: int)
 signal fish_caught(fish_id: String)
 signal money_gained(amount: int)
+signal vendor_unlocked  # 🆕 Neues Signal
 
 var touch_buttons: Node = null
 
@@ -17,6 +18,9 @@ var last_scene: String = "res://scenes/MainScene.tscn"
 var options: String = "res://scenes/OptionsCOntrol.tscn"
 var caught_fish_species: Dictionary = {}  # ✅ Speichert fish_id: bool
 var used_story_items: Array = []
+
+# 🆕 Story Items für Vendor Unlock
+const REQUIRED_STORY_ITEMS = ["van", "opensign", "friteuse", "sushimesser"]
 
 # --- SETTINGS ---
 var master_volume: float = 1.0
@@ -39,12 +43,12 @@ var completed_biomes: Dictionary = {
 
 var unlocked_spots = {
 	"lake": true, "city": false, "sewer": false,
-	"forest": false, "desert": false, "iceland": false, "home": true, "van": true
+	"forest": false, "desert": false, "iceland": false, "home": true, "van": false  # 🔧 van startet locked
 }
 
 var spot_prices = {
 	"lake": 0, "city": 500, "sewer": 1200,
-	"forest": 2000, "desert": 4000, "iceland": 6000, "home": 0, "van": 0
+	"forest": 2000, "desert": 4000, "iceland": 6000, "home": 0, "van": 0  # 🔧 van kostet 0 (wird durch Items freigeschaltet)
 }
 
 # Köder-Inventar
@@ -108,6 +112,58 @@ func _ready():
 func _sync_steam_scores() -> void:
 	GodotSteam.update_fish(get_total_fish_caught())
 	GodotSteam.update_money(money)
+
+# 🆕 Prüfe ob Vendor freigeschaltet werden soll
+func check_vendor_unlock() -> void:
+	# Prüfe ob bereits freigeschaltet
+	if unlocked_spots["van"]:
+		print("ℹ️ Vendor bereits freigeschaltet")
+		return
+	
+	# Prüfe ob alle Items gefunden wurden
+	var all_found = true
+	for item_id in REQUIRED_STORY_ITEMS:
+		if not used_story_items.has(item_id):
+			all_found = false
+			break
+	
+	if all_found:
+		unlock_vendor()
+
+# 🆕 Schalte Vendor frei
+func unlock_vendor() -> void:
+	print("🎉 VENDOR FREIGESCHALTET!")
+	unlocked_spots["van"] = true
+	save_game()
+	
+	# Zeige Benachrichtigung
+	show_vendor_unlock_notification()
+	
+	# Emittiere Signal
+	emit_signal("vendor_unlocked")
+
+# 🆕 Zeige Unlock-Benachrichtigung
+func show_vendor_unlock_notification() -> void:
+	# Erstelle eine temporäre Notification
+	# Du kannst hier dein eigenes UI verwenden
+	print("════════════════════════════════════")
+	print("    🎊 IMBISS FREIGESCHALTET! 🎊    ")
+	print("  Alle Teile gefunden! Besuche den  ")
+	print("     Imbiss auf der Weltkarte!      ")
+	print("════════════════════════════════════")
+
+# 🆕 Prüfe Story Item Status
+func get_story_item_progress() -> Dictionary:
+	return {
+		"found": used_story_items.size(),
+		"total": REQUIRED_STORY_ITEMS.size(),
+		"items": {
+			"van": used_story_items.has("van"),
+			"opensign": used_story_items.has("opensign"),
+			"friteuse": used_story_items.has("friteuse"),
+			"sushimesser": used_story_items.has("sushimesser")
+		}
+	}
 
 func save_settings() -> void:
 	var settings_data = {
@@ -354,7 +410,7 @@ func reset():
 	fish_catch_count.clear()
 	used_story_items.clear()
 	completed_biomes = {"lake": false, "city": false, "sewer": false, "forest": false, "desert": false, "iceland": false}
-	unlocked_spots = {"lake": true, "city": false, "sewer": false, "forest": false, "desert": false, "iceland": false, "home": true, "van": true}
+	unlocked_spots = {"lake": true, "city": false, "sewer": false, "forest": false, "desert": false, "iceland": false, "home": true, "van": false}
 	bait_inventory = {"Common": 0, "Uncommon": 0, "Rare": 0, "Epic": 0, "Legendary": 0, "Exotic": 0}
 	active_bait = ""
 	

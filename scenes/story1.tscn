@@ -1,0 +1,25 @@
+[gd_scene load_steps=4 format=3 uid="uid://4vuswgb4ap52"]
+
+[ext_resource type="Script" uid="uid://brkb1qhwl0hbm" path="res://scripts/storyItem.gd" id="1_wch0y"]
+[ext_resource type="PackedScene" uid="uid://cgx4m5clsd3v7" path="res://scenes/foodtruck.tscn" id="2_pvcsp"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_pghkn"]
+size = Vector3(2.01538, 1.98813, 4.79736)
+
+[node name="van" type="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+script = ExtResource("1_wch0y")
+rotation_speed = 0.0
+float_height = 0.0
+
+[node name="Area3D" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.349868, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+transform = Transform3D(0.999998, 0, 0, 0, 1, 0, 0, 0, 0.999998, 0.148803, 1.34264, -0.431394)
+shape = SubResource("BoxShape3D_pghkn")
+
+[node name="Foodtruck" parent="." instance=ExtResource("2_pvcsp")]
+
+[editable path="Foodtruck"]
+[editable path="Foodtruck/Sketchfab_Scene"]

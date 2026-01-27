@@ -148,7 +148,7 @@ https://skfb.ly/oRLDX"
 layout_mode = 2
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "Sprite helpers <3:
-Julia, Daniel"
+Julia, Daniel, Luca"
 
 [node name="Button" type="Button" parent="."]
 layout_mode = 1

@@ -1,4 +1,4 @@
-[gd_scene load_steps=77 format=3 uid="uid://cx2sffjjdjuw5"]
+[gd_scene load_steps=78 format=3 uid="uid://cx2sffjjdjuw5"]
 
 [ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="1_2phbr"]
 [ext_resource type="PackedScene" uid="uid://b5ew1rfc8ow8g" path="res://scenes/fishingRod.tscn" id="1_echbf"]
@@ -45,6 +45,7 @@
 [ext_resource type="PackedScene" uid="uid://ctqxalvjd2b1k" path="res://assets/palm.glb" id="36_u55b3"]
 [ext_resource type="PackedScene" uid="uid://bswqivqayur26" path="res://scenes/fireflies.tscn" id="38_oiest"]
 [ext_resource type="PackedScene" uid="uid://ng3k0vguw2ww" path="res://assets/chair.glb" id="45_pwxld"]
+[ext_resource type="PackedScene" uid="uid://4vuswgb4ap52" path="res://scenes/story1.tscn" id="46_cw1g3"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1wiy7"]
 shader = ExtResource("1_u55b3")
@@ -1433,6 +1434,7 @@ anchor_bottom = 1.0
 offset_right = 28.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 
 [node name="UI" type="CanvasLayer" parent="."]
 
@@ -1819,6 +1821,9 @@ transform = Transform3D(-0.114778, 0.0021709, -0.157627, 0.00289339, 0.194978, 0
 [node name="Cube" parent="chair" index="0"]
 transform = Transform3D(0.993955, 3.71821e-05, -0.109791, -0.000236018, 0.0894958, 0.00164719, 0.109791, -0.000144207, 0.993953, -2.93301, 0.0474119, -1.31001)
 surface_material_override/0 = ExtResource("35_y15d6")
+
+[node name="van" parent="." instance=ExtResource("46_cw1g3")]
+transform = Transform3D(0.51845, 0.420864, 0.744368, -0.0534179, 0.884736, -0.463022, -0.853438, 0.200291, 0.481173, -11.4535, 4.99099, -27.7274)
 
 [editable path="UI/Touch"]
 [editable path="PlayerCamera/FishingRod"]

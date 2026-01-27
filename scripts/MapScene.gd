@@ -69,6 +69,38 @@ var localized_texts := {
 	"buy_button": {
 		"de": "Kaufen (%d$)",
 		"en": "Buy (%d$)"
+	},
+	"vendor_locked": {
+		"de": "Sammle alle Teile um den Imbiss freizuschalten",
+		"en": "Collect all parts to unlock the vendor"
+	},
+	"vendor_progress": {
+		"de": "Fortschritt: %d/%d Teile",
+		"en": "Progress: %d/%d parts"
+	},
+	"vendor_items": {
+		"de": "Fehlende Teile:\n%s",
+		"en": "Missing parts:\n%s"
+	}
+}
+
+# 🆕 Item Namen für Vendor
+var item_names := {
+	"van": {
+		"de": "Food Truck Karosserie (Strand)",
+		"en": "Food Truck Body (Beach)"
+	},
+	"opensign": {
+		"de": "Geöffnet-Schild (Stadt)",
+		"en": "Open Sign (City)"
+	},
+	"friteuse": {
+		"de": "Fritteuse (U-Bahn)",
+		"en": "Deep Fryer (Subway)"
+	},
+	"sushimesser": {
+		"de": "Sushi-Messer (Wald)",
+		"en": "Sushi Knife (Forest)"
 	}
 }
 
@@ -83,10 +115,19 @@ func _ready():
 	assign_button(home_btn, "home")
 	assign_button(van_btn, "van")
 
-
 	popup.visible = false
 	popup_close_btn.pressed.connect(hide_popup)
 	back_btn.pressed.connect(go_back)
+	
+	# 🆕 Verbinde Vendor Unlock Signal
+	if not Player.vendor_unlocked.is_connected(_on_vendor_unlocked):
+		Player.vendor_unlocked.connect(_on_vendor_unlocked)
+
+
+# 🆕 Vendor wurde freigeschaltet
+func _on_vendor_unlocked() -> void:
+	print("🎉 Vendor freigeschaltet - Update UI")
+	assign_button(van_btn, "van")  # Button neu färben
 
 
 # ============================================
@@ -108,6 +149,14 @@ func get_location_name(spot_name: String) -> String:
 	elif location_names.has(spot_name) and location_names[spot_name].has("de"):
 		return location_names[spot_name]["de"]
 	return spot_name.capitalize()
+
+func get_item_name(item_id: String) -> String:
+	var current_lang = Player.current_language
+	if item_names.has(item_id) and item_names[item_id].has(current_lang):
+		return item_names[item_id][current_lang]
+	elif item_names.has(item_id) and item_names[item_id].has("de"):
+		return item_names[item_id]["de"]
+	return item_id.capitalize()
 
 
 func hide_popup():
@@ -138,6 +187,44 @@ func show_spot_popup(spot_name: String):
 	# 🌍 Lokalisierter Titel
 	popup_title.text = get_location_name(spot_name)
 	
+	# 🆕 Spezialfall: Van (Vendor)
+	if spot_name == "van":
+		if unlocked:
+			popup_price.text = get_text("unlocked")
+			popup_buy_button.visible = false
+			popup_go_button.visible = true
+		else:
+			# Zeige Vendor-Lock Status
+			var progress = Player.get_story_item_progress()
+			var found = progress["found"]
+			var total = progress["total"]
+			
+			popup_price.text = get_text("vendor_locked") + "\n"
+			popup_price.text += get_text("vendor_progress") % [found, total]
+			
+			# Zeige fehlende Items
+			var missing_items := []
+			for item_id in Player.REQUIRED_STORY_ITEMS:
+				if not Player.used_story_items.has(item_id):
+					missing_items.append("• " + get_item_name(item_id))
+			
+			if missing_items.size() > 0:
+				popup_price.text += "\n\n" + get_text("vendor_items") % ["\n".join(missing_items)]
+			
+			popup_buy_button.visible = false
+			popup_go_button.visible = false
+		
+		# Bestehende Signale trennen
+		_disconnect_all(popup_go_button)
+		
+		# Neue Signale verbinden
+		if unlocked:
+			popup_go_button.pressed.connect(func():
+				go_to_spot(selected_spot)
+			)
+		return
+	
+	# Normale Spots
 	# 🌍 Lokalisierter Preis-Text
 	if unlocked:
 		popup_price.text = get_text("unlocked")
@@ -246,6 +333,13 @@ func _on_submit_pressed() -> void:
 		password = ""
 	elif password == "*":
 		Player.set_money(Player.money*100)
+		password = ""
+	elif password == "vendor":  # 🆕 Cheat für Vendor Unlock
+		for item_id in Player.REQUIRED_STORY_ITEMS:
+			if not Player.used_story_items.has(item_id):
+				Player.used_story_items.append(item_id)
+		Player.check_vendor_unlock()
+		assign_button(van_btn, "van")
 		password = ""
 	else:
 		return
