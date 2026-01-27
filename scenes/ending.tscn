@@ -179,10 +179,9 @@ script/source = "extends Node3D
 @export var splash: GPUParticles3D
 @export var waterplane: Node3D
 @export var catch_result_ui: Node
-@export var shop_scene_path: String = \"res://scenes/shop.tscn\"
 @export var rotation_speed: float = 2.0
 @export var camera: Camera3D
-@export var fishing_location: String = \"ocean\"
+@export var fishing_location: String = \"ocean\"  # 🆕 OCEAN Map
 @export var fishbook_ui: Control
 @export var options: Control
 
@@ -194,8 +193,6 @@ script/source = "extends Node3D
 @export var right_button: Button
 @export var interact_button: Button
 @export var settings_button: Button
-
-
 
 @onready var anim: AnimationPlayer = $AnimationPlayer
 @onready var animCircle: AnimationPlayer = $\"../../DirectionalLight3D/AnimationPlayer\"
@@ -214,7 +211,6 @@ script/source = "extends Node3D
 @onready var whoosh_sound: AudioStreamPlayer = get_node(\"../../Audio/whoosh\")
 @onready var line_sound: AudioStreamPlayer = get_node(\"../../Audio/line\")
 
-
 @export var cast_power_ui_scene: PackedScene
 var cast_power_ui: Control = null
 
@@ -232,8 +228,8 @@ enum {
 }
 
 var state: int = STATE_IDLE
-
 var paused: bool = false
+var fish_caught: bool = false  # 🆕 Blockiert Input während CatchResult angezeigt wird
 
 # Cast Power Variables
 var cast_power: float = 0.0
@@ -241,7 +237,7 @@ var cast_power_speed: float = 3
 var max_cast_power: float = 1.0
 var min_distance: float = 5.5
 var max_distance: float = 86
-var last_cast_quality: float = 0.0  # Speichert die Qualität des letzten Wurfs
+var last_cast_quality: float = 0.0
 
 # Minigame Variables
 var marker_pos: float = 0.0
@@ -253,16 +249,13 @@ var sweet_pos: float = 0.0
 var sweet_speed: float = 120.0
 var sweet_direction: int = 1
 
-# Erweiterte Rotation Variables (4 Richtungen)
+# 🆕 Einfache 2-Richtungs Rotation (nur Links/Rechts)
 var current_rotation: float = 180.0
 var target_rotation: float = 180.0
 var is_rotating: bool = false
 
-# Definierte Rotationspositionen
+# Nur Fishing Position (kein Shop)
 const ROTATION_FISHING: float = 180.0
-const ROTATION_SHOP: float = 90.0
-const ROTATION_EMPTY_1: float = 0.0
-const ROTATION_EMPTY_2: float = 270.0
 
 var hook_start_position: Vector3
 var hook_end_position: Vector3
@@ -281,27 +274,30 @@ func _ready() -> void:
 		cast_power_ui = cast_power_ui_scene.instantiate()
 		add_child(cast_power_ui)
 		
-	# 🆕 Button-Signals verbinden
 	setup_buttons()
+	
 	if catch_result_ui:
 		catch_result_ui.story_item_used.connect(_on_story_item_used)
+		# 🆕 Verbinde mit CatchResult closed Signal
+		if catch_result_ui.has_signal(\"closed\"):
+			catch_result_ui.closed.connect(_on_catch_result_closed)
 	
 	Player.biome_completed.connect(_on_biome_completed)
 
 
-# 🆕 Story-Item wurde \\\"verwendet\\\"
 func _on_story_item_used(biome: String) -> void:
 	print(\"🎭 Story-Item Event ausgelöst für Biom:\", biome)
 	
-	_on_biome_completed(\"iceland\", 100)
-	# Trigger das Biom-Completion Event
 	if not Player.completed_biomes.get(biome, false):
 		Player.trigger_biome_completion_event(biome)
 
 
+# 🆕 Wird aufgerufen wenn CatchResult UI geschlossen wird
+func _on_catch_result_closed() -> void:
+	print(\"✅ CatchResult geschlossen - Input wieder aktiviert\")
+	fish_caught = false
 
 
-# 🆕 Button Setup
 func setup_buttons() -> void:
 	if journal_button:
 		journal_button.pressed.connect(toggle_fishbook)
@@ -319,7 +315,6 @@ func setup_buttons() -> void:
 		right_button.pressed.connect(rotate_camera_right)
 	
 	if interact_button:
-		# 🆕 WICHTIG: Für Halten von Buttons brauchen wir down/up Signals
 		interact_button.button_down.connect(_on_interact_button_down)
 		interact_button.button_up.connect(_on_interact_button_up)
 		
@@ -327,73 +322,58 @@ func setup_buttons() -> void:
 		settings_button.pressed.connect(handle_pause_input)
 
 
-# 🆕 Interact Button - DOWN (Halten simulieren)
 func _on_interact_button_down() -> void:
-	# Shop betreten bei 90°
-	if abs(current_rotation - ROTATION_SHOP) < 1.0:
-		enter_shop()
+	# 🆕 Blockiere während CatchResult
+	if fish_caught:
 		return
 	
-	# Bei 180° (Fishing)
-	if abs(current_rotation - ROTATION_FISHING) < 1.0:
-		match state:
-			STATE_IDLE:
-				start_charging_cast()
-			STATE_CHARGING:
-				# Halten des Buttons = weiter halten zum Laden
-				pass
-			STATE_CASTED, STATE_BITE:
-				reel_pressed()
-			STATE_MINIGAME:
-				input_active = true
+	# Nur Fishing (kein Shop)
+	match state:
+		STATE_IDLE:
+			start_charging_cast()
+		STATE_CHARGING:
+			pass  # Halten zum Laden
+		STATE_CASTED, STATE_BITE:
+			reel_pressed()
+		STATE_MINIGAME:
+			input_active = true
 
 
-# 🆕 Interact Button - UP (Loslassen)
 func _on_interact_button_up() -> void:
-	# Bei 180° (Fishing)
-	if abs(current_rotation - ROTATION_FISHING) < 1.0:
-		match state:
-			STATE_CHARGING:
-				release_cast()
-			STATE_MINIGAME:
-				input_active = false
+	# 🆕 Blockiere während CatchResult
+	if fish_caught:
+		return
+	
+	match state:
+		STATE_CHARGING:
+			release_cast()
+		STATE_MINIGAME:
+			input_active = false
+
 
 func _on_biome_completed(biome_name: String, reward: int) -> void:
 	print(\"🎉 Biom abgeschlossen: \", biome_name, \" | Belohnung: \", reward, \" Gold\")
 	
-	# Hier kannst du machen was du willst:
-	
-	# Beispiel 1: Spezielle Items freischalten
 	match biome_name:
-		\"lake\":
-			pass
-		
-		\"city\":
-			pass
-		
-		\"sewer\":
-			pass
-		
-		\"forest\":
-			pass
-		
-		\"desert\":
-			pass
-		\"iceland\":
-			Transition.change_scene(\"res://scenes/void.tscn\")
+		\"ocean\":
+			# Du hast dich selbst gefangen - Ende?
+			print(\"🌊 OCEAN abgeschlossen - Du hast dich selbst gefangen!\")
+			# Hier kannst du z.B. Credits, Endscreen oder zurück zur Map
+			# Transition.change_scene(\"res://scenes/ending.tscn\")
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	# 🆕 ESC/Pause behandeln - IMMER als erstes prüfen
 	if event.is_action_released(\"pause\"):
 		handle_pause_input()
 		return 
 	
-	# Während Pause keine anderen Inputs verarbeiten
+	# 🆕 Blockiere alle Inputs während CatchResult angezeigt wird
+	if fish_caught:
+		return
+	
 	if paused:
 		return
 	
-	# Rotation in beide Richtungen
 	if event.is_action_pressed(\"left\"):
 		rotate_camera_left()
 		return
@@ -403,7 +383,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 	
 	if event.is_action_pressed(\"map_open\"):
-		Player.update_last_scene(\"res://scenes/iceland.tscn\")
+		Player.update_last_scene(\"res://scenes/ending.tscn\")  # 🆕 Ocean Scene
 		Transition.change_scene(\"res://scenes/MapScene.tscn\")
 		return
 	
@@ -415,32 +395,16 @@ func _unhandled_input(event: InputEvent) -> void:
 		toggle_inventory()
 		return
 
-	# Shop betreten bei 90° (VOR der Rotation-Blockade!)
-	if event.is_action_pressed(\"cast\") and abs(current_rotation - ROTATION_SHOP) < 1.0:
-		print(\"DEBUG: Versuche Shop zu betreten, State = \", state)
-		enter_shop()
-		return
-
-	# Keine anderen Eingaben während Rotation
 	if state == STATE_ROTATING:
 		return
 
-	# Minigame Input
 	if state == STATE_MINIGAME:
 		if event.is_action_pressed(\"cast\"):
 			input_active = true
 		if event.is_action_released(\"cast\"):
 			input_active = false
 
-	# Cast-Taste Handling je nach Position
 	if event.is_action_pressed(\"cast\"):
-		print(\"DEBUG: current_rotation = \", current_rotation, \" | camera.rotation.y = \", rad_to_deg(camera.rotation.y))
-		
-		# Angeln nur bei 180°
-		if abs(current_rotation - ROTATION_FISHING) > 1.0:
-			print(\"Angeln nur bei 180° möglich! Aktuelle Rotation: \", current_rotation)
-			return
-		
 		match state:
 			STATE_IDLE:
 				start_charging_cast()
@@ -455,27 +419,21 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 # ---------------------------------------------------------
-# 🆕 MENÜ-MANAGEMENT SYSTEM
+# MENÜ-MANAGEMENT
 # ---------------------------------------------------------
 func handle_pause_input() -> void:
-	# Prüfe welche Menüs offen sind (Priorität: Fishbook > Inventory > Options)
-	
-	# 1. Wenn Fishbook offen ist, schließe es
 	if fishbook_ui and fishbook_ui.visible:
 		close_fishbook()
 		return
 	
-	# 2. Wenn Inventory offen ist, schließe es
 	if inventory_ui and inventory_ui.visible:
 		close_inventory()
 		return
 	
-	# 3. Wenn Options offen ist, schließe es
 	if options and options.visible:
 		close_options()
 		return
 	
-	# 4. Wenn alle zu sind, öffne Options
 	open_options()
 
 
@@ -497,10 +455,8 @@ func toggle_inventory() -> void:
 
 
 func open_fishbook() -> void:
-	# Schließe alle anderen Menüs
 	close_inventory()
 	close_options()
-	
 	fishbook_ui.visible = true
 	paused = false
 	Engine.time_scale = 1
@@ -513,10 +469,8 @@ func close_fishbook() -> void:
 
 
 func open_inventory() -> void:
-	# Schließe alle anderen Menüs
 	close_fishbook()
 	close_options()
-	
 	inventory_ui.show()
 	paused = false
 	Engine.time_scale = 1
@@ -529,10 +483,8 @@ func close_inventory() -> void:
 
 
 func open_options() -> void:
-	# Schließe alle anderen Menüs
 	close_fishbook()
 	close_inventory()
-	
 	options.show()
 	paused = true
 	Engine.time_scale = 0
@@ -545,23 +497,17 @@ func close_options() -> void:
 
 
 # ---------------------------------------------------------
-# 4-RICHTUNGS ROTATION SYSTEM
+# KAMERA ROTATION (Einfach - nur 360° drehen)
 # ---------------------------------------------------------
 func rotate_camera_left() -> void:
 	if is_rotating:
 		return
 	
 	whoosh_sound.play()
+	target_rotation = current_rotation - 90.0
+	if target_rotation < 0.0:
+		target_rotation += 360.0
 	
-	# Im Uhrzeigersinn: 180 → 270 → 0 → 90 → 180
-	if current_rotation == ROTATION_FISHING:
-		target_rotation = ROTATION_EMPTY_2
-	elif current_rotation == ROTATION_EMPTY_2:
-		target_rotation = ROTATION_EMPTY_1
-	elif current_rotation == ROTATION_EMPTY_1:
-		target_rotation = ROTATION_SHOP
-	elif current_rotation == ROTATION_SHOP:
-		target_rotation = ROTATION_FISHING
 	reset_line()
 	start_rotation()
 
@@ -571,16 +517,10 @@ func rotate_camera_right() -> void:
 		return
 	
 	whoosh_sound.play()
+	target_rotation = current_rotation + 90.0
+	if target_rotation >= 360.0:
+		target_rotation -= 360.0
 	
-	# Gegen Uhrzeigersinn: 180 → 90 → 0 → 270 → 180
-	if current_rotation == ROTATION_FISHING:
-		target_rotation = ROTATION_SHOP
-	elif current_rotation == ROTATION_SHOP:
-		target_rotation = ROTATION_EMPTY_1
-	elif current_rotation == ROTATION_EMPTY_1:
-		target_rotation = ROTATION_EMPTY_2
-	elif current_rotation == ROTATION_EMPTY_2:
-		target_rotation = ROTATION_FISHING
 	reset_line()
 	start_rotation()
 
@@ -604,7 +544,6 @@ func _process(delta: float) -> void:
 
 func update_rotation(delta: float) -> void:
 	var rotation_step = rotation_speed * delta
-	
 	var diff = target_rotation - current_rotation
 	
 	if diff > 180.0:
@@ -630,44 +569,16 @@ func update_rotation(delta: float) -> void:
 	if abs(current_rotation - target_rotation) < 0.5:
 		current_rotation = target_rotation
 		is_rotating = false
-		
-		if current_rotation == ROTATION_FISHING:
-			state = STATE_IDLE
-		else:
-			state = STATE_ROTATING
+		state = STATE_IDLE
 
 
-func enter_shop() -> void:
-	print(\"Betrete Shop!\")
-	Player.update_last_scene(\"res://scenes/iceland.tscn\")
-	Transition.change_scene(\"res://scenes/shop_inside.tscn\")
-
-
-# 🆕 Button Handler Funktionen
 func open_map() -> void:
-	Player.update_last_scene(\"res://scenes/iceland.tscn\")
+	Player.update_last_scene(\"res://scenes/ending.tscn\")
 	Transition.change_scene(\"res://scenes/MapScene.tscn\")
 
 
-func on_interact_pressed() -> void:
-	# Shop betreten bei 90°
-	if abs(current_rotation - ROTATION_SHOP) < 1.0:
-		enter_shop()
-		return
-	
-	# Bei 180° (Fishing) -> Cast/Reel
-	if abs(current_rotation - ROTATION_FISHING) < 1.0:
-		match state:
-			STATE_IDLE:
-				start_charging_cast()
-			STATE_CHARGING:
-				release_cast()
-			STATE_CASTED, STATE_BITE:
-				reel_pressed()
-
-
 # ---------------------------------------------------------
-# CAST CHARGING SYSTEM
+# CAST CHARGING
 # ---------------------------------------------------------
 func start_charging_cast() -> void:
 	print(\"CHARGING CAST\")
@@ -697,15 +608,12 @@ func release_cast() -> void:
 		cast_power_ui.hide_power()
 	
 	var power_quality = 1.0 - abs(cast_power - 1.0)
-	last_cast_quality = power_quality  # Speichern für späteren Gebrauch
+	last_cast_quality = power_quality
 	
 	print(\"Cast released with power: \", power_quality)
 	cast_line(power_quality)
 
 
-# ---------------------------------------------------------
-# CAST
-# ---------------------------------------------------------
 # ---------------------------------------------------------
 # CAST
 # ---------------------------------------------------------
@@ -716,50 +624,34 @@ func cast_line(power: float = 1.0) -> void:
 	ui_bite_indicator.visible = false
 
 	anim.play(\"cast\")
-	camera.start_screenshake(0.01,0.3)
+	camera.start_screenshake(0.01, 0.3)
 	await anim.animation_finished
 
 	var x = randf_range(-2.0, 2.0)
 	var distance = lerp(min_distance, max_distance, power)
-	var z = distance
 	
 	var water_height = 0.05
 	if waterplane:
 		water_height = waterplane.global_position.y
 	
-	# ✅ Hook landet weit weg (Start Position bei max_distance)
-	# WICHTIG: Setze Position GLOBAL, nicht lokal!
-	var cast_forward = -camera.global_transform.basis.z  # Kamera schaut in -Z
-	cast_forward.y = 0  # Nur horizontal
+	var cast_forward = -camera.global_transform.basis.z
+	cast_forward.y = 0
 	cast_forward = cast_forward.normalized()
 	
-	# ✅ FIX: Seitlicher Offset muss auch in die richtige Richtung rotiert werden
-	var cast_right = camera.global_transform.basis.x  # Rechts-Vektor der Kamera
+	var cast_right = camera.global_transform.basis.x
 	cast_right.y = 0
 	cast_right = cast_right.normalized()
 	
 	hook.global_position = rod_tip.global_position + cast_right * x + cast_forward * distance
 	hook.global_position.y = water_height
 	hook.visible = true
-	hook_start_position = hook.global_position  # Weit weg im Wasser (0% Progress)
+	hook_start_position = hook.global_position
 	
-	# 🔍 DEBUG: Überprüfe tatsächliche Distanz
-	var actual_distance = rod_tip.global_position.distance_to(hook_start_position)
-	print(\"🎣 Cast Distance:\")
-	print(\"  - Gewünschte Distanz: \", distance)
-	print(\"  - Tatsächliche Distanz: \", actual_distance)
-	print(\"  - Rod Tip Position: \", rod_tip.global_position)
-	print(\"  - Hook Start Position: \", hook_start_position)
-	
-	# ✅ FIX: End Position = min_distance vom Cast-Punkt (100% Progress)
-	# Berechne Richtung von Angel zum Hook (Cast-Richtung)
 	var cast_direction = (hook.global_position - rod_tip.global_position).normalized()
-	cast_direction.y = 0  # Nur horizontale Bewegung
+	cast_direction.y = 0
 	
-	# End Position = min_distance in Cast-Richtung von der Angel
-	# Bei 100% Progress ist der Hook bei min_distance vom Ursprung
 	hook_end_position = rod_tip.global_position + cast_direction * min_distance
-	hook_end_position.y = water_height  # Bleib auf Wasserhöhe
+	hook_end_position.y = water_height
 
 	splash.global_position = hook_start_position
 	splash.visible = true
@@ -823,7 +715,6 @@ func start_bite_timer() -> void:
 
 func start_bite_window() -> void:
 	var max_reaction_time := 2.0
-
 	await get_tree().create_timer(max_reaction_time).timeout
 
 	if state == STATE_BITE:
@@ -858,9 +749,7 @@ func start_catch_minigame() -> void:
 	splash.visible = true
 	splash.emitting = true
 
-	# ---------------------------
-	# Fisch bestimmen
-	# ---------------------------
+	# 🎣 Fisch bestimmen - OCEAN verwendet automatisch FISH_OCEAN
 	var target_rarity: String = \"\"
 	if Player.has_active_bait():
 		target_rarity = Player.get_active_bait_rarity()
@@ -869,22 +758,24 @@ func start_catch_minigame() -> void:
 	var effective_bait: int = max(1, int(Player.upgrade_bait * quality_multiplier))
 
 	if target_rarity != \"\":
-		current_fish = FishDB.get_random_fish_by_rarity(FishDB.get_fish_list_for_biome(fishing_location),target_rarity)
+		current_fish = FishDB.get_random_fish_by_rarity(
+			FishDB.get_fish_list_for_biome(fishing_location),
+			target_rarity
+		)
 	else:
-		current_fish = FishDB.get_random_from_list(FishDB.FISH_ICELAND, effective_bait)
+		current_fish = FishDB.get_random_from_list(
+			FishDB.get_fish_list_for_biome(fishing_location),
+			effective_bait
+		)
 
 	print(\"🎣 Gefangen:\", FishDB.get_fish_name(current_fish))
 
-	# ---------------------------
 	# Marker Setup
-	# ---------------------------
 	marker_pos = 0.0
 	marker.position.x = 0.0
 	marker_speed = FishDB.get_marker_speed_for_fish(current_fish)
 
-	# ---------------------------
 	# SweetSpot Größe & Speed nach Rarity
-	# ---------------------------
 	var bar_width: float = float(bar_background.size.x)
 	var rarity: int = int(current_fish.get(\"rarity\", FishDB.RARITY.NORMAL))
 
@@ -906,15 +797,12 @@ func start_catch_minigame() -> void:
 		_:
 			sweet_spot.size.x = bar_width * 0.25
 
-	# Minimum Breite
 	sweet_spot.size.x = max(sweet_spot.size.x, 55.0)
 
-	# Startposition zufällig
 	var max_x: float = bar_width - float(sweet_spot.size.x)
 	sweet_pos = randf_range(0.0, max_x)
 	sweet_spot.position.x = sweet_pos
 
-	# SweetSpot Geschwindigkeit (abhängig von Rarity, relativ zum Marker)
 	match rarity:
 		FishDB.RARITY.NORMAL:
 			sweet_speed = marker_speed * 0.15
@@ -933,19 +821,13 @@ func start_catch_minigame() -> void:
 		_:
 			sweet_speed = marker_speed * 0.25
 
-	# Richtung zufällig
 	sweet_direction = -1 if randi() % 2 == 0 else 1
-
-	# ---------------------------
-	# Progress Reset
-	# ---------------------------
 	catch_progress.value = 50.0
 	input_active = false
+
 	
 func update_catch_minigame(delta: float) -> void:
-	# -------------------------
 	# SweetSpot Bewegung
-	# -------------------------
 	sweet_pos += sweet_speed * delta * sweet_direction
 
 	var sweet_max_x := bar_background.size.x - sweet_spot.size.x
@@ -959,15 +841,12 @@ func update_catch_minigame(delta: float) -> void:
 
 	sweet_spot.position.x = sweet_pos
 
-	# -------------------------
 	# Marker & Hook Bewegung
-	# -------------------------
 	var current_speed = marker_speed
 	
-	# ✅ Hook bewegt sich basierend auf Progress
 	var t := catch_progress.value / 100.0
 	var new_pos := hook_start_position.lerp(hook_end_position, t)
-	new_pos.y = waterplane.global_position.y - 7.0  # Bleib auf Wasserhöhe
+	new_pos.y = waterplane.global_position.y - 7.0
 	hook.global_position = new_pos
 
 	if input_active:
@@ -986,9 +865,7 @@ func update_catch_minigame(delta: float) -> void:
 
 	marker.position.x = marker_pos
 
-	# -------------------------
 	# Collision Detection
-	# -------------------------
 	var in_spot := marker.position.x >= sweet_spot.position.x \\
 		and marker.position.x <= sweet_spot.position.x + sweet_spot.size.x
 
@@ -996,7 +873,6 @@ func update_catch_minigame(delta: float) -> void:
 		var grip_multiplier := 1.0 + (Player.upgrade_grip - 1) * 0.05
 		catch_progress.value += 40.0 * grip_multiplier * delta
 		
-		# Splash Particles immer am Hook spawnen wenn im Sweet Spot
 		if splash:
 			splash.global_position = hook.global_position
 			if not splash.emitting:
@@ -1006,7 +882,6 @@ func update_catch_minigame(delta: float) -> void:
 	else:
 		catch_progress.value = max(0.0, catch_progress.value - 25.0 * delta)
 		
-		# Splash stoppen wenn außerhalb des Sweet Spots
 		if splash and splash.emitting:
 			splash.emitting = false
 
@@ -1014,9 +889,10 @@ func update_catch_minigame(delta: float) -> void:
 		end_catch_minigame(true)
 	elif catch_progress.value <= 0.0:
 		end_catch_minigame(false)
+
 		
 func end_catch_minigame(success: bool) -> void:
-	camera.start_screenshake(0.4,0.3)
+	camera.start_screenshake(0.4, 0.3)
 	if success:
 		var fish = current_fish
 		Player.add_fish(fish)
@@ -1026,9 +902,11 @@ func end_catch_minigame(success: bool) -> void:
 		SteamAchievements.check_total_fish_caught()
 		SteamAchievements.check_species_discovered()
 		
-		# 🆕 Köder VERBRAUCHEN
 		if Player.has_active_bait():
 			Player.consume_active_bait()
+
+		# 🆕 Blockiere Input bis CatchResult geschlossen wird
+		fish_caught = true
 
 		if catch_result_ui:
 			catch_result_ui.show_fish(fish)
@@ -1048,7 +926,6 @@ func trigger_splash_burst() -> void:
 		return
 	
 	splash.emitting = true
-	
 	await get_tree().create_timer(0.15).timeout
 	
 	if splash and state == STATE_MINIGAME:

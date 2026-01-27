@@ -40,9 +40,13 @@ func _ready():
 	rarity_label = $VBoxContainer/InfoContainer/StatsContainer/MarginContainer2/RarityLabel
 	value_label = $VBoxContainer/InfoContainer/StatsContainer/MarginContainer3/ValueLabel
 	separator = $VBoxContainer/InfoContainer/VSeparator
+	name_label.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	rarity_label.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	value_label.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	name_label.autowrap_mode = TextServer.AUTOWRAP_WORD
 	
 	# Größe setzen
-	custom_minimum_size = Vector2(160, 190)
+	size_flags_horizontal = Control.SIZE_FILL
 	
 	# Mouse Filter
 	mouse_filter = Control.MOUSE_FILTER_STOP
@@ -127,17 +131,19 @@ func update_display():
 		var rarity_data = FishDB.RARITY_DATA[rarity]
 		var rarity_color = rarity_data["color"]
 		
-		# 🐟 ICON - normal sichtbar
+		# 🐟 ICON - Steam-Player oder normal
 		icon.modulate = Color.WHITE
-		if fish_data.has("icon") and ResourceLoader.exists(fish_data["icon"]):
-			icon.texture = load(fish_data["icon"])
+		
+		# 🆕 Prüfe ob Icon ein Texture2D ist (Steam Avatar)
+		icon.texture = FishDB.get_fish_icon(fish_data)
 		
 		# ❓ Fragezeichen ausblenden
 		if question_overlay:
 			question_overlay.visible = false
 		
-		# 📝 NAME
-		name_label.text = fish_data["name"]
+		# 📝 NAME - Steam-Player oder normal
+		var display_name = fish_data.get("name", "???")
+		name_label.text = display_name
 		name_label.add_theme_font_size_override("font_size", 15)
 		
 		# 🌍 SELTENHEIT (Übersetzt)
@@ -291,14 +297,21 @@ func _on_mouse_entered():
 	if fish_id == "":
 		return
 
-	var full_fish: Dictionary = FishDB.get_fish_by_id(fish_id)
+	var full_fish: Dictionary
+
+	if fish_data.get("is_steam_player", false):
+		full_fish = fish_data
+	else:
+		full_fish = FishDB.get_fish_by_id(fish_id)
+	
 	if full_fish.is_empty():
 		return
 
+
 	# ----------------------------
-	# Name (lokalisiert)
+	# Name (lokalisiert oder Steam)
 	# ----------------------------
-	var fish_name := FishDB.get_fish_name(full_fish)
+	var fish_name : String = fish_data.get("name", FishDB.get_fish_name(full_fish))
 
 	# ----------------------------
 	# Beschreibung (lokalisiert)

@@ -223,10 +223,10 @@ func _request_leaderboard_data(leaderboard_name: String):
 	print("📥 Requesting leaderboard data:", leaderboard_name, "| Handle:", handle)
 	
 	Steam.downloadLeaderboardEntries(
-	0,                          # start_index
-	max_entries - 1,            # end_index
-	Steam.LEADERBOARD_DATA_REQUEST_GLOBAL,
-	handle                       # leaderboard_handle
+		0,                          # start_index
+		max_entries - 1,            # end_index
+		Steam.LEADERBOARD_DATA_REQUEST_GLOBAL,
+		handle                       # leaderboard_handle
 	)
 
 
@@ -256,7 +256,7 @@ func _on_leaderboard_downloaded(a, b = null, c = null) -> void:
 		return
 
 	var leaderboard_name := Steam.getLeaderboardName(leaderboard_handle)
-	print("🏆 Leaderboard geladen:", leaderboard_name, " Einträge:", results.size())
+	print("🏆 Leaderboard geladen:", leaderboard_name, "| Einträge:", results.size())
 
 	# Debug-Ausgabe
 	for i in range(results.size()):
@@ -268,40 +268,34 @@ func _on_leaderboard_downloaded(a, b = null, c = null) -> void:
 			r.get("score", 0)
 		])
 
-	# UI aktualisieren
+	# 🔧 FIX: UI aktualisieren - direkt hier statt _apply_rows_to_tabs
 	for tab in tab_container.get_children():
 		if tab.get_meta("leaderboard_name") == leaderboard_name:
-			_update_entries(tab.get_meta("entries_container"), results)
+			var container = tab.get_meta("entries_container")
+			print("🎯 Update Tab:", tab.name, "| Container gefunden:", container != null)
+			_update_entries(container, results)
 			break
-
-func _apply_rows_to_tabs(leaderboard_name: String, rows: Array) -> void:
-	if rows.is_empty():
-		print("ℹ️ Keine Daten:", leaderboard_name)
-		return
-
-	for tab in tab_container.get_children():
-		if tab.get_meta("leaderboard_name") == leaderboard_name:
-			_update_entries(tab.get_meta("entries_container"), rows)
-			break
-
-func _show_empty_state(container: VBoxContainer):
-	var entry_nodes = container.get_children().slice(2)
-	
-	for i in range(entry_nodes.size()):
-		var entry_node = entry_nodes[i]
-		var labels = entry_node.get_children()
-		labels[0].text = str(i + 1)
-		labels[1].text = "No entries yet"
-		labels[2].text = "---"
-	
-	print("ℹ️ Empty state angezeigt")
 
 func _update_entries(container: VBoxContainer, entries: Array):
-	var entry_nodes = container.get_children().slice(2)
+	if not container:
+		print("❌ Container ist null!")
+		return
+	
+	# Hole alle Entry-Nodes (überspringe Header + Separator)
+	var all_children = container.get_children()
+	print("📦 Container Children:", all_children.size())
+	
+	# Die ersten 2 sind Header + Separator
+	var entry_nodes = all_children.slice(2)
+	print("📝 Entry Nodes:", entry_nodes.size())
 
 	for i in range(entry_nodes.size()):
 		var entry_node = entry_nodes[i]
 		var labels = entry_node.get_children()
+		
+		if labels.size() < 3:
+			print("⚠️ Entry", i, "hat zu wenige Labels:", labels.size())
+			continue
 
 		if i < entries.size():
 			var data = entries[i]
@@ -313,6 +307,8 @@ func _update_entries(container: VBoxContainer, entries: Array):
 			labels[0].text = str(rank)
 			labels[1].text = player_name
 			labels[2].text = str(score)
+			
+			print("✏️ Entry %d: %s - %s - %d" % [i, labels[0].text, labels[1].text, score])
 
 			# Eigenen Eintrag highlighten
 			if steam_id == GodotSteam.steam_id:

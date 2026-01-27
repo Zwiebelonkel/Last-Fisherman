@@ -29,6 +29,7 @@ extends Node3D
 @onready var bait_shop_panel: VBoxContainer = $UI/ShopContainer/MainPanel/VBoxContainer/BaitShop
 
 # 🆕 Köder-Karten
+@onready var common_bait_card: PanelContainer = $UI/ShopContainer/MainPanel/VBoxContainer/BaitShop/Scroll/Cards/NormalCard
 @onready var uncommon_bait_card: PanelContainer = $UI/ShopContainer/MainPanel/VBoxContainer/BaitShop/Scroll/Cards/UngewöhnlichCard
 @onready var rare_bait_card: PanelContainer = $UI/ShopContainer/MainPanel/VBoxContainer/BaitShop/Scroll/Cards/SeltenCard
 @onready var epic_bait_card: PanelContainer = $UI/ShopContainer/MainPanel/VBoxContainer/BaitShop/Scroll/Cards/EpischCard
@@ -93,6 +94,7 @@ func get_text(key: String) -> String:
 # ============================================
 
 func setup_bait_buttons():
+	common_bait_card.get_node("CardContent/BuyButton").pressed.connect(func(): buy_bait("Common"))
 	uncommon_bait_card.get_node("CardContent/BuyButton").pressed.connect(func(): buy_bait("Uncommon"))
 	rare_bait_card.get_node("CardContent/BuyButton").pressed.connect(func(): buy_bait("Rare"))
 	epic_bait_card.get_node("CardContent/BuyButton").pressed.connect(func(): buy_bait("Epic"))
@@ -138,6 +140,7 @@ func buy_bait(rarity: String):
 		
 		var card: PanelContainer
 		match rarity:
+			"Common": card = common_bait_card
 			"Uncommon": card = uncommon_bait_card
 			"Rare": card = rare_bait_card
 			"Epic": card = epic_bait_card
@@ -190,6 +193,7 @@ func update_ui():
 # ============================================
 
 func update_bait_ui():
+	update_bait_card(common_bait_card, "Common", Color(0.4, 0.4, 0.4))
 	update_bait_card(uncommon_bait_card, "Uncommon", Color(0.4, 0.8, 0.4))
 	update_bait_card(rare_bait_card, "Rare", Color(0.3, 0.5, 1.0))
 	update_bait_card(epic_bait_card, "Epic", Color(0.7, 0.3, 1.0))

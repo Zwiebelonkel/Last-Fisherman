@@ -61,6 +61,7 @@ NEVERCATCHED,Noch nicht gefangen,Not Caught Yet
 COMPLETEVALUE,Gesamtwert,Total Value
 BAITS,Köder,Baits
 SELLALL,Alle verkaufen,Sell All
+BAIT_NORMAL,Normaler Köder,Common Bait
 
 STATS_TITLE,🎣 FISCH STATISTIKEN 🎣,🎣 FISH STATISTICS 🎣
 STATS_BAIT_LEVEL,Köder Level: {level},Bait Level: {level}
@@ -284,7 +285,7 @@ FISH_LAKE_PLUTONIUM_DESC,"Leuchtet im Dunkeln. FDA-Zulassung ausstehend. Nicht e
 FISH_LAKE_PLUTONIUM_SCIENCE,"Radioaktive Stoffe können Organismen zum Leuchten bringen, allerdings nicht ohne signifikante Nebenwirkungen.","Radioactive substances can cause organisms to glow – though not without significant side effects."
 
 FISH_LAKE_ROTER_KNOPF_NAME,Roter Knopf,Red Button
-FISH_LAKE_ROTER_KNOPF_DESC,"Ist tot. Schwimmt trotzdem. Frag nicht.","It's dead. Still floating. Don't ask."
+FISH_LAKE_ROTER_KNOPF_DESC,"Merkwürdigerweise ist das Batteriefach leer. Ob der noch funktioniert?","Strangely, the battery compartment is empty. I wonder if it still works?"
 FISH_LAKE_ROTER_KNOPF_SCIENCE,"Forellen reagieren extrem empfindlich auf Sauerstoffgehalt im Wasser.","Trout are extremely sensitive to oxygen levels in water."
 FISH_LAKE_ROTER_KNOPF_STORY,"Die Geisterforelle leuchtet in deinen Händen auf. Eine alte Macht erwacht...","The ghost trout glows in your hands. An ancient power awakens..."
 
@@ -316,6 +317,9 @@ FISH_CITY_NEONFLOSSER_SCIENCE,Biolumineszenz bei Fischen entsteht häufig durch 
 FISH_CITY_ZIGARETTEN_NAME,Zigaretten,Cigarettes
 FISH_CITY_ZIGARETTEN_DESC,Marlboro Menthol. Seit 1987 im Wasser. Noch immer brennend aktuell.,Marlboro Menthol. In the water since 1987. Still burning hot topic.
 FISH_CITY_ZIGARETTEN_SCIENCE,Zigarettenfilter bestehen aus Zelluloseacetat – sie zersetzen sich extrem langsam und verschmutzen Gewässer über Jahrzehnte.,Cigarette filters consist of cellulose acetate - they decompose extremely slowly and pollute waters for decades.
+FISH_CITY_RADIOAKTIV_NAME,Radioaktiver Molch,Radioactive Newt
+FISH_CITY_RADIOAKTIV_DESC,Nicht direkt reingucken. Und auch nicht küssen. Wegen radioaktiven Isotopen. Leider...,Don't look directly into it. And don't kiss it either. Because of radioactive isotopes. Unfortunately...
+FISH_CITY_RADIOAKTIV_SCIENCE,Molche besitzen eine außergewöhnliche Fähigkeit zur Regeneration von Gliedmaßen.,Newts possess an exceptional ability to regenerate lost limbs.
 FISH_CITY_ALTSTADTGEIST_NAME,Altstadtgeist,Old Town Ghost
 FISH_CITY_ALTSTADTGEIST_DESC,Erzählt dir Geschichten von früher. Alle langweilig.,Tells you stories from the past. All boring.
 FISH_CITY_ALTSTADTGEIST_SCIENCE,Viele Tiefseefische nutzen transparente Gewebe um unsichtbar zu wirken – quasi biologische Tarnkappen.,Many deep-sea fish use transparent tissue to appear invisible - biological invisibility cloaks basically.
@@ -481,3 +485,8 @@ EVENT_SEWER,Die Ratten werden immer größer.\nIch glaube da unten lebt etwas da
 EVENT_FOREST,Der Wald ist zu still geworden.\nSelbst die Vögel haben aufgehört zu singen.,The forest has become too quiet.\nEven the birds have stopped singing.
 EVENT_DESERT,Die Hitze spielt mir Streiche.\nOder war das gerade wirklich eine Flosse im Sand?,The heat is playing tricks on me.\nOr was that really a fin in the sand?
 EVENT_ICELAND,Das Eis knackt anders als sonst.\nEs fühlt sich an als würde etwas darunter warten.,The ice is cracking differently than usual.\nIt feels like something is waiting beneath.
+
+FISH_OCEAN_STEAM_PLAYER_NAME,Du selbst!
+FISH_OCEAN_STEAM_PLAYER_DESC,Ein wahrlich einzigartiger Fang - du hast dich selbst gefangen! Vielleicht solltest du öfter aus dem Haus gehen...
+FISH_OCEAN_STEAM_PLAYER_SCIENCE,Homo Sapiens Digitalis - Eine seltene Spezies, die ihre natürliche Umgebung verlassen hat und nun in den digitalen Gewässern von Steam schwimmt.
+FISH_OCEAN_STEAM_PLAYER_STORY,Du starrst auf den gefangenen Fisch und erkennst dein eigenes Gesicht im eisigen Wasser Islan. Ein Moment der Selbsterkenntnis - oder der Wahnsinn des langen Angelns? Die Reise endet hier, wo sie begann: Bei dir selbst.

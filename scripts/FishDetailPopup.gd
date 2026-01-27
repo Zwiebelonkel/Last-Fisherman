@@ -56,67 +56,86 @@ func get_text(key: String) -> String:
 func show_fish_details(fish: Dictionary):
 	fish_data = fish
 	visible = true
-	
-	# Hole vollständige Fischdaten aus FishDB
-	var full_fish_data = get_full_fish_data(fish["id"])
-	
-	if full_fish_data.is_empty():
+
+	var is_steam: bool = fish.get("is_steam_player", false)
+	var full_fish_data: Dictionary = fish if is_steam else get_full_fish_data(fish.get("id", ""))
+
+	if not is_steam and full_fish_data.is_empty():
 		print("❌ Fisch nicht in FishDB gefunden:", fish.get("id", "UNKNOWN"))
 		return
-	
-	# 🐟 Icon
-	if full_fish_data.has("icon"):
-		fish_icon.texture = load(full_fish_data["icon"])
-	
-	# 📝 Name
-	fish_name_label.text = FishDB.get_fish_name(full_fish_data)
-	
-	# 🎨 Seltenheit (🌍 Übersetzt)
-	var rarity = full_fish_data["rarity"]
-	var rarity_data = FishDB.RARITY_DATA[rarity]
-	var rarity_color = rarity_data["color"]
-	
-	rarity_label.text = "⭐ " + tr(rarity_data["name_key"])
-	rarity_label.modulate = rarity_data["color"]
-	rarity_label.modulate = rarity_color
-	
-	# Rahmen in Seltenheitsfarbe
-	update_border_color(rarity_color)
-	
-	# 💰 Wert
-	var base_value = full_fish_data["base_value"]
-	var total_value = int(base_value * rarity_data["value"])
-	value_label.text = "💰 %d €  (x%.1f)" % [total_value, rarity_data["value"]]
-	
-	# ⚖️ Gewicht (Rekord) (🌍 Übersetzt)
-	var max_weight = Player.get_max_caught_weight(fish["id"])
-	if max_weight > 0:
-		weight_label.text = "⚖️ %.2f kg 🏆" % max_weight
+
+	# ✅ ICON: Steam -> steam_avatar direkt nutzen, sonst FishDB
+	if is_steam and full_fish_data.has("steam_avatar") and full_fish_data["steam_avatar"] is Texture2D:
+		fish_icon.texture = full_fish_data["steam_avatar"]
 	else:
-		weight_label.text = get_text("not_caught_yet")
-	
-	# 📊 Gewichtsbereich (🌍 Übersetzt)
+		fish_icon.texture = FishDB.get_fish_icon(full_fish_data)
+
+	# ✅ NAME: Steam-Spielername hat absolute Priorität
+	if is_steam:
+		var steam_name: String = str(fish_data.get("name", "Unknown Player"))
+		fish_name_label.text = steam_name
+	else:
+		fish_name_label.text = FishDB.get_fish_name(full_fish_data)
+
+	# ✅ RARITY safe
+	var rarity: int = FishDB.get_rarity_safe(full_fish_data)
+	var rarity_data = FishDB.RARITY_DATA.get(rarity, FishDB.RARITY_DATA[FishDB.RARITY.NORMAL])
+	var rarity_color: Color = rarity_data["color"]
+
+	rarity_label.text = "⭐ " + tr(rarity_data["name_key"])
+	rarity_label.modulate = rarity_color
+	update_border_color(rarity_color)
+
+	# ✅ VALUE safe (Steam-Fish hat oft kein base_value)
+	var base_value: int = int(full_fish_data.get("base_value", 0))
+	var total_value: int = int(base_value * float(rarity_data.get("value", 1.0)))
+	value_label.text = "💰 %d €  (x%.1f)" % [total_value, float(rarity_data.get("value", 1.0))]
+
+	# ✅ WEIGHT / CAUGHT COUNT: nur wenn es eine echte Fish-ID gibt
+	var fish_id: String = str(fish.get("id", ""))
+	if fish_id != "":
+		var max_weight = Player.get_max_caught_weight(fish_id)
+		if max_weight > 0:
+			weight_label.text = "⚖️ %.2f kg 🏆" % max_weight
+		else:
+			weight_label.text = get_text("not_caught_yet")
+
+		var caught_count = Player.get_catch_count(fish_id)
+		caught_count_label.text = get_text("caught_times") % caught_count
+	else:
+		weight_label.text = get_text("unknown")
+		caught_count_label.text = get_text("unknown")
+
+	# ✅ Weight range
 	if full_fish_data.has("weight_min") and full_fish_data.has("weight_max"):
 		weight_range_label.text = "%.2f - %.2f kg" % [full_fish_data["weight_min"], full_fish_data["weight_max"]]
 	else:
 		weight_range_label.text = get_text("unknown")
-	
-	# 🎣 Wie oft gefangen (🌍 Übersetzt)
-	var caught_count = Player.get_catch_count(fish["id"])
-	caught_count_label.text = get_text("caught_times") % caught_count
-	
-	# 📖 Beschreibung + Wissenschaftlicher Fakt
-	var description := FishDB.get_fish_description(full_fish_data)
-	var science_fact := FishDB.get_fish_science(full_fish_data)
-	
+
+	# ✅ Beschreibung safe
+	var description: String = ""
+	if is_steam:
+		description = str(full_fish_data.get("description", ""))
+	else:
+		description = FishDB.get_fish_description(full_fish_data)
+
+	var science_fact: String = ""
+	if is_steam:
+		science_fact = str(full_fish_data.get("science", ""))
+	else:
+		science_fact = FishDB.get_fish_science(full_fish_data)
+
+
+	if description == "":
+		description = get_text("no_description")
+
 	var full_description = "[color=#CCCCCC]%s[/color]" % description
-	
 	if science_fact != "":
-		full_description += "\n\n[color=#88DDFF][/color]\n[color=#AACCEE]%s[/color]" % science_fact
-	
+		full_description += "\n\n[color=#AACCEE]%s[/color]" % science_fact
+
 	description_text.text = full_description
-	
-	# ✨ Animation
+
+	# Animation wie gehabt...
 	popup_panel.modulate.a = 0
 	popup_panel.scale = Vector2(0.8, 0.8)
 	var tween = create_tween()
@@ -131,7 +150,8 @@ func get_full_fish_data(fish_id: String) -> Dictionary:
 		FishDB.FISH_SEWER,
 		FishDB.FISH_FOREST,
 		FishDB.FISH_DESERT,
-		FishDB.FISH_ICELAND
+		FishDB.FISH_ICELAND,
+		FishDB.FISH_OCEAN
 	]
 
 	for fish_list in all_lists:

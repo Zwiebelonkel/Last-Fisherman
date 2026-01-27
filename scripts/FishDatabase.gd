@@ -13,109 +13,109 @@ enum RARITY {
 	ANTIK
 }
 
-#static var RARITY_DATA = {
-	#RARITY.NORMAL: {
-		#"name_key": "RARITY_NORMAL",
-		#"color": Color.WHITE,
-		#"value": 1.0,
-		#"spawn_chance": 45.0,
-		#"difficulty": 1.0
-	#},
-	#RARITY.UNGEWOEHNLICH: {
-		#"name_key": "RARITY_UNCOMMON",
-		#"color": Color(0.3,1,0.3),
-		#"value": 1.5,
-		#"spawn_chance": 33.0,
-		#"difficulty": 1.3
-	#},
-	#RARITY.SELTEN: {
-		#"name_key": "RARITY_RARE",
-		#"color": Color(0.2,0.4,1),
-		#"value": 2.0,
-		#"spawn_chance": 12.0,
-		#"difficulty": 1.6
-	#},
-	#RARITY.EPISCH: {
-		#"name_key": "RARITY_EPIC",
-		#"color": Color(0.7,0,1),
-		#"value": 3.0,
-		#"spawn_chance": 7.0,
-		#"difficulty": 2.0
-	#},
-	#RARITY.LEGENDAER: {
-		#"name_key": "RARITY_LEGENDARY",
-		#"color": Color(1,0.8,0.1),
-		#"value": 6.0,
-		#"spawn_chance": 2.5,
-		#"difficulty": 2.5
-	#},
-	#RARITY.EXOTISCH: {
-		#"name_key": "RARITY_EXOTIC",
-		#"color": Color(1,0,0.2),
-		#"value": 12.0,
-		#"spawn_chance": 0.5,
-		#"difficulty": 3.0
-	#},
-	#RARITY.ANTIK: {
-		#"name_key": "RARITY_ANTIQUE",
-		#"color": Color(0.4,0.8,0.9),
-		#"value": 0.0,
-		#"spawn_chance": 0.4,
-		#"difficulty": 1.0
-	#}
-#}
-
 static var RARITY_DATA = {
 	RARITY.NORMAL: {
 		"name_key": "RARITY_NORMAL",
 		"color": Color.WHITE,
 		"value": 1.0,
-		"spawn_chance": 0.0,
+		"spawn_chance": 45.0,
 		"difficulty": 1.0
 	},
 	RARITY.UNGEWOEHNLICH: {
 		"name_key": "RARITY_UNCOMMON",
 		"color": Color(0.3,1,0.3),
 		"value": 1.5,
-		"spawn_chance": 0.0,
+		"spawn_chance": 33.0,
 		"difficulty": 1.3
 	},
 	RARITY.SELTEN: {
 		"name_key": "RARITY_RARE",
 		"color": Color(0.2,0.4,1),
 		"value": 2.0,
-		"spawn_chance": 0.0,
+		"spawn_chance": 12.0,
 		"difficulty": 1.6
 	},
 	RARITY.EPISCH: {
 		"name_key": "RARITY_EPIC",
 		"color": Color(0.7,0,1),
 		"value": 3.0,
-		"spawn_chance": 0.0,
+		"spawn_chance": 7.0,
 		"difficulty": 2.0
 	},
 	RARITY.LEGENDAER: {
 		"name_key": "RARITY_LEGENDARY",
 		"color": Color(1,0.8,0.1),
 		"value": 6.0,
-		"spawn_chance": 0.0,
+		"spawn_chance": 2.5,
 		"difficulty": 2.5
 	},
 	RARITY.EXOTISCH: {
 		"name_key": "RARITY_EXOTIC",
 		"color": Color(1,0,0.2),
 		"value": 12.0,
-		"spawn_chance": 0.0,
+		"spawn_chance": 0.5,
 		"difficulty": 3.0
 	},
 	RARITY.ANTIK: {
 		"name_key": "RARITY_ANTIQUE",
 		"color": Color(0.4,0.8,0.9),
 		"value": 0.0,
-		"spawn_chance": 100.0,
+		"spawn_chance": 0.4,
 		"difficulty": 1.0
 	}
 }
+
+#static var RARITY_DATA = {
+	#RARITY.NORMAL: {
+		#"name_key": "RARITY_NORMAL",
+		#"color": Color.WHITE,
+		#"value": 1.0,
+		#"spawn_chance": 0.0,
+		#"difficulty": 1.0
+	#},
+	#RARITY.UNGEWOEHNLICH: {
+		#"name_key": "RARITY_UNCOMMON",
+		#"color": Color(0.3,1,0.3),
+		#"value": 1.5,
+		#"spawn_chance": 0.0,
+		#"difficulty": 1.3
+	#},
+	#RARITY.SELTEN: {
+		#"name_key": "RARITY_RARE",
+		#"color": Color(0.2,0.4,1),
+		#"value": 2.0,
+		#"spawn_chance": 0.0,
+		#"difficulty": 1.6
+	#},
+	#RARITY.EPISCH: {
+		#"name_key": "RARITY_EPIC",
+		#"color": Color(0.7,0,1),
+		#"value": 3.0,
+		#"spawn_chance": 0.0,
+		#"difficulty": 2.0
+	#},
+	#RARITY.LEGENDAER: {
+		#"name_key": "RARITY_LEGENDARY",
+		#"color": Color(1,0.8,0.1),
+		#"value": 6.0,
+		#"spawn_chance": 0.0,
+		#"difficulty": 2.5
+	#},
+	#RARITY.EXOTISCH: {
+		#"name_key": "RARITY_EXOTIC",
+		#"color": Color(1,0,0.2),
+		#"value": 12.0,
+		#"spawn_chance": 0.0,
+		#"difficulty": 3.0
+	#},
+	#RARITY.ANTIK: {
+		#"name_key": "RARITY_ANTIQUE",
+		#"color": Color(0.4,0.8,0.9),
+		#"value": 0.0,
+		#"spawn_chance": 100.0,
+		#"difficulty": 1.0
+	#}
+#}
 
 # ===========================
 #  FISH LISTS BY LOCATION
@@ -379,6 +379,17 @@ var FISH_CITY = [
 		"icon": "res://assets/fish/Eel.png",
 		"weight_min": 1.0,
 		"weight_max": 2.5
+	},
+	{
+		"id": "RADIOAKTIV",
+		"name_key": "FISH_CITY_RADIOAKTIV_NAME",
+		"description_key": "FISH_CITY_RADIOAKTIV_DESC",
+		"science_key": "FISH_CITY_RADIOAKTIV_SCIENCE",
+		"rarity": RARITY.EPISCH,
+		"base_value": 40,
+		"icon": "res://assets/fish/radioactive.png",
+		"weight_min": 1.0,
+		"weight_max": 200.0
 	},
 	{
 		"id": "ZIGARETTEN",
@@ -887,6 +898,7 @@ var FISH_DESERT = [
 	}
 ]
 
+# ✅ ICELAND - Originale Fische (bleibt wie im Original)
 var FISH_ICELAND = [
 	{
 		"id": "EISFISCH",
@@ -970,6 +982,25 @@ var FISH_ICELAND = [
 	}
 ]
 
+# 🆕 OCEAN - NUR STEAM SPIELER (Komplett neue Map)
+var FISH_OCEAN = [
+	{
+		"id": "STEAM_PLAYER",
+		"name_key": "FISH_OCEAN_STEAM_PLAYER_NAME",
+		"description_key": "FISH_OCEAN_STEAM_PLAYER_DESC",
+		"science_key": "FISH_OCEAN_STEAM_PLAYER_SCIENCE",
+		"story_key": "FISH_OCEAN_STEAM_PLAYER_STORY",
+		"is_story_item": true,
+		"is_steam_player": true,
+		"biome": "ocean",
+		"rarity": RARITY.ANTIK,
+		"base_value": 0,
+		"icon": "",  # Wird dynamisch vom Steam Avatar überschrieben
+		"weight_min": 70.0,
+		"weight_max": 90.0
+	}
+]
+
 # ===========================
 #  RANDOM FISH (NORMAL)
 # ===========================
@@ -1025,6 +1056,10 @@ static func get_random_from_list(list: Array, bait_level := 1) -> Dictionary:
 	
 	var selected: Dictionary = fish_of_rarity.pick_random().duplicate(true)
 	
+	# 🆕 STEAM PLAYER INTEGRATION
+	if selected.get("is_steam_player", false):
+		_apply_steam_data_to_fish(selected)
+	
 	# 6. Generiere Gewicht
 	if selected.has("weight_min") and selected.has("weight_max"):
 		var w = randf_range(selected["weight_min"], selected["weight_max"])
@@ -1035,6 +1070,99 @@ static func get_random_from_list(list: Array, bait_level := 1) -> Dictionary:
 	selected["is_new_catch"] = not Player.caught_fish_species.has(selected["id"]) 
 	
 	return selected
+
+# ===========================
+# 🆕 STEAM INTEGRATION
+# ===========================
+static func _apply_steam_data_to_fish(fish: Dictionary) -> void:
+	"""Lädt Steam-Nutzername und Avatar und überschreibt Fisch-Daten"""
+	
+	# Prüfe ob Steam verfügbar ist
+	if not Engine.has_singleton("Steam"):
+		print("⚠️ Steam nicht verfügbar - verwende Fallback")
+		fish["name_key"] = ""
+		fish["steam_name"] = "Mysterious Angler"
+		return
+	
+	# Prüfe ob Steam initialisiert ist
+	if not Steam.isSteamRunning():
+		print("⚠️ Steam läuft nicht - verwende Fallback")
+		fish["name_key"] = ""
+		fish["steam_name"] = "Mysterious Angler"
+		return
+	
+	# Steam Name laden
+	var steam_name := Steam.getPersonaName()
+	if steam_name == "":
+		steam_name = "Unknown Player"
+	
+	print("🎣 Steam-Spieler gefangen:", steam_name)
+	
+	# Überschreibe den Namen direkt (kein Translation Key)
+	fish["steam_name"] = steam_name
+	fish["name_key"] = ""  # Deaktiviere Translation
+	
+	# Steam ID holen
+	var steam_id: int = Steam.getSteamID()
+	
+	# Avatar laden (Large = 184x184)
+	var avatar_handle: int = Steam.getLargeFriendAvatar(steam_id)
+	
+	if avatar_handle > 0:
+		var avatar_size: Dictionary = Steam.getImageSize(avatar_handle)
+		
+		if avatar_size.has("width") and avatar_size.has("height"):
+			if avatar_size["width"] > 0 and avatar_size["height"] > 0:
+				# getImageRGBA gibt ein Dictionary zurück mit "buffer" key
+				var avatar_data: Dictionary = Steam.getImageRGBA(avatar_handle)
+				
+				if avatar_data.has("buffer"):
+					var avatar_buffer: PackedByteArray = avatar_data["buffer"]
+					
+					if avatar_buffer.size() > 0:
+						# Erstelle Image aus Steam-Daten
+						var avatar_image := Image.create_from_data(
+							avatar_size["width"],
+							avatar_size["height"],
+							false,
+							Image.FORMAT_RGBA8,
+							avatar_buffer
+						)
+						
+						if avatar_image:
+							# 🆕 Mache Avatar quadratisch (crop zum kleineren Seitenverhältnis)
+							var width: int = int(avatar_size["width"])
+							var height: int = int(avatar_size["height"])
+							
+							if width != height:
+								var crop_size: int = min(width, height)
+								var offset_x: int = (width - crop_size) / 2
+								var offset_y: int = (height - crop_size) / 2
+								
+								# Crop zum Quadrat
+								var rect := Rect2i(offset_x, offset_y, crop_size, crop_size)
+								var cropped_image := avatar_image.get_region(rect)
+								avatar_image = cropped_image
+								
+								print("🔲 Avatar gecropped zu:", crop_size, "x", crop_size)
+							
+							# Erstelle Texture2D aus Image
+							var texture := ImageTexture.create_from_image(avatar_image)
+							fish["steam_avatar"] = texture
+							
+							print("✅ Steam Avatar geladen:", avatar_image.get_width(), "x", avatar_image.get_height())
+						else:
+							print("⚠️ Konnte Image nicht erstellen")
+					else:
+						print("⚠️ Avatar Buffer leer")
+				else:
+					print("⚠️ Avatar Data hat keinen 'buffer' key")
+			else:
+				print("⚠️ Avatar Größe ungültig:", avatar_size)
+		else:
+			print("⚠️ Avatar Size Dictionary fehlt width/height")
+	else:
+		print("⚠️ Kein Avatar Handle:", avatar_handle)
 
 # ===========================
 #  RARITY BOOST CALCULATION
@@ -1116,6 +1244,10 @@ static func get_random_fish_by_rarity(list: Array, rarity_string: String) -> Dic
 		return get_random_from_list(list)
 
 	var selected: Dictionary = filtered.pick_random().duplicate(true)
+	
+	# 🆕 STEAM PLAYER INTEGRATION
+	if selected.get("is_steam_player", false):
+		_apply_steam_data_to_fish(selected)
 
 	# Gewicht generieren
 	if selected.has("weight_min") and selected.has("weight_max"):
@@ -1152,10 +1284,22 @@ static func get_marker_speed_for_fish(fish: Dictionary, base_speed: float = 350.
 #  ICON ACCESS
 # ===========================
 static func get_fish_icon(fish: Dictionary) -> Texture2D:
-	var icon_path: String = fish.get("icon", "res://assets/fish/unknown.png")
-	if ResourceLoader.exists(icon_path):
-		return load(icon_path)
+	# 1️⃣ Steam-Fish → Avatar oder Player-Fallback
+	if fish.get("is_steam_player", false):
+		if fish.has("steam_avatar") and fish["steam_avatar"] is Texture2D:
+			return fish["steam_avatar"]
+		return load("res://assets/fish/player.png")
+
+	# 2️⃣ Normale Fische → Icon-Pfad
+	var icon_path : String= fish.get("icon", "")
+	if icon_path is String and icon_path != "" and ResourceLoader.exists(icon_path):
+		var tex := load(icon_path)
+		if tex is Texture2D:
+			return tex
+
+	# 3️⃣ Globaler Fallback
 	return load("res://assets/fish/unknown.png")
+
 
 # ===========================
 #  RARITY STRING → ENUM (FIXED)
@@ -1215,6 +1359,10 @@ static func get_fish_value(fish: Dictionary) -> int:
 	return int(base_value * rarity_multiplier)
 
 func get_fish_name(fish: Dictionary) -> String:
+	# 🆕 Prüfe ob Steam-Name vorhanden
+	if fish.has("steam_name") and fish["steam_name"] != "":
+		return fish["steam_name"]
+	
 	var key: String = fish.get("name_key", "")
 	if key == "":
 		return tr("UNKNOWN")
@@ -1233,7 +1381,7 @@ func get_fish_story(fish: Dictionary) -> String:
 	return tr(key) if key != "" else ""
 
 func get_fish_by_id(id: String) -> Dictionary:
-	for list in [FISH_LAKE, FISH_CITY, FISH_SEWER, FISH_FOREST, FISH_DESERT, FISH_ICELAND]:
+	for list in [FISH_LAKE, FISH_CITY, FISH_SEWER, FISH_FOREST, FISH_DESERT, FISH_ICELAND, FISH_OCEAN]:
 		for fish in list:
 			if fish.get("id", "") == id:
 				return fish
@@ -1243,6 +1391,11 @@ func get_fish_name_by_id(fish_id: String) -> String:
 	var fish := get_fish_by_id(fish_id)
 	if fish.is_empty():
 		return tr("FISH_UNKNOWN_NAME")
+	
+	# 🆕 Steam-Name Support
+	if fish.has("steam_name") and fish["steam_name"] != "":
+		return fish["steam_name"]
+	
 	return tr(fish.get("name_key", "FISH_UNKNOWN_NAME"))
 
 func get_fish_list_for_biome(biome: String) -> Array:
@@ -1259,6 +1412,8 @@ func get_fish_list_for_biome(biome: String) -> Array:
 			return FISH_DESERT
 		"iceland":
 			return FISH_ICELAND
+		"ocean":
+			return FISH_OCEAN
 		_:
 			push_warning("⚠️ Unbekanntes Biom: %s" % biome)
 			return FISH_LAKE

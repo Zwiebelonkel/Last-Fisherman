@@ -11,7 +11,7 @@ func _process(_delta: float) -> void:
 
 	var rarity_enum := FishDB.rarity_string_to_enum(Player.active_bait)
 	if rarity_enum == -1:
-		bait_label.text = tr("BAIT_NONE")
+		bait_label.text = tr("BAIT_NORMAL")
 		return
 
 	var rarity_key: String = FishDB.RARITY_DATA[rarity_enum]["name_key"]

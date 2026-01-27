@@ -49,6 +49,15 @@ func refresh() -> void:
 	# ----------------------------
 	for i in range(fish_count):
 		var f = Inventory.fish_inventory[i]
+		
+		# 🔧 DEBUG: Steam-Player erkennen
+		if f.get("is_steam_player", false):
+			print("🔧 [InventoryUI] Zeige Steam-Player:")
+			print("  - ID:", f.get("id"))
+			print("  - Name:", f.get("steam_name", "FEHLT"))
+			print("  - Hat steam_avatar:", f.has("steam_avatar"))
+			print("  - Avatar Typ:", typeof(f.get("steam_avatar")))
+		
 		var item := item_scene.instantiate()
 
 		var rarity = f.get("rarity", FishDB.RARITY.NORMAL)
@@ -71,11 +80,17 @@ func refresh() -> void:
 		style.shadow_color = Color(0, 0, 0, 0.5)
 		item.add_theme_stylebox_override("panel", style)
 
-		# Icon
+		# Icon - 🆕 Unterstützt Texture2D für Steam-Avatare
 		var icon: TextureRect = item.get_node("VBoxContainer/IconContainer/MarginContainer/FishIcon")
-		icon.texture = _get_fish_icon(f)
+		var fish_icon = _get_fish_icon(f)
+		if fish_icon is Texture2D:
+			icon.texture = fish_icon
+		elif fish_icon is String and ResourceLoader.exists(fish_icon):
+			icon.texture = load(fish_icon)
+		else:
+			icon.texture = load("res://assets/fish/unknown.png")
 
-		# ✅ FIX: Name über FishDB.get_fish_name()
+		# ✅ FIX: Name über FishDB.get_fish_name() oder steam_name
 		var fish_name := FishDB.get_fish_name(f)
 		item.get_node("VBoxContainer/InfoContainer/MarginContainer/Name").text = fish_name
 
@@ -110,6 +125,7 @@ func refresh() -> void:
 	# 🎣 KÖDER LADEN
 	# ----------------------------
 	var bait_colors := {
+		"Common": Color(0.4, 0.4, 0.4),
 		"Uncommon": Color(0.4, 0.8, 0.4),
 		"Rare": Color(0.3, 0.5, 1.0),
 		"Epic": Color(0.7, 0.3, 1.0),
@@ -211,7 +227,12 @@ func _sell_single_fish(index: int) -> void:
 	print("🐟 Verkauft: %s für %d €" % [fish_name, value])
 	refresh()
 
-func _get_fish_icon(fish: Dictionary) -> Texture2D:
+func _get_fish_icon(fish: Dictionary):
+	# 🆕 Prüfe ob Icon bereits ein Texture2D ist (Steam-Avatar)
+	if fish.has("steam_avatar") and fish["steam_avatar"] is Texture2D:
+		return fish["steam_avatar"]
+	
+	# Sonst nutze normales Icon-System
 	return FishDB.get_fish_icon(fish)
 
 func _on_sell_all_pressed() -> void:

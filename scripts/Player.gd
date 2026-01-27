@@ -49,13 +49,13 @@ var spot_prices = {
 
 # Köder-Inventar
 var bait_inventory: Dictionary = {
-	"Uncommon": 0, "Rare": 0, "Epic": 0, "Legendary": 0, "Exotic": 0
+	"Common": 0,"Uncommon": 0, "Rare": 0, "Epic": 0, "Legendary": 0, "Exotic": 0
 }
 
 var active_bait: String = ""
 
 const BAIT_PRICES = {
-	"Uncommon": 150, "Rare": 400, "Epic": 900, "Legendary": 2000, "Exotic": 4500
+	"Common": 50,"Uncommon": 150, "Rare": 400, "Epic": 900, "Legendary": 2000, "Exotic": 4500
 }
 
 func buy_bait(rarity: String, amount: int = 1) -> bool:
@@ -355,7 +355,7 @@ func reset():
 	used_story_items.clear()
 	completed_biomes = {"lake": false, "city": false, "sewer": false, "forest": false, "desert": false, "iceland": false}
 	unlocked_spots = {"lake": true, "city": false, "sewer": false, "forest": false, "desert": false, "iceland": false, "home": true, "van": true}
-	bait_inventory = {"Uncommon": 0, "Rare": 0, "Epic": 0, "Legendary": 0, "Exotic": 0}
+	bait_inventory = {"Common": 0, "Uncommon": 0, "Rare": 0, "Epic": 0, "Legendary": 0, "Exotic": 0}
 	active_bait = ""
 	
 	GodotSteam.update_fish(0)

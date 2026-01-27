@@ -49,6 +49,10 @@ var localized_texts := {
 		"de": "❄️ Eisland",
 		"en": "❄️ Iceland"
 	},
+	"location_ocean": {
+		"de": "🌊 Ozean",
+		"en": "🌊 Ocean"
+	},
 	"location_all": {
 		"de": "🌍 Alle",
 		"en": "🌍 All"
@@ -115,6 +119,7 @@ func _ready():
 		location_selector.add_item(get_text("location_forest"))
 		location_selector.add_item(get_text("location_desert"))
 		location_selector.add_item(get_text("location_iceland"))
+		location_selector.add_item(get_text("location_ocean"))  # 🆕 OCEAN
 		location_selector.add_item(get_text("location_all"))
 	
 	# Signal verbinden
@@ -177,7 +182,7 @@ func _on_visibility_changed() -> void:
 		
 		if not fishing_rod:
 			# Fallback: Suche in allen Scenes
-			for scene_name in ["MainScene", "MainScene2", "forest"]:
+			for scene_name in ["MainScene", "MainScene2", "forest", "ocean"]:  # 🆕 ocean hinzugefügt
 				fishing_rod = get_tree().root.get_node_or_null(scene_name + "/PlayerCamera/FishingRod")
 				if fishing_rod:
 					break
@@ -213,8 +218,10 @@ func get_location_index(location: String) -> int:
 			return 4
 		"iceland":
 			return 5
+		"ocean":
+			return 6  # 🆕 OCEAN
 		"insgesamt":
-			return 6
+			return 7  # 🆕 verschoben
 		_:
 			return 0  # Fallback zu See
 
@@ -293,6 +300,8 @@ func update_stats():
 			location_text = get_text("location_desert")
 		"iceland":
 			location_text = get_text("location_iceland")
+		"ocean":
+			location_text = get_text("location_ocean")  # 🆕 OCEAN
 		"insgesamt":
 			location_text = get_text("location_all")
 	
@@ -313,6 +322,8 @@ func _on_location_changed(index: int):
 		5:
 			current_location = "iceland"
 		6:
+			current_location = "ocean"  # 🆕 OCEAN
+		7:
 			current_location = "insgesamt"
 	
 	load_bestiary()

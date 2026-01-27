@@ -6,6 +6,32 @@ func _ready():
 	load_inventory()
 
 func add_fish(fish_data: Dictionary) -> void:
+	# 🆕 Für Steam-Player: Daten JETZT fetchen und persistent speichern
+	if fish_data.get("is_steam_player", false):
+		print("🔧 [Inventory] Steam-Player erkannt, fetche Daten...")
+		FishDB._apply_steam_data_to_fish(fish_data)
+		
+		print("🔧 [Inventory] Nach Fetch:")
+		print("  - steam_name:", fish_data.get("steam_name", "FEHLT"))
+		print("  - steam_avatar ist Texture2D:", fish_data.has("steam_avatar") and fish_data["steam_avatar"] is Texture2D)
+		
+		# Konvertiere Texture2D zu Base64 für Speicherung (aber behalte beide!)
+		if fish_data.has("steam_avatar") and fish_data["steam_avatar"] is Texture2D:
+			var img: Image = fish_data["steam_avatar"].get_image()
+			if img:
+				var png_data = img.save_png_to_buffer()
+				fish_data["steam_avatar_base64"] = Marshalls.raw_to_base64(png_data)
+				print("✅ [Inventory] Avatar konvertiert zu Base64, Länge:", len(fish_data["steam_avatar_base64"]))
+				# WICHTIG: steam_avatar NICHT löschen - bleibt im RAM für sofortige Anzeige!
+			else:
+				print("❌ [Inventory] Konnte Image nicht aus Texture2D extrahieren!")
+		else:
+			print("❌ [Inventory] Kein gültiger steam_avatar vorhanden!")
+		
+		# Steam-Name persistent speichern
+		if fish_data.has("steam_name"):
+			print("✅ [Inventory] Steam-Name gespeichert:", fish_data["steam_name"])
+	
 	fish_inventory.append(fish_data)
 	var fish_name := FishDB.get_fish_name(fish_data)
 	print("Fisch ins Inventar hinzugefügt:", fish_name)
@@ -27,8 +53,20 @@ func get_total_value() -> int:
 	return total
 
 func save_inventory() -> void:
+	# 🆕 Bereite Daten für Speicherung vor (entferne nicht-serialisierbare Objekte)
+	var save_inventory = []
+	for fish in fish_inventory:
+		var fish_copy = fish.duplicate(true)
+		
+		# Entferne Texture2D (falls noch vorhanden)
+		if fish_copy.has("steam_avatar"):
+			fish_copy.erase("steam_avatar")
+			print("⚠️ [Inventory] steam_avatar beim Speichern entfernt für:", fish_copy.get("steam_name", fish_copy.get("id")))
+		
+		save_inventory.append(fish_copy)
+	
 	var save_data = {
-		"fish_inventory": fish_inventory,
+		"fish_inventory": save_inventory,
 		"version": 2  # ✅ Version 2 = ID-basiertes System
 	}
 	var file = FileAccess.open("user://inventory.dat", FileAccess.WRITE)
@@ -43,6 +81,26 @@ func load_inventory() -> void:
 		# ✅ Prüfe Version
 		var version: int = save_data.get("version", 1)
 		fish_inventory = save_data.get("fish_inventory", [])
+		
+		# 🆕 Rekonstruiere Texture2D aus Base64 für Steam-Player
+		for fish in fish_inventory:
+			if fish.get("is_steam_player", false):
+				print("🔧 [Inventory] Lade Steam-Player:", fish.get("steam_name", "UNBEKANNT"))
+				
+				if fish.has("steam_avatar_base64"):
+					print("  → Base64 gefunden, Länge:", len(fish["steam_avatar_base64"]))
+					var base64_data = fish["steam_avatar_base64"]
+					var png_data = Marshalls.base64_to_raw(base64_data)
+					var img = Image.new()
+					var error = img.load_png_from_buffer(png_data)
+					if error == OK:
+						fish["steam_avatar"] = ImageTexture.create_from_image(img)
+						print("  ✅ Avatar rekonstruiert:", fish["steam_avatar"])
+					else:
+						print("  ❌ Fehler beim Laden des PNG:", error)
+					fish.erase("steam_avatar_base64")  # Cleanup
+				else:
+					print("  ❌ Kein steam_avatar_base64 gefunden!")
 		
 		print("Inventar geladen! Version:", version, "Fische:", fish_inventory.size())
 		
