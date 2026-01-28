@@ -1,4 +1,4 @@
-[gd_scene load_steps=62 format=3 uid="uid://cvkrlt4ri1i2u"]
+[gd_scene load_steps=69 format=3 uid="uid://cvkrlt4ri1i2u"]
 
 [ext_resource type="Shader" uid="uid://c140kjbm2bot5" path="res://shader/buckshot.gdshader" id="1_nmpot"]
 [ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="2_ikoiv"]
@@ -32,7 +32,14 @@
 [ext_resource type="PackedScene" uid="uid://dguwyn5rc7uog" path="res://scenes/splash.tscn" id="25_kg0fi"]
 [ext_resource type="AudioStream" uid="uid://b7ifxd818oete" path="res://sounds/line.mp3" id="27_86b61"]
 [ext_resource type="PackedScene" uid="uid://bw4vof4oddwco" path="res://assets/ödland.glb" id="29_86b61"]
+[ext_resource type="AudioStream" uid="uid://bqcbwput2tdy3" path="res://sounds/reeling.mp3" id="31_qf2lb"]
+[ext_resource type="AudioStream" uid="uid://bm2wkiirbpowg" path="res://sounds/rarity/uncommon.mp3" id="32_6pahv"]
+[ext_resource type="AudioStream" uid="uid://bpy3o38b3nar3" path="res://sounds/rarity/rare.mp3" id="33_snoms"]
 [ext_resource type="PackedScene" uid="uid://brt3w2gy2qfei" path="res://scenes/story2.tscn" id="33_w6q1s"]
+[ext_resource type="AudioStream" uid="uid://rcuhs2eom22x" path="res://sounds/rarity/epic.mp3" id="34_r7ypu"]
+[ext_resource type="AudioStream" uid="uid://c0e0t3u3yvvhg" path="res://sounds/rarity/legendary.mp3" id="35_awvkl"]
+[ext_resource type="AudioStream" uid="uid://qeh48myqvc8p" path="res://sounds/rarity/exotic.mp3" id="36_fukq0"]
+[ext_resource type="AudioStream" uid="uid://6a3ro0nq1u4" path="res://sounds/rarity/antique.mp3" id="37_4jd3d"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_nmpot"]
 shader = ExtResource("1_nmpot")
@@ -98,9 +105,18 @@ script/source = "extends Node3D
 @onready var catch_progress: ProgressBar = catch_ui.get_node(\"CatchProgress\")
 @onready var bite_sound: AudioStreamPlayer = get_node(\"../../Audio/bite\")
 @onready var cast_sound: AudioStreamPlayer = get_node(\"../../Audio/cast\")
+@onready var normal_sound: AudioStreamPlayer = get_node(\"../../Audio/normal\")
+@onready var uncommon_sound: AudioStreamPlayer = get_node(\"../../Audio/uncommon\")
+@onready var rare_sound: AudioStreamPlayer = get_node(\"../../Audio/rare\")
+@onready var epic_sound: AudioStreamPlayer = get_node(\"../../Audio/epic\")
+@onready var legendary_sound: AudioStreamPlayer = get_node(\"../../Audio/legendary\")
+@onready var exotic_sound: AudioStreamPlayer = get_node(\"../../Audio/exotic\")
+@onready var antique_sound: AudioStreamPlayer = get_node(\"../../Audio/antique\")
 @onready var success_sound: AudioStreamPlayer = get_node(\"../../Audio/success\")
 @onready var whoosh_sound: AudioStreamPlayer = get_node(\"../../Audio/whoosh\")
 @onready var line_sound: AudioStreamPlayer = get_node(\"../../Audio/line\")
+@onready var reel_sound: AudioStreamPlayer = get_node(\"../../Audio/reel\")
+
 
 
 @export var cast_power_ui_scene: PackedScene
@@ -306,6 +322,15 @@ func _unhandled_input(event: InputEvent) -> void:
 	# 🆕 ESC/Pause behandeln - IMMER als erstes prüfen
 	if event.is_action_released(\"pause\"):
 		handle_pause_input()
+		return
+		
+# -------------------------------------------------
+# 🔒 CatchResult blockiert Gameplay-Input
+# -------------------------------------------------
+	if catch_result_ui and catch_result_ui.visible:
+		if event.is_action_pressed(\"cast\"):
+			# NUR schließen, sonst nichts
+			catch_result_ui.visible = false
 		return
 	
 	# Während Pause keine anderen Inputs verarbeiten
@@ -766,6 +791,7 @@ func show_bite_indicator() -> void:
 # CATCH MINIGAME
 # ---------------------------------------------------------
 func start_catch_minigame() -> void:
+	reel_sound.play()
 	state = STATE_MINIGAME
 	catch_ui.visible = true
 	anim.play(\"fight\")
@@ -922,12 +948,14 @@ func update_catch_minigame(delta: float) -> void:
 		end_catch_minigame(false)
 
 func end_catch_minigame(success: bool) -> void:
+	reel_sound.stop()
 	camera.start_screenshake(0.4,0.3)
 	if success:
 		var fish = current_fish
 		Player.add_fish(fish)
 		Player.caught_fish_species[fish[\"id\"]] = true
-		success_sound.play()
+		# 🎵 Spiele Rarität-spezifischen Sound
+		play_rarity_sound(fish.get(\"rarity\", FishDB.RARITY.NORMAL))
 		SteamAchievements.on_fish_caught(fish[\"id\"])
 		SteamAchievements.check_total_fish_caught()
 		SteamAchievements.check_species_discovered()
@@ -947,6 +975,34 @@ func end_catch_minigame(success: bool) -> void:
 
 	catch_ui.visible = false
 	await reset_line()
+
+func play_rarity_sound(rarity: int) -> void:
+	match rarity:
+		FishDB.RARITY.NORMAL:
+			if normal_sound:
+				normal_sound.play()
+		FishDB.RARITY.UNGEWOEHNLICH:
+			if uncommon_sound:
+				normal_sound.play()
+		FishDB.RARITY.SELTEN:
+			if rare_sound:
+				normal_sound.play()
+		FishDB.RARITY.EPISCH:
+			if epic_sound:
+				normal_sound.play()
+		FishDB.RARITY.LEGENDAER:
+			if legendary_sound:
+				legendary_sound.play()
+		FishDB.RARITY.EXOTISCH:
+			if exotic_sound:
+				exotic_sound.play()
+		FishDB.RARITY.ANTIK:
+			if antique_sound:
+				antique_sound.play()
+		_:
+			# Fallback auf normal sound
+			if normal_sound:
+				normal_sound.play()
 
 
 func trigger_splash_burst() -> void:
@@ -2079,6 +2135,44 @@ stream = ExtResource("27_86b61")
 volume_db = -2.735
 pitch_scale = 1.1
 autoplay = true
+bus = &"SFX"
+
+[node name="reel" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("31_qf2lb")
+volume_db = -4.518
+pitch_scale = 1.1
+bus = &"SFX"
+
+[node name="normal" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("22_0orsp")
+bus = &"SFX"
+
+[node name="uncommon" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("32_6pahv")
+bus = &"SFX"
+
+[node name="rare" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("33_snoms")
+bus = &"SFX"
+
+[node name="epic" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("34_r7ypu")
+bus = &"SFX"
+
+[node name="legendary" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("35_awvkl")
+pitch_scale = 0.93
+bus = &"SFX"
+
+[node name="exotic" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("36_fukq0")
+pitch_scale = 0.8
+bus = &"SFX"
+
+[node name="antique" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("37_4jd3d")
+volume_db = -6.82
+pitch_scale = 0.67
 bus = &"SFX"
 
 [node name="Splash" parent="." instance=ExtResource("25_kg0fi")]

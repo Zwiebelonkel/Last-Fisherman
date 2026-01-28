@@ -1306,6 +1306,7 @@ static func get_fish_icon(fish: Dictionary) -> Texture2D:
 # ===========================
 static func rarity_string_to_enum(r: String) -> int:
 	var map := {
+		"Common": RARITY.NORMAL,
 		"Uncommon": RARITY.UNGEWOEHNLICH,
 		"Rare": RARITY.SELTEN,
 		"Epic": RARITY.EPISCH,

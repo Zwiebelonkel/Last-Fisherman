@@ -18,6 +18,7 @@ var last_scene: String = "res://scenes/MainScene.tscn"
 var options: String = "res://scenes/OptionsCOntrol.tscn"
 var caught_fish_species: Dictionary = {}  # ✅ Speichert fish_id: bool
 var used_story_items: Array = []
+var tutorial_seen: bool = false  # 🆕 Tutorial wurde angesehen
 
 # 🆕 Story Items für Vendor Unlock
 const REQUIRED_STORY_ITEMS = ["van", "opensign", "friteuse", "sushimesser"]
@@ -371,7 +372,8 @@ func save_game() -> void:
 		"caught_fish_species": caught_fish_species, "completed_biomes": completed_biomes,
 		"fish_weight_records": fish_weight_records, "fish_catch_count": fish_catch_count,
 		"used_story_items": used_story_items,
-		"bait_inventory": bait_inventory, "active_bait": active_bait
+		"bait_inventory": bait_inventory, "active_bait": active_bait,
+		"tutorial_seen": tutorial_seen  # 🆕 Tutorial-Status speichern
 	}
 	var file = FileAccess.open("user://savegame.dat", FileAccess.WRITE)
 	file.store_var(save_data)
@@ -395,6 +397,7 @@ func load_game() -> void:
 		used_story_items = save_data.get("used_story_items", [])
 		bait_inventory = save_data.get("bait_inventory", bait_inventory)
 		active_bait = save_data.get("active_bait", "")
+		tutorial_seen = save_data.get("tutorial_seen", false)  # 🆕 Tutorial-Status laden
 
 func reset():
 	money = 0
@@ -413,6 +416,7 @@ func reset():
 	unlocked_spots = {"lake": true, "city": false, "sewer": false, "forest": false, "desert": false, "iceland": false, "home": true, "van": false}
 	bait_inventory = {"Common": 0, "Uncommon": 0, "Rare": 0, "Epic": 0, "Legendary": 0, "Exotic": 0}
 	active_bait = ""
+	tutorial_seen = false  # 🆕 Tutorial zurücksetzen
 	
 	GodotSteam.update_fish(0)
 	GodotSteam.update_money(0)

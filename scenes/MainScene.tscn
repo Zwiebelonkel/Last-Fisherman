@@ -1,4 +1,4 @@
-[gd_scene load_steps=78 format=3 uid="uid://cx2sffjjdjuw5"]
+[gd_scene load_steps=80 format=3 uid="uid://cx2sffjjdjuw5"]
 
 [ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="1_2phbr"]
 [ext_resource type="PackedScene" uid="uid://b5ew1rfc8ow8g" path="res://scenes/fishingRod.tscn" id="1_echbf"]
@@ -42,10 +42,12 @@
 [ext_resource type="PackedScene" uid="uid://xjntcu6j0ri0" path="res://scenes/explosion.tscn" id="31_fto0a"]
 [ext_resource type="PackedScene" uid="uid://7g6l5pa83hrt" path="res://assets/boat.glb" id="34_kwqb8"]
 [ext_resource type="Material" uid="uid://cj86wv7c01tef" path="res://materials/outlineWhite.tres" id="35_y15d6"]
+[ext_resource type="AudioStream" uid="uid://bqcbwput2tdy3" path="res://sounds/reeling.mp3" id="36_qnen4"]
 [ext_resource type="PackedScene" uid="uid://ctqxalvjd2b1k" path="res://assets/palm.glb" id="36_u55b3"]
 [ext_resource type="PackedScene" uid="uid://bswqivqayur26" path="res://scenes/fireflies.tscn" id="38_oiest"]
 [ext_resource type="PackedScene" uid="uid://ng3k0vguw2ww" path="res://assets/chair.glb" id="45_pwxld"]
 [ext_resource type="PackedScene" uid="uid://4vuswgb4ap52" path="res://scenes/story1.tscn" id="46_cw1g3"]
+[ext_resource type="PackedScene" uid="uid://cw1hh2dbog4uj" path="res://scenes/TutorialOverlay.tscn" id="47_yc0gu"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1wiy7"]
 shader = ExtResource("1_u55b3")
@@ -239,6 +241,8 @@ script/source = "extends Node3D
 
 @onready var whoosh_sound: AudioStreamPlayer = get_node(\"../../Audio/whoosh\")
 @onready var line_sound: AudioStreamPlayer = get_node(\"../../Audio/line\")
+@onready var reel_sound: AudioStreamPlayer = get_node(\"../../Audio/reel\")
+
 @onready var music: AudioStreamPlayer = get_node(\"../../Audio/music\")
 
 @onready var dayNightAni: AnimationPlayer = $\"../../DirectionalLight3D/AnimationPlayer\"
@@ -457,6 +461,15 @@ func _unhandled_input(event: InputEvent) -> void:
 	# 🆕 ESC/Pause behandeln - IMMER als erstes prüfen
 	if event.is_action_released(\"pause\"):
 		handle_pause_input()
+		return
+	
+# -------------------------------------------------
+# 🔒 CatchResult blockiert Gameplay-Input
+# -------------------------------------------------
+	if catch_result_ui and catch_result_ui.visible:
+		if event.is_action_pressed(\"cast\"):
+			# NUR schließen, sonst nichts
+			catch_result_ui.visible = false
 		return
 	
 	# Während Pause keine anderen Inputs verarbeiten
@@ -918,6 +931,7 @@ func show_bite_indicator() -> void:
 # CATCH MINIGAME
 # ---------------------------------------------------------
 func start_catch_minigame() -> void:
+	reel_sound.play()
 	state = STATE_MINIGAME
 	catch_ui.visible = true
 	anim.play(\"fight\")
@@ -1085,6 +1099,7 @@ func update_catch_minigame(delta: float) -> void:
 		end_catch_minigame(false)
 
 func end_catch_minigame(success: bool) -> void:
+	reel_sound.stop()
 	camera.start_screenshake(0.4, 0.3)
 
 	if success:
@@ -1438,6 +1453,8 @@ mouse_filter = 2
 
 [node name="UI" type="CanvasLayer" parent="."]
 
+[node name="TutorialOverlay" parent="UI" instance=ExtResource("47_yc0gu")]
+
 [node name="BiteIndicator" type="TextureRect" parent="UI"]
 visible = false
 anchors_preset = 8
@@ -1730,6 +1747,12 @@ stream = ExtResource("26_mekmn")
 volume_db = -2.735
 pitch_scale = 1.1
 autoplay = true
+bus = &"SFX"
+
+[node name="reel" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("36_qnen4")
+volume_db = -4.518
+pitch_scale = 1.1
 bus = &"SFX"
 
 [node name="clouds" parent="." instance=ExtResource("24_a7pbh")]

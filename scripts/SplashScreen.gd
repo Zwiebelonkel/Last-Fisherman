@@ -117,6 +117,10 @@ var loading_messages := {
 func _ready():
 	print("🎮 Splash Screen gestartet")
 	
+	if has_node("/root/ShaderWarmup"):
+		while not ShaderWarmup.shaders_ready:
+			await get_tree().create_timer(0.1).timeout
+		
 	# 🆕 Lade zufälligen Fisch
 	load_random_fish()
 	
