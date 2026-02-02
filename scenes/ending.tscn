@@ -1,4 +1,4 @@
-[gd_scene load_steps=63 format=3 uid="uid://b6exh44q6u50p"]
+[gd_scene load_steps=64 format=3 uid="uid://b6exh44q6u50p"]
 
 [ext_resource type="Shader" uid="uid://c140kjbm2bot5" path="res://shader/buckshot.gdshader" id="1_mbbil"]
 [ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="2_hpe61"]
@@ -36,6 +36,7 @@
 [ext_resource type="AudioStream" uid="uid://c0e0t3u3yvvhg" path="res://sounds/rarity/legendary.mp3" id="31_djqsd"]
 [ext_resource type="AudioStream" uid="uid://qeh48myqvc8p" path="res://sounds/rarity/exotic.mp3" id="32_wwpln"]
 [ext_resource type="AudioStream" uid="uid://6a3ro0nq1u4" path="res://sounds/rarity/antique.mp3" id="33_ao3ch"]
+[ext_resource type="PackedScene" uid="uid://c5jx2owcswvrq" path="res://scenes/JumpScareOverlay.tscn" id="37_5lvs8"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1wiy7"]
 shader = ExtResource("1_mbbil")
@@ -227,6 +228,7 @@ script/source = "extends Node3D
 @onready var reel_sound: AudioStreamPlayer = get_node(\"../../Audio/reel\")
 
 
+
 @export var cast_power_ui_scene: PackedScene
 var cast_power_ui: Control = null
 
@@ -302,13 +304,46 @@ func _ready() -> void:
 
 
 func _on_story_item_used(biome: String) -> void:
-	print(\"🎭 Story-Item Event ausgelöst für Biom:\", biome)
+	if biome != \"ocean\":
+		return
 	
-	if not Player.completed_biomes.get(biome, false):
-		Player.trigger_biome_completion_event(biome)
+	print(\"🌊 OCEAN Story Item benutzt – JUMPSCARE!\")
+
+	await play_ocean_jumpscare()
 
 
-# 🆕 Wird aufgerufen wenn CatchResult UI geschlossen wird
+func play_ocean_jumpscare() -> void:
+	print(\"🌊 OCEAN Story Item benutzt – JUMPSCARE!\")
+
+	# -------------------------
+	# JUMPSCARE
+	# -------------------------
+	var jumpscare_scene := preload(\"res://scenes/JumpscareOverlay.tscn\")
+	var jumpscare := jumpscare_scene.instantiate()
+	get_tree().root.add_child(jumpscare)
+
+	print(\"🎬 Jumpscare gestartet\")
+	jumpscare.play()
+	await jumpscare.finished
+	print(\"🎬 Jumpscare beendet\")
+	
+	jumpscare.queue_free()
+	await get_tree().process_frame
+	print(\"🎬 Jumpscare entfernt\")
+
+	# -------------------------
+	# 🎬 WECHSEL ZUR ENDING SCENE
+	# -------------------------
+	print(\"🎬 Lade Ending Scene...\")
+	
+	# Unmute alle Busse für die neue Scene
+	for i in range(AudioServer.bus_count):
+		AudioServer.set_bus_mute(i, false)
+	
+	# Wechsel zur Ending Scene
+	get_tree().change_scene_to_file(\"res://scenes/endingScreen.tscn\")
+
+
 func _on_catch_result_closed() -> void:
 	print(\"✅ CatchResult geschlossen - Input wieder aktiviert\")
 	fish_caught = false
@@ -589,7 +624,7 @@ func update_rotation(delta: float) -> void:
 		current_rotation += 360.0
 
 	if camera:
-		camera.rotation.y = deg_to_rad(current_rotation)
+		camera.rotation.y = deg_to_rad(-current_rotation)
 
 	if abs(current_rotation - target_rotation) < 0.5:
 		current_rotation = target_rotation
@@ -1903,6 +1938,9 @@ transform = Transform3D(-0.185706, -1.18963, -0.632375, -0.000701904, 0.638439, 
 
 [node name="Node3D5" parent="." instance=ExtResource("29_ccyyx")]
 transform = Transform3D(0.669928, 0, -3.16998, 0, 3.24, 0, 3.16998, 0, 0.669928, -22.8293, 1.14626, 0)
+
+[node name="JumpScareOverlay" parent="." instance=ExtResource("37_5lvs8")]
+duration = 0.4
 
 [editable path="UI/Touch"]
 [editable path="PlayerCamera/FishingRod"]

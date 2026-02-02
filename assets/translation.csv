@@ -264,6 +264,10 @@ FISH_LAKE_ZANDER_NAME,Zander,Zander
 FISH_LAKE_ZANDER_DESC,"Der Hipster-Fisch. War schon cool, bevor es mainstream wurde.","The hipster fish. Was cool before it went mainstream."
 FISH_LAKE_ZANDER_SCIENCE,"Zander sehen im Dunkeln besonders gut, da ihre Netzhaut stark lichtverstärkend aufgebaut ist.","Zander see exceptionally well in the dark due to their light-amplifying retina."
 
+FISH_LAKE_KORALLE_NAME,Koralle,Coral
+FISH_LAKE_KORALLE_DESC,"Es ist ruhig und still.","It is static and quiet."
+FISH_LAKE_KORALLE_SCIENCE,"Korallen sind lebende Organismen, die in Symbiose mit Algen leben und durch Kalkskelette Riffe bilden.","Corals are living organisms that form reefs by building calcium carbonate skeletons in symbiosis with algae."
+
 FISH_LAKE_KAUGUMMIKARPFEN_NAME,Kaugummikarpfen,Gum Carp
 FISH_LAKE_KAUGUMMIKARPFEN_DESC,"Schmeckt nach Erdbeere und existenzieller Krise.","Tastes like strawberry and existential crisis."
 FISH_LAKE_KAUGUMMIKARPFEN_SCIENCE,"Karpfen besitzen über 100.000 Geschmacksknospen, was sie zu wahren Gourmets des Süßwassers macht.","Carp have over 100,000 taste buds, making them true freshwater gourmets."
@@ -428,9 +432,15 @@ FISH_DESERT_SOLARFAENGER_SCIENCE,Bestimmte Meeresorganismen nutzen tatsächlich 
 FISH_DESERT_ROSTFLOSSER_NAME,Rostflosser,Rust Fin
 FISH_DESERT_ROSTFLOSSER_DESC,Braucht dringend eine Tetanus-Impfung.,Urgently needs a tetanus shot.
 FISH_DESERT_ROSTFLOSSER_SCIENCE,Rost ist im Wasser weit verbreitet – Eisenbakterien erzeugen ganze rot gefärbte Zonen.,Rust is widespread in water - iron bacteria create entire red-colored zones.
+
 FISH_DESERT_SANDSTREIFER_NAME,Sandstreifer,Sand Striper
 FISH_DESERT_SANDSTREIFER_DESC,Getarnt wie ein Sandsturm. Mit Flossen.,Camouflaged like a sandstorm. With fins.
 FISH_DESERT_SANDSTREIFER_SCIENCE,Viele Wüstenfische – ja die gibt es – leben in kurzzeitig wasserführenden Oasen oder Flussläufen.,Many desert fish - yes they exist - live in temporarily water-bearing oases or riverbeds.
+
+FISH_DESERT_STEINSCHNECKE_NAME,Steinqualle,Stone Jellyfish
+FISH_DESERT_STEINSCHNECKE_DESC,Wie ein glibschiger LKW,Like a slimy truck
+FISH_DESERT_STEINSCHNECKE_SCIENCE,Die Steinqualle (Gattung Cassiopea) lebt oft kopfüber auf dem Meeresboden da sie in ihrem Gewebe symbiotische Algen beherbergt.,The upside-down jellyfish (genus Cassiopea) often lives upside down on the seafloor as it hosts symbiotic algae in its tissue.
+
 FISH_DESERT_AGGRESIVE_GARNELE_NAME,Aggressive Garnele,Aggressive Shrimp
 FISH_DESERT_AGGRESIVE_GARNELE_DESC,Winzig aber verdammt wütend. Wie ein Chihuahua.,Tiny but damn angry. Like a Chihuahua.
 FISH_DESERT_AGGRESIVE_GARNELE_SCIENCE,Knallkrebse erzeugen durch ihre Scheren Schockwellen die Beute betäuben – kleine Wutpakete.,Pistol shrimp create shock waves with their claws that stun prey - little rage packets.
@@ -468,6 +478,11 @@ FISH_ICELAND_BLAUER_MARLIN_SCIENCE,Sie sind extrem schnelle Jäger der Hochsee d
 FISH_ICELAND_SCHWARZER_MARLIN_NAME,Schwarzer Marlin,Black Marlin
 FISH_ICELAND_SCHWARZER_MARLIN_DESC,Man könnte sagen dass der Entwickler zu faul gewesen ist um ein neues Asset zu erstellen,One could say the developer was too lazy to create a new asset
 FISH_ICELAND_SCHWARZER_MARLIN_SCIENCE,Der schwarze Marlin gilt als der schnellste Fisch der Welt mit dokumentierten Spitzengeschwindigkeiten von bis zu 129 km/h.,The black marlin is considered the fastest fish in the world with documented top speeds of up to 129 km/h.
+
+FISH_ICELAND_KRISTALL_FISCH_NAME,Kristallfisch,Crystal Fish
+FISH_ICELAND_KRISTALL_FISCH_DESC,Ein sehr seltenes und stinkendes Fisch-Gerippe aus Kristall.,A rare and stinky fish skeleton made of crystal.
+FISH_ICELAND_KRISTALL_FISCH_SCIENCE,Kristallfische sind extrem selten und leben in tiefen und kalten Gewässern.,Crystal fish are extremely rare and live in deep cold waters.
+
 FISH_ICELAND_MEGALODON_NAME,Megalodon,Megalodon
 FISH_ICELAND_MEGALODON_DESC,Ein prähistorischer Riesenhai. Sollte eigentlich ausgestorben sein... sollte.,A prehistoric giant shark. Should actually be extinct... should be.
 FISH_ICELAND_MEGALODON_SCIENCE,Der Megalodon lebte vor 23-3.6 Millionen Jahren und hatte eine Beißkraft von geschätzten 18 Tonnen.,The Megalodon lived 23-3.6 million years ago and had a bite force of an estimated 18 tons.
@@ -485,6 +500,8 @@ EVENT_SEWER,Die Ratten werden immer größer.\nIch glaube da unten lebt etwas da
 EVENT_FOREST,Der Wald ist zu still geworden.\nSelbst die Vögel haben aufgehört zu singen.,The forest has become too quiet.\nEven the birds have stopped singing.
 EVENT_DESERT,Die Hitze spielt mir Streiche.\nOder war das gerade wirklich eine Flosse im Sand?,The heat is playing tricks on me.\nOr was that really a fin in the sand?
 EVENT_ICELAND,Das Eis knackt anders als sonst.\nEs fühlt sich an als würde etwas darunter warten.,The ice is cracking differently than usual.\nIt feels like something is waiting beneath.
+EVENT_OCEAN,Der Code ist korrekt. Die Tür öffnet sich langsam...\n\nDu trittst hindurch – und der Ozean umschließt dich.,The code is correct. The door slowly opens...\n\nYou step through — and the ocean closes in around you.
+
 
 FISH_OCEAN_STEAM_PLAYER_NAME,Du selbst!
 FISH_OCEAN_STEAM_PLAYER_DESC,Ein wahrlich einzigartiger Fang - du hast dich selbst gefangen! Vielleicht solltest du öfter aus dem Haus gehen...

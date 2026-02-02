@@ -15,7 +15,7 @@ var upgrade_grip: int = 1
 var upgrade_bait: int = 1
 var upgrade_line: int = 1
 var last_scene: String = "res://scenes/MainScene.tscn"
-var options: String = "res://scenes/OptionsCOntrol.tscn"
+var options: String = "res://scenes/OptionsControl.tscn"
 var caught_fish_species: Dictionary = {}  # ✅ Speichert fish_id: bool
 var used_story_items: Array = []
 var tutorial_seen: bool = false  # 🆕 Tutorial wurde angesehen
@@ -39,7 +39,7 @@ var fish_catch_count: Dictionary = {}  # ✅ fish_id als Key
 # Biom-Completion Tracking
 var completed_biomes: Dictionary = {
 	"lake": false, "city": false, "sewer": false,
-	"forest": false, "desert": false, "iceland": false,
+	"forest": false, "desert": false, "iceland": false, "ocean": false
 }
 
 var unlocked_spots = {
@@ -412,7 +412,7 @@ func reset():
 	fish_weight_records.clear()
 	fish_catch_count.clear()
 	used_story_items.clear()
-	completed_biomes = {"lake": false, "city": false, "sewer": false, "forest": false, "desert": false, "iceland": false}
+	completed_biomes = {"lake": false, "city": false, "sewer": false, "forest": false, "desert": false, "iceland": false, "ocean": false}
 	unlocked_spots = {"lake": true, "city": false, "sewer": false, "forest": false, "desert": false, "iceland": false, "home": true, "van": false}
 	bait_inventory = {"Common": 0, "Uncommon": 0, "Rare": 0, "Epic": 0, "Legendary": 0, "Exotic": 0}
 	active_bait = ""

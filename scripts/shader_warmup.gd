@@ -18,7 +18,10 @@ func _warmup_shaders():
 	var shaders = [
 		"res://shader/buckshot.gdshader",
 		"res://shader/sky.gdshader", 
-		"res://shader/shader_water.gdshader"
+		"res://shader/shader_water.gdshader",
+		"res://shader/2DShine.gdshader",
+		"res://shader/2DShine.gdshader",
+		"res://shader/2DShine.gdshader"
 	]
 	
 	for shader_path in shaders:

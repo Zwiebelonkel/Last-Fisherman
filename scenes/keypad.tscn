@@ -1,0 +1,70 @@
+[gd_scene load_steps=6 format=3 uid="uid://cyys33sgvu4h4"]
+
+[ext_resource type="Script" uid="uid://bphaa2n535w3j" path="res://scripts/keypad.gd" id="1"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_keypad"]
+size = Vector3(0.5, 0.7, 0.1)
+
+[sub_resource type="StandardMaterial3D" id="Material_keypad"]
+albedo_color = Color(0.2, 0.2, 0.2, 1)
+metallic = 0.8
+roughness = 0.3
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_interaction"]
+radius = 3.0
+
+[sub_resource type="AudioStreamGenerator" id="AudioStream_beep"]
+buffer_length = 0.1
+
+[node name="Keypad" type="Node3D"]
+script = ExtResource("1")
+
+[node name="KeypadMesh" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_keypad")
+surface_material_override/0 = SubResource("Material_keypad")
+
+[node name="Display" type="Label3D" parent="."]
+transform = Transform3D(2.76, 0, 0, 0, 2.76, 0, 0, 0, 2.76, 0, 0.2, 0.126274)
+pixel_size = 0.001
+billboard = 1
+alpha_cut = 2
+text = "----"
+font_size = 48
+outline_size = 4
+
+[node name="Prompt" type="Label3D" parent="."]
+transform = Transform3D(2.76, 0, 0, 0, 2.76, 0, 0, 0, 2.76, 0, -0.2, 0.126274)
+pixel_size = 0.001
+billboard = 1
+alpha_cut = 2
+text = "Type number"
+font_size = 24
+outline_size = 2
+
+[node name="InteractionArea" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="InteractionArea"]
+shape = SubResource("SphereShape3D_interaction")
+
+[node name="AudioBeep" type="AudioStreamPlayer3D" parent="."]
+stream = SubResource("AudioStream_beep")
+volume_db = -10.0
+max_distance = 10.0
+
+[node name="AudioSuccess" type="AudioStreamPlayer3D" parent="."]
+stream = SubResource("AudioStream_beep")
+volume_db = -5.0
+pitch_scale = 1.5
+max_distance = 15.0
+
+[node name="AudioError" type="AudioStreamPlayer3D" parent="."]
+stream = SubResource("AudioStream_beep")
+volume_db = -5.0
+pitch_scale = 0.5
+max_distance = 15.0
+
+[node name="OmniLight3D" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.2)
+light_color = Color(0.5, 1, 0.5, 1)
+light_energy = 2.0
+omni_range = 2.0

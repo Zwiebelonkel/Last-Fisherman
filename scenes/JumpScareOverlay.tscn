@@ -1,0 +1,44 @@
+[gd_scene load_steps=4 format=3 uid="uid://c5jx2owcswvrq"]
+
+[ext_resource type="Script" uid="uid://cobev6njukjat" path="res://scripts/jumpScare.gd" id="1_mtifg"]
+[ext_resource type="Texture2D" uid="uid://c4yey1qjxfqf2" path="res://assets/jumpscare.png" id="2_5q2aa"]
+[ext_resource type="AudioStream" uid="uid://crv83d72vmtl2" path="res://assets/jumpscare.mp3" id="3_ibdnn"]
+
+[node name="JumpScareOverlay" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_mtifg")
+duration = 0.73
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="ScareImage" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 136.0
+offset_top = 33.0
+offset_right = 520.0
+offset_bottom = 409.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.55, 0.55)
+texture = ExtResource("2_5q2aa")
+flip_h = true
+
+[node name="Screech" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_ibdnn")
+pitch_scale = 0.7
+bus = &"SFX"

@@ -13,109 +13,109 @@ enum RARITY {
 	ANTIK
 }
 
-static var RARITY_DATA = {
-	RARITY.NORMAL: {
-		"name_key": "RARITY_NORMAL",
-		"color": Color.WHITE,
-		"value": 1.0,
-		"spawn_chance": 45.0,
-		"difficulty": 1.0
-	},
-	RARITY.UNGEWOEHNLICH: {
-		"name_key": "RARITY_UNCOMMON",
-		"color": Color(0.3,1,0.3),
-		"value": 1.5,
-		"spawn_chance": 33.0,
-		"difficulty": 1.3
-	},
-	RARITY.SELTEN: {
-		"name_key": "RARITY_RARE",
-		"color": Color(0.2,0.4,1),
-		"value": 2.0,
-		"spawn_chance": 12.0,
-		"difficulty": 1.6
-	},
-	RARITY.EPISCH: {
-		"name_key": "RARITY_EPIC",
-		"color": Color(0.7,0,1),
-		"value": 3.0,
-		"spawn_chance": 7.0,
-		"difficulty": 2.0
-	},
-	RARITY.LEGENDAER: {
-		"name_key": "RARITY_LEGENDARY",
-		"color": Color(1,0.8,0.1),
-		"value": 6.0,
-		"spawn_chance": 2.5,
-		"difficulty": 2.5
-	},
-	RARITY.EXOTISCH: {
-		"name_key": "RARITY_EXOTIC",
-		"color": Color(1,0,0.2),
-		"value": 12.0,
-		"spawn_chance": 0.5,
-		"difficulty": 3.0
-	},
-	RARITY.ANTIK: {
-		"name_key": "RARITY_ANTIQUE",
-		"color": Color(0.4,0.8,0.9),
-		"value": 0.0,
-		"spawn_chance": 0.4,
-		"difficulty": 1.0
-	}
-}
-
 #static var RARITY_DATA = {
 	#RARITY.NORMAL: {
 		#"name_key": "RARITY_NORMAL",
 		#"color": Color.WHITE,
 		#"value": 1.0,
-		#"spawn_chance": 0.0,
+		#"spawn_chance": 45.0,
 		#"difficulty": 1.0
 	#},
 	#RARITY.UNGEWOEHNLICH: {
 		#"name_key": "RARITY_UNCOMMON",
 		#"color": Color(0.3,1,0.3),
 		#"value": 1.5,
-		#"spawn_chance": 0.0,
+		#"spawn_chance": 33.0,
 		#"difficulty": 1.3
 	#},
 	#RARITY.SELTEN: {
 		#"name_key": "RARITY_RARE",
 		#"color": Color(0.2,0.4,1),
 		#"value": 2.0,
-		#"spawn_chance": 0.0,
+		#"spawn_chance": 12.0,
 		#"difficulty": 1.6
 	#},
 	#RARITY.EPISCH: {
 		#"name_key": "RARITY_EPIC",
 		#"color": Color(0.7,0,1),
 		#"value": 3.0,
-		#"spawn_chance": 0.0,
+		#"spawn_chance": 7.0,
 		#"difficulty": 2.0
 	#},
 	#RARITY.LEGENDAER: {
 		#"name_key": "RARITY_LEGENDARY",
 		#"color": Color(1,0.8,0.1),
 		#"value": 6.0,
-		#"spawn_chance": 0.0,
+		#"spawn_chance": 2.5,
 		#"difficulty": 2.5
 	#},
 	#RARITY.EXOTISCH: {
 		#"name_key": "RARITY_EXOTIC",
 		#"color": Color(1,0,0.2),
 		#"value": 12.0,
-		#"spawn_chance": 0.0,
+		#"spawn_chance": 0.5,
 		#"difficulty": 3.0
 	#},
 	#RARITY.ANTIK: {
 		#"name_key": "RARITY_ANTIQUE",
 		#"color": Color(0.4,0.8,0.9),
 		#"value": 0.0,
-		#"spawn_chance": 100.0,
+		#"spawn_chance": 0.4,
 		#"difficulty": 1.0
 	#}
 #}
+
+static var RARITY_DATA = {
+	RARITY.NORMAL: {
+		"name_key": "RARITY_NORMAL",
+		"color": Color.WHITE,
+		"value": 1.0,
+		"spawn_chance": 0.0,
+		"difficulty": 1.0
+	},
+	RARITY.UNGEWOEHNLICH: {
+		"name_key": "RARITY_UNCOMMON",
+		"color": Color(0.3,1,0.3),
+		"value": 1.5,
+		"spawn_chance": 0.0,
+		"difficulty": 1.3
+	},
+	RARITY.SELTEN: {
+		"name_key": "RARITY_RARE",
+		"color": Color(0.2,0.4,1),
+		"value": 2.0,
+		"spawn_chance": 0.0,
+		"difficulty": 1.6
+	},
+	RARITY.EPISCH: {
+		"name_key": "RARITY_EPIC",
+		"color": Color(0.7,0,1),
+		"value": 3.0,
+		"spawn_chance": 0.0,
+		"difficulty": 2.0
+	},
+	RARITY.LEGENDAER: {
+		"name_key": "RARITY_LEGENDARY",
+		"color": Color(1,0.8,0.1),
+		"value": 6.0,
+		"spawn_chance": 0.0,
+		"difficulty": 2.5
+	},
+	RARITY.EXOTISCH: {
+		"name_key": "RARITY_EXOTIC",
+		"color": Color(1,0,0.2),
+		"value": 12.0,
+		"spawn_chance": 0.0,
+		"difficulty": 3.0
+	},
+	RARITY.ANTIK: {
+		"name_key": "RARITY_ANTIQUE",
+		"color": Color(0.4,0.8,0.9),
+		"value": 0.0,
+		"spawn_chance": 100.0,
+		"difficulty": 1.0
+	}
+}
 
 # ===========================
 #  FISH LISTS BY LOCATION
@@ -219,6 +219,17 @@ var FISH_LAKE = [
 		"icon": "res://assets/fish/fish4.png",
 		"weight_min": 1.5,
 		"weight_max": 4.0
+	},
+	{
+		"id": "KORALLE",
+		"name_key": "FISH_LAKE_KORALLE_NAME",
+		"description_key": "FISH_LAKE_KORALLE_DESC",
+		"science_key": "FISH_LAKE_KORALLE_SCIENCE",
+		"rarity": RARITY.EPISCH,
+		"base_value": 27,
+		"icon": "res://assets/fish/Koralle.png",
+		"weight_min": 0.2,
+		"weight_max": 3.0
 	},
 	{
 		"id": "KAUGUMMIKARPFEN",
@@ -817,6 +828,17 @@ var FISH_DESERT = [
 		"weight_max": 6.0
 	},
 	{
+		"id": "STEINSCHNECKE",
+		"name_key": "FISH_DESERT_STEINSCHNECKE_NAME",
+		"description_key": "FISH_DESERT_STEINSCHNECKE_DESC",
+		"science_key": "FISH_DESERT_STEINSCHNECKE_SCIENCE",
+		"rarity": RARITY.SELTEN,
+		"base_value": 35,
+		"icon": "res://assets/fish/stoneSlug.png",
+		"weight_min": 500.0,
+		"weight_max": 3000.0
+	},
+	{
 		"id": "AGGRESIVE_GARNELE",
 		"name_key": "FISH_DESERT_AGGRESIVE_GARNELE_NAME",
 		"description_key": "FISH_DESERT_AGGRESIVE_GARNELE_DESC",
@@ -943,6 +965,17 @@ var FISH_ICELAND = [
 		"icon": "res://assets/fish/speerfisch.png",
 		"weight_min": 1.0,
 		"weight_max": 10.0
+	},
+	{
+		"id": "KRISTALL_FISCH",
+		"name_key": "FISH_ICELAND_KRISTALL_FISCH_NAME",
+		"description_key": "FISH_ICELAND_KRISTALL_FISCH_DESC",
+		"science_key": "FISH_ICELAND_KRISTALL_FISCH_SCIENCE",
+		"rarity": RARITY.LEGENDAER,
+		"base_value": 55,
+		"icon": "res://assets/fish/cristal.png",
+		"weight_min": 0.5,
+		"weight_max": 1.2
 	},
 	{
 		"id": "SCHWARZER_MARLIN",

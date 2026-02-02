@@ -1,8 +1,9 @@
-[gd_scene load_steps=8 format=3 uid="uid://cnjcmcbmutuo0"]
+[gd_scene load_steps=9 format=3 uid="uid://cnjcmcbmutuo0"]
 
 [ext_resource type="Texture2D" uid="uid://vnkl81cd5ns2" path="res://assets/echos/beach.png" id="1_6mggl"]
 [ext_resource type="Script" uid="uid://ch70okxe7anjk" path="res://scripts/eventEcho.gd" id="1_mhljt"]
 [ext_resource type="Shader" uid="uid://c140kjbm2bot5" path="res://shader/buckshot.gdshader" id="2_52p3h"]
+[ext_resource type="AudioStream" uid="uid://dy3uepyjrgdit" path="res://sounds/ending.mp3" id="2_606dw"]
 [ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="3_mhljt"]
 [ext_resource type="Script" uid="uid://chbsiwh86juia" path="res://scripts/typewriter.gd" id="5_606dw"]
 [ext_resource type="AudioStream" uid="uid://pbhs1kk2wylq" path="res://sounds/echo.mp3" id="6_v5q72"]
@@ -27,6 +28,7 @@ shader_parameter/viewport_size_override = Vector2(0, 0)
 [node name="EventEcho" type="CanvasLayer"]
 layer = 127
 script = ExtResource("1_mhljt")
+ending_music = ExtResource("2_606dw")
 
 [node name="ColorRect" type="ColorRect" parent="."]
 anchors_preset = 15

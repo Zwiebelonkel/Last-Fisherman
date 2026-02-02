@@ -1,0 +1,101 @@
+[gd_scene load_steps=7 format=3 uid="uid://de43b6r65xqkx"]
+
+[ext_resource type="Script" uid="uid://d05iwv0epvytf" path="res://scripts/ending_screen.gd" id="1_cas3l"]
+[ext_resource type="Texture2D" uid="uid://b4vpo3k0sv7oo" path="res://assets/echos/ending.png" id="2_nrc21"]
+[ext_resource type="AudioStream" uid="uid://dy3uepyjrgdit" path="res://sounds/ending.mp3" id="3_q3b0u"]
+[ext_resource type="Shader" uid="uid://c140kjbm2bot5" path="res://shader/buckshot.gdshader" id="4_304tg"]
+[ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="5_amowu"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_cas3l"]
+shader = ExtResource("4_304tg")
+shader_parameter/exposure = 1.0
+shader_parameter/contrast = 1.1
+shader_parameter/saturation = 1.12
+shader_parameter/enable_pixelate = true
+shader_parameter/pixel_factor = 3.0
+shader_parameter/enable_posterize = true
+shader_parameter/color_levels = 16.0
+shader_parameter/dither_strength = 0.35
+shader_parameter/chrom_aberration = 0.01
+shader_parameter/vignette_strength = 1.0
+shader_parameter/grain_strength = 0.2
+shader_parameter/tint_color = Vector3(0.95, 1.03, 0.9)
+shader_parameter/tint_strength = 0.15
+shader_parameter/viewport_size_override = Vector2(0, 0)
+
+[node name="EndingScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_cas3l")
+ending_texture = ExtResource("2_nrc21")
+ending_music_stream = ExtResource("3_q3b0u")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0, 0, 0, 1)
+
+[node name="EndingImage" type="TextureRect" parent="."]
+z_index = 1
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -821.0
+offset_top = -50.0
+offset_right = 715.0
+offset_bottom = 974.0
+grow_horizontal = 2
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_nrc21")
+
+[node name="EndingMusic" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_q3b0u")
+bus = &"Music"
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = 128
+
+[node name="ScrollContainer" type="ScrollContainer" parent="CanvasLayer"]
+offset_left = 120.0
+offset_top = 380.0
+offset_right = 1192.0
+offset_bottom = 611.0
+horizontal_scroll_mode = 0
+
+[node name="EndingText" type="RichTextLabel" parent="CanvasLayer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_colors/default_color = Color(1, 1, 1, 1)
+theme_override_fonts/normal_font = ExtResource("5_amowu")
+theme_override_font_sizes/normal_font_size = 20
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+
+[node name="Filter" type="CanvasLayer" parent="."]
+layer = 0
+
+[node name="PixelateOverlay" type="ColorRect" parent="Filter"]
+material = SubResource("ShaderMaterial_cas3l")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 28.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PixelateOverlay2" type="ColorRect" parent="Filter"]
+material = SubResource("ShaderMaterial_cas3l")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 28.0
+grow_horizontal = 2
+grow_vertical = 2
