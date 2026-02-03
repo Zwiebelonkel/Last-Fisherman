@@ -55,9 +55,13 @@ void fragment() {
 	material_override = shader_material
 	visible = false
 	
-	# Signal verbinden
-	if fishing_script:
+	# Signal verbinden (EXPORT-SICHER)
+	if fishing_script and fishing_script.has_signal("line_visible"):
 		fishing_script.connect("line_visible", Callable(self, "set_line_visible"))
+	else:
+		push_warning("⚠️ line_visible Signal nicht gefunden – Line deaktiviert")
+		visible = false
+
 
 
 func set_line_visible(state: bool) -> void:

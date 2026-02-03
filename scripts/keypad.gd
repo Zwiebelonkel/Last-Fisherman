@@ -10,11 +10,10 @@ signal code_incorrect()
 # -------------------------
 # Configuration
 # -------------------------
-@export var correct_code: String = "1234"  # Ändere den Code hier
+@export var correct_code: String = "1906"  # Ändere den Code hier
 @export var interaction_distance: float = 3.0
 @export var event_echo_scene: PackedScene = preload("res://scenes/event_echo.tscn")
-@export var ending_scene: String = "res://scenes/ending.tscn"
-
+@export var ending_scene: PackedScene = preload("res://scenes/ending.tscn")
 # -------------------------
 # State
 # -------------------------
@@ -169,18 +168,25 @@ func show_event_echo() -> void:
 	# Entferne Event Echo und gehe zum Ending
 	if event_echo:
 		event_echo.queue_free()
-	
+	AudioServer.set_bus_mute(
+	AudioServer.get_bus_index("Music"),
+		false
+	)
+	AudioServer.set_bus_mute(
+	AudioServer.get_bus_index("SFX"),
+		false
+	)
 	go_to_ending()
 
 func go_to_ending() -> void:
 	print("🎬 Wechsle zu Ending Scene")
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
-	
-	if FileAccess.file_exists(ending_scene):
-		Transition.change_scene(ending_scene, 1.0)
+	if ending_scene:
+		Transition.change_scene("res://scenes/ending.tscn", 1.0)
 	else:
-		push_error("❌ Ending Scene nicht gefunden: " + ending_scene)
+		push_error("❌ Ending Scene PackedScene fehlt!")
+
 
 # -------------------------
 # Display

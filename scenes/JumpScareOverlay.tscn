@@ -1,21 +1,55 @@
-[gd_scene load_steps=4 format=3 uid="uid://c5jx2owcswvrq"]
+[gd_scene load_steps=6 format=3 uid="uid://c5jx2owcswvrq"]
 
-[ext_resource type="Script" uid="uid://cobev6njukjat" path="res://scripts/jumpScare.gd" id="1_mtifg"]
-[ext_resource type="Texture2D" uid="uid://c4yey1qjxfqf2" path="res://assets/jumpscare.png" id="2_5q2aa"]
-[ext_resource type="AudioStream" uid="uid://crv83d72vmtl2" path="res://assets/jumpscare.mp3" id="3_ibdnn"]
+[ext_resource type="Script" uid="uid://cobev6njukjat" path="res://scripts/jumpScare.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://c4yey1qjxfqf2" path="res://assets/jumpscare.png" id="2"]
+[ext_resource type="Shader" uid="uid://c140kjbm2bot5" path="res://shader/buckshot.gdshader" id="2_crflw"]
+[ext_resource type="AudioStream" uid="uid://crv83d72vmtl2" path="res://assets/jumpscare.mp3" id="3"]
 
-[node name="JumpScareOverlay" type="Control"]
-layout_mode = 3
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wbrvg"]
+shader = ExtResource("2_crflw")
+shader_parameter/exposure = 1.0
+shader_parameter/contrast = 1.1
+shader_parameter/saturation = 1.12
+shader_parameter/enable_pixelate = true
+shader_parameter/pixel_factor = 3.0
+shader_parameter/enable_posterize = true
+shader_parameter/color_levels = 16.0
+shader_parameter/dither_strength = 0.35
+shader_parameter/chrom_aberration = 0.01
+shader_parameter/vignette_strength = 1.0
+shader_parameter/grain_strength = 0.2
+shader_parameter/tint_color = Vector3(0.95, 1.03, 0.9)
+shader_parameter/tint_strength = 0.15
+shader_parameter/viewport_size_override = Vector2(0, 0)
+
+[node name="JumpScareOverlay" type="CanvasLayer"]
+script = ExtResource("1")
+duration = 1.0
+shake_strength = 10.0
+shake_speed = 60.0
+
+[node name="Filter" type="CanvasLayer" parent="."]
+layer = 128
+
+[node name="PixelateOverlay" type="ColorRect" parent="Filter"]
+material = SubResource("ShaderMaterial_wbrvg")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_right = 28.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_mtifg")
-duration = 0.73
+
+[node name="PixelateOverlay2" type="ColorRect" parent="Filter"]
+material = SubResource("ShaderMaterial_wbrvg")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 28.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="ColorRect" type="ColorRect" parent="."]
-layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -24,21 +58,15 @@ grow_vertical = 2
 color = Color(0, 0, 0, 1)
 
 [node name="ScareImage" type="TextureRect" parent="."]
-layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 136.0
-offset_top = 33.0
-offset_right = 520.0
-offset_bottom = 409.0
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(0.55, 0.55)
-texture = ExtResource("2_5q2aa")
-flip_h = true
+texture = ExtResource("2")
+expand_mode = 1
+stretch_mode = 5
 
-[node name="Screech" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("3_ibdnn")
-pitch_scale = 0.7
+[node name="Screech" type="AudioStreamPlayer" parent="ScareImage"]
+stream = ExtResource("3")
+volume_db = 2.377
+pitch_scale = 1.05
 bus = &"SFX"

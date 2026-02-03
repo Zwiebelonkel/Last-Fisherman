@@ -13,109 +13,109 @@ enum RARITY {
 	ANTIK
 }
 
-#static var RARITY_DATA = {
-	#RARITY.NORMAL: {
-		#"name_key": "RARITY_NORMAL",
-		#"color": Color.WHITE,
-		#"value": 1.0,
-		#"spawn_chance": 45.0,
-		#"difficulty": 1.0
-	#},
-	#RARITY.UNGEWOEHNLICH: {
-		#"name_key": "RARITY_UNCOMMON",
-		#"color": Color(0.3,1,0.3),
-		#"value": 1.5,
-		#"spawn_chance": 33.0,
-		#"difficulty": 1.3
-	#},
-	#RARITY.SELTEN: {
-		#"name_key": "RARITY_RARE",
-		#"color": Color(0.2,0.4,1),
-		#"value": 2.0,
-		#"spawn_chance": 12.0,
-		#"difficulty": 1.6
-	#},
-	#RARITY.EPISCH: {
-		#"name_key": "RARITY_EPIC",
-		#"color": Color(0.7,0,1),
-		#"value": 3.0,
-		#"spawn_chance": 7.0,
-		#"difficulty": 2.0
-	#},
-	#RARITY.LEGENDAER: {
-		#"name_key": "RARITY_LEGENDARY",
-		#"color": Color(1,0.8,0.1),
-		#"value": 6.0,
-		#"spawn_chance": 2.5,
-		#"difficulty": 2.5
-	#},
-	#RARITY.EXOTISCH: {
-		#"name_key": "RARITY_EXOTIC",
-		#"color": Color(1,0,0.2),
-		#"value": 12.0,
-		#"spawn_chance": 0.5,
-		#"difficulty": 3.0
-	#},
-	#RARITY.ANTIK: {
-		#"name_key": "RARITY_ANTIQUE",
-		#"color": Color(0.4,0.8,0.9),
-		#"value": 0.0,
-		#"spawn_chance": 0.4,
-		#"difficulty": 1.0
-	#}
-#}
-
 static var RARITY_DATA = {
 	RARITY.NORMAL: {
 		"name_key": "RARITY_NORMAL",
 		"color": Color.WHITE,
 		"value": 1.0,
-		"spawn_chance": 0.0,
+		"spawn_chance": 45.0,
 		"difficulty": 1.0
 	},
 	RARITY.UNGEWOEHNLICH: {
 		"name_key": "RARITY_UNCOMMON",
 		"color": Color(0.3,1,0.3),
 		"value": 1.5,
-		"spawn_chance": 0.0,
+		"spawn_chance": 33.0,
 		"difficulty": 1.3
 	},
 	RARITY.SELTEN: {
 		"name_key": "RARITY_RARE",
 		"color": Color(0.2,0.4,1),
 		"value": 2.0,
-		"spawn_chance": 0.0,
+		"spawn_chance": 12.0,
 		"difficulty": 1.6
 	},
 	RARITY.EPISCH: {
 		"name_key": "RARITY_EPIC",
 		"color": Color(0.7,0,1),
 		"value": 3.0,
-		"spawn_chance": 0.0,
+		"spawn_chance": 7.0,
 		"difficulty": 2.0
 	},
 	RARITY.LEGENDAER: {
 		"name_key": "RARITY_LEGENDARY",
 		"color": Color(1,0.8,0.1),
 		"value": 6.0,
-		"spawn_chance": 0.0,
+		"spawn_chance": 2.5,
 		"difficulty": 2.5
 	},
 	RARITY.EXOTISCH: {
 		"name_key": "RARITY_EXOTIC",
 		"color": Color(1,0,0.2),
 		"value": 12.0,
-		"spawn_chance": 0.0,
+		"spawn_chance": 0.5,
 		"difficulty": 3.0
 	},
 	RARITY.ANTIK: {
 		"name_key": "RARITY_ANTIQUE",
 		"color": Color(0.4,0.8,0.9),
 		"value": 0.0,
-		"spawn_chance": 100.0,
+		"spawn_chance": 0.4,
 		"difficulty": 1.0
 	}
 }
+
+#static var RARITY_DATA = {
+	#RARITY.NORMAL: {
+		#"name_key": "RARITY_NORMAL",
+		#"color": Color.WHITE,
+		#"value": 1.0,
+		#"spawn_chance": 0.0,
+		#"difficulty": 1.0
+	#},
+	#RARITY.UNGEWOEHNLICH: {
+		#"name_key": "RARITY_UNCOMMON",
+		#"color": Color(0.3,1,0.3),
+		#"value": 1.5,
+		#"spawn_chance": 0.0,
+		#"difficulty": 1.3
+	#},
+	#RARITY.SELTEN: {
+		#"name_key": "RARITY_RARE",
+		#"color": Color(0.2,0.4,1),
+		#"value": 2.0,
+		#"spawn_chance": 0.0,
+		#"difficulty": 1.6
+	#},
+	#RARITY.EPISCH: {
+		#"name_key": "RARITY_EPIC",
+		#"color": Color(0.7,0,1),
+		#"value": 3.0,
+		#"spawn_chance": 0.0,
+		#"difficulty": 2.0
+	#},
+	#RARITY.LEGENDAER: {
+		#"name_key": "RARITY_LEGENDARY",
+		#"color": Color(1,0.8,0.1),
+		#"value": 6.0,
+		#"spawn_chance": 0.0,
+		#"difficulty": 2.5
+	#},
+	#RARITY.EXOTISCH: {
+		#"name_key": "RARITY_EXOTIC",
+		#"color": Color(1,0,0.2),
+		#"value": 12.0,
+		#"spawn_chance": 0.0,
+		#"difficulty": 3.0
+	#},
+	#RARITY.ANTIK: {
+		#"name_key": "RARITY_ANTIQUE",
+		#"color": Color(0.4,0.8,0.9),
+		#"value": 0.0,
+		#"spawn_chance": 100.0,
+		#"difficulty": 1.0
+	#}
+#}
 
 # ===========================
 #  FISH LISTS BY LOCATION
@@ -1451,3 +1451,37 @@ func get_fish_list_for_biome(biome: String) -> Array:
 		_:
 			push_warning("⚠️ Unbekanntes Biom: %s" % biome)
 			return FISH_LAKE
+			
+# ===========================
+# 🆕 STEAM PLAYER FISH (OCEAN)
+# ===========================
+func get_steam_player_fish() -> Dictionary:
+	# Sicherheit: Ocean-Liste prüfen
+	if FISH_OCEAN.is_empty():
+		push_error("❌ FISH_OCEAN ist leer!")
+		return {}
+
+	# Es gibt absichtlich nur EINEN Fisch
+	var fish: Dictionary = FISH_OCEAN[0].duplicate(true)
+
+	# Erzwinge ANTIK
+	fish["rarity"] = RARITY.ANTIK
+	fish["base_value"] = 0
+	fish["is_story_item"] = true
+	fish["unique"] = true
+
+	# 🆕 Steam-Daten anwenden
+	if fish.get("is_steam_player", false):
+		_apply_steam_data_to_fish(fish)
+
+	# Gewicht generieren
+	if fish.has("weight_min") and fish.has("weight_max"):
+		var w = randf_range(fish["weight_min"], fish["weight_max"])
+		fish["weight"] = snappedf(w, 0.01)
+	else:
+		fish["weight"] = 80.0
+
+	# Immer "neu" (existenzielle Bedeutung)
+	fish["is_new_catch"] = true
+
+	return fish

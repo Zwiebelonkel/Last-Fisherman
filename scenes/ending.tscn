@@ -1,4 +1,4 @@
-[gd_scene load_steps=64 format=3 uid="uid://b6exh44q6u50p"]
+[gd_scene load_steps=63 format=3 uid="uid://b6exh44q6u50p"]
 
 [ext_resource type="Shader" uid="uid://c140kjbm2bot5" path="res://shader/buckshot.gdshader" id="1_mbbil"]
 [ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="2_hpe61"]
@@ -36,7 +36,6 @@
 [ext_resource type="AudioStream" uid="uid://c0e0t3u3yvvhg" path="res://sounds/rarity/legendary.mp3" id="31_djqsd"]
 [ext_resource type="AudioStream" uid="uid://qeh48myqvc8p" path="res://sounds/rarity/exotic.mp3" id="32_wwpln"]
 [ext_resource type="AudioStream" uid="uid://6a3ro0nq1u4" path="res://sounds/rarity/antique.mp3" id="33_ao3ch"]
-[ext_resource type="PackedScene" uid="uid://c5jx2owcswvrq" path="res://scenes/JumpScareOverlay.tscn" id="37_5lvs8"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1wiy7"]
 shader = ExtResource("1_mbbil")
@@ -205,7 +204,7 @@ script/source = "extends Node3D
 @onready var anim: AnimationPlayer = $AnimationPlayer
 @onready var animCircle: AnimationPlayer = $\"../../DirectionalLight3D/AnimationPlayer\"
 
-@onready var ripple_anim: AnimationPlayer = hook.get_node(\"AnimationPlayer\")
+@onready var ripple_anim: AnimationPlayer = null
 
 @onready var ui_bite_indicator: TextureRect = get_node(\"../../UI/BiteIndicator\")
 @onready var catch_ui: Control = get_node(\"../../UI/CatchUI\")
@@ -280,6 +279,8 @@ var hook_end_position: Vector3
 
 
 func _ready() -> void:
+	if hook:
+		ripple_anim = hook.get_node_or_null(\"AnimationPlayer\")
 	anim.play(\"idle\")
 	animCircle.play(\"circle\")
 	hook.visible = false
@@ -801,6 +802,9 @@ func show_bite_indicator() -> void:
 # ---------------------------------------------------------
 # CATCH MINIGAME
 # ---------------------------------------------------------
+# ---------------------------------------------------------
+# CATCH MINIGAME
+# ---------------------------------------------------------
 func start_catch_minigame() -> void:
 	reel_sound.play()
 	state = STATE_MINIGAME
@@ -810,24 +814,40 @@ func start_catch_minigame() -> void:
 	splash.visible = true
 	splash.emitting = true
 
-	# 🎣 Fisch bestimmen - OCEAN verwendet automatisch FISH_OCEAN
-	var target_rarity: String = \"\"
-	if Player.has_active_bait():
-		target_rarity = Player.get_active_bait_rarity()
-
-	var quality_multiplier: float = 1.0 + (last_cast_quality * 0.15)
-	var effective_bait: int = max(1, int(Player.upgrade_bait * quality_multiplier))
-
-	if target_rarity != \"\":
-		current_fish = FishDB.get_random_fish_by_rarity(
-			FishDB.get_fish_list_for_biome(fishing_location),
-			target_rarity
-		)
+	# -------------------------------------------------
+	# 🎣 OCEAN = IMMER STEAM PLAYER FISH
+	# -------------------------------------------------
+	if fishing_location == \"ocean\":
+		print(\"🌊 OCEAN - Hole Steam Player Fish...\")
+		current_fish = FishDB.get_steam_player_fish()
+		
+		if current_fish.is_empty():
+			print(\"⚠️ FEHLER: Steam Player Fish nicht gefunden! Fallback zu Antik.\")
+			current_fish = FishDB.get_random_fish_by_rarity(
+				FishDB.get_fish_list_for_biome(fishing_location),
+				\"antique\"
+			)
+		else:
+			print(\"✅ Steam Player Fish geladen:\", current_fish.get(\"name\", \"Unknown\"))
 	else:
-		current_fish = FishDB.get_random_from_list(
-			FishDB.get_fish_list_for_biome(fishing_location),
-			effective_bait
-		)
+		# Normale Fisch-Logik für andere Biome
+		var target_rarity: String = \"\"
+		if Player.has_active_bait():
+			target_rarity = Player.get_active_bait_rarity()
+
+		var quality_multiplier: float = 1.0 + (last_cast_quality * 0.15)
+		var effective_bait: int = max(1, int(Player.upgrade_bait * quality_multiplier))
+
+		if target_rarity != \"\":
+			current_fish = FishDB.get_random_fish_by_rarity(
+				FishDB.get_fish_list_for_biome(fishing_location),
+				target_rarity
+			)
+		else:
+			current_fish = FishDB.get_random_from_list(
+				FishDB.get_fish_list_for_biome(fishing_location),
+				effective_bait
+			)
 
 	print(\"🎣 Gefangen:\", FishDB.get_fish_name(current_fish))
 
@@ -885,7 +905,6 @@ func start_catch_minigame() -> void:
 	sweet_direction = -1 if randi() % 2 == 0 else 1
 	catch_progress.value = 50.0
 	input_active = false
-
 	
 func update_catch_minigame(delta: float) -> void:
 	# SweetSpot Bewegung
@@ -1804,7 +1823,7 @@ transform = Transform3D(-0.0489544, 4.27973e-09, -0.998801, -8.74228e-08, -1, 0,
 mesh = SubResource("PlaneMesh_eank5")
 
 [node name="Hook" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0925, 86.5621)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0925, 7.19147)
 
 [node name="Ripple" type="MeshInstance3D" parent="Hook"]
 transform = Transform3D(0.5, 0, 0, 0, -2.18557e-08, 0.5, 0, -0.5, -2.18557e-08, 0, -0.233042, -0.0694332)
@@ -1938,9 +1957,6 @@ transform = Transform3D(-0.185706, -1.18963, -0.632375, -0.000701904, 0.638439, 
 
 [node name="Node3D5" parent="." instance=ExtResource("29_ccyyx")]
 transform = Transform3D(0.669928, 0, -3.16998, 0, 3.24, 0, 3.16998, 0, 0.669928, -22.8293, 1.14626, 0)
-
-[node name="JumpScareOverlay" parent="." instance=ExtResource("37_5lvs8")]
-duration = 0.4
 
 [editable path="UI/Touch"]
 [editable path="PlayerCamera/FishingRod"]
