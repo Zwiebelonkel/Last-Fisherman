@@ -9,7 +9,6 @@ extends Node3D
 @export var camera: Camera3D
 
 @onready var anim: AnimationPlayer = $AnimationPlayer
-@onready var ripple_anim: AnimationPlayer = hook.get_node("AnimationPlayer")
 
 @onready var ui_bite_indicator: TextureRect = get_node("../../UI/BiteIndicator")
 @onready var catch_ui: Control = get_node("../../UI/CatchUI")
@@ -161,7 +160,6 @@ func cast_line() -> void:
 	hook.position = Vector3(x, 0.05, z)
 	hook.visible = true
 
-	ripple_anim.play("ripple")
 	anim.play("idle")
 
 	start_bite_timer()

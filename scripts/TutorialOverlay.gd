@@ -189,7 +189,7 @@ func _setup_ui() -> void:
 	btn_normal.corner_radius_bottom_right = 8
 	
 	var btn_hover = StyleBoxFlat.new()
-	btn_hover.bg_color = Color(1.0, 1.0, 0.5)
+	#btn_hover.bg_color = Color(1.0, 1.0, 0.5)
 	btn_hover.corner_radius_top_left = 8
 	btn_hover.corner_radius_top_right = 8
 	btn_hover.corner_radius_bottom_left = 8

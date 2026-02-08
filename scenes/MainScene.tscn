@@ -1,4 +1,4 @@
-[gd_scene load_steps=80 format=3 uid="uid://cx2sffjjdjuw5"]
+[gd_scene load_steps=80 format=3 uid="uid://bw5el7n36awdr"]
 
 [ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="1_2phbr"]
 [ext_resource type="PackedScene" uid="uid://b5ew1rfc8ow8g" path="res://scenes/fishingRod.tscn" id="1_echbf"]

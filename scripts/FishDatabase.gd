@@ -177,6 +177,17 @@ var FISH_LAKE = [
 		"weight_max": 15.0
 	},
 	{
+	"id": "SCHLAMMGEIST",
+	"name_key": "FISH_LAKE_SCHLAMMGEIST_NAME",
+	"description_key": "FISH_LAKE_SCHLAMMGEIST_DESC",
+	"science_key": "FISH_LAKE_SCHLAMMGEIST_SCIENCE",
+	"rarity": RARITY.UNGEWOEHNLICH,
+	"base_value": 12,
+	"icon": "res://assets/fish/schlammgeist.png",
+	"weight_min": 0.6,
+	"weight_max": 2.2
+	},
+	{
 		"id": "HECHT",
 		"name_key": "FISH_LAKE_HECHT_NAME",
 		"description_key": "FISH_LAKE_HECHT_DESC",
@@ -197,6 +208,17 @@ var FISH_LAKE = [
 		"icon": "res://assets/fish/hermitcrab.png",
 		"weight_min": 0.185,
 		"weight_max": 0.5
+	},
+	{
+	"id": "SPIEGELKARPFEN",
+	"name_key": "FISH_LAKE_SPIEGELKARPFEN_NAME",
+	"description_key": "FISH_LAKE_SPIEGELKARPFEN_DESC",
+	"science_key": "FISH_LAKE_SPIEGELKARPFEN_SCIENCE",
+	"rarity": RARITY.SELTEN,
+	"base_value": 14,
+	"icon": "res://assets/fish/spiegelkarpfen.png",
+	"weight_min": 4.0,
+	"weight_max": 12.0
 	},
 	{
 		"id": "MANTA",
@@ -220,6 +242,17 @@ var FISH_LAKE = [
 		"weight_min": 1.5,
 		"weight_max": 4.0
 	},
+{
+	"id": "TIEFENHUSTLER",
+	"name_key": "FISH_LAKE_TIEFENHUSTLER_NAME",
+	"description_key": "FISH_LAKE_TIEFENHUSTLER_DESC",
+	"science_key": "FISH_LAKE_TIEFENHUSTLER_SCIENCE",
+	"rarity": RARITY.EPISCH,
+	"base_value": 26,
+	"icon": "res://assets/fish/tiefenhustler.png",
+	"weight_min": 1.2,
+	"weight_max": 3.5
+},
 	{
 		"id": "KORALLE",
 		"name_key": "FISH_LAKE_KORALLE_NAME",
@@ -336,6 +369,17 @@ var FISH_CITY = [
 		"weight_min": 1.0,
 		"weight_max": 3.0
 	},
+{
+	"id": "METALLAAL",
+	"name_key": "FISH_CITY_METALLAAL_NAME",
+	"description_key": "FISH_CITY_METALLAAL_DESC",
+	"science_key": "FISH_CITY_METALLAAL_SCIENCE",
+	"rarity": RARITY.UNGEWOEHNLICH,
+	"base_value": 12,
+	"icon": "res://assets/fish/metallaal.png",
+	"weight_min": 1.5,
+	"weight_max": 4.0
+},
 	{
 		"id": "DORSCH",
 		"name_key": "FISH_CITY_DORSCH_NAME",
@@ -358,6 +402,17 @@ var FISH_CITY = [
 		"weight_min": 0.3,
 		"weight_max": 1.0
 	},
+{
+	"id": "SCHATTENKOI",
+	"name_key": "FISH_CITY_SCHATTENKOI_NAME",
+	"description_key": "FISH_CITY_SCHATTENKOI_DESC",
+	"science_key": "FISH_CITY_SCHATTENKOI_SCIENCE",
+	"rarity": RARITY.SELTEN,
+	"base_value": 22,
+	"icon": "res://assets/fish/schattenkoi.png",
+	"weight_min": 3.0,
+	"weight_max": 9.0
+},
 	{
 		"id": "BARRAKUDA",
 		"name_key": "FISH_CITY_BARRAKUDA_NAME",
@@ -402,6 +457,17 @@ var FISH_CITY = [
 		"weight_min": 1.0,
 		"weight_max": 200.0
 	},
+{
+	"id": "ABFLUSSENGEL",
+	"name_key": "FISH_CITY_ABFLUSSENGEL_NAME",
+	"description_key": "FISH_CITY_ABFLUSSENGEL_DESC",
+	"science_key": "FISH_CITY_ABFLUSSENGEL_SCIENCE",
+	"rarity": RARITY.EPISCH,
+	"base_value": 37,
+	"icon": "res://assets/fish/abflussengel.png",
+	"weight_min": 0.8,
+	"weight_max": 2.5
+},
 	{
 		"id": "ZIGARETTEN",
 		"name_key": "FISH_CITY_ZIGARETTEN_NAME",
@@ -530,6 +596,17 @@ var FISH_SEWER = [
 		"weight_max": 20.0
 	},
 	{
+	"id": "SIFFZUNGE",
+	"name_key": "FISH_SEWER_SIFFZUNGE_NAME",
+	"description_key": "FISH_SEWER_SIFFZUNGE_DESC",
+	"science_key": "FISH_SEWER_SIFFZUNGE_SCIENCE",
+	"rarity": RARITY.UNGEWOEHNLICH,
+	"base_value": 15,
+	"icon": "res://assets/fish/siffzunge.png",
+	"weight_min": 0.3,
+	"weight_max": 1.0
+},
+	{
 		"id": "TEERFISCH",
 		"name_key": "FISH_SEWER_TEERFISCH_NAME",
 		"description_key": "FISH_SEWER_TEERFISCH_DESC",
@@ -540,6 +617,17 @@ var FISH_SEWER = [
 		"weight_min": 2.0,
 		"weight_max": 6.0
 	},
+	{
+	"id": "KLOAKENHECHT",
+	"name_key": "FISH_SEWER_KLOAKENHECHT_NAME",
+	"description_key": "FISH_SEWER_KLOAKENHECHT_DESC",
+	"science_key": "FISH_SEWER_KLOAKENHECHT_SCIENCE",
+	"rarity": RARITY.SELTEN,
+	"base_value": 23,
+	"icon": "res://assets/fish/kloakenhecht.png",
+	"weight_min": 2.5,
+	"weight_max": 7.0
+},
 	{
 		"id": "KARTOFFEL",
 		"name_key": "FISH_SEWER_KARTOFFEL_NAME",
@@ -573,6 +661,17 @@ var FISH_SEWER = [
 		"weight_min": 3.0,
 		"weight_max": 8.0
 	},
+	{
+	"id": "GERUCHSFISCH",
+	"name_key": "FISH_SEWER_GERUCHSFISCH_NAME",
+	"description_key": "FISH_SEWER_GERUCHSFISCH_DESC",
+	"science_key": "FISH_SEWER_GERUCHSFISCH_SCIENCE",
+	"rarity": RARITY.EPISCH,
+	"base_value": 34,
+	"icon": "res://assets/fish/geruchsfisch.png",
+	"weight_min": 0.6,
+	"weight_max": 2.0
+},
 	{
 		"id": "FUEHRERSCHEIN",
 		"name_key": "FISH_SEWER_FUEHRERSCHEIN_NAME",
@@ -679,6 +778,17 @@ var FISH_FOREST = [
 		"weight_max": 8.0
 	},
 	{
+	"id": "MOOSWELS",
+	"name_key": "FISH_FOREST_MOOSWELS_NAME",
+	"description_key": "FISH_FOREST_MOOSWELS_DESC",
+	"science_key": "FISH_FOREST_MOOSWELS_SCIENCE",
+	"rarity": RARITY.UNGEWOEHNLICH,
+	"base_value": 18,
+	"icon": "res://assets/fish/mooswels.png",
+	"weight_min": 4.0,
+	"weight_max": 12.0
+},
+	{
 		"id": "ROHRSCHATTEN",
 		"name_key": "FISH_FOREST_ROHRSCHATTEN_NAME",
 		"description_key": "FISH_FOREST_ROHRSCHATTEN_DESC",
@@ -689,6 +799,17 @@ var FISH_FOREST = [
 		"weight_min": 0.5,
 		"weight_max": 2.0
 	},
+	{
+	"id": "NEBELBISS",
+	"name_key": "FISH_FOREST_NEBELBISS_NAME",
+	"description_key": "FISH_FOREST_NEBELBISS_DESC",
+	"science_key": "FISH_FOREST_NEBELBISS_SCIENCE",
+	"rarity": RARITY.SELTEN,
+	"base_value": 30,
+	"icon": "res://assets/fish/nebelbiss.png",
+	"weight_min": 1.0,
+	"weight_max": 3.5
+},
 	{
 		"id": "ANGEL",
 		"name_key": "FISH_FOREST_ANGEL_NAME",
@@ -722,6 +843,17 @@ var FISH_FOREST = [
 		"weight_min": 10.0,
 		"weight_max": 30.0
 	},
+	{
+	"id": "WURMFUERST",
+	"name_key": "FISH_FOREST_WURMFUERST_NAME",
+	"description_key": "FISH_FOREST_WURMFUERST_DESC",
+	"science_key": "FISH_FOREST_WURMFUERST_SCIENCE",
+	"rarity": RARITY.EPISCH,
+	"base_value": 85,
+	"icon": "res://assets/fish/wurmfuerst.png",
+	"weight_min": 0.8,
+	"weight_max": 2.8
+},
 	{
 		"id": "BAMBUSHAI",
 		"name_key": "FISH_FOREST_BAMBUSHAI_NAME",
@@ -817,6 +949,17 @@ var FISH_DESERT = [
 		"weight_max": 3.0
 	},
 	{
+	"id": "FLIMMERAAL",
+	"name_key": "FISH_DESERT_FLIMMERAAL_NAME",
+	"description_key": "FISH_DESERT_FLIMMERAAL_DESC",
+	"science_key": "FISH_DESERT_FLIMMERAAL_SCIENCE",
+	"rarity": RARITY.UNGEWOEHNLICH,
+	"base_value": 27,
+	"icon": "res://assets/fish/flimmeraal.png",
+	"weight_min": 1.0,
+	"weight_max": 3.0
+},
+	{
 		"id": "SANDSTREIFER",
 		"name_key": "FISH_DESERT_SANDSTREIFER_NAME",
 		"description_key": "FISH_DESERT_SANDSTREIFER_DESC",
@@ -827,6 +970,17 @@ var FISH_DESERT = [
 		"weight_min": 2.0,
 		"weight_max": 6.0
 	},
+	{
+	"id": "SALZFRESSER",
+	"name_key": "FISH_DESERT_SALZFRESSER_NAME",
+	"description_key": "FISH_DESERT_SALZFRESSER_DESC",
+	"science_key": "FISH_DESERT_SALZFRESSER_SCIENCE",
+	"rarity": RARITY.SELTEN,
+	"base_value": 33,
+	"icon": "res://assets/fish/salzfresser.png",
+	"weight_min": 2.0,
+	"weight_max": 6.0
+},
 	{
 		"id": "STEINSCHNECKE",
 		"name_key": "FISH_DESERT_STEINSCHNECKE_NAME",
@@ -860,6 +1014,17 @@ var FISH_DESERT = [
 		"weight_min": 10.0,
 		"weight_max": 40.0
 	},
+	{
+	"id": "DUENENHAI",
+	"name_key": "FISH_DESERT_DUENENHAI_NAME",
+	"description_key": "FISH_DESERT_DUENENHAI_DESC",
+	"science_key": "FISH_DESERT_DUENENHAI_SCIENCE",
+	"rarity": RARITY.EPISCH,
+	"base_value": 90,
+	"icon": "res://assets/fish/duenenhai.png",
+	"weight_min": 8.0,
+	"weight_max": 25.0
+},
 	{
 		"id": "WASSERFISCH",
 		"name_key": "FISH_DESERT_WASSERFISCH_NAME",
@@ -934,6 +1099,17 @@ var FISH_ICELAND = [
 		"weight_max": 0.5
 	},
 	{
+	"id": "FROSTMAUL",
+	"name_key": "FISH_ICELAND_FROSTMAUL_NAME",
+	"description_key": "FISH_ICELAND_FROSTMAUL_DESC",
+	"science_key": "FISH_ICELAND_FROSTMAUL_SCIENCE",
+	"rarity": RARITY.SELTEN,
+	"base_value": 45,
+	"icon": "res://assets/fish/frostmaul.png",
+	"weight_min": 5.0,
+	"weight_max": 15.0
+},
+	{
 		"id": "ANGLERFISCH",
 		"name_key": "FISH_ICELAND_ANGLERFISCH_NAME",
 		"description_key": "FISH_ICELAND_ANGLERFISCH_DESC",
@@ -956,6 +1132,17 @@ var FISH_ICELAND = [
 		"weight_max": 800.0
 	},
 	{
+	"id": "EISLICHT",
+	"name_key": "FISH_ICELAND_EISLICHT_NAME",
+	"description_key": "FISH_ICELAND_EISLICHT_DESC",
+	"science_key": "FISH_ICELAND_EISLICHT_SCIENCE",
+	"rarity": RARITY.EPISCH,
+	"base_value": 76,
+	"icon": "res://assets/fish/eislicht.png",
+	"weight_min": 0.5,
+	"weight_max": 1.8
+},
+	{
 		"id": "BLAUER_MARLIN",
 		"name_key": "FISH_ICELAND_BLAUER_MARLIN_NAME",
 		"description_key": "FISH_ICELAND_BLAUER_MARLIN_DESC",
@@ -972,11 +1159,22 @@ var FISH_ICELAND = [
 		"description_key": "FISH_ICELAND_KRISTALL_FISCH_DESC",
 		"science_key": "FISH_ICELAND_KRISTALL_FISCH_SCIENCE",
 		"rarity": RARITY.LEGENDAER,
-		"base_value": 55,
+		"base_value": 550,
 		"icon": "res://assets/fish/cristal.png",
 		"weight_min": 0.5,
 		"weight_max": 1.2
 	},
+	{
+	"id": "GLETSCHERZUNGE",
+	"name_key": "FISH_ICELAND_GLETSCHERZUNGE_NAME",
+	"description_key": "FISH_ICELAND_GLETSCHERZUNGE_DESC",
+	"science_key": "FISH_ICELAND_GLETSCHERZUNGE_SCIENCE",
+	"rarity": RARITY.LEGENDAER,
+	"base_value": 490,
+	"icon": "res://assets/fish/gletscherzunge.png",
+	"weight_min": 20.0,
+	"weight_max": 60.0
+},
 	{
 		"id": "SCHWARZER_MARLIN",
 		"name_key": "FISH_ICELAND_SCHWARZER_MARLIN_NAME",

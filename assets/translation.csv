@@ -293,6 +293,19 @@ FISH_LAKE_ROTER_KNOPF_DESC,"Merkwürdigerweise ist das Batteriefach leer. Ob der
 FISH_LAKE_ROTER_KNOPF_SCIENCE,"Forellen reagieren extrem empfindlich auf Sauerstoffgehalt im Wasser.","Trout are extremely sensitive to oxygen levels in water."
 FISH_LAKE_ROTER_KNOPF_STORY,"Die Geisterforelle leuchtet in deinen Händen auf. Eine alte Macht erwacht...","The ghost trout glows in your hands. An ancient power awakens..."
 
+FISH_LAKE_SCHLAMMGEIST_NAME,Schlammgeist,Mud Wraith
+FISH_LAKE_SCHLAMMGEIST_DESC,"Bewegt sich kaum. Beobachtet alles.","Barely moves. Watches everything."
+FISH_LAKE_SCHLAMMGEIST_SCIENCE,"Einige Fischarten verharren regungslos im Sediment, um Energie zu sparen und Beute zu überraschen.","Some fish remain motionless in sediment to conserve energy and ambush prey."
+
+FISH_LAKE_SPIEGELKARPFEN_NAME,Spiegelkarpfen,Mirror Carp
+FISH_LAKE_SPIEGELKARPFEN_DESC,"Siehst du ihn an, siehst du dich selbst. Leider.","When you look at it, you see yourself. Unfortunately."
+FISH_LAKE_SPIEGELKARPFEN_SCIENCE,"Spiegelkarpfen besitzen reduzierte Schuppen, was ihre Haut besonders reflektiv erscheinen lässt.","Mirror carp have reduced scales, making their skin highly reflective."
+
+FISH_LAKE_TIEFENHUSTLER_NAME,Tiefenhustler,Depth Hustler
+FISH_LAKE_TIEFENHUSTLER_DESC,"Hat nichts. Will trotzdem alles.","Has nothing. Wants everything."
+FISH_LAKE_TIEFENHUSTLER_SCIENCE,"Bodennahe Fische zeigen oft opportunistisches Fressverhalten und hohe Anpassungsfähigkeit.","Bottom-dwelling fish often display opportunistic feeding behavior and high adaptability."
+
+
 
 FISH_CITY_SAND_AAL_NAME,Sand-Aal,Sand Eel
 FISH_CITY_SAND_AAL_DESC,Schlüpfriger als ein Politiker im Wahlkampf.,More slippery than a politician during election campaign.
@@ -343,6 +356,20 @@ FISH_CITY_STOEPSEL_NAME,Stöpsel,Plug
 FISH_CITY_STOEPSEL_DESC,Ist tot. Schwimmt trotzdem. Frag nicht.,Is dead. Still swimming. Don't ask.
 FISH_CITY_STOEPSEL_SCIENCE,Forellen reagieren extrem empfindlich auf Sauerstoffgehalt im Wasser.,Trout react extremely sensitively to oxygen content in water.
 FISH_CITY_STOEPSEL_STORY,Die Geisterforelle leuchtet in deinen Händen auf. Eine alte Macht erwacht...,The ghost trout glows in your hands. An ancient power awakens...
+
+FISH_CITY_METALLAAL_NAME,Metallaal,Metal Eel
+FISH_CITY_METALLAAL_DESC,"Fühlt sich magnetisch an. Vielleicht bist du das Problem.","Feels magnetic. Maybe you're the problem."
+FISH_CITY_METALLAAL_SCIENCE,"Aale reagieren sensibel auf elektromagnetische Felder und orientieren sich daran.","Eels are sensitive to electromagnetic fields and use them for orientation."
+
+FISH_CITY_SCHATTENKOI_NAME,Schattenkoi,Shadow Koi
+FISH_CITY_SCHATTENKOI_DESC,"War früher schön. Jetzt erinnert er sich.","Used to be beautiful. Now it remembers."
+FISH_CITY_SCHATTENKOI_SCIENCE,"Koi passen ihre Pigmentierung an Lichtverhältnisse und Umweltstress an.","Koi adjust their pigmentation based on lighting and environmental stress."
+
+FISH_CITY_ABFLUSSENGEL_NAME,Abflussengel,Drain Angel
+FISH_CITY_ABFLUSSENGEL_DESC,"Schützt nichts. Erlöst niemanden.","Protects nothing. Saves no one."
+FISH_CITY_ABFLUSSENGEL_SCIENCE,"Flossenformen können hydrodynamische Effizienz selbst in stark verschmutzten Gewässern gewährleisten.","Fin shapes can ensure hydrodynamic efficiency even in heavily polluted waters."
+
+
 FISH_SEWER_KACKWURST_NAME,Kackwurst,Poop Sausage
 FISH_SEWER_KACKWURST_DESC,Exakt das wonach es aussieht. Verkauf es schnell.,Exactly what it looks like. Sell it quickly.
 FISH_SEWER_KACKWURST_SCIENCE,Organische Abfälle werden im Wasser von Mikroorganismen zersetzt – nicht schön aber effizient.,Organic waste is decomposed by microorganisms in water - not pretty but efficient.
@@ -386,6 +413,18 @@ FISH_SEWER_BAHNKARTE_NAME,Bahnkarte,Train Ticket
 FISH_SEWER_BAHNKARTE_DESC,Seit 37 Jahren ungültig,Invalid for 37 years
 FISH_SEWER_BAHNKARTE_SCIENCE,Dieses Relikt stammt in einer Zeit wo die Erde noch komplett war.,This relic comes from a time when the Earth was still whole.
 FISH_SEWER_BAHNKARTE_STORY,Die Geisterforelle leuchtet in deinen Händen auf. Eine alte Macht erwacht...,The ghost trout glows in your hands. An ancient power awakens...
+FISH_SEWER_SIFFZUNGE_NAME,Siffzunge,Sludge Tongue
+FISH_SEWER_SIFFZUNGE_DESC,"Leckt Dinge, die nie hätten existieren sollen.","Licks things that should never have existed."
+FISH_SEWER_SIFFZUNGE_SCIENCE,"Einige Fische besitzen hochsensible Geschmacksorgane zur Nahrungserkennung in trübem Wasser.","Some fish have highly sensitive taste organs to detect food in murky water."
+
+FISH_SEWER_KLOAKENHECHT_NAME,Kloakenhecht,Cloaca Pike
+FISH_SEWER_KLOAKENHECHT_DESC,"Aggressiv. Territorial. Verständlich.","Aggressive. Territorial. Understandable."
+FISH_SEWER_KLOAKENHECHT_SCIENCE,"Hechtartige Fische reagieren extrem aggressiv auf beengte Lebensräume.","Pike-like fish become extremely aggressive in confined habitats."
+
+FISH_SEWER_GERUCHSFISCH_NAME,Geruchsfisch,Stench Fish
+FISH_SEWER_GERUCHSFISCH_DESC,"Du riechst ihn. Er riecht dich.","You smell it. It smells you."
+FISH_SEWER_GERUCHSFISCH_SCIENCE,"Chemorezeptoren ermöglichen Fischen das Wahrnehmen feinster organischer Stoffe.","Chemoreceptors allow fish to detect minute organic compounds."
+
 FISH_FOREST_KARPFEN_NAME,Karpfen,Carp
 FISH_FOREST_KARPFEN_DESC,Meditiert unter Wasser. Unc ist vegetarisch.,Meditates underwater. Uncle is vegetarian.
 FISH_FOREST_KARPFEN_SCIENCE,Karpfen können Geräusche unterscheiden und sogar auf Futtergeräusche konditioniert werden.,Carp can distinguish sounds and can even be conditioned to feeding sounds.
@@ -423,6 +462,20 @@ FISH_FOREST_HAIZAHN_NAME,Haizahn,Shark Tooth
 FISH_FOREST_HAIZAHN_DESC,Ein schönes Souvenir. Aber auch bisschen krank wenn man darüber nachdenkt.,A nice souvenir. But also a bit sick when you think about it.
 FISH_FOREST_HAIZAHN_SCIENCE,Haie haben ein sogenanntes Revolvergebiss mit mehreren Zahnreihen wodurch sie im Laufe ihres Lebens Tausende von Zähnen verlieren.,Sharks have a so-called revolving jaw with multiple rows of teeth losing thousands of teeth in their lifetime.
 FISH_FOREST_HAIZAHN_STORY,Die Geisterforelle leuchtet in deinen Händen auf. Eine alte Macht erwacht...,The ghost trout glows in your hands. An ancient power awakens...
+
+FISH_FOREST_MOOSWELS_NAME,Mooswels,Moss Catfish
+FISH_FOREST_MOOSWELS_DESC,"Verwechselt dich mit einem Baum.","Mistakes you for a tree."
+FISH_FOREST_MOOSWELS_SCIENCE,"Algen- und Moosbewuchs auf Fischen dient oft der Tarnung in bewachsenen Gewässern.","Algae and moss growth on fish often serves as camouflage."
+
+FISH_FOREST_NEBELBISS_NAME,Nebelbiss,Fog Bite
+FISH_FOREST_NEBELBISS_DESC,"Du siehst ihn erst, wenn es zu spät ist.","You only see it when it's too late."
+FISH_FOREST_NEBELBISS_SCIENCE,"Gedämpftes Licht beeinflusst das Jagdverhalten vieler Süßwasserfische.","Dim lighting affects the hunting behavior of many freshwater fish."
+
+FISH_FOREST_WURMFUERST_NAME,Wurmfürst,Worm Lord
+FISH_FOREST_WURMFUERST_DESC,"Regiert über nichts. Aber mit Würde.","Rules over nothing. But with dignity."
+FISH_FOREST_WURMFUERST_SCIENCE,"Einige Fischarten ernähren sich fast ausschließlich von Wirbellosen im Sediment.","Some fish species feed almost exclusively on sediment-dwelling invertebrates."
+
+
 FISH_DESERT_SCHMUTZGRUNDEL_NAME,Schmutzgrundel,Dirt Goby
 FISH_DESERT_SCHMUTZGRUNDEL_DESC,Lebt im Dreck. Buchstäblich. Wie deine Ernährungsgewohnheiten.,Lives in dirt. Literally. Like your eating habits.
 FISH_DESERT_SCHMUTZGRUNDEL_SCIENCE,Grundeln können in extrem trübem Wasser überleben und sind wahre Anpassungsmeister.,Gobies can survive in extremely murky water and are true adaptation masters.
@@ -463,6 +516,20 @@ FISH_DESERT_BENZIN_NAME,Benzin,Gasoline
 FISH_DESERT_BENZIN_DESC,Das wird nicht lange reichen...,This won't last long...
 FISH_DESERT_BENZIN_SCIENCE,Benzin ist ein hochentzündliches flüchtiges Gemisch aus über 100 verschiedenen Kohlenwasserstoffen gewonnen aus Erdöl.,Gasoline is a highly flammable volatile mixture of over 100 different hydrocarbons derived from petroleum.
 FISH_DESERT_BENZIN_STORY,Die Geisterforelle leuchtet in deinen Händen auf. Eine alte Macht erwacht...,The ghost trout glows in your hands. An ancient power awakens...
+
+FISH_DESERT_FLIMMERAAL_NAME,Flimmeraal,Shimmer Eel
+FISH_DESERT_FLIMMERAAL_DESC,"War vielleicht nur eine Halluzination.","Might have just been a hallucination."
+FISH_DESERT_FLIMMERAAL_SCIENCE,"Hitze und Lichtbrechung können visuelle Täuschungen in Wüstengewässern verursachen.","Heat and light refraction can cause visual illusions in desert waters."
+
+FISH_DESERT_SALZFRESSER_NAME,Salzfresser,Salt Eater
+FISH_DESERT_SALZFRESSER_DESC,"Trinkt, was dich töten würde.","Drinks what would kill you."
+FISH_DESERT_SALZFRESSER_SCIENCE,"Halophile Organismen sind an extrem salzhaltige Umgebungen angepasst.","Halophilic organisms are adapted to extremely salty environments."
+
+FISH_DESERT_DUENENHAI_NAME,Dünenhai,Dune Shark
+FISH_DESERT_DUENENHAI_DESC,"Schwimmt dort, wo kein Wasser sein sollte.","Swims where there shouldn't be water."
+FISH_DESERT_DUENENHAI_SCIENCE,"Sandbewohnende Tiere nutzen wellenartige Bewegungen zur Fortbewegung.","Sand-dwelling animals use wave-like movements to travel."
+
+
 FISH_ICELAND_EISFISCH_NAME,Eisfisch,Ice Fish
 FISH_ICELAND_EISFISCH_DESC,Durchsichtiger Fisch ohne rote Blutkörperchen - fast wie aus Glas gemacht.,Transparent fish without red blood cells - almost made of glass.
 FISH_ICELAND_EISFISCH_SCIENCE,Antarktische Eisfische haben kein Hämoglobin im Blut und erscheinen daher fast transparent.,Antarctic ice fish have no hemoglobin in their blood and therefore appear almost transparent.
@@ -490,6 +557,20 @@ FISH_ICELAND_PINGUIN_NAME,Pinguin,Penguin
 FISH_ICELAND_PINGUIN_DESC,Der arme Bursche hat seine Familie verloren.,The poor fellow has lost his family.
 FISH_ICELAND_PINGUIN_SCIENCE,Pinguine kommunizieren durch Schreie leben in großen Kolonien trinken Salzwasser.,Penguins communicate through calls live in large colonies drink saltwater.
 FISH_ICELAND_PINGUIN_STORY,Die Geisterforelle leuchtet in deinen Händen auf. Eine alte Macht erwacht...,The ghost trout glows in your hands. An ancient power awakens...
+
+FISH_ICELAND_FROSTMAUL_NAME,Frostmaul,Frost Maw
+FISH_ICELAND_FROSTMAUL_DESC,"Atmet Dampf. Lebt trotzdem.","Breathes vapor. Still alive."
+FISH_ICELAND_FROSTMAUL_SCIENCE,"Einige arktische Fische produzieren Frostschutzproteine im Blut.","Some arctic fish produce antifreeze proteins in their blood."
+
+FISH_ICELAND_EISLICHT_NAME,Eislicht,Ice Glow
+FISH_ICELAND_EISLICHT_DESC,"Leuchtet schwach. Als hätte es Angst.","Glows faintly. As if it's afraid."
+FISH_ICELAND_EISLICHT_SCIENCE,"Biolumineszenz tritt auch in extrem kalten Tiefseehabitaten auf.","Bioluminescence occurs even in extremely cold deep-sea habitats."
+
+FISH_ICELAND_GLETSCHERZUNGE_NAME,Gletscherzunge,Glacier Tongue
+FISH_ICELAND_GLETSCHERZUNGE_DESC,"Kalt. Schwer. Endgültig.","Cold. Heavy. Final."
+FISH_ICELAND_GLETSCHERZUNGE_SCIENCE,"Große Tiefseefische wachsen langsam und erreichen enorme Massen.","Large deep-sea fish grow slowly and reach massive sizes."
+
+
 
 FISH_VALUE_PRICELESS,Unbezahlbar,Priceless
 FISH_WEIGHT,Gewicht,Weight
