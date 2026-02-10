@@ -366,18 +366,30 @@ func get_inventory_value() -> int:
 
 func save_game() -> void:
 	var save_data = {
-		"money": money, "level": level, "xp": xp,
-		"upgrade_grip": upgrade_grip, "upgrade_bait": upgrade_bait, "upgrade_line": upgrade_line,
-		"last_scene": last_scene, "unlocked_spots": unlocked_spots,
-		"caught_fish_species": caught_fish_species, "completed_biomes": completed_biomes,
-		"fish_weight_records": fish_weight_records, "fish_catch_count": fish_catch_count,
+		"money": money,
+		"level": level,
+		"xp": xp,
+		"upgrade_grip": upgrade_grip,
+		"upgrade_bait": upgrade_bait,
+		"upgrade_line": upgrade_line,
+		"last_scene": last_scene,
+		"unlocked_spots": unlocked_spots,
+		"caught_fish_species": caught_fish_species,
+		"completed_biomes": completed_biomes,
+		"fish_weight_records": fish_weight_records,
+		"fish_catch_count": fish_catch_count,
 		"used_story_items": used_story_items,
-		"bait_inventory": bait_inventory, "active_bait": active_bait,
-		"tutorial_seen": tutorial_seen  # 🆕 Tutorial-Status speichern
+		"bait_inventory": bait_inventory,
+		"active_bait": active_bait,
+		"tutorial_seen": tutorial_seen
 	}
+	
 	var file = FileAccess.open("user://savegame.dat", FileAccess.WRITE)
 	file.store_var(save_data)
-
+	
+	# 🆕 LoreManager speichert separat
+	LoreManager.save_data()
+	
 func load_game() -> void:
 	if FileAccess.file_exists("user://savegame.dat"):
 		var file = FileAccess.open("user://savegame.dat", FileAccess.READ)
@@ -399,7 +411,7 @@ func load_game() -> void:
 		active_bait = save_data.get("active_bait", "")
 		tutorial_seen = save_data.get("tutorial_seen", false)  # 🆕 Tutorial-Status laden
 
-func reset():
+func reset() -> void:
 	money = 0
 	level = 1
 	xp = 0
@@ -412,17 +424,29 @@ func reset():
 	fish_weight_records.clear()
 	fish_catch_count.clear()
 	used_story_items.clear()
-	completed_biomes = {"lake": false, "city": false, "sewer": false, "forest": false, "desert": false, "iceland": false, "ocean": false}
-	unlocked_spots = {"lake": true, "city": false, "sewer": false, "forest": false, "desert": false, "iceland": false, "home": true, "van": false}
-	bait_inventory = {"Common": 0, "Uncommon": 0, "Rare": 0, "Epic": 0, "Legendary": 0, "Exotic": 0}
+	completed_biomes = {
+		"lake": false, "city": false, "sewer": false,
+		"forest": false, "desert": false, "iceland": false, "ocean": false
+	}
+	unlocked_spots = {
+		"lake": true, "city": false, "sewer": false,
+		"forest": false, "desert": false, "iceland": false,
+		"home": true, "van": false
+	}
+	bait_inventory = {
+		"Common": 0, "Uncommon": 0, "Rare": 0,
+		"Epic": 0, "Legendary": 0, "Exotic": 0
+	}
 	active_bait = ""
-	tutorial_seen = false  # 🆕 Tutorial zurücksetzen
+	tutorial_seen = false
+	
+	# 🆕 Reset Lore
+	LoreManager.reset()
 	
 	GodotSteam.update_fish(0)
 	GodotSteam.update_money(0)
 	save_game()
 	GodotSteam.flush_scores()
-
 func get_total_fish_caught() -> int:
 	var total := 0
 	for v in fish_catch_count.values():

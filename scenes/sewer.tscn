@@ -425,7 +425,8 @@ func _on_biome_completed(biome_name: String, reward: int) -> void:
 			false
 			)
 			Player.update_last_scene(\"res://scenes/sewer.tscn\")
-			Transition.change_scene(\"res://scenes/MapScene.tscn\")
+			register_biome_note(\"fragment_03\")
+			FlowManager.end_event()
 			
 			# Player.add_ability(\"poison_resistance\")
 		
@@ -436,6 +437,10 @@ func _on_biome_completed(biome_name: String, reward: int) -> void:
 		\"desert\":
 			print(\"✨ Alle Biome gemeistert - Geheimes Ende freigeschaltet!\")
 
+func register_biome_note(note_id: String) -> void:
+	if not LoreManager.has_note(note_id):
+		var note_data = LoreManager.NOTES[note_id]
+		FlowManager.register_note(note_id, note_data.digit, note_data.text)
 
 func _unhandled_input(event: InputEvent) -> void:
 	# 🆕 ESC/Pause behandeln - IMMER als erstes prüfen

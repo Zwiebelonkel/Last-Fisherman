@@ -30,6 +30,8 @@ Player="*res://scripts/Player.gd"
 Inventory="*res://scripts/inventar.gd"
 FishBook="*res://scripts/FishBook.gd"
 Transition="*res://scripts/transition.gd"
+LoreManager="*res://scripts/LoreManager.gd"
+FlowManager="*res://scripts/FlowManager.gd"
 
 [display]
 

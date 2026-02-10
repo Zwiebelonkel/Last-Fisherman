@@ -11,7 +11,7 @@ var title_label: Label
 
 var current_location = "lake"
 var fish_entry_scene = preload("res://scenes/FishBookEntry.tscn")
-var fish_detail_popup_scene  # Wird in _ready() geladen
+var fish_detail_popup_scene
 var fish_book
 var detail_popup: Control
 
@@ -20,6 +20,10 @@ var localized_texts := {
 	"caught_text": {
 		"de": "Gefangen: %d / %d (%d%%)",
 		"en": "Caught: %d / %d (%d%%)"
+	},
+	"collected_text": {  # 🆕 Für Zettel
+		"de": "Gesammelt: %d / %d (%d%%)",
+		"en": "Collected: %d / %d (%d%%)"
 	},
 	"fishbook_title": {
 		"de": "📖 Fischbuch - %s",
@@ -53,24 +57,26 @@ var localized_texts := {
 		"de": "🌊 Ozean",
 		"en": "🌊 Ocean"
 	},
+	"location_lore": {  # 🆕 Lore-Kategorie
+		"de": "❓ ???",
+		"en": "❓ ???"
+	},
 	"location_all": {
 		"de": "🌍 Alle",
 		"en": "🌍 All"
 	}
 }
 
-
 func _ready():
 	fish_book = load("res://scripts/FishBook.gd").new()
 	
-	# Popup Scene laden - mit Fehlerbehandlung
+	# Popup Scene laden
 	print("Versuche FishDetailPopup zu laden...")
 	if ResourceLoader.exists("res://scenes/FishDetailPopup.tscn"):
 		fish_detail_popup_scene = load("res://scenes/FishDetailPopup.tscn")
 		print("  ✅ FishDetailPopup.tscn geladen")
 	else:
 		print("  ❌ res://scenes/FishDetailPopup.tscn nicht gefunden!")
-		print("  → Bitte erstelle die Scene oder passe den Pfad an")
 	
 	# Nodes finden
 	if has_node("VBoxContainer/ScrollContainer/GridContainer"):
@@ -90,26 +96,16 @@ func _ready():
 		detail_popup = fish_detail_popup_scene.instantiate()
 		add_child(detail_popup)
 		detail_popup.visible = false
-		print("  ✅ Detail Popup instantiiert und hinzugefügt")
-		print("  → Popup Node:", detail_popup)
-		print("  → Hat show_fish_details():", detail_popup.has_method("show_fish_details"))
-	else:
-		print("  ❌ Konnte Popup nicht erstellen - Scene nicht geladen")
-	
-	# Debug-Ausgabe
-	print("Grid Container: ", grid_container)
-	print("Location Selector: ", location_selector)
-	print("Stats Label: ", stats_label)
-	print("Title Label: ", title_label)
+		print("  ✅ Detail Popup instantiiert")
 	
 	if not grid_container or not location_selector or not stats_label or not title_label:
 		print("❌ ERROR: Nicht alle Nodes gefunden!")
 		return
 	
 	# Grid-Einstellungen
-	grid_container.columns = 5  # 5 Karten pro Reihe
+	grid_container.columns = 5
 	
-	# Location-Selector Setup (🌍 Mit Übersetzungen)
+	# Location-Selector Setup
 	if location_selector is OptionButton:
 		location_selector.item_selected.connect(_on_location_changed)
 		location_selector.clear()
@@ -119,18 +115,54 @@ func _ready():
 		location_selector.add_item(get_text("location_forest"))
 		location_selector.add_item(get_text("location_desert"))
 		location_selector.add_item(get_text("location_iceland"))
-		location_selector.add_item(get_text("location_ocean"))  # 🆕 OCEAN
+		location_selector.add_item(get_text("location_ocean"))
+		
+		# 🆕 LORE KATEGORIE (nur wenn Zettel vorhanden)
+		if LoreManager.get_note_count() > 0:
+			location_selector.add_item(get_text("location_lore"))
+		
 		location_selector.add_item(get_text("location_all"))
 	
 	# Signal verbinden
 	visibility_changed.connect(_on_visibility_changed)
 	
+	# 🆕 Verbinde Lore-Signal
+	LoreManager.note_added.connect(_on_note_added)
+	
 	print("✅ FishBook UI erfolgreich geladen!")
 
+# ===========================
+#  🆕 LORE SIGNAL HANDLER
+# ===========================
 
-# ============================================
-# 🌍 LOCALIZATION HELPER
-# ============================================
+func _on_note_added(note_id: String, digit: int) -> void:
+	print("📝 FishBook: Neuer Zettel - %s" % note_id)
+	
+	# Füge ??? Kategorie hinzu wenn noch nicht vorhanden
+	if location_selector:
+		var has_lore_category = false
+		for i in range(location_selector.item_count):
+			if location_selector.get_item_text(i) == get_text("location_lore"):
+				has_lore_category = true
+				break
+		
+		if not has_lore_category:
+			# Füge vor "Alle" ein
+			var all_index = location_selector.item_count - 1
+			location_selector.add_item(get_text("location_lore"))
+			
+			# Verschiebe "Alle" ans Ende
+			location_selector.move_item(location_selector.item_count - 1, all_index)
+			
+			print("  ✅ ??? Kategorie hinzugefügt")
+	
+	# Refresh wenn aktuell in ??? Kategorie
+	if current_location == "???":
+		load_bestiary()
+
+# ===========================
+#  LOCALIZATION HELPER
+# ===========================
 
 func get_text(key: String) -> String:
 	var current_lang = Player.current_language
@@ -140,49 +172,34 @@ func get_text(key: String) -> String:
 		return localized_texts[key]["de"]
 	return key
 
+# ===========================
+#  POPUP
+# ===========================
 
-# 🆕 Popup anzeigen
 func show_fish_detail_popup(fish_data: Dictionary):
 	print("show_fish_detail_popup() aufgerufen mit:", fish_data.get("name", "Unknown"))
 	
 	if detail_popup:
-		print("  → detail_popup existiert")
 		if detail_popup.has_method("show_fish_details"):
-			print("  → Methode gefunden, rufe auf...")
 			detail_popup.show_fish_details(fish_data)
 		else:
 			print("  ❌ Methode 'show_fish_details' nicht gefunden!")
-			print("  → Verfügbare Methoden:", detail_popup.get_method_list())
 	else:
 		print("  ❌ detail_popup ist null!")
-		print("  → Versuche Popup neu zu erstellen...")
-		
-		# Fallback: Popup neu erstellen
-		if fish_detail_popup_scene:
-			detail_popup = fish_detail_popup_scene.instantiate()
-			add_child(detail_popup)
-			detail_popup.visible = false
-			
-			# Warte einen Frame
-			await get_tree().process_frame
-			
-			if detail_popup.has_method("show_fish_details"):
-				detail_popup.show_fish_details(fish_data)
-			else:
-				print("  ❌ Auch nach Neuerstellen keine Methode gefunden")
 
-# 🆕 WICHTIG: Beim Öffnen aktuellen Ort aus FishingRod holen
+# ===========================
+#  VISIBILITY
+# ===========================
+
 func _on_visibility_changed() -> void:
 	if visible:
 		print("📖 FishBook wurde geöffnet - Lade aktuellen Ort...")
 		
-		# 🆕 Versuche fishing_location aus FishingRod zu holen
-		# Pfad: Root -> MainScene3 -> PlayerCamera -> FishingRod
+		# Versuche fishing_location aus FishingRod zu holen
 		var fishing_rod = get_tree().root.get_node_or_null("MainScene3/PlayerCamera/FishingRod")
 		
 		if not fishing_rod:
-			# Fallback: Suche in allen Scenes
-			for scene_name in ["MainScene", "MainScene2", "forest", "ocean"]:  # 🆕 ocean hinzugefügt
+			for scene_name in ["MainScene", "MainScene2", "forest", "ocean"]:
 				fishing_rod = get_tree().root.get_node_or_null(scene_name + "/PlayerCamera/FishingRod")
 				if fishing_rod:
 					break
@@ -192,7 +209,6 @@ func _on_visibility_changed() -> void:
 			print("  ✅ Ort erkannt: ", detected_location)
 			current_location = detected_location
 			
-			# 🆕 OptionButton auf richtigen Index setzen
 			var location_index = get_location_index(detected_location)
 			if location_index >= 0:
 				location_selector.select(location_index)
@@ -203,7 +219,10 @@ func _on_visibility_changed() -> void:
 		
 		load_bestiary()
 
-# 🆕 Hilfsfunktion: Location String → OptionButton Index
+# ===========================
+#  LOCATION INDEX
+# ===========================
+
 func get_location_index(location: String) -> int:
 	match location:
 		"lake":
@@ -219,11 +238,17 @@ func get_location_index(location: String) -> int:
 		"iceland":
 			return 5
 		"ocean":
-			return 6  # 🆕 OCEAN
+			return 6
+		"???":  # 🆕 Lore
+			return 7
 		"insgesamt":
-			return 7  # 🆕 verschoben
+			return 8  # 🆕 Verschoben
 		_:
-			return 0  # Fallback zu See
+			return 0
+
+# ===========================
+#  LOAD BESTIARY
+# ===========================
 
 func load_bestiary():
 	print("📖 load_bestiary() - Starting...")
@@ -242,14 +267,13 @@ func load_bestiary():
 		var entry = entries[i]
 		var entry_ui = fish_entry_scene.instantiate()
 		
-		# 🆕 WICHTIG: Setze Referenz zum FishBook UI
 		if entry_ui.has_method("set_fishbook_ui"):
 			entry_ui.set_fishbook_ui(self)
 		
 		entry_ui.set_fish_data(entry)
 		grid_container.add_child(entry_ui)
 		
-		# ✨ Fade-in Animation (gestaffelt)
+		# Fade-in Animation
 		entry_ui.modulate.a = 0
 		entry_ui.scale = Vector2(0.8, 0.8)
 		
@@ -261,31 +285,38 @@ func load_bestiary():
 	# Stats aktualisieren
 	update_stats()
 
+# ===========================
+#  UPDATE STATS
+# ===========================
+
 func update_stats():
 	var stats = fish_book.get_bestiary_stats(current_location)
 	
-	# 🎨 Farbiger Progress-Text
+	# Farbiger Progress-Text
 	var color = Color.WHITE
 	var completion = stats["completion"]
 	
 	if completion == 100:
-		color = Color(0.2, 1.0, 0.3)  # Grün bei 100%
+		color = Color(0.2, 1.0, 0.3)
 	elif completion >= 75:
-		color = Color(0.3, 0.8, 1.0)  # Blau bei 75%+
+		color = Color(0.3, 0.8, 1.0)
 	elif completion >= 50:
-		color = Color(1.0, 0.85, 0.3)  # Gold bei 50%+
+		color = Color(1.0, 0.85, 0.3)
 	else:
-		color = Color(0.8, 0.8, 0.8)  # Grau unter 50%
+		color = Color(0.8, 0.8, 0.8)
 	
 	stats_label.add_theme_color_override("font_color", color)
-	# 🌍 Übersetzter Stats-Text
-	stats_label.text = get_text("caught_text") % [stats["caught"], stats["total"], completion]
 	
-	# 🏆 Komplettierungs-Badge
+	# 🆕 Unterschiedlicher Text für Lore
+	if current_location == "???":
+		stats_label.text = get_text("collected_text") % [stats["caught"], stats["total"], completion]
+	else:
+		stats_label.text = get_text("caught_text") % [stats["caught"], stats["total"], completion]
+	
 	if completion == 100:
 		stats_label.text += " 🏆"
 	
-	# 📖 Titel aktualisieren (🌍 Mit Übersetzungen)
+	# Titel aktualisieren
 	var location_text = ""
 	match current_location:
 		"lake":
@@ -301,11 +332,17 @@ func update_stats():
 		"iceland":
 			location_text = get_text("location_iceland")
 		"ocean":
-			location_text = get_text("location_ocean")  # 🆕 OCEAN
+			location_text = get_text("location_ocean")
+		"???":  # 🆕 Lore
+			location_text = get_text("location_lore")
 		"insgesamt":
 			location_text = get_text("location_all")
 	
 	title_label.text = get_text("fishbook_title") % location_text
+
+# ===========================
+#  LOCATION CHANGED
+# ===========================
 
 func _on_location_changed(index: int):
 	match index:
@@ -322,18 +359,27 @@ func _on_location_changed(index: int):
 		5:
 			current_location = "iceland"
 		6:
-			current_location = "ocean"  # 🆕 OCEAN
+			current_location = "ocean"
 		7:
+			# Könnte ??? oder insgesamt sein
+			if LoreManager.get_note_count() > 0:
+				current_location = "???"
+			else:
+				current_location = "insgesamt"
+		8:
 			current_location = "insgesamt"
 	
 	load_bestiary()
+
+# ===========================
+#  INPUT
+# ===========================
 
 func _input(event):
 	if event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE:
 		if get_parent().has_method("toggle_bestiary"):
 			get_parent().toggle_bestiary()
 		get_tree().root.set_input_as_handled()
-
 
 func _on_close_pressed() -> void:
 	hide()

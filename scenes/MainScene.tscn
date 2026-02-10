@@ -439,7 +439,9 @@ func _on_biome_completed(biome_name: String, reward: int) -> void:
 
 
 			Player.update_last_scene(\"res://scenes/MainScene.tscn\")
-			Transition.change_scene(\"res://scenes/MapScene.tscn\")
+					# 🆕 Zettel registrieren
+			register_biome_note(\"fragment_01\")
+			FlowManager.end_event()
 
 		
 		\"city\":
@@ -456,6 +458,11 @@ func _on_biome_completed(biome_name: String, reward: int) -> void:
 		
 		\"desert\":
 			print(\"✨ Alle Biome gemeistert - Geheimes Ende freigeschaltet!\")
+
+func register_biome_note(note_id: String) -> void:
+	if not LoreManager.has_note(note_id):
+		var note_data = LoreManager.NOTES[note_id]
+		FlowManager.register_note(note_id, note_data.digit, note_data.text)
 
 func _unhandled_input(event: InputEvent) -> void:
 	# 🆕 ESC/Pause behandeln - IMMER als erstes prüfen

@@ -8,15 +8,15 @@ var value_label: Label
 var separator: HSeparator
 var fish_data: Dictionary = {}
 
-# 🎯 TOOLTIP
+# Tooltip
 var tooltip_panel: PanelContainer
 var tooltip_label: RichTextLabel
 var is_hovering: bool = false
 
-# 🆕 Referenz zum FishBook UI
+# Referenz zum FishBook UI
 var fishbook_ui: Control = null
 
-# 🌍 Localized Texts
+# Localized Texts
 var localized_texts := {
 	"unknown": {
 		"de": "Unbekannt",
@@ -29,6 +29,10 @@ var localized_texts := {
 	"no_description": {
 		"de": "Keine Beschreibung verfügbar.",
 		"en": "No description available."
+	},
+	"lore_item": {  # 🆕 Für Zettel
+		"de": "Fragment",
+		"en": "Fragment"
 	}
 }
 
@@ -45,19 +49,14 @@ func _ready():
 	value_label.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	name_label.autowrap_mode = TextServer.AUTOWRAP_WORD
 	
-	# Größe setzen
 	size_flags_horizontal = Control.SIZE_FILL
-	
-	# Mouse Filter
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	
-	# Tooltip erstellen
 	create_tooltip()
 
-
-# ============================================
-# 🌍 LOCALIZATION HELPER
-# ============================================
+# ===========================
+#  LOCALIZATION HELPER
+# ===========================
 
 func get_text(key: String) -> String:
 	var current_lang = Player.current_language
@@ -66,26 +65,6 @@ func get_text(key: String) -> String:
 	elif localized_texts.has(key) and localized_texts[key].has("de"):
 		return localized_texts[key]["de"]
 	return key
-
-func _get_rarity_key(rarity_name: String) -> String:
-	match rarity_name:
-		"Normal":
-			return "NORMAL"
-		"Ungewöhnlich":
-			return "UNCOMMON"
-		"Selten":
-			return "RARE"
-		"Episch":
-			return "EPIC"
-		"Legendär":
-			return "LEGENDARY"
-		"Exotisch":
-			return "EXOTIC"
-		"Antik":
-			return "ANTIQUE"
-		_:
-			return "NORMAL"
-
 
 func set_fishbook_ui(ui: Control):
 	fishbook_ui = ui
@@ -108,7 +87,6 @@ func show_fish_details():
 	if fishbook_ui and fishbook_ui.has_method("show_fish_detail_popup"):
 		fishbook_ui.show_fish_detail_popup(fish_data)
 	else:
-		# Fallback: Suche in Parent-Hierarchie
 		var parent = get_parent()
 		var depth = 0
 		while parent and depth < 10:
@@ -118,6 +96,10 @@ func show_fish_details():
 			parent = parent.get_parent()
 			depth += 1
 
+# ===========================
+#  UPDATE DISPLAY
+# ===========================
+
 func update_display():
 	if fish_data.is_empty():
 		return
@@ -125,51 +107,45 @@ func update_display():
 	if icon == null or name_label == null or rarity_label == null or value_label == null:
 		return
 	
-	# 🎨 RARITY & VALUE & RAHMEN
+	# 🆕 SPEZIALBEHANDLUNG FÜR LORE
+	if fish_data.get("is_lore", false):
+		update_lore_display()
+		return
+	
+	# NORMALE FISCHE
 	if fish_data.get("caught", false):
 		var rarity = fish_data["rarity"]
 		var rarity_data = FishDB.RARITY_DATA[rarity]
 		var rarity_color = rarity_data["color"]
 		
-		# 🐟 ICON - Steam-Player oder normal
 		icon.modulate = Color.WHITE
-		
-		# 🆕 Prüfe ob Icon ein Texture2D ist (Steam Avatar)
 		icon.texture = FishDB.get_fish_icon(fish_data)
 		
-		# ❓ Fragezeichen ausblenden
 		if question_overlay:
 			question_overlay.visible = false
 		
-		# 📝 NAME - Steam-Player oder normal
 		var display_name = fish_data.get("name", "???")
 		name_label.text = display_name
 		name_label.add_theme_font_size_override("font_size", 15)
 		
-		# 🌍 SELTENHEIT (Übersetzt)
 		var rarity_key: String = rarity_data["name_key"]
 		rarity_label.text = tr(rarity_key)
 		rarity_label.modulate = rarity_color
 		separator.modulate = rarity_color
 		rarity_label.add_theme_font_size_override("font_size", 12)
 		
-		# 💰 VALUE
 		value_label.text = "💰 %d" % fish_data["base_value"]
 		value_label.add_theme_font_size_override("font_size", 12)
 		value_label.show()
 		
-		# 🎨 RAHMEN IN SELTENHEITS-FARBE
 		update_border_color(rarity_color)
-		
-		# Hintergrund normal
 		modulate = Color.WHITE
 		
-		# ✨ Glow-Effekt bei hohen Seltenheiten
 		if rarity >= FishDB.RARITY.EPISCH:
 			add_glow_effect(rarity_color)
 		
 	else:
-		# 🔒 UNBEKANNTER FISCH
+		# UNBEKANNTER FISCH
 		icon.modulate = Color(0.3, 0.3, 0.3, 0.5)
 		
 		if question_overlay:
@@ -178,17 +154,60 @@ func update_display():
 		name_label.text = "???"
 		name_label.add_theme_font_size_override("font_size", 15)
 		
-		# 🌍 "Unbekannt" übersetzt
 		rarity_label.text = get_text("unknown")
 		rarity_label.modulate = Color.GRAY
 		separator.modulate = Color.GRAY
 		rarity_label.add_theme_font_size_override("font_size", 12)
 		
 		value_label.hide()
-		
 		update_border_color(Color(0.4, 0.4, 0.4, 1))
-		
 		modulate = Color(0.7, 0.7, 0.7)
+
+# ===========================
+#  🆕 LORE DISPLAY
+# ===========================
+
+func update_lore_display():
+	"""Spezielle Anzeige für Zettel"""
+	
+	# Icon (Custom Fragment Icon)
+	icon.modulate = Color.WHITE
+	if ResourceLoader.exists("res://assets/fish/fragment.png"):
+		icon.texture = load("res://assets/fish/fragment.png")
+	else:
+		# Fallback: Nutze Question Mark Icon oder generisches Icon
+		icon.texture = load("res://assets/fish/unknown.png")
+	
+	if question_overlay:
+		question_overlay.visible = false
+	
+	# Name
+	var display_name = fish_data.get("name", "Fragment")
+	name_label.text = display_name
+	name_label.add_theme_font_size_override("font_size", 15)
+	
+	# Rarity (Legendary Gold)
+	var rarity_data = FishDB.RARITY_DATA[FishDB.RARITY.LEGENDAER]
+	var rarity_color = rarity_data["color"]
+	
+	rarity_label.text = get_text("lore_item")
+	rarity_label.modulate = rarity_color
+	separator.modulate = rarity_color
+	rarity_label.add_theme_font_size_override("font_size", 12)
+	
+	# Kein Wert für Zettel
+	value_label.hide()
+	
+	# Goldener Rahmen
+	update_border_color(rarity_color)
+	modulate = Color.WHITE
+	
+	# Glow-Effekt
+	add_glow_effect(rarity_color)
+
+# ===========================
+#  BORDER & GLOW
+# ===========================
 
 func update_border_color(color: Color):
 	var style_box = StyleBoxFlat.new()
@@ -213,6 +232,10 @@ func add_glow_effect(color: Color):
 	var tween = create_tween().set_loops()
 	tween.tween_property(self, "modulate:a", 0.9, 1.0)
 	tween.tween_property(self, "modulate:a", 1.0, 1.0)
+
+# ===========================
+#  TOOLTIP
+# ===========================
 
 func create_tooltip():
 	tooltip_panel = PanelContainer.new()
@@ -284,15 +307,22 @@ func _notification(what):
 	elif what == NOTIFICATION_MOUSE_EXIT:
 		_on_mouse_exited()
 
+# ===========================
+#  MOUSE EVENTS
+# ===========================
+
 func _on_mouse_entered():
 	if not fish_data.get("caught", false):
 		return
 
 	is_hovering = true
-
-	# ----------------------------
-	# Vollständige FishDB-Daten
-	# ----------------------------
+	
+	# 🆕 SPEZIALBEHANDLUNG FÜR LORE
+	if fish_data.get("is_lore", false):
+		show_lore_tooltip()
+		return
+	
+	# NORMALE FISCHE
 	var fish_id: String = fish_data.get("id", "")
 	if fish_id == "":
 		return
@@ -307,44 +337,24 @@ func _on_mouse_entered():
 	if full_fish.is_empty():
 		return
 
-
-	# ----------------------------
-	# Name (lokalisiert oder Steam)
-	# ----------------------------
 	var fish_name : String = fish_data.get("name", FishDB.get_fish_name(full_fish))
-
-	# ----------------------------
-	# Beschreibung (lokalisiert)
-	# ----------------------------
 	var description := FishDB.get_fish_description(full_fish)
-
-	# ----------------------------
-	# Rarity
-	# ----------------------------
+	
 	var rarity: int = full_fish["rarity"]
 	var rarity_data: Dictionary = FishDB.RARITY_DATA[rarity]
 	var rarity_color: Color = rarity_data["color"]
 	var rarity_text: String = tr(rarity_data["name_key"])
 
-	# ----------------------------
-	# Tooltip Text
-	# ----------------------------
 	var tooltip_text := ""
 	tooltip_text += "[b][font_size=16]%s[/font_size][/b]\n" % fish_name
 	tooltip_text += "[color=%s]%s[/color]" % [rarity_color.to_html(), rarity_text]
 	tooltip_text += " • 💰 %d\n" % FishDB.get_fish_value(full_fish)
 
-	# ----------------------------
-	# Rekord-Gewicht (ID!)
-	# ----------------------------
 	var max_weight := Player.get_max_caught_weight(fish_id)
 	if max_weight > 0:
 		var record_text := get_text("record") % max_weight
 		tooltip_text += "\n[color=#FFD700]%s[/color]\n" % record_text
 
-	# ----------------------------
-	# Beschreibung
-	# ----------------------------
 	if description != "":
 		tooltip_text += "\n[color=#CCCCCC]%s[/color]" % description
 	else:
@@ -354,16 +364,36 @@ func _on_mouse_entered():
 	tooltip_panel.visible = true
 	update_tooltip_position()
 
-func get_description_from_fishdb() -> String:
-	var fish_id: String = fish_data.get("id", "")
-	if fish_id == "":
-		return ""
+# ===========================
+#  🆕 LORE TOOLTIP
+# ===========================
 
-	var full_fish: Dictionary = FishDB.get_fish_by_id(fish_id)
-	if full_fish.is_empty():
-		return ""
+func show_lore_tooltip():
+	"""Zeige Tooltip für Zettel"""
+	var lore_name = fish_data.get("name", "Fragment")
+	var lore_text = fish_data.get("text", "")
+	var digit = fish_data.get("digit", 0)
+	
+	var rarity_data = FishDB.RARITY_DATA[FishDB.RARITY.LEGENDAER]
+	var rarity_color = rarity_data["color"]
+	
+	var tooltip_text := ""
+	tooltip_text += "[b][font_size=16]%s[/font_size][/b]\n" % lore_name
+	tooltip_text += "[color=%s]Fragment[/color]\n" % rarity_color.to_html()
+	
+	# 🔐 Zeige Ziffer nur wenn alle Zettel gesammelt
+	if LoreManager.is_code_complete():
+		tooltip_text += "\n[color=#FFD700]🔐 Ziffer: %d[/color]\n" % digit
+	
+	# Text (gekürzt für Tooltip)
+	if lore_text.length() > 100:
+		tooltip_text += "\n[color=#CCCCCC]%s...[/color]" % lore_text.substr(0, 100)
+	else:
+		tooltip_text += "\n[color=#CCCCCC]%s[/color]" % lore_text
 
-	return FishDB.get_fish_description(full_fish)
+	tooltip_label.text = tooltip_text
+	tooltip_panel.visible = true
+	update_tooltip_position()
 
 func _on_mouse_exited():
 	is_hovering = false
