@@ -1,10 +1,11 @@
-[gd_scene load_steps=7 format=3 uid="uid://de43b6r65xqkx"]
+[gd_scene load_steps=8 format=3 uid="uid://de43b6r65xqkx"]
 
 [ext_resource type="Script" uid="uid://d05iwv0epvytf" path="res://scripts/ending_screen.gd" id="1_cas3l"]
 [ext_resource type="Texture2D" uid="uid://b4vpo3k0sv7oo" path="res://assets/echos/ending.png" id="2_nrc21"]
 [ext_resource type="AudioStream" uid="uid://dy3uepyjrgdit" path="res://sounds/ending.mp3" id="3_q3b0u"]
 [ext_resource type="Shader" uid="uid://c140kjbm2bot5" path="res://shader/buckshot.gdshader" id="4_304tg"]
 [ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="5_amowu"]
+[ext_resource type="AudioStream" uid="uid://ckynhrbv4216v" path="res://sounds/bye.mp3" id="6_nrc21"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_cas3l"]
 shader = ExtResource("4_304tg")
@@ -99,3 +100,8 @@ anchor_bottom = 1.0
 offset_right = 28.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="bye" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("6_nrc21")
+pitch_scale = 1.16
+bus = &"SFX"

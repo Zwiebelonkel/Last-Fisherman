@@ -1,7 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://b6riarv4ejax4"]
+[gd_scene load_steps=8 format=3 uid="uid://b6riarv4ejax4"]
 
 [ext_resource type="Shader" uid="uid://c140kjbm2bot5" path="res://shader/buckshot.gdshader" id="1"]
 [ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="2"]
+[ext_resource type="AudioStream" uid="uid://b5enghab28w0l" path="res://sounds/note.mp3" id="3_atri0"]
 
 [sub_resource type="GDScript" id="GDScript_noteview"]
 script/source = "extends Control
@@ -208,7 +209,7 @@ grow_horizontal = 2
 grow_vertical = 0
 theme_override_fonts/font = ExtResource("2")
 theme_override_font_sizes/font_size = 20
-text = "[Beliebige Taste]"
+text = "ANY_KEY"
 horizontal_alignment = 1
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
@@ -216,3 +217,8 @@ libraries = {
 &"": SubResource("AnimationLibrary_note")
 }
 autoplay = "float"
+
+[node name="bye" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_atri0")
+pitch_scale = 0.86
+autoplay = true

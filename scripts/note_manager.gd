@@ -1,49 +1,128 @@
-extends Node3D
-
-var note_ui: NoteUI
-
+extends Node
+# ========================================
+# LOREMANAGER - Persistent Notes
+# ========================================
+signal note_added(note_id: String, digit: int)
+signal all_notes_collected()
+# -------------------------
+# Data
+# -------------------------
+var collected_notes: Dictionary = {}
+# Format: { "fragment_01": { "digit": 1, "text": "..." } }
+# -------------------------
+# Note Definitions
+# -------------------------
+const NOTES: Dictionary = {
+	"fragment_01": {
+		"digit": 1,
+		"name": "Fragment I",
+		"text": "We did not flee. The sea did not take us. We stopped being seen."
+	},
+	"fragment_02": {
+		"digit": 9,
+		"name": "Fragment II",
+		"text": "The fish only came when no one was looking anymore. They were always there. We were the problem."
+	},
+	"fragment_03": {
+		"digit": 0,
+		"name": "Fragment III",
+		"text": "We called it research. Archival. Control. But the water remembers everything."
+	},
+	"fragment_04": {
+		"digit": 6,
+		"name": "Fragment IV",
+		"text": "Someone must remain. Not to save. But to remember. If you're reading this, it's you now."
+	}
+}
+# -------------------------
+# Ready
+# -------------------------
 func _ready() -> void:
-	print("🏠 HUB MANAGER START")
-	
-	await get_tree().process_frame
-	
-	# Finde NoteUI
-	var ui_nodes = get_tree().get_nodes_in_group("note_ui")
-	print("Suche NoteUI: ", ui_nodes.size(), " gefunden")
-	
-	if ui_nodes.size() > 0:
-		note_ui = ui_nodes[0]
-		print("✅ NoteUI: ", note_ui.name)
-	else:
-		push_error("❌ KEINE NoteUI gefunden!")
+	load_data()
+	print("📚 LoreManager: %d notes loaded" % collected_notes.size())
+# -------------------------
+# Add Note
+# -------------------------
+func add_note(note_id: String, digit: int = -1, text: String = "") -> void:
+	if collected_notes.has(note_id):
+		print("⚠️ LoreManager: Note already collected - %s" % note_id)
 		return
 	
-	# Registriere Notes
-	var notes = get_tree().get_nodes_in_group("notes")
-	print("Suche Notes: ", notes.size(), " gefunden")
+	var note_data: Dictionary
 	
-	var registered = 0
-	for note in notes:
-		if note.has_signal("note_opened") and note.has_signal("note_closed"):
-			note.note_opened.connect(_on_note_opened)
-			note.note_closed.connect(_on_note_closed)
-			registered += 1
-			print("✅ Registriert: ", note.name)
-		else:
-			push_error("❌ Note fehlen Signals: ", note.name)
+	if NOTES.has(note_id):
+		note_data = NOTES[note_id].duplicate()
+	else:
+		note_data = {
+			"digit": digit,
+			"name": "Fragment",
+			"text": text
+		}
 	
-	print("SETUP ABGESCHLOSSEN - ", registered, " Notes registriert")
-
-func _on_note_opened(title: String, text: String) -> void:
-	print("\n🔔 MANAGER: Note öffnen")
-	if note_ui:
-		note_ui.show_note(title, text)
-	else:
-		push_error("❌ NoteUI ist NULL!")
-
-func _on_note_closed() -> void:
-	print("🔔 MANAGER: Note schließen\n")
-	if note_ui:
-		note_ui.hide_note()
-	else:
-		push_error("❌ NoteUI ist NULL!")
+	collected_notes[note_id] = note_data
+	print("✅ LoreManager: Note added - %s (Digit: %d)" % [note_id, note_data.digit])
+	
+	emit_signal("note_added", note_id, note_data.digit)
+	
+	if collected_notes.size() == NOTES.size():
+		emit_signal("all_notes_collected")
+		print("🎉 LoreManager: All notes collected! Code: %s" % get_code())
+	
+	save_data()
+# -------------------------
+# Get Functions
+# -------------------------
+func has_note(note_id: String) -> bool:
+	return collected_notes.has(note_id)
+func get_note_count() -> int:
+	return collected_notes.size()
+func get_code() -> String:
+	var code = ""
+	var sorted_ids = collected_notes.keys()
+	sorted_ids.sort()
+	
+	for note_id in sorted_ids:
+		code += str(collected_notes[note_id].digit)
+	
+	return code
+func is_code_complete() -> bool:
+	return collected_notes.size() == NOTES.size()
+# -------------------------
+# Inventory Integration
+# -------------------------
+func get_inventory_notes() -> Array:
+	var notes = []
+	
+	for note_id in collected_notes:
+		var note = collected_notes[note_id]
+		notes.append({
+			"id": note_id,
+			"name": note.get("name", "Fragment"),
+			"category": "???",
+			"description": "A mysterious note",
+			"digit": note.get("digit", 0)
+		})
+	
+	return notes
+# -------------------------
+# Save/Load
+# -------------------------
+func save_data() -> void:
+	var save_data = { "collected_notes": collected_notes }
+	var file = FileAccess.open("user://lore.dat", FileAccess.WRITE)
+	if file:
+		file.store_var(save_data)
+		file.close()
+func load_data() -> void:
+	if not FileAccess.file_exists("user://lore.dat"):
+		return
+	
+	var file = FileAccess.open("user://lore.dat", FileAccess.READ)
+	if file:
+		var save_data = file.get_var()
+		file.close()
+		collected_notes = save_data.get("collected_notes", {})
+func reset() -> void:
+	collected_notes.clear()
+	save_data()
+	print("🔄 LoreManager: Reset")

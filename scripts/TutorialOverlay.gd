@@ -7,6 +7,8 @@ extends CanvasLayer
 @onready var content: VBoxContainer = $Panel/VBox/Content
 @onready var close_button: Button = $Panel/VBox/CloseButton
 @onready var page_indicator: Label = $Panel/VBox/PageIndicator
+@onready var welcome: AudioStreamPlayer = $welcome
+
 
 const VCR_FONT := preload("res://fonts/VCR_OSD_MONO_1.001.ttf")
 var current_page: int = 0
@@ -138,6 +140,7 @@ func _ready() -> void:
 	print("🔍 DEBUG: CanvasLayer visible =", visible)
 	
 	print("✅ Tutorial-Overlay gestartet")
+	welcome.play()
 
 
 func _setup_ui() -> void:

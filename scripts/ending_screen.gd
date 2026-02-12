@@ -5,6 +5,8 @@ extends Control
 @onready var scroll_container: ScrollContainer = $CanvasLayer/ScrollContainer
 @onready var ending_text: RichTextLabel = $CanvasLayer/ScrollContainer/EndingText
 @onready var ending_music: AudioStreamPlayer = $EndingMusic
+@onready var bye: AudioStreamPlayer = $bye
+
 
 @export var ending_texture: Texture2D
 @export var ending_music_stream: AudioStream
@@ -62,6 +64,7 @@ var _scrolling := false
 var _wait_for_input := false
 
 func _ready() -> void:
+	bye.play()
 	background.color = Color.BLACK
 
 	# 🔥 KRITISCH: Anchors zurücksetzen
