@@ -1,4 +1,4 @@
-[gd_scene load_steps=80 format=3 uid="uid://bw5el7n36awdr"]
+[gd_scene load_steps=85 format=3 uid="uid://bw5el7n36awdr"]
 
 [ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="1_2phbr"]
 [ext_resource type="PackedScene" uid="uid://b5ew1rfc8ow8g" path="res://scenes/fishingRod.tscn" id="1_echbf"]
@@ -20,11 +20,14 @@
 [ext_resource type="PackedScene" uid="uid://brmbdno888s38" path="res://assets/tree.glb" id="14_08o8g"]
 [ext_resource type="PackedScene" uid="uid://bw80sbvfcwe1p" path="res://scenes/cigarette.tscn" id="14_fto0a"]
 [ext_resource type="PackedScene" uid="uid://cfptx2e41wve1" path="res://scenes/shop.tscn" id="15_0cxu4"]
-[ext_resource type="Material" uid="uid://bsr3yycic2g0q" path="res://materials/water.tres" id="16_wsqty"]
 [ext_resource type="AudioStream" uid="uid://esyv0p374c5j" path="res://sounds/bite.mp3" id="18_2phbr"]
+[ext_resource type="Shader" uid="uid://c37jx2ebwp1a3" path="res://shader/shader_water.gdshader" id="18_5ha8j"]
 [ext_resource type="PackedScene" uid="uid://8ljq0dpgsno5" path="res://scenes/bait.tscn" id="18_l3o4o"]
 [ext_resource type="AudioStream" uid="uid://cldy38iwm8ovi" path="res://sounds/cast.mp3" id="19_mkg2b"]
+[ext_resource type="Texture2D" uid="uid://cjl6h1xc3a12p" path="res://textures/foam.png" id="19_xuwja"]
 [ext_resource type="AudioStream" uid="uid://26m0pjkxve85" path="res://sounds/rarity/normal.mp3" id="20_1ns3k"]
+[ext_resource type="Texture2D" uid="uid://cvllk03mhtybp" path="res://textures/723-normal.jpg" id="20_g8282"]
+[ext_resource type="Texture2D" uid="uid://d31603nl8y0gd" path="res://textures/Water_preview.jpgC878A51E-2B84-45CA-85CB-75E5BC88EEC8Large.jpg" id="21_7tuqu"]
 [ext_resource type="AudioStream" uid="uid://cmr6cded4l11v" path="res://sounds/whoosh.mp3" id="21_a7pbh"]
 [ext_resource type="PackedScene" uid="uid://dedujdavqgnhc" path="res://scenes/clouds.tscn" id="24_a7pbh"]
 [ext_resource type="AudioStream" uid="uid://bm2wkiirbpowg" path="res://sounds/rarity/uncommon.mp3" id="25_2so2y"]
@@ -45,6 +48,7 @@
 [ext_resource type="AudioStream" uid="uid://bqcbwput2tdy3" path="res://sounds/reeling.mp3" id="36_qnen4"]
 [ext_resource type="PackedScene" uid="uid://ctqxalvjd2b1k" path="res://assets/palm.glb" id="36_u55b3"]
 [ext_resource type="PackedScene" uid="uid://bswqivqayur26" path="res://scenes/fireflies.tscn" id="38_oiest"]
+[ext_resource type="AudioStream" uid="uid://nvrc6arpsx6n" path="res://sounds/ocean.mp3" id="38_xuwja"]
 [ext_resource type="PackedScene" uid="uid://ng3k0vguw2ww" path="res://assets/chair.glb" id="45_pwxld"]
 [ext_resource type="PackedScene" uid="uid://4vuswgb4ap52" path="res://scenes/story1.tscn" id="46_cw1g3"]
 [ext_resource type="PackedScene" uid="uid://cw1hh2dbog4uj" path="res://scenes/TutorialOverlay.tscn" id="47_yc0gu"]
@@ -1180,11 +1184,69 @@ func trigger_splash_burst() -> void:
 		
 "
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_e65ta"]
+render_priority = -128
+shader = ExtResource("18_5ha8j")
+shader_parameter/wave_height = 0.679
+shader_parameter/wave_speed = 3.348
+shader_parameter/refraction_strength = 0.231
+shader_parameter/refraction_depth_scale = 0.771
+shader_parameter/wave_1 = Vector4(0.3, 4, 0.2, 0.6)
+shader_parameter/wave_2 = Vector4(-0.26, -0.19, 0.01, 0.47)
+shader_parameter/wave_3 = Vector4(-7.67, 5.63, 0.1, 0.38)
+shader_parameter/wave_4 = Vector4(-0.42, -1.63, 0.1, 0.28)
+shader_parameter/wave_5 = Vector4(1.66, 0.07, 0.15, 1.81)
+shader_parameter/wave_6 = Vector4(1.2, 1.14, 0.01, 0.33)
+shader_parameter/wave_7 = Vector4(-1.6, 7.3, 0.11, 0.73)
+shader_parameter/wave_8 = Vector4(-0.42, -1.63, 0.15, 1.52)
+shader_parameter/time_factor = 6.975
+shader_parameter/noise_zoom = 3.885
+shader_parameter/noise_amp = 1.0
+shader_parameter/base_water_color = Color(0.188235, 0.537255, 0.282353, 1)
+shader_parameter/fresnel_water_color = Color(0.338312, 0.553894, 0.419979, 1)
+shader_parameter/deep_water_color = Color(0.116021, 0.237972, 0.128846, 1)
+shader_parameter/shallow_water_color = Color(0.56641, 0.833903, 0.620567, 1)
+shader_parameter/beers_law = 2.01
+shader_parameter/depth_offset = -1.2
+shader_parameter/near = 7.38
+shader_parameter/far = 10000.0
+shader_parameter/edge_texture_scale = 3.5
+shader_parameter/edge_texture_offset = 1.0
+shader_parameter/edge_texture_speed = 0.1
+shader_parameter/edge_foam_intensity = 2.0
+shader_parameter/edge_fade_start = -3.0
+shader_parameter/edge_fade_end = 6.6
+shader_parameter/edge_foam_texture = ExtResource("19_xuwja")
+shader_parameter/peak_height_threshold = 2.88
+shader_parameter/peak_color = Vector3(1, 1, 1)
+shader_parameter/peak_intensity = 1.0
+shader_parameter/foam_texture = ExtResource("19_xuwja")
+shader_parameter/foam_intensity = 1.0
+shader_parameter/foam_scale = 6.255
+shader_parameter/metallic = 1.79
+shader_parameter/roughness = 0.07
+shader_parameter/uv_scale_text_a = 0.23
+shader_parameter/uv_speed_text_a = Vector2(0.015, -0.03)
+shader_parameter/uv_scale_text_b = 0.36
+shader_parameter/uv_speed_text_b = Vector2(-0.025, 0.1)
+shader_parameter/normal_strength = 1.28
+shader_parameter/uv_sampler_scale = 0.3
+shader_parameter/blend_factor = 0.795
+shader_parameter/perturbation_strength = 0.37
+shader_parameter/perturbation_time = 0.3
+shader_parameter/normalmap_a = ExtResource("20_g8282")
+shader_parameter/normalmap_b = ExtResource("21_7tuqu")
+shader_parameter/caustics_intensity = 14.48
+shader_parameter/num_caustic_layers = 16.0
+shader_parameter/caustic_distortion_strength = 0.001
+
 [sub_resource type="PlaneMesh" id="PlaneMesh_qg23i"]
 lightmap_size_hint = Vector2i(251, 1001)
-material = ExtResource("16_wsqty")
+material = SubResource("ShaderMaterial_e65ta")
 uv2_padding = 1.41
 size = Vector2(200, 200)
+subdivide_width = 200
+subdivide_depth = 200
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_8wjpf"]
 render_priority = 0
@@ -1626,7 +1688,7 @@ transform = Transform3D(0.789812, 0.0794083, 0.274757, -0.0560458, 0.8343, -0.08
 visible = false
 
 [node name="WaterPlane" type="MeshInstance3D" parent="."]
-transform = Transform3D(-1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0, 0, 1, 0, 1.31409, 91.1433)
+transform = Transform3D(-1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0, 0, 1, 0, 1.15246, 91.1433)
 mesh = SubResource("PlaneMesh_qg23i")
 
 [node name="Hook" type="Node3D" parent="."]
@@ -1647,6 +1709,7 @@ libraries = {
 transform = Transform3D(1, 0, 0, 0, 0.931818, 0.362926, 0, -0.362926, 0.931818, -1.07784, 37.4465, 160.116)
 light_color = Color(0.99552, 0.467887, 0.0444731, 1)
 light_energy = 16.0
+light_indirect_energy = 0.0
 light_volumetric_fog_energy = 0.485
 light_angular_distance = 13.64
 light_specular = 0.676
@@ -1748,6 +1811,13 @@ stream = ExtResource("27_wsqty")
 volume_db = -1.03
 autoplay = true
 bus = &"Music"
+
+[node name="ocean" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("38_xuwja")
+volume_db = -6.973
+pitch_scale = 0.84
+autoplay = true
+bus = &"SFX"
 
 [node name="line" type="AudioStreamPlayer" parent="Audio"]
 stream = ExtResource("26_mekmn")

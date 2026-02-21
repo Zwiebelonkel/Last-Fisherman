@@ -1,4 +1,4 @@
-[gd_scene load_steps=69 format=3 uid="uid://cvkrlt4ri1i2u"]
+[gd_scene load_steps=70 format=3 uid="uid://cvkrlt4ri1i2u"]
 
 [ext_resource type="Shader" uid="uid://c140kjbm2bot5" path="res://shader/buckshot.gdshader" id="1_nmpot"]
 [ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="2_ikoiv"]
@@ -40,6 +40,7 @@
 [ext_resource type="AudioStream" uid="uid://c0e0t3u3yvvhg" path="res://sounds/rarity/legendary.mp3" id="35_awvkl"]
 [ext_resource type="AudioStream" uid="uid://qeh48myqvc8p" path="res://sounds/rarity/exotic.mp3" id="36_fukq0"]
 [ext_resource type="AudioStream" uid="uid://6a3ro0nq1u4" path="res://sounds/rarity/antique.mp3" id="37_4jd3d"]
+[ext_resource type="AudioStream" uid="uid://nvrc6arpsx6n" path="res://sounds/ocean.mp3" id="38_6pahv"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_nmpot"]
 shader = ExtResource("1_nmpot")
@@ -1430,14 +1431,14 @@ shader_parameter/wave_5 = Vector4(1.66, 0.07, 0.15, 1.81)
 shader_parameter/wave_6 = Vector4(1.2, 1.14, 0.01, 0.33)
 shader_parameter/wave_7 = Vector4(-1.6, 7.3, 0.11, 0.73)
 shader_parameter/wave_8 = Vector4(-0.42, -1.63, 0.15, 1.52)
-shader_parameter/time_factor = 6.975
-shader_parameter/noise_zoom = 12.02
-shader_parameter/noise_amp = 0.37
+shader_parameter/time_factor = 2.5
+shader_parameter/noise_zoom = 2.0
+shader_parameter/noise_amp = 1.0
 shader_parameter/base_water_color = Color(0, 0, 0, 1)
 shader_parameter/fresnel_water_color = Color(0, 0, 0, 1)
 shader_parameter/deep_water_color = Color(0, 0.0652681, 0.151571, 1)
 shader_parameter/shallow_water_color = Color(0, 0, 0, 1)
-shader_parameter/beers_law = 10.51
+shader_parameter/beers_law = 12.705
 shader_parameter/depth_offset = 0.095
 shader_parameter/near = 10.435
 shader_parameter/far = 10000.0
@@ -1447,7 +1448,7 @@ shader_parameter/edge_texture_speed = 0.1
 shader_parameter/edge_foam_intensity = 2.0
 shader_parameter/edge_fade_start = -3.0
 shader_parameter/edge_fade_end = 6.6
-shader_parameter/peak_height_threshold = 4.675
+shader_parameter/peak_height_threshold = 1.0
 shader_parameter/peak_color = Vector3(1, 1, 1)
 shader_parameter/peak_intensity = 2.665
 shader_parameter/foam_intensity = 0.0
@@ -1458,24 +1459,26 @@ shader_parameter/uv_scale_text_a = 0.255
 shader_parameter/uv_speed_text_a = Vector2(0.65, 0.3)
 shader_parameter/uv_scale_text_b = 0.855
 shader_parameter/uv_speed_text_b = Vector2(0.15, 0.1)
-shader_parameter/normal_strength = 5.095
-shader_parameter/uv_sampler_scale = 0.3
+shader_parameter/normal_strength = 0.94
+shader_parameter/uv_sampler_scale = 6.555
 shader_parameter/blend_factor = 0.795
-shader_parameter/perturbation_strength = 0.47
+shader_parameter/perturbation_strength = 1.315
 shader_parameter/perturbation_time = 0.245
 shader_parameter/normalmap_a = ExtResource("10_kg0fi")
 shader_parameter/normalmap_b = ExtResource("11_0orsp")
 shader_parameter/caustics_intensity = 15.0
 shader_parameter/num_caustic_layers = 16.76
 shader_parameter/caustic_distortion_strength = 0.001
-shader_parameter/water_level = 4.03
-shader_parameter/wave_amplitude_multiplier = 18.68
+shader_parameter/water_level = 0.0
+shader_parameter/wave_amplitude_multiplier = 2.36
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_qg23i"]
 lightmap_size_hint = Vector2i(251, 1001)
 material = SubResource("ShaderMaterial_k24pf")
 uv2_padding = 1.41
 size = Vector2(200, 200)
+subdivide_width = 200
+subdivide_depth = 200
 
 [sub_resource type="Animation" id="Animation_my70f"]
 length = 0.001
@@ -1974,7 +1977,7 @@ light_color = Color(0.212618, 0.391718, 0.51053, 1)
 light_energy = 0.646
 light_indirect_energy = 0.0
 light_volumetric_fog_energy = 0.485
-light_angular_distance = 13.64
+light_angular_distance = 3.7
 light_specular = 0.191
 shadow_enabled = true
 directional_shadow_split_1 = 0.079
@@ -2178,6 +2181,13 @@ bus = &"SFX"
 stream = ExtResource("37_4jd3d")
 volume_db = -6.82
 pitch_scale = 0.67
+bus = &"SFX"
+
+[node name="ocean" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("38_6pahv")
+volume_db = -7.567
+pitch_scale = 0.7
+autoplay = true
 bus = &"SFX"
 
 [node name="Splash" parent="." instance=ExtResource("25_kg0fi")]

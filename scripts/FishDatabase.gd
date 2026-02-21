@@ -12,7 +12,7 @@ enum RARITY {
 	EXOTISCH,
 	ANTIK
 }
-
+# NORMALE CHANCEN_______________________
 #static var RARITY_DATA = {
 	#RARITY.NORMAL: {
 		#"name_key": "RARITY_NORMAL",
@@ -65,6 +65,7 @@ enum RARITY {
 	#}
 #}
 
+# DEBUG CHANCEN_______________________
 static var RARITY_DATA = {
 	RARITY.NORMAL: {
 		"name_key": "RARITY_NORMAL",
@@ -221,6 +222,17 @@ var FISH_LAKE = [
 	"weight_max": 12.0
 	},
 	{
+	"id": "SEEPFERD",
+	"name_key": "FISH_LAKE_SEEPFERD_NAME",
+	"description_key": "FISH_LAKE_SEEPFERD_DESC",
+	"science_key": "FISH_LAKE_SEEPFERD_SCIENCE",
+	"rarity": RARITY.SELTEN,
+	"base_value": 15,
+	"icon": "res://assets/fish/Seepferd.png",
+	"weight_min": 0.005,
+	"weight_max": 0.035
+	},
+	{
 		"id": "MANTA",
 		"name_key": "FISH_LAKE_MANTA_NAME",
 		"description_key": "FISH_LAKE_MANTA_DESC",
@@ -357,6 +369,17 @@ var FISH_CITY = [
 		"icon": "res://assets/fish/signal.png",
 		"weight_min": 0.2,
 		"weight_max": 0.5
+	},
+	{
+		"id": "SEEIGEL",
+		"name_key": "FISH_CITY_SEEIGEL_NAME",
+		"description_key": "FISH_CITY_SEEIGEL_DESC",
+		"science_key": "FISH_CITY_SEEIGEL_SCIENCE",
+		"rarity": RARITY.NORMAL,
+		"base_value": 9,
+		"icon": "res://assets/fish/Seeigel.png",
+		"weight_min": 0.050,
+		"weight_max": 0.200
 	},
 	{
 		"id": "TRUEMMERKABEL_FISCH",
@@ -594,6 +617,17 @@ var FISH_SEWER = [
 		"icon": "res://assets/fish/Wels.png",
 		"weight_min": 5.0,
 		"weight_max": 20.0
+	},
+	{
+		"id": "SEEPFERD2",
+		"name_key": "FISH_SEWER_SEEPFERD2_NAME",
+		"description_key": "FISH_SEWER_SEEPFERD2_DESC",
+		"science_key": "FISH_SEWER_SEEPFERD2_SCIENCE",
+		"rarity": RARITY.UNGEWOEHNLICH,
+		"base_value": 14,
+		"icon": "res://assets/fish/Seepferd2.png",
+		"weight_min": 0.05,
+		"weight_max": 0.12
 	},
 	{
 	"id": "SIFFZUNGE",

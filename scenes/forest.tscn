@@ -1,4 +1,4 @@
-[gd_scene load_steps=77 format=3 uid="uid://bru2npwxw6p10"]
+[gd_scene load_steps=78 format=3 uid="uid://bru2npwxw6p10"]
 
 [ext_resource type="Shader" uid="uid://c140kjbm2bot5" path="res://shader/buckshot.gdshader" id="1_u01n2"]
 [ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="2_8wf4g"]
@@ -43,6 +43,7 @@
 [ext_resource type="PackedScene" uid="uid://bswqivqayur26" path="res://scenes/fireflies.tscn" id="34_4uh7g"]
 [ext_resource type="AudioStream" uid="uid://qeh48myqvc8p" path="res://sounds/rarity/exotic.mp3" id="34_dn1w7"]
 [ext_resource type="AudioStream" uid="uid://6a3ro0nq1u4" path="res://sounds/rarity/antique.mp3" id="35_6sryq"]
+[ext_resource type="AudioStream" uid="uid://c413rhml1623r" path="res://sounds/lake.mp3" id="36_eos0w"]
 [ext_resource type="PackedScene" uid="uid://i8dug7jmonh4" path="res://scenes/story4.tscn" id="37_7q4h0"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_lvx2t"]
@@ -1666,41 +1667,41 @@ shader_parameter/wave_6 = Vector4(1.2, 1.14, 0.01, 0.33)
 shader_parameter/wave_7 = Vector4(-1.6, 7.3, 0.11, 0.73)
 shader_parameter/wave_8 = Vector4(-0.42, -1.63, 0.15, 1.52)
 shader_parameter/time_factor = 6.975
-shader_parameter/noise_zoom = 3.885
-shader_parameter/noise_amp = 1.545
+shader_parameter/noise_zoom = 1.53
+shader_parameter/noise_amp = 0.47
 shader_parameter/base_water_color = Color(0.188235, 0.537255, 0.282353, 1)
 shader_parameter/fresnel_water_color = Color(0.338312, 0.553894, 0.419979, 1)
 shader_parameter/deep_water_color = Color(0.116021, 0.237972, 0.128846, 1)
 shader_parameter/shallow_water_color = Color(0.56641, 0.833903, 0.620567, 1)
-shader_parameter/beers_law = 0.405
-shader_parameter/depth_offset = 0.095
+shader_parameter/beers_law = 1.095
+shader_parameter/depth_offset = -1.355
 shader_parameter/near = 7.0
 shader_parameter/far = 10000.0
-shader_parameter/edge_texture_scale = 4.715
+shader_parameter/edge_texture_scale = 4.45
 shader_parameter/edge_texture_offset = 1.0
 shader_parameter/edge_texture_speed = 0.1
 shader_parameter/edge_foam_intensity = 2.0
 shader_parameter/edge_fade_start = -3.0
 shader_parameter/edge_fade_end = 6.6
-shader_parameter/peak_height_threshold = 1.0
+shader_parameter/peak_height_threshold = 30.51
 shader_parameter/peak_color = Vector3(1, 1, 1)
-shader_parameter/peak_intensity = 1.0
+shader_parameter/peak_intensity = 0.0
 shader_parameter/foam_intensity = 1.0
 shader_parameter/foam_scale = 1.0
-shader_parameter/metallic = 1.79
-shader_parameter/roughness = 0.07
+shader_parameter/metallic = 0.99
+shader_parameter/roughness = 0.015
 shader_parameter/uv_scale_text_a = 0.23
 shader_parameter/uv_speed_text_a = Vector2(0.015, -0.03)
 shader_parameter/uv_scale_text_b = 0.36
 shader_parameter/uv_speed_text_b = Vector2(-0.025, 0.1)
 shader_parameter/normal_strength = 1.28
-shader_parameter/uv_sampler_scale = 0.3
+shader_parameter/uv_sampler_scale = -2.27
 shader_parameter/blend_factor = 0.795
 shader_parameter/perturbation_strength = 0.37
 shader_parameter/perturbation_time = 0.3
 shader_parameter/normalmap_a = ExtResource("11_4uh7g")
 shader_parameter/normalmap_b = ExtResource("12_len2l")
-shader_parameter/caustics_intensity = 14.48
+shader_parameter/caustics_intensity = 15.335
 shader_parameter/num_caustic_layers = 16.0
 shader_parameter/caustic_distortion_strength = 0.001
 
@@ -1709,6 +1710,8 @@ lightmap_size_hint = Vector2i(251, 1001)
 material = SubResource("ShaderMaterial_k24pf")
 uv2_padding = 1.41
 size = Vector2(57.075, 55.585)
+subdivide_width = 200
+subdivide_depth = 200
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_vbuu3"]
 render_priority = 0
@@ -2164,6 +2167,13 @@ bus = &"SFX"
 stream = ExtResource("35_6sryq")
 volume_db = -6.82
 pitch_scale = 0.67
+bus = &"SFX"
+
+[node name="lake" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("36_eos0w")
+volume_db = -6.379
+pitch_scale = 0.84
+autoplay = true
 bus = &"SFX"
 
 [node name="Splash" parent="." instance=ExtResource("23_7jawt")]

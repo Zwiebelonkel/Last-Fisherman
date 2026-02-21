@@ -177,16 +177,26 @@ func get_text(key: String) -> String:
 # ===========================
 
 func show_fish_detail_popup(fish_data: Dictionary):
-	print("show_fish_detail_popup() aufgerufen mit:", fish_data.get("name", "Unknown"))
+	print("show_fish_detail_popup() aufgerufen mit:", fish_data.get("name", fish_data.get("id", "Unknown")))
 	
-	if detail_popup:
-		if detail_popup.has_method("show_fish_details"):
-			detail_popup.show_fish_details(fish_data)
-		else:
-			print("  ❌ Methode 'show_fish_details' nicht gefunden!")
-	else:
+	if not detail_popup:
 		print("  ❌ detail_popup ist null!")
-
+		return
+	
+	if not detail_popup.has_method("show_fish_details"):
+		print("  ❌ Methode 'show_fish_details' nicht gefunden!")
+		return
+	
+	var fish_id: String = fish_data.get("id", "")
+	if LoreManager.NOTES.has(fish_id):
+		var note: Dictionary = LoreManager.NOTES[fish_id].duplicate()
+		note["id"]      = fish_id
+		note["is_lore"] = true
+		note["caught"]  = true
+		detail_popup.show_fish_details(note)
+		return
+	
+	detail_popup.show_fish_details(fish_data)
 # ===========================
 #  VISIBILITY
 # ===========================

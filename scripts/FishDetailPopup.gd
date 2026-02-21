@@ -31,6 +31,22 @@ var localized_texts := {
 	"no_description": {
 		"de": "Keine Beschreibung verfügbar.",
 		"en": "No description available."
+	},
+	"lore_weight": {
+		"de": "⚖️ Gewicht unbekannt",
+		"en": "⚖️ Weight unknown"
+	},
+	"lore_value": {
+		"de": "💰 Kein Wert",
+		"en": "💰 No value"
+	},
+	"lore_caught": {
+		"de": "📜 Fragment gefunden",
+		"en": "📜 Fragment found"
+	},
+	"lore_digit": {
+		"de": "🔢 Ziffer: %d",
+		"en": "🔢 Digit: %d"
 	}
 }
 
@@ -53,31 +69,53 @@ func get_text(key: String) -> String:
 	return key
 
 
+# ============================================
+# 📌 MAIN ENTRY POINT
+# ============================================
+
 func show_fish_details(fish: Dictionary):
 	fish_data = fish
 	visible = true
 
 	var is_steam: bool = fish.get("is_steam_player", false)
+	var is_lore: bool = _is_lore_fragment(fish)  # ← fish statt fish.get("id")
+	
+	if is_lore:
+		_show_lore_fragment(fish)
+		_play_open_animation()
+		return
+
+	# -----------------------------------------------
+	# 🗺️ LORE FRAGMENT
+	# -----------------------------------------------
+	if is_lore:
+		_show_lore_fragment(fish)
+		_play_open_animation()
+		return
+
+	# -----------------------------------------------
+	# 🐟 NORMAL FISH / STEAM PLAYER
+	# -----------------------------------------------
 	var full_fish_data: Dictionary = fish if is_steam else get_full_fish_data(fish.get("id", ""))
 
 	if not is_steam and full_fish_data.is_empty():
 		print("❌ Fisch nicht in FishDB gefunden:", fish.get("id", "UNKNOWN"))
+		visible = false
 		return
 
-	# ✅ ICON: Steam -> steam_avatar direkt nutzen, sonst FishDB
+	# ICON
 	if is_steam and full_fish_data.has("steam_avatar") and full_fish_data["steam_avatar"] is Texture2D:
 		fish_icon.texture = full_fish_data["steam_avatar"]
 	else:
 		fish_icon.texture = FishDB.get_fish_icon(full_fish_data)
 
-	# ✅ NAME: Steam-Spielername hat absolute Priorität
+	# NAME
 	if is_steam:
-		var steam_name: String = str(fish_data.get("name", "Unknown Player"))
-		fish_name_label.text = steam_name
+		fish_name_label.text = str(fish_data.get("name", "Unknown Player"))
 	else:
 		fish_name_label.text = FishDB.get_fish_name(full_fish_data)
 
-	# ✅ RARITY safe
+	# RARITY
 	var rarity: int = FishDB.get_rarity_safe(full_fish_data)
 	var rarity_data = FishDB.RARITY_DATA.get(rarity, FishDB.RARITY_DATA[FishDB.RARITY.NORMAL])
 	var rarity_color: Color = rarity_data["color"]
@@ -86,12 +124,12 @@ func show_fish_details(fish: Dictionary):
 	rarity_label.modulate = rarity_color
 	update_border_color(rarity_color)
 
-	# ✅ VALUE safe (Steam-Fish hat oft kein base_value)
+	# VALUE
 	var base_value: int = int(full_fish_data.get("base_value", 0))
 	var total_value: int = int(base_value * float(rarity_data.get("value", 1.0)))
 	value_label.text = "💰 %d €  (x%.1f)" % [total_value, float(rarity_data.get("value", 1.0))]
 
-	# ✅ WEIGHT / CAUGHT COUNT: nur wenn es eine echte Fish-ID gibt
+	# WEIGHT / CAUGHT COUNT
 	var fish_id: String = str(fish.get("id", ""))
 	if fish_id != "":
 		var max_weight = Player.get_max_caught_weight(fish_id)
@@ -106,13 +144,13 @@ func show_fish_details(fish: Dictionary):
 		weight_label.text = get_text("unknown")
 		caught_count_label.text = get_text("unknown")
 
-	# ✅ Weight range
+	# WEIGHT RANGE
 	if full_fish_data.has("weight_min") and full_fish_data.has("weight_max"):
 		weight_range_label.text = "%.2f - %.2f kg" % [full_fish_data["weight_min"], full_fish_data["weight_max"]]
 	else:
 		weight_range_label.text = get_text("unknown")
 
-	# ✅ Beschreibung safe
+	# DESCRIPTION
 	var description: String = ""
 	if is_steam:
 		description = str(full_fish_data.get("description", ""))
@@ -125,7 +163,6 @@ func show_fish_details(fish: Dictionary):
 	else:
 		science_fact = FishDB.get_fish_science(full_fish_data)
 
-
 	if description == "":
 		description = get_text("no_description")
 
@@ -135,13 +172,63 @@ func show_fish_details(fish: Dictionary):
 
 	description_text.text = full_description
 
-	# Animation wie gehabt...
-	popup_panel.modulate.a = 0
-	popup_panel.scale = Vector2(0.8, 0.8)
-	var tween = create_tween()
-	tween.set_parallel(true)
-	tween.tween_property(popup_panel, "modulate:a", 1.0, 0.3)
-	tween.tween_property(popup_panel, "scale", Vector2(1.0, 1.0), 0.3).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	_play_open_animation()
+
+
+# ============================================
+# 📜 LORE FRAGMENT DISPLAY
+# ============================================
+
+func _is_lore_fragment(fish: Dictionary) -> bool:
+	# Direkt per Flag (gesetzt von FishBookUI)
+	if fish.get("is_lore", false):
+		return true
+	# Fallback: ID in LoreManager prüfen
+	return LoreManager.NOTES.has(fish.get("id", ""))
+
+func _show_lore_fragment(fish: Dictionary):
+	var lang: String = Player.current_language
+	
+	var lore_name: String = fish.get("name_" + lang, fish.get("name_de", fish.get("name", "Fragment")))
+	var lore_desc: String = fish.get("text_" + lang, fish.get("text_de", fish.get("text", "")))
+	var digit: int        = fish.get("digit", -1)
+
+	# ICON
+	var lore_icon_path := "res://assets/fish/unknown.png"
+	if ResourceLoader.exists("res://assets/fish/fragment.png"):
+		lore_icon_path = "res://assets/fish/fragment.png"
+	fish_icon.texture = load(lore_icon_path)
+
+	# NAME
+	fish_name_label.text = lore_name
+
+	# RARITY → ANTIK
+	var rarity_data = FishDB.RARITY_DATA[FishDB.RARITY.ANTIK]
+	var rarity_color: Color = rarity_data["color"]
+	rarity_label.text = "⭐ " + tr(rarity_data["name_key"])
+	rarity_label.modulate = rarity_color
+	update_border_color(rarity_color)
+
+	# STATS
+	value_label.text        = get_text("lore_value")
+	weight_label.text       = get_text("lore_weight")
+	weight_range_label.text = get_text("unknown")
+	caught_count_label.text = get_text("lore_caught")
+
+	# DESCRIPTION
+	if lore_desc == "":
+		lore_desc = get_text("no_description")
+
+	var full_description := "[color=#CCCCCC]%s[/color]" % lore_desc
+	if digit >= 0:
+		full_description += "\n\n[color=#AACCEE]%s[/color]" % (get_text("lore_digit") % digit)
+
+	description_text.text = full_description
+
+
+# ============================================
+# 🔍 FISH DB LOOKUP
+# ============================================
 
 func get_full_fish_data(fish_id: String) -> Dictionary:
 	var all_lists = [
@@ -162,11 +249,33 @@ func get_full_fish_data(fish_id: String) -> Dictionary:
 	return {}
 
 
+# ============================================
+# 🎨 BORDER COLOR
+# ============================================
+
 func update_border_color(color: Color):
 	var style = popup_panel.get_theme_stylebox("panel").duplicate()
 	if style is StyleBoxFlat:
 		style.border_color = color
 		popup_panel.add_theme_stylebox_override("panel", style)
+
+
+# ============================================
+# 🎬 ANIMATION
+# ============================================
+
+func _play_open_animation():
+	popup_panel.modulate.a = 0
+	popup_panel.scale = Vector2(0.8, 0.8)
+	var tween = create_tween()
+	tween.set_parallel(true)
+	tween.tween_property(popup_panel, "modulate:a", 1.0, 0.3)
+	tween.tween_property(popup_panel, "scale", Vector2(1.0, 1.0), 0.3).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+
+
+# ============================================
+# ❌ CLOSE LOGIC
+# ============================================
 
 func _on_close_pressed():
 	hide_popup()

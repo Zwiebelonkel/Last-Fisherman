@@ -305,6 +305,10 @@ FISH_LAKE_TIEFENHUSTLER_NAME,Tiefenhustler,Depth Hustler
 FISH_LAKE_TIEFENHUSTLER_DESC,"Hat nichts. Will trotzdem alles.","Has nothing. Wants everything."
 FISH_LAKE_TIEFENHUSTLER_SCIENCE,"Bodennahe Fische zeigen oft opportunistisches Fressverhalten und hohe Anpassungsfähigkeit.","Bottom-dwelling fish often display opportunistic feeding behavior and high adaptability."
 
+FISH_LAKE_SEEPFERD_NAME,Seepferdchen,Seahorse
+FISH_LAKE_SEEPFERD_DESC,"Wurde als Schwimmabzeichen missbraucht. Grr","Used as a swimming badge. Disgraceful. Grr."
+FISH_LAKE_SEEPFERD_SCIENCE,"Nach einer Tragezeit von 10 bis 45 Tagen presst der Vater hunderte bis tausende vollentwickelte Mini-Seepferdchen aus seiner Bauchtasche. Eklig..","After a gestation period of 10 to 45 days, the father releases hundreds to thousands of fully formed miniature seahorses from his brood pouch. Slightly disturbing."
+
 
 
 FISH_CITY_SAND_AAL_NAME,Sand-Aal,Sand Eel
@@ -369,6 +373,10 @@ FISH_CITY_ABFLUSSENGEL_NAME,Abflussengel,Drain Angel
 FISH_CITY_ABFLUSSENGEL_DESC,"Schützt nichts. Erlöst niemanden.","Protects nothing. Saves no one."
 FISH_CITY_ABFLUSSENGEL_SCIENCE,"Flossenformen können hydrodynamische Effizienz selbst in stark verschmutzten Gewässern gewährleisten.","Fin shapes can ensure hydrodynamic efficiency even in heavily polluted waters."
 
+FISH_CITY_SEEIGEL_NAME,Seeigel,Sea Urchin
+FISH_CITY_SEEIGEL_DESC,"Eigentlich heißt er Ivan. Auf einem Surfcup ist ein Pinguin auf ihm gelandet. Der Arme...","His real name is Ivan. During a surfing contest, a penguin landed on him. Poor guy..."
+FISH_CITY_SEEIGEL_SCIENCE,"Seeigel sind weltweit in Meeren verbreitete, stachelige Stachelhäuter (Echinoidea) mit über 1.000 bekannten Arten, die bis zu 200 Jahre alt werden können.","Sea urchins are spiny echinoderms (class Echinoidea) found in oceans worldwide. With over 1,000 known species, some can live up to 200 years."
+
 
 FISH_SEWER_KACKWURST_NAME,Kackwurst,Poop Sausage
 FISH_SEWER_KACKWURST_DESC,Exakt das wonach es aussieht. Verkauf es schnell.,Exactly what it looks like. Sell it quickly.
@@ -424,6 +432,10 @@ FISH_SEWER_KLOAKENHECHT_SCIENCE,"Hechtartige Fische reagieren extrem aggressiv a
 FISH_SEWER_GERUCHSFISCH_NAME,Geruchsfisch,Stench Fish
 FISH_SEWER_GERUCHSFISCH_DESC,"Du riechst ihn. Er riecht dich.","You smell it. It smells you."
 FISH_SEWER_GERUCHSFISCH_SCIENCE,"Chemorezeptoren ermöglichen Fischen das Wahrnehmen feinster organischer Stoffe.","Chemoreceptors allow fish to detect minute organic compounds."
+
+FISH_SEWER_SEEPFERD2_NAME,Versifftes Seepferdchen,Filthy Seahorse
+FISH_SEWER_SEEPFERD2_DESC,"Es klammert sich an rostige Ketten im Hafen. Früher war es ein Schwimmabzeichen. Jetzt ist es eine Warnung.","It clings to rusted harbor chains. Once a swimming badge. Now a warning."
+FISH_SEWER_SEEPFERD2_SCIENCE,"In stark verschmutzten Gewässern verändern Seepferdchen ihre Pigmentierung, entwickeln verkrustete Hautpartien und zeigen reduzierte Fortpflanzungsraten. Umweltstress wirkt sich massiv auf ihre Populationen aus.","In heavily polluted waters, seahorses develop altered pigmentation, encrusted skin tissue, and significantly reduced reproduction rates. Environmental stress severely impacts their populations."
 
 FISH_FOREST_KARPFEN_NAME,Karpfen,Carp
 FISH_FOREST_KARPFEN_DESC,Meditiert unter Wasser. Unc ist vegetarisch.,Meditates underwater. Uncle is vegetarian.
@@ -575,18 +587,18 @@ FISH_ICELAND_GLETSCHERZUNGE_SCIENCE,"Große Tiefseefische wachsen langsam und er
 FISH_VALUE_PRICELESS,Unbezahlbar,Priceless
 FISH_WEIGHT,Gewicht,Weight
 
-EVENT_LAKE,Das Wasser war bis jetzt immer ruhig.\nIch weiß nicht was mit dieser Welle nicht stimmt.,The water has always been calm until now.\nI don't know what's wrong with this wave.
-EVENT_CITY,Hier habe ich damals Thunfischbrötchen geklaut.\nDaraus wird wohl nie wieder etwas.,I used to steal tuna sandwiches here.\nI guess that'll never happen again.
-EVENT_SEWER,Die Ratten werden immer größer.\nIch glaube da unten lebt etwas das nicht da sein sollte.,The rats are getting bigger.\nI think something lives down there that shouldn't be there.
-EVENT_FOREST,Der Wald ist zu still geworden.\nSelbst die Vögel haben aufgehört zu singen.,The forest has become too quiet.\nEven the birds have stopped singing.
-EVENT_DESERT,Die Hitze spielt mir Streiche.\nOder war das gerade wirklich eine Flosse im Sand?,The heat is playing tricks on me.\nOr was that really a fin in the sand?
-EVENT_ICELAND,Das Eis knackt anders als sonst.\nEs fühlt sich an als würde etwas darunter warten.,The ice is cracking differently than usual.\nIt feels like something is waiting beneath.
-EVENT_OCEAN,Der Code ist korrekt. Die Tür öffnet sich langsam...\n\nDu trittst hindurch – und der Ozean umschließt dich.,The code is correct. The door slowly opens...\n\nYou step through — and the ocean closes in around you.
+EVENT_LAKE,Das Wasser war bis jetzt immer ruhig.\nIch weiß nicht was mit dieser Welle nicht stimmt.\n\nEs gibt keine zweite.,The water has always been calm until now.\nI don't know what's wrong with this wave.\n\nThere won't be a second one.
+EVENT_CITY,Hier habe ich damals Thunfischbrötchen geklaut.\nDaraus wird wohl nie wieder etwas.\n\nDas Wasser steigt seit drei Tagen.\nDie "Leute" nennen es noch immer Regen.,I used to steal tuna sandwiches here.\nI guess that'll never happen again.\n\nThe water has been rising for three days.\n"People" still call it rain.
+EVENT_SEWER,Die Ratten werden immer größer.\nIch glaube da unten lebt etwas das nicht da sein sollte.\n\nOder ich bin das.\nIch bin mir nicht mehr sicher.,The rats are getting bigger.\nI think something lives down there that shouldn't be there.\n\nOr maybe it's me.\nI'm not sure anymore.
+EVENT_FOREST,Der Wald ist zu still geworden.\nSelbst die Vögel haben aufgehört zu singen.\n\nSie wissen was kommt.\nSie haben mich nicht gewarnt.,The forest has become too quiet.\nEven the birds have stopped singing.\n\nThey know what's coming.\nThey didn't warn me.
+EVENT_DESERT,Die Hitze spielt mir Streiche.\nOder war das gerade wirklich eine Flosse im Sand?\n\nDie Sonne ist heute größer als gestern.\nIch habe sie gemessen.,The heat is playing tricks on me.\nOr was that really a fin in the sand?\n\nThe sun is larger today than yesterday.\nI measured it.
+EVENT_ICELAND,Das Eis knackt anders als sonst.\nEs fühlt sich an als würde etwas darunter warten.\n\nVielleicht bin ich es selbst.\nDer der wartet.\nDer der schon immer gewartet hat.,The ice is cracking differently than usual.\nIt feels like something is waiting beneath.\n\nMaybe it's me.\nThe one who waits.\nThe one who has always been waiting.
+EVENT_OCEAN,Der Code ist korrekt.\nDie Tür öffnet sich langsam.\n\nDu trittst hindurch –\nund siehst dich selbst.\n\nDu hast hier die ganze Zeit geangelt.\nDu erinnerst dich nicht daran.\nDu wirst dich nicht daran erinnern.,The code is correct.\nThe door slowly opens.\n\nYou step through –\nand see yourself.\n\nYou have been fishing here the whole time.\nYou don't remember it.\nYou won't remember it.
 
 
 FISH_OCEAN_STEAM_PLAYER_NAME,Du selbst!
 FISH_OCEAN_STEAM_PLAYER_DESC,Ein wahrlich einzigartiger Fang - du hast dich selbst gefangen! Vielleicht solltest du öfter aus dem Haus gehen...
 FISH_OCEAN_STEAM_PLAYER_SCIENCE,Homo Sapiens Digitalis - Eine seltene Spezies, die ihre natürliche Umgebung verlassen hat und nun in den digitalen Gewässern von Steam schwimmt.
-FISH_OCEAN_STEAM_PLAYER_STORY,Du starrst auf den gefangenen Fisch und erkennst dein eigenes Gesicht im eisigen Wasser Islan. Ein Moment der Selbsterkenntnis - oder der Wahnsinn des langen Angelns? Die Reise endet hier, wo sie begann: Bei dir selbst.
+FISH_OCEAN_STEAM_PLAYER_STORY,Du starrst auf den gefangenen Fisch und erkennst dein eigenes Gesicht im eisigen Wasser. Ein Moment der Selbsterkenntnis - oder der Wahnsinn des langen Angelns? Die Reise endet hier, wo sie begann: Bei dir selbst.
 
-ANY_BUTTON,[Beliebige Taste],[Any Key]
+ANY_KEY,[Beliebige Taste],[Any Key]

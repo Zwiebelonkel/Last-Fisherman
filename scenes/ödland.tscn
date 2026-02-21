@@ -1594,6 +1594,8 @@ lightmap_size_hint = Vector2i(251, 1001)
 material = SubResource("ShaderMaterial_7r1ho")
 uv2_padding = 1.41
 size = Vector2(300, 300)
+subdivide_width = 200
+subdivide_depth = 200
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_8wjpf"]
 render_priority = 0

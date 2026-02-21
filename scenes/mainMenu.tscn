@@ -172,6 +172,10 @@ volumetric_fog_ambient_inject = 0.2
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_k24pf"]
 render_priority = -128
 shader = ExtResource("10_tlicg")
+shader_parameter/wave_height = 1.387
+shader_parameter/wave_speed = 1.0
+shader_parameter/refraction_strength = 0.5
+shader_parameter/refraction_depth_scale = 0.5
 shader_parameter/wave_1 = Vector4(0.3, 4, 0.2, 0.6)
 shader_parameter/wave_2 = Vector4(-0.26, -0.19, 0.01, 0.47)
 shader_parameter/wave_3 = Vector4(-7.67, 5.63, 0.1, 0.38)
@@ -181,14 +185,14 @@ shader_parameter/wave_6 = Vector4(1.2, 1.14, 0.01, 0.33)
 shader_parameter/wave_7 = Vector4(-1.6, 7.3, 0.11, 0.73)
 shader_parameter/wave_8 = Vector4(-0.42, -1.63, 0.15, 1.52)
 shader_parameter/time_factor = 6.975
-shader_parameter/noise_zoom = 3.885
+shader_parameter/noise_zoom = 2.0
 shader_parameter/noise_amp = 1.545
 shader_parameter/base_water_color = Color(0.188783, 0.538177, 0.53811, 1)
 shader_parameter/fresnel_water_color = Color(0.762158, 0.371565, 0.128367, 1)
 shader_parameter/deep_water_color = Color(0, 0.20636, 0.393908, 1)
 shader_parameter/shallow_water_color = Color(0.189291, 0.841735, 0.976884, 1)
-shader_parameter/beers_law = 0.405
-shader_parameter/depth_offset = 0.095
+shader_parameter/beers_law = 2.205
+shader_parameter/depth_offset = 9.97
 shader_parameter/near = 7.0
 shader_parameter/far = 10000.0
 shader_parameter/edge_texture_scale = 4.715
@@ -197,13 +201,13 @@ shader_parameter/edge_texture_speed = 0.1
 shader_parameter/edge_foam_intensity = 2.0
 shader_parameter/edge_fade_start = -3.0
 shader_parameter/edge_fade_end = 6.6
-shader_parameter/peak_height_threshold = 1.0
+shader_parameter/peak_height_threshold = 4.3
 shader_parameter/peak_color = Vector3(1, 1, 1)
 shader_parameter/peak_intensity = 1.0
 shader_parameter/foam_intensity = 1.0
 shader_parameter/foam_scale = 1.0
-shader_parameter/metallic = 1.87
-shader_parameter/roughness = 0.115
+shader_parameter/metallic = 1.045
+shader_parameter/roughness = 0.015
 shader_parameter/uv_scale_text_a = 0.23
 shader_parameter/uv_speed_text_a = Vector2(0.14, 0.3)
 shader_parameter/uv_scale_text_b = 0.855
@@ -222,6 +226,8 @@ shader_parameter/caustic_distortion_strength = 0.001
 [sub_resource type="PlaneMesh" id="PlaneMesh_qg23i"]
 material = SubResource("ShaderMaterial_k24pf")
 size = Vector2(200, 200)
+subdivide_width = 200
+subdivide_depth = 200
 
 [sub_resource type="Animation" id="Animation_lam2r"]
 length = 0.001
@@ -459,7 +465,7 @@ environment = SubResource("Environment_cfq0f")
 transform = Transform3D(-0.805949, 0, 0.591985, 0, 1, 0, -0.591985, 0, -0.805949, 2.14169, 1.27432, 0.0851256)
 
 [node name="WaterPlane" type="MeshInstance3D" parent="."]
-transform = Transform3D(-1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0, 0, 1, 0, 1.53095, 91.1433)
+transform = Transform3D(-1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0, 0, 1, 0, 0.633762, 91.1433)
 mesh = SubResource("PlaneMesh_qg23i")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
