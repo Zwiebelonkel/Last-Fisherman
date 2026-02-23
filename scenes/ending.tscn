@@ -1,5 +1,6 @@
-[gd_scene load_steps=63 format=3 uid="uid://b6exh44q6u50p"]
+[gd_scene load_steps=65 format=3 uid="uid://b6exh44q6u50p"]
 
+[ext_resource type="Shader" uid="uid://cn35ulb5u6yxj" path="res://shader/screen_rain.gdshader" id="1_edxmc"]
 [ext_resource type="Shader" uid="uid://c140kjbm2bot5" path="res://shader/buckshot.gdshader" id="1_mbbil"]
 [ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="2_hpe61"]
 [ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="3_5fodb"]
@@ -37,6 +38,11 @@
 [ext_resource type="AudioStream" uid="uid://c0e0t3u3yvvhg" path="res://sounds/rarity/legendary.mp3" id="31_djqsd"]
 [ext_resource type="AudioStream" uid="uid://qeh48myqvc8p" path="res://sounds/rarity/exotic.mp3" id="32_wwpln"]
 [ext_resource type="AudioStream" uid="uid://6a3ro0nq1u4" path="res://sounds/rarity/antique.mp3" id="33_ao3ch"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ytxmq"]
+shader = ExtResource("1_edxmc")
+shader_parameter/frequency = 0.0
+shader_parameter/size = 0.015
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1wiy7"]
 shader = ExtResource("1_mbbil")
@@ -1281,6 +1287,19 @@ emission_energy_multiplier = 16.0
 material = SubResource("StandardMaterial3D_7xda3")
 
 [node name="MainScene" type="Node3D"]
+
+[node name="rain" type="CanvasLayer" parent="."]
+layer = 128
+
+[node name="PixelateOverlay" type="ColorRect" parent="rain"]
+material = SubResource("ShaderMaterial_ytxmq")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 28.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
 
 [node name="Filter" type="CanvasLayer" parent="."]
 layer = 0

@@ -1,7 +1,7 @@
 extends Control
 
 @onready var popup_panel: PanelContainer = $CenterContainer/PopupPanel
-@onready var fish_icon: TextureRect = $CenterContainer/PopupPanel/MarginContainer/VBoxContainer/Header/IconContainer/FishIcon
+@onready var fish_viewport: SubViewport = $CenterContainer/PopupPanel/MarginContainer/VBoxContainer/Header/IconContainer/SubViewportContainer/SubViewport
 @onready var fish_name_label: Label = $CenterContainer/PopupPanel/MarginContainer/VBoxContainer/Header/InfoContainer/FishName
 @onready var rarity_label: Label = $CenterContainer/PopupPanel/MarginContainer/VBoxContainer/Header/InfoContainer/Rarity
 @onready var value_label: Label = $CenterContainer/PopupPanel/MarginContainer/VBoxContainer/Header/InfoContainer/StatsGrid/Value
@@ -54,7 +54,22 @@ func _ready():
 	visible = false
 	close_button.pressed.connect(_on_close_pressed)
 	overlay.gui_input.connect(_on_overlay_clicked)
+	
+func set_3d_fish(texture: Texture2D):
+	# alten Fisch löschen
+	for child in fish_viewport.get_children():
+		child.queue_free()
 
+	var fish_scene = preload("res://test.tscn").instantiate()
+	fish_viewport.add_child(fish_scene)
+
+	var mesh := fish_scene.get_node("MeshInstance3D") as MeshInstance3D
+	var mat := mesh.material_override as ShaderMaterial
+	
+	if texture == null:
+		texture = load("res://assets/fish/unknown.png")
+
+	mat.set_shader_parameter("Texture", texture)
 
 # ============================================
 # 🌍 LOCALIZATION HELPER
@@ -105,9 +120,9 @@ func show_fish_details(fish: Dictionary):
 
 	# ICON
 	if is_steam and full_fish_data.has("steam_avatar") and full_fish_data["steam_avatar"] is Texture2D:
-		fish_icon.texture = full_fish_data["steam_avatar"]
+		set_3d_fish(full_fish_data["steam_avatar"])
 	else:
-		fish_icon.texture = FishDB.get_fish_icon(full_fish_data)
+		set_3d_fish(FishDB.get_fish_icon(full_fish_data))
 
 	# NAME
 	if is_steam:
@@ -197,7 +212,7 @@ func _show_lore_fragment(fish: Dictionary):
 	var lore_icon_path := "res://assets/fish/unknown.png"
 	if ResourceLoader.exists("res://assets/fish/fragment.png"):
 		lore_icon_path = "res://assets/fish/fragment.png"
-	fish_icon.texture = load(lore_icon_path)
+	set_3d_fish(load(lore_icon_path) as Texture2D)
 
 	# NAME
 	fish_name_label.text = lore_name

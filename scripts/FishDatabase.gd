@@ -13,110 +13,110 @@ enum RARITY {
 	ANTIK
 }
 # NORMALE CHANCEN_______________________
-#static var RARITY_DATA = {
-	#RARITY.NORMAL: {
-		#"name_key": "RARITY_NORMAL",
-		#"color": Color.WHITE,
-		#"value": 1.0,
-		#"spawn_chance": 45.0,
-		#"difficulty": 1.0
-	#},
-	#RARITY.UNGEWOEHNLICH: {
-		#"name_key": "RARITY_UNCOMMON",
-		#"color": Color(0.3,1,0.3),
-		#"value": 1.5,
-		#"spawn_chance": 33.0,
-		#"difficulty": 1.3
-	#},
-	#RARITY.SELTEN: {
-		#"name_key": "RARITY_RARE",
-		#"color": Color(0.2,0.4,1),
-		#"value": 2.0,
-		#"spawn_chance": 12.0,
-		#"difficulty": 1.6
-	#},
-	#RARITY.EPISCH: {
-		#"name_key": "RARITY_EPIC",
-		#"color": Color(0.7,0,1),
-		#"value": 3.0,
-		#"spawn_chance": 7.0,
-		#"difficulty": 2.0
-	#},
-	#RARITY.LEGENDAER: {
-		#"name_key": "RARITY_LEGENDARY",
-		#"color": Color(1,0.8,0.1),
-		#"value": 6.0,
-		#"spawn_chance": 2.5,
-		#"difficulty": 2.5
-	#},
-	#RARITY.EXOTISCH: {
-		#"name_key": "RARITY_EXOTIC",
-		#"color": Color(1,0,0.2),
-		#"value": 12.0,
-		#"spawn_chance": 0.5,
-		#"difficulty": 3.0
-	#},
-	#RARITY.ANTIK: {
-		#"name_key": "RARITY_ANTIQUE",
-		#"color": Color(0.4,0.8,0.9),
-		#"value": 0.0,
-		#"spawn_chance": 0.4,
-		#"difficulty": 1.0
-	#}
-#}
-
-# DEBUG CHANCEN_______________________
 static var RARITY_DATA = {
 	RARITY.NORMAL: {
 		"name_key": "RARITY_NORMAL",
 		"color": Color.WHITE,
 		"value": 1.0,
-		"spawn_chance": 0.0,
+		"spawn_chance": 45.0,
 		"difficulty": 1.0
 	},
 	RARITY.UNGEWOEHNLICH: {
 		"name_key": "RARITY_UNCOMMON",
 		"color": Color(0.3,1,0.3),
 		"value": 1.5,
-		"spawn_chance": 0.0,
+		"spawn_chance": 33.0,
 		"difficulty": 1.3
 	},
 	RARITY.SELTEN: {
 		"name_key": "RARITY_RARE",
 		"color": Color(0.2,0.4,1),
 		"value": 2.0,
-		"spawn_chance": 0.0,
+		"spawn_chance": 12.0,
 		"difficulty": 1.6
 	},
 	RARITY.EPISCH: {
 		"name_key": "RARITY_EPIC",
 		"color": Color(0.7,0,1),
 		"value": 3.0,
-		"spawn_chance": 0.0,
+		"spawn_chance": 7.0,
 		"difficulty": 2.0
 	},
 	RARITY.LEGENDAER: {
 		"name_key": "RARITY_LEGENDARY",
 		"color": Color(1,0.8,0.1),
 		"value": 6.0,
-		"spawn_chance": 0.0,
+		"spawn_chance": 2.5,
 		"difficulty": 2.5
 	},
 	RARITY.EXOTISCH: {
 		"name_key": "RARITY_EXOTIC",
 		"color": Color(1,0,0.2),
 		"value": 12.0,
-		"spawn_chance": 0.0,
+		"spawn_chance": 0.5,
 		"difficulty": 3.0
 	},
 	RARITY.ANTIK: {
 		"name_key": "RARITY_ANTIQUE",
 		"color": Color(0.4,0.8,0.9),
 		"value": 0.0,
-		"spawn_chance": 100.0,
+		"spawn_chance": 0.4,
 		"difficulty": 1.0
 	}
 }
+
+# DEBUG CHANCEN_______________________
+#static var RARITY_DATA = {
+	#RARITY.NORMAL: {
+		#"name_key": "RARITY_NORMAL",
+		#"color": Color.WHITE,
+		#"value": 1.0,
+		#"spawn_chance": 0.0,
+		#"difficulty": 1.0
+	#},
+	#RARITY.UNGEWOEHNLICH: {
+		#"name_key": "RARITY_UNCOMMON",
+		#"color": Color(0.3,1,0.3),
+		#"value": 1.5,
+		#"spawn_chance": 0.0,
+		#"difficulty": 1.3
+	#},
+	#RARITY.SELTEN: {
+		#"name_key": "RARITY_RARE",
+		#"color": Color(0.2,0.4,1),
+		#"value": 2.0,
+		#"spawn_chance": 0.0,
+		#"difficulty": 1.6
+	#},
+	#RARITY.EPISCH: {
+		#"name_key": "RARITY_EPIC",
+		#"color": Color(0.7,0,1),
+		#"value": 3.0,
+		#"spawn_chance": 0.0,
+		#"difficulty": 2.0
+	#},
+	#RARITY.LEGENDAER: {
+		#"name_key": "RARITY_LEGENDARY",
+		#"color": Color(1,0.8,0.1),
+		#"value": 6.0,
+		#"spawn_chance": 0.0,
+		#"difficulty": 2.5
+	#},
+	#RARITY.EXOTISCH: {
+		#"name_key": "RARITY_EXOTIC",
+		#"color": Color(1,0,0.2),
+		#"value": 12.0,
+		#"spawn_chance": 0.0,
+		#"difficulty": 3.0
+	#},
+	#RARITY.ANTIK: {
+		#"name_key": "RARITY_ANTIQUE",
+		#"color": Color(0.4,0.8,0.9),
+		#"value": 0.0,
+		#"spawn_chance": 100.0,
+		#"difficulty": 1.0
+	#}
+#}
 
 # ===========================
 #  FISH LISTS BY LOCATION

@@ -1,4 +1,4 @@
-[gd_scene load_steps=70 format=3 uid="uid://cvkrlt4ri1i2u"]
+[gd_scene load_steps=69 format=3 uid="uid://cvkrlt4ri1i2u"]
 
 [ext_resource type="Shader" uid="uid://c140kjbm2bot5" path="res://shader/buckshot.gdshader" id="1_nmpot"]
 [ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="2_ikoiv"]
@@ -20,12 +20,11 @@
 [ext_resource type="Script" uid="uid://bymrcyid32xsp" path="res://scripts/line.gd" id="13_my70f"]
 [ext_resource type="PackedScene" uid="uid://cfptx2e41wve1" path="res://scenes/shop.tscn" id="15_nmpot"]
 [ext_resource type="PackedScene" uid="uid://8ljq0dpgsno5" path="res://scenes/bait.tscn" id="16_nmpot"]
-[ext_resource type="Shader" uid="uid://of02kbc2kqkw" path="res://shader/sky2.gdshader" id="17_agolw"]
 [ext_resource type="PackedScene" uid="uid://btgasvjdkp460" path="res://assets/hotel.glb" id="18_agolw"]
 [ext_resource type="PackedScene" uid="uid://ckje0fw3pep83" path="res://assets/skyscaper.glb" id="18_ibljb"]
-[ext_resource type="Texture2D" uid="uid://e7t33pnr13bp" path="res://textures/These-images-of-clouds-are-created-exclusively-using-Perlin-noise-It-simulates-the_Q320.jpg" id="18_yles7"]
 [ext_resource type="AudioStream" uid="uid://esyv0p374c5j" path="res://sounds/bite.mp3" id="20_ikoiv"]
 [ext_resource type="AudioStream" uid="uid://cldy38iwm8ovi" path="res://sounds/cast.mp3" id="21_kg0fi"]
+[ext_resource type="Shader" uid="uid://b8mxoacu7poqc" path="res://shader/sky.gdshader" id="21_qf2lb"]
 [ext_resource type="AudioStream" uid="uid://26m0pjkxve85" path="res://sounds/rarity/normal.mp3" id="22_0orsp"]
 [ext_resource type="AudioStream" uid="uid://cmr6cded4l11v" path="res://sounds/whoosh.mp3" id="23_h3250"]
 [ext_resource type="AudioStream" uid="uid://djac3dtda2yhn" path="res://sounds/city.mp3" id="24_my70f"]
@@ -1751,28 +1750,31 @@ disable_receive_shadows = true
 [sub_resource type="SphereMesh" id="SphereMesh_08o8g"]
 material = SubResource("StandardMaterial3D_kp0ql")
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_ibljb"]
-shader = ExtResource("17_agolw")
-shader_parameter/use_directional_light = false
-shader_parameter/sun_color = Color(0.0158297, 0.0357297, 0.0947171, 1)
-shader_parameter/sun_energy = 16.185
-shader_parameter/cloud_color = Color(0.0179562, 0.0357238, 0.0609136, 1)
-shader_parameter/cloud_density = 5.5
-shader_parameter/cloud_depth = -4.46
-shader_parameter/cloud_sag = 2.0
-shader_parameter/noise_texture = ExtResource("18_yles7")
-shader_parameter/noise_tiling = Vector2(1, 1)
-shader_parameter/wind_speed = Vector2(-0.19, -0.26)
-shader_parameter/ground_bottom_color = Color(0, 0, 0, 1)
-shader_parameter/ground_curve = 0.04
-shader_parameter/exposure = 5.741
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_6pahv"]
+shader = ExtResource("21_qf2lb")
+shader_parameter/time_of_day = 0.571
+shader_parameter/day_zenith = Color(0.18, 0.48, 0.9, 1)
+shader_parameter/day_horizon = Color(0.72, 0.9, 1, 1)
+shader_parameter/sunset_zenith = Color(0.25, 0.12, 0.28, 1)
+shader_parameter/sunset_horizon = Color(1, 0.45, 0.1, 1)
+shader_parameter/sunset_glow = Color(1, 0.7, 0.2, 1)
+shader_parameter/night_zenith = Color(0.01, 0.01, 0.06, 1)
+shader_parameter/night_horizon = Color(0.03, 0.04, 0.12, 1)
+shader_parameter/sun_size = 0.034
+shader_parameter/sun_glow_power = 4.5
+shader_parameter/moon_size = 0.001
+shader_parameter/cloud_speed = 0.235
+shader_parameter/cloud_scale = 3.279
+shader_parameter/cloud_density = 0.41
 
-[sub_resource type="Sky" id="Sky_gi457"]
-sky_material = SubResource("ShaderMaterial_ibljb")
+[sub_resource type="Sky" id="Sky_snoms"]
+sky_material = SubResource("ShaderMaterial_6pahv")
 
 [sub_resource type="Environment" id="Environment_agolw"]
 background_mode = 2
-sky = SubResource("Sky_gi457")
+background_energy_multiplier = 0.09
+sky = SubResource("Sky_snoms")
+ambient_light_energy = 12.17
 glow_enabled = true
 glow_intensity = 8.0
 glow_strength = 0.94

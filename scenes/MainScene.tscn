@@ -1,10 +1,9 @@
-[gd_scene load_steps=85 format=3 uid="uid://bw5el7n36awdr"]
+[gd_scene load_steps=84 format=3 uid="uid://bw5el7n36awdr"]
 
 [ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="1_2phbr"]
 [ext_resource type="PackedScene" uid="uid://b5ew1rfc8ow8g" path="res://scenes/fishingRod.tscn" id="1_echbf"]
 [ext_resource type="Script" uid="uid://bl1xotduehieu" path="res://scripts/camera_sway.gd" id="1_ibiss"]
 [ext_resource type="PackedScene" uid="uid://cdb3sodlv6np7" path="res://scenes/MoneyHUD.tscn" id="1_kp0ql"]
-[ext_resource type="Shader" uid="uid://c140kjbm2bot5" path="res://shader/buckshot.gdshader" id="1_u55b3"]
 [ext_resource type="PackedScene" uid="uid://cqtn78ty1fa7" path="res://scenes/CatchResultUI.tscn" id="2_o3jky"]
 [ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="3_8wjpf"]
 [ext_resource type="PackedScene" uid="uid://be7bs5po2ukhi" path="res://scenes/FishBook.tscn" id="7_a7pbh"]
@@ -20,6 +19,7 @@
 [ext_resource type="PackedScene" uid="uid://brmbdno888s38" path="res://assets/tree.glb" id="14_08o8g"]
 [ext_resource type="PackedScene" uid="uid://bw80sbvfcwe1p" path="res://scenes/cigarette.tscn" id="14_fto0a"]
 [ext_resource type="PackedScene" uid="uid://cfptx2e41wve1" path="res://scenes/shop.tscn" id="15_0cxu4"]
+[ext_resource type="Shader" uid="uid://b8mxoacu7poqc" path="res://shader/sky.gdshader" id="15_xuwja"]
 [ext_resource type="AudioStream" uid="uid://esyv0p374c5j" path="res://sounds/bite.mp3" id="18_2phbr"]
 [ext_resource type="Shader" uid="uid://c37jx2ebwp1a3" path="res://shader/shader_water.gdshader" id="18_5ha8j"]
 [ext_resource type="PackedScene" uid="uid://8ljq0dpgsno5" path="res://scenes/bait.tscn" id="18_l3o4o"]
@@ -29,7 +29,6 @@
 [ext_resource type="Texture2D" uid="uid://cvllk03mhtybp" path="res://textures/723-normal.jpg" id="20_g8282"]
 [ext_resource type="Texture2D" uid="uid://d31603nl8y0gd" path="res://textures/Water_preview.jpgC878A51E-2B84-45CA-85CB-75E5BC88EEC8Large.jpg" id="21_7tuqu"]
 [ext_resource type="AudioStream" uid="uid://cmr6cded4l11v" path="res://sounds/whoosh.mp3" id="21_a7pbh"]
-[ext_resource type="PackedScene" uid="uid://dedujdavqgnhc" path="res://scenes/clouds.tscn" id="24_a7pbh"]
 [ext_resource type="AudioStream" uid="uid://bm2wkiirbpowg" path="res://sounds/rarity/uncommon.mp3" id="25_2so2y"]
 [ext_resource type="PackedScene" uid="uid://dguwyn5rc7uog" path="res://scenes/splash.tscn" id="25_ye0jt"]
 [ext_resource type="AudioStream" uid="uid://bpy3o38b3nar3" path="res://sounds/rarity/rare.mp3" id="26_7yh6i"]
@@ -53,8 +52,135 @@
 [ext_resource type="PackedScene" uid="uid://4vuswgb4ap52" path="res://scenes/story1.tscn" id="46_cw1g3"]
 [ext_resource type="PackedScene" uid="uid://cw1hh2dbog4uj" path="res://scenes/TutorialOverlay.tscn" id="47_yc0gu"]
 
+[sub_resource type="Shader" id="Shader_7tuqu"]
+code = "shader_type canvas_item;
+
+uniform sampler2D screen_tex : hint_screen_texture;
+
+uniform float exposure    : hint_range(0.5, 2.0) = 1.0;
+uniform float contrast    : hint_range(0.5, 2.0) = 1.1;
+uniform float saturation  : hint_range(0.0, 2.0) = 1.12;
+
+uniform bool  enable_pixelate = true;
+uniform float pixel_factor    : hint_range(0.5, 6.0) = 3.0;
+
+uniform bool  enable_posterize = true;
+uniform float color_levels     : hint_range(2.0, 16.0) = 16.0;
+uniform float dither_strength  : hint_range(0.0, 1.0) = 0.35;
+
+uniform float chrom_aberration : hint_range(0.0, 2.0) = 0.01;
+uniform float vignette_strength: hint_range(0.0, 2.0) = 1.0;
+uniform float grain_strength   : hint_range(0.0, 1.0) = 0.2;
+
+uniform vec3  tint_color = vec3(0.95, 1.03, 0.9);
+uniform float tint_strength : hint_range(0.0, 1.0) = 0.15;
+
+uniform vec2  viewport_size_override = vec2(0.0);
+
+float bayer4x4(vec2 p){
+    int x = int(mod(p.x, 4.0));
+    int y = int(mod(p.y, 4.0));
+    int m[16] = int[16](
+        0,  8,  2, 10,
+       12,  4, 14,  6,
+        3, 11,  1,  9,
+       15,  7, 13,  5
+    );
+    return (float(m[y*4 + x]) + 0.5) / 16.0;
+}
+
+vec3 to_hsv(vec3 c){
+    float cmax = max(c.r, max(c.g, c.b));
+    float cmin = min(c.r, min(c.g, c.b));
+    float d = cmax - cmin;
+    float h = 0.0;
+    if (d > 1e-5) {
+        if      (cmax == c.r) h = mod((c.g - c.b) / d, 6.0);
+        else if (cmax == c.g) h = (c.b - c.r) / d + 2.0;
+        else                  h = (c.r - c.g) / d + 4.0;
+        h /= 6.0;
+        if (h < 0.0) h += 1.0;
+    }
+    float s = cmax <= 1e-5 ? 0.0 : d / cmax;
+    float v = cmax;
+    return vec3(h, s, v);
+}
+
+vec3 to_rgb(vec3 hsv){
+    float h = hsv.x * 6.0;
+    float s = hsv.y;
+    float v = hsv.z;
+    int i = int(floor(h));
+    float f = h - float(i);
+    float p = v * (1.0 - s);
+    float q = v * (1.0 - s * f);
+    float t = v * (1.0 - s * (1.0 - f));
+    if(i == 0) return vec3(v, t, p);
+    if(i == 1) return vec3(q, v, p);
+    if(i == 2) return vec3(p, v, t);
+    if(i == 3) return vec3(p, q, v);
+    if(i == 4) return vec3(t, p, v);
+    return vec3(v, p, q);
+}
+
+float luma(vec3 c){ return dot(c, vec3(0.2126, 0.7152, 0.0722)); }
+
+vec3 adjust_contrast_saturation(vec3 c, float contrast_, float saturation_){
+    c = (c - 0.5) * contrast_ + 0.5;
+    vec3 hsv = to_hsv(c);
+    hsv.y *= saturation_;
+    return clamp(to_rgb(hsv), 0.0, 1.0);
+}
+
+void fragment(){
+    vec2 uv = SCREEN_UV;
+
+    vec2 px = SCREEN_PIXEL_SIZE;
+    if (viewport_size_override.x > 0.0 && viewport_size_override.y > 0.0){
+        px = 1.0 / viewport_size_override;
+    }
+
+    if (enable_pixelate){
+        vec2 step_uv = px * pixel_factor;
+        uv = floor(uv / step_uv) * step_uv + step_uv * 0.5;
+    }
+
+    vec2 center = vec2(0.5);
+    vec2 dir = uv - center;
+    float dist = length(dir);
+    float ca = chrom_aberration * dist * dist;
+
+    vec3 col;
+    col.r = texture(screen_tex, uv + dir * ( ca)).r;
+    col.g = texture(screen_tex, uv                    ).g;
+    col.b = texture(screen_tex, uv - dir * ( ca)).b;
+
+    col *= exposure;
+
+    col = mix(col, col * tint_color, tint_strength);
+
+    if (enable_posterize){
+        vec2 frag_xy = floor(uv / px);
+        float b = bayer4x4(frag_xy);
+
+        vec3 q = floor(col * color_levels + b * dither_strength);
+        col = q / (color_levels - 1.0);
+    }
+
+    col = adjust_contrast_saturation(col, contrast, saturation);
+
+    float vignette = smoothstep(0.5, 0.9, dist) * vignette_strength;
+    col *= clamp(1.0 - vignette, 0.0, 1.0);
+
+    float n = fract(sin(dot(floor(uv/px), vec2(12.9898, 78.233)) + TIME * 37.0) * 43758.5453);
+    col += (n - 0.5) * (px.x + px.y) * 2.0 * grain_strength;
+
+    COLOR = vec4(clamp(col, 0.0, 1.0), 1.0);
+}
+"
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1wiy7"]
-shader = ExtResource("1_u55b3")
+shader = SubResource("Shader_7tuqu")
 shader_parameter/exposure = 1.0
 shader_parameter/contrast = 1.1
 shader_parameter/saturation = 1.14
@@ -64,7 +190,7 @@ shader_parameter/enable_posterize = true
 shader_parameter/color_levels = 16.0
 shader_parameter/dither_strength = 0.46
 shader_parameter/chrom_aberration = 0.01
-shader_parameter/vignette_strength = 1.0
+shader_parameter/vignette_strength = 1.039
 shader_parameter/grain_strength = 0.2
 shader_parameter/tint_color = Vector3(0.95, 1.03, 0.9)
 shader_parameter/tint_strength = 0.15
@@ -79,100 +205,22 @@ default_font = ExtResource("3_8wjpf")
 [sub_resource type="Theme" id="Theme_2phbr"]
 default_font = ExtResource("3_8wjpf")
 
-[sub_resource type="Shader" id="Shader_pwxld"]
-code = "shader_type sky;
-
-group_uniforms Sky;
-/**
- * Use directional light for sun color
-*/
-uniform bool use_directional_light = true;
-uniform vec4 sun_color : source_color = vec4(1.0);
-uniform float sun_energy = 15.0;
-uniform vec4 cloud_color : source_color = vec4(0.296, 0.402, 0.521, 1.0);
-/**
- * Determines how much light the clouds absorb
-*/
-uniform float cloud_density = 5.0;
-/**
- * Depth of the parallax effect
-*/
-uniform float cloud_depth = 2.0;
-/**
- * Higher values give the clouds a heavier appearance
-*/
-uniform float cloud_sag = 2.0;
-uniform sampler2D noise_texture;
-uniform vec2 noise_tiling = vec2(1.0);
-uniform vec2 wind_speed = vec2(0.5);
-group_uniforms;
-
-group_uniforms Ground;
-uniform vec4 ground_bottom_color : source_color = vec4(0.2, 0.169, 0.133, 1.0);
-uniform float ground_curve : hint_range(0, 1) = 0.04;
-group_uniforms;
-
-uniform float exposure : hint_range(0, 128) = 1.0;
-
-// https://www.scratchapixel.com/lessons/3d-basic-rendering/minimal-ray-tracer-rendering-simple-shapes/ray-plane-and-ray-disk-intersection.html
-float ray_plane_intersection(vec3 origin, vec3 normal, vec3 ray_start, vec3 ray_dir) {
-	return dot(origin - ray_start, normal) / dot(ray_dir, normal);
-}
-
-float sample_height(vec2 uv) {
-	float height = texture(noise_texture, uv).r;
-	return pow(height, cloud_sag);
-}
-
-float beers_law(float absorption, float dist) {
-	return exp(-absorption * dist);
-}
-
-void sky() {
-	vec3 light_color = vec3(0.0);
-	if (use_directional_light)
-		light_color = LIGHT0_COLOR * LIGHT0_ENERGY * dot(LIGHT0_DIRECTION, vec3(0.0, 1.0, 0.0));
-	else
-		light_color = sun_color.rgb * sun_energy;
-
-	vec3 sky = cloud_color.rgb;
-
-	// Find view ray intersection with cloud layer
-	float t = ray_plane_intersection(vec3(0.0, 1.0, 0.0), vec3(0.0, -1.0, 0.0), vec3(0.0), EYEDIR);
-	if (t >= 0.0) {
-		vec3 wind = vec3(wind_speed.x, 0.0, wind_speed.y) * TIME * 0.1;
-		vec3 tiling = vec3(noise_tiling.x, 1.0, noise_tiling.y) * 0.2;
-		vec3 cloud_pos = EYEDIR * t * tiling + wind;
-
-		// Parallax mapping
-		float height = sample_height(cloud_pos.xz);
-		cloud_pos += EYEDIR * height * cloud_depth * 0.1;
-		height = sample_height(cloud_pos.xz);
-
-		// Attenuate light by view angle to simulate occlusion
-		float n_dot_v = dot(vec3(0.0, 1.0, 0.0), EYEDIR);
-		sky += light_color * beers_law(cloud_density, 1.0 - height * n_dot_v);
-	}
-	vec3 horizon = cloud_color.rgb + light_color * beers_law(cloud_density, 1.0);
-	vec3 ground = mix(horizon, ground_bottom_color.rgb, clamp(1.0 - pow(1.0 + EYEDIR.y, 1.0 / ground_curve), 0.0, 1.0));
-	COLOR = mix(ground, sky, step(0.0, EYEDIR.y)) * exposure;
-}
-"
-
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_cfq0f"]
-shader = SubResource("Shader_pwxld")
-shader_parameter/use_directional_light = false
-shader_parameter/sun_color = Color(0.0605303, 0.0605303, 0.0605303, 1)
-shader_parameter/sun_energy = 8.525
-shader_parameter/cloud_color = Color(0, 0, 0, 1)
-shader_parameter/cloud_density = 5.0
-shader_parameter/cloud_depth = 2.0
-shader_parameter/cloud_sag = 2.0
-shader_parameter/noise_tiling = Vector2(1, 1)
-shader_parameter/wind_speed = Vector2(0.5, 0.5)
-shader_parameter/ground_bottom_color = Color(0.2, 0.169, 0.133, 1)
-shader_parameter/ground_curve = 0.04
-shader_parameter/exposure = 1.0
+shader = ExtResource("15_xuwja")
+shader_parameter/time_of_day = 0.0
+shader_parameter/day_zenith = Color(0.18, 0.48, 0.9, 1)
+shader_parameter/day_horizon = Color(0.72, 0.9, 1, 1)
+shader_parameter/sunset_zenith = Color(0.25, 0.12, 0.28, 1)
+shader_parameter/sunset_horizon = Color(1, 0.45, 0.1, 1)
+shader_parameter/sunset_glow = Color(1, 0.7, 0.2, 1)
+shader_parameter/night_zenith = Color(0.01, 0.01, 0.06, 1)
+shader_parameter/night_horizon = Color(0.03, 0.04, 0.12, 1)
+shader_parameter/sun_size = 0.025
+shader_parameter/sun_glow_power = 4.5
+shader_parameter/moon_size = 0.018
+shader_parameter/cloud_speed = 0.015
+shader_parameter/cloud_scale = 1.1
+shader_parameter/cloud_density = 0.644
 
 [sub_resource type="Sky" id="Sky_cw1g3"]
 sky_material = SubResource("ShaderMaterial_cfq0f")
@@ -180,10 +228,10 @@ radiance_size = 0
 
 [sub_resource type="Environment" id="Environment_cfq0f"]
 background_mode = 2
-background_energy_multiplier = 0.14
+background_energy_multiplier = 0.99
 sky = SubResource("Sky_cw1g3")
 glow_enabled = true
-glow_intensity = 0.05
+glow_intensity = 1.41
 glow_strength = 0.29
 glow_hdr_scale = 1.17
 glow_hdr_luminance_cap = 4.75
@@ -194,6 +242,7 @@ fog_sun_scatter = 1.0
 fog_density = 0.0
 fog_sky_affect = 0.0
 volumetric_fog_enabled = true
+volumetric_fog_density = 0.0563
 volumetric_fog_length = 42.44
 volumetric_fog_ambient_inject = 0.2
 
@@ -1202,10 +1251,10 @@ shader_parameter/wave_8 = Vector4(-0.42, -1.63, 0.15, 1.52)
 shader_parameter/time_factor = 6.975
 shader_parameter/noise_zoom = 3.885
 shader_parameter/noise_amp = 1.0
-shader_parameter/base_water_color = Color(0.188235, 0.537255, 0.282353, 1)
-shader_parameter/fresnel_water_color = Color(0.338312, 0.553894, 0.419979, 1)
+shader_parameter/base_water_color = Color(0, 0.0431373, 0, 1)
+shader_parameter/fresnel_water_color = Color(0.661277, 0.815883, 0.803102, 1)
 shader_parameter/deep_water_color = Color(0.116021, 0.237972, 0.128846, 1)
-shader_parameter/shallow_water_color = Color(0.56641, 0.833903, 0.620567, 1)
+shader_parameter/shallow_water_color = Color(0.0311719, 0.0981428, 0.0947162, 1)
 shader_parameter/beers_law = 2.01
 shader_parameter/depth_offset = -1.2
 shader_parameter/near = 7.38
@@ -1223,7 +1272,7 @@ shader_parameter/peak_intensity = 1.0
 shader_parameter/foam_texture = ExtResource("19_xuwja")
 shader_parameter/foam_intensity = 1.0
 shader_parameter/foam_scale = 6.255
-shader_parameter/metallic = 1.79
+shader_parameter/metallic = 0.35
 shader_parameter/roughness = 0.07
 shader_parameter/uv_scale_text_a = 0.23
 shader_parameter/uv_speed_text_a = Vector2(0.015, -0.03)
@@ -1365,6 +1414,30 @@ tracks/3/keys = {
 "update": 0,
 "values": [Vector3(-0.371406, 0, 0)]
 }
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("../WorldEnvironment:environment:sky:sky_material:shader_parameter/time_of_day")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("../WorldEnvironment:environment:volumetric_fog_density")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0563]
+}
 
 [sub_resource type="Animation" id="Animation_vt84v"]
 resource_name = "circle"
@@ -1377,10 +1450,10 @@ tracks/0/path = NodePath(".:light_color")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 30, 60),
-"transitions": PackedFloat32Array(1, 1, 1),
+"times": PackedFloat32Array(0, 15.6667, 30, 47.3667, 60.5333),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
 "update": 0,
-"values": [Color(0.99552, 0.467887, 0.0444731, 1), Color(0.0187395, 0.22427, 0.266336, 1), Color(0.99552, 0.467887, 0.0444731, 1)]
+"values": [Color(0.378803, 0.43246, 0.23638, 1), Color(0.988235, 0.352941, 0, 1), Color(0.0187395, 0.22427, 0.266336, 1), Color(0.99552, 0.467887, 0.0444731, 1), Color(0.378803, 0.43246, 0.23638, 1)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -1417,6 +1490,30 @@ tracks/3/keys = {
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
 "values": [Vector3(-0.371406, 0, 0), Vector3(-1.94081, 0, 0), Vector3(-0.371406, 0, 0)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("../WorldEnvironment:environment:sky:sky_material:shader_parameter/time_of_day")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 11.6649, 20, 29.9373, 50, 60),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [0.0, 0.27, 0.283, 0.5, 0.748, 1.0]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("../WorldEnvironment:environment:volumetric_fog_density")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0, 11.5667, 30),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [0.0163, 0.0163, 0.182]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_amia2"]
@@ -1708,7 +1805,7 @@ libraries = {
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.931818, 0.362926, 0, -0.362926, 0.931818, -1.07784, 37.4465, 160.116)
 light_color = Color(0.99552, 0.467887, 0.0444731, 1)
-light_energy = 16.0
+light_energy = 7.044
 light_indirect_energy = 0.0
 light_volumetric_fog_energy = 0.485
 light_angular_distance = 13.64
@@ -1832,12 +1929,6 @@ volume_db = -4.518
 pitch_scale = 1.1
 bus = &"SFX"
 
-[node name="clouds" parent="." instance=ExtResource("24_a7pbh")]
-transform = Transform3D(-1.81, -2.73302e-07, 1.19464e-14, 0, -7.91176e-08, -1.81, 2.73302e-07, -1.81, 7.91176e-08, 0, 4.53567, 8.9877)
-
-[node name="clouds2" parent="." instance=ExtResource("24_a7pbh")]
-transform = Transform3D(-1.81, -2.73302e-07, 1.19464e-14, 0, -7.91176e-08, -1.81, 2.73302e-07, -1.81, 7.91176e-08, 0, 4.53567, 3.86946)
-
 [node name="Splash" parent="." instance=ExtResource("25_ye0jt")]
 
 [node name="rock" parent="." instance=ExtResource("27_jcw2p")]
@@ -1893,7 +1984,7 @@ transform = Transform3D(3.07, 0, 0, 0, 3.07, 0, 0, 0, 3.07, -22.6968, 0, 114.287
 visible = false
 
 [node name="boat" parent="." instance=ExtResource("34_kwqb8")]
-transform = Transform3D(-0.434404, 0, -0.0227662, 0, 0.435, 0, 0.0227662, 0, -0.434404, 1.82034, 0.83367, -1.44675)
+transform = Transform3D(-0.39353, -0.18421, -0.0206241, -0.183958, 0.39407, -0.00964085, 0.0227662, 4.82947e-17, -0.434404, 1.82034, 0.83367, -1.44675)
 
 [node name="boat" parent="boat" index="0"]
 surface_material_override/0 = ExtResource("35_y15d6")

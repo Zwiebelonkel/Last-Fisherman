@@ -1,56 +1,15 @@
-[gd_scene load_steps=6 format=3 uid="uid://5t2nyo7in3m0"]
+[gd_scene load_steps=2 format=3 uid="uid://5t2nyo7in3m0"]
 
 [ext_resource type="Script" uid="uid://jbrd8pc3br11" path="res://test.gd" id="1_37kl0"]
-[ext_resource type="Shader" uid="uid://dtxd5m6ahyemu" path="res://shader/extrusion.gdshader" id="2_8uh7m"]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_6uqi0"]
-render_priority = 0
-shader = ExtResource("2_8uh7m")
-shader_parameter/extruded_alpha_cull = 1.0
-shader_parameter/extrude_scale = 0.2
-shader_parameter/opaque_extrude = true
-shader_parameter/keep_image = true
-shader_parameter/image_alpha_cull = 1.0
-shader_parameter/offset = Vector2(0, 0)
-shader_parameter/color_mix = Color(0, 0, 0, 1)
-shader_parameter/mix_strength = 0.0
-shader_parameter/texture_calls = 20
-shader_parameter/ray_bias = 1.0
-shader_parameter/infinite_holes = false
-shader_parameter/Hframes = 1
-shader_parameter/Vframes = 1
-shader_parameter/frame = 0
-
-[sub_resource type="BoxMesh" id="BoxMesh_ppyta"]
-material = SubResource("ShaderMaterial_6uqi0")
-size = Vector3(1, 1, 0.105)
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_ykrsh"]
-render_priority = 0
-shader = ExtResource("2_8uh7m")
-shader_parameter/extruded_alpha_cull = 1.0
-shader_parameter/extrude_scale = 0.2
-shader_parameter/opaque_extrude = true
-shader_parameter/keep_image = true
-shader_parameter/image_alpha_cull = 1.0
-shader_parameter/offset = Vector2(0, 0)
-shader_parameter/color_mix = Color(0, 0, 0, 1)
-shader_parameter/mix_strength = 0.0
-shader_parameter/texture_calls = 20
-shader_parameter/ray_bias = 1.0
-shader_parameter/infinite_holes = false
-shader_parameter/Hframes = 1
-shader_parameter/Vframes = 1
-shader_parameter/frame = 0
 
 [node name="Control" type="Node3D"]
 script = ExtResource("1_37kl0")
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.44738)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.6562)
+fov = 29.7
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-mesh = SubResource("BoxMesh_ppyta")
-surface_material_override/0 = SubResource("ShaderMaterial_ykrsh")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0013462, 0)

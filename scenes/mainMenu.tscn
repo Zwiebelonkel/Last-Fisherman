@@ -140,18 +140,20 @@ _data = {
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_cfq0f"]
 shader = ExtResource("7_ewahu")
-shader_parameter/use_directional_light = true
-shader_parameter/sun_color = Color(1, 1, 1, 1)
-shader_parameter/sun_energy = 15.0
-shader_parameter/cloud_color = Color(0.296, 0.402, 0.521, 1)
+shader_parameter/time_of_day = 0.35
+shader_parameter/day_zenith = Color(0.18, 0.48, 0.9, 1)
+shader_parameter/day_horizon = Color(0.72, 0.9, 1, 1)
+shader_parameter/sunset_zenith = Color(0.25, 0.12, 0.28, 1)
+shader_parameter/sunset_horizon = Color(1, 0.45, 0.1, 1)
+shader_parameter/sunset_glow = Color(1, 0.7, 0.2, 1)
+shader_parameter/night_zenith = Color(0.01, 0.01, 0.06, 1)
+shader_parameter/night_horizon = Color(0.03, 0.04, 0.12, 1)
+shader_parameter/sun_size = 0.025
+shader_parameter/sun_glow_power = 4.5
+shader_parameter/moon_size = 0.018
+shader_parameter/cloud_speed = 0.015
+shader_parameter/cloud_scale = 1.1
 shader_parameter/cloud_density = 5.0
-shader_parameter/cloud_depth = 2.0
-shader_parameter/cloud_sag = 2.0
-shader_parameter/noise_tiling = Vector2(1, 1)
-shader_parameter/wind_speed = Vector2(0.5, 0.5)
-shader_parameter/ground_bottom_color = Color(0.2, 0.169, 0.133, 1)
-shader_parameter/ground_curve = 0.04
-shader_parameter/exposure = 1.0
 
 [sub_resource type="Sky" id="Sky_x537r"]
 sky_material = SubResource("ShaderMaterial_cfq0f")
@@ -172,8 +174,8 @@ volumetric_fog_ambient_inject = 0.2
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_k24pf"]
 render_priority = -128
 shader = ExtResource("10_tlicg")
-shader_parameter/wave_height = 1.387
-shader_parameter/wave_speed = 1.0
+shader_parameter/wave_height = 1.484
+shader_parameter/wave_speed = 2.774
 shader_parameter/refraction_strength = 0.5
 shader_parameter/refraction_depth_scale = 0.5
 shader_parameter/wave_1 = Vector4(0.3, 4, 0.2, 0.6)

@@ -1,8 +1,7 @@
 shader_type spatial;
-render_mode unshaded, depth_prepass_alpha, cull_disabled;
-
+render_mode unshaded;
 uniform float extruded_alpha_cull : hint_range(0.0, 1.0) = 1.0;
-uniform float extrude_scale : hint_range(0.0, 1.0) = 0.02;
+uniform float extrude_scale : hint_range(0.0, 1.0) = 0.1;
 uniform bool opaque_extrude = true;
 uniform bool keep_image = true;
 uniform float image_alpha_cull : hint_range(0.0, 1.0) = 1.0;
@@ -11,11 +10,12 @@ uniform vec4 color_mix : source_color = vec4(0.0, 0.0, 0.0, 1.0);
 uniform float mix_strength : hint_range(0.0, 1.0) = 0.0;
 uniform sampler2D Texture : source_color, filter_nearest;
 uniform int texture_calls = 20;
-uniform float ray_bias = 1;
+uniform float ray_bias = 1.0;
 uniform bool infinite_holes = false;
 uniform int Hframes = 1;
 uniform int Vframes = 1;
 uniform int frame = 0;
+uniform bool hide_sides = true;
 
 struct imgPoint {
 	vec4 color;
@@ -55,15 +55,15 @@ vec2 lineImgIntersect(vec2 x, vec2 y){
 }
 
 vec2 frameUV(vec2 uv){
-	int hFrame = frame % Hframes;
-	int vFrame = frame / Vframes;
-	uv.x = uv.x/float(Hframes) + float(hFrame)/float(Hframes);
-	uv.y = uv.y/float(Vframes) + float(vFrame)/float(Vframes);
+	int hFrame = frame % max(Hframes, 1);
+	int vFrame = (frame / max(Hframes, 1)) % max(Vframes, 1);
+	uv.x = uv.x/float(max(Hframes,1)) + float(hFrame)/float(max(Hframes,1));
+	uv.y = uv.y/float(max(Vframes,1)) + float(vFrame)/float(max(Vframes,1));
 	return uv;
 }
 
 vec2 flippedFrameUV(vec2 uv){
-	float frameCenter = 0.5/float(Hframes) + float(frame % Hframes)/float(Hframes);
+	float frameCenter = 0.5/float(max(Hframes,1)) + float(frame % max(Hframes,1))/float(max(Hframes,1));
 	uv = frameUV(uv);
 	uv.x = -(uv.x - frameCenter) + frameCenter;
 	return uv;
@@ -72,51 +72,65 @@ vec2 flippedFrameUV(vec2 uv){
 imgPoint imgExtrude(vec2 pos_on_img, vec2 slope, bool flipped){
 	vec4 color;
 	slope.y *= -1.0;
-	vec2 edge = lineImgIntersect(pos_on_img, pos_on_img + slope);
-	if (flipped) {
-		pos_on_img = flippedFrameUV(pos_on_img);
-		edge = flippedFrameUV(edge);
-	} else {
-		pos_on_img = frameUV(pos_on_img);
-		edge = frameUV(edge);
+
+	// FIX: Wenn slope fast null ist, direkt samplen und keine Extrusion versuchen
+	if (length(slope) < 0.0001) {
+		vec2 mapped = flipped ? flippedFrameUV(pos_on_img) : frameUV(pos_on_img);
+		vec4 c = texture(Texture, mapped + offset);
+		return imgPoint(c, pos_on_img);
 	}
+
+	vec2 edge = lineImgIntersect(pos_on_img, pos_on_img + slope);
+
+	vec2 mapped_pos = flipped ? flippedFrameUV(pos_on_img) : frameUV(pos_on_img);
+	vec2 mapped_edge = flipped ? flippedFrameUV(edge) : frameUV(edge);
+
+	// FIX: Prüfe ob die Start-Position schon außerhalb liegt → nicht extrudieren
+	if (!isInImg(pos_on_img)) {
+		return imgPoint(vec4(0.0), pos_on_img);
+	}
+
 	bool extrude = false;
-	vec2 point;
-	int calls = texture_calls;
-	float log_dir = -1.0;
-	float log_percentage;
+	vec2 point = mapped_edge;
+	vec2 raw_point = edge;
+
+	int calls = max(texture_calls, 1);
+
+	// FIX: Einfacher linearer Scan für stabiles Verhalten bei extremen Winkeln
+	vec4 best_color = vec4(0.0);
+	vec2 best_point = mapped_pos;
+	vec2 best_raw = pos_on_img;
+
 	for (int i = 0; i < calls; i++){
-		if (!extrude) {
-			float percentage = float(i) * 1.0/float(texture_calls);
-			percentage = pow(percentage, ray_bias);
-			point = getPositionAlongTheLine(pos_on_img, edge, percentage);
-			color = texture(Texture, point + offset);
-			if (color.w >= extruded_alpha_cull) {
-				extrude = true;
-				if (i == 0) break;
-				calls - i;
-				i = 0;
-				log_percentage = percentage;
-			}
-		} else {
-			float incremenet = log_dir * 1.0/(float(texture_calls)*float(i*2));
-			log_percentage += incremenet;
-			vec2 check_point = getPositionAlongTheLine(pos_on_img, edge, log_percentage);
-			vec4 check_color = texture(Texture, check_point + offset);
-			if (check_color.w >= extruded_alpha_cull) {
-				color = check_color;
-				point = check_point;
-				log_dir = -1.0;
-			} else log_dir = 1.0;
+		float percentage = float(i) / float(calls - 1 > 0 ? calls - 1 : 1);
+		percentage = pow(percentage, max(ray_bias, 0.0001));
+
+		vec2 raw_sample = getPositionAlongTheLine(pos_on_img, edge, percentage);
+
+		// FIX: Nur samplen wenn raw UV im Bild-Bereich liegt
+		if (!isInImg(raw_sample)) continue;
+
+		vec2 mapped_sample = flipped ? flippedFrameUV(raw_sample) : frameUV(raw_sample);
+		vec4 c = texture(Texture, mapped_sample + offset);
+
+		if (c.a >= extruded_alpha_cull) {
+			best_color = c;
+			best_point = mapped_sample;
+			best_raw = raw_sample;
+			extrude = true;
 		}
 	}
+
 	if (extrude) {
-		if (opaque_extrude) color.w = 1.0;
-		color = mix(color, color_mix, mix_strength);
-		if (infinite_holes) return imgPoint(color, pos_on_img);
-		return imgPoint(color, point);
+		if (opaque_extrude) best_color.a = 1.0;
+		best_color = mix(best_color, color_mix, mix_strength);
+		if (infinite_holes) return imgPoint(best_color, pos_on_img);
+		return imgPoint(best_color, best_raw);
 	}
-	return imgPoint(vec4(0.0), edge);
+
+	// FIX: Fallback → originale Farbe zurückgeben statt transparent/schwarz
+	vec4 orig = texture(Texture, mapped_pos + offset);
+	return imgPoint(orig, pos_on_img);
 }
 
 vec2 UVtoXY(vec2 uv){
@@ -131,34 +145,52 @@ vec2 XYtoUV(vec2 xy){
 }
 
 vec3 PlaneLineIntersection(vec3 plane_point, vec3 plane_normal, vec3 line_point, vec3 line_dir){
-	float t = (dot(plane_normal, plane_point) - dot(plane_normal, line_point)) / (dot(plane_normal, normalize(line_dir)));
-	return line_point + normalize(line_dir) * t;
+    vec3 dir_n = normalize(line_dir);
+    float denom = dot(plane_normal, dir_n);
+
+    if (abs(denom) < 0.01) { 
+        return line_point;
+    }
+
+    float t = (dot(plane_normal, plane_point) - dot(plane_normal, line_point)) / denom;
+    t = clamp(t, -10.0, 10.0);
+
+    return line_point + dir_n * t;
 }
 
 void fragment() {
+	ALBEDO = vec3(0.0);
+	ALPHA = 0.0;
+
 	vec3 frag_pos = (INV_VIEW_MATRIX * vec4(VERTEX, 1.0)).xyz;
 	vec3 camera_ray = normalize(frag_pos - CAMERA_POSITION_WORLD);
 	vec3 model_ray_full = normalize((inverse(MODEL_MATRIX) * vec4(camera_ray, 0.0)).xyz);
-	
-	// ✅ extrude_scale hier anwenden – nur XY skaliert, Z bleibt für Face-Erkennung
+
 	vec3 model_ray = vec3(model_ray_full.xy * extrude_scale, model_ray_full.z);
 
 	ivec2 face = ivec2(UV / vec2(1.0/3.0, 1.0/2.0));
+	face.x = clamp(face.x, 0, 2);
+	face.y = clamp(face.y, 0, 1);
+
 	vec2 adjusted_UV = mod(UV, vec2(1.0/3.0, 1.0/2.0)) * vec2(3.0, 2.0);
+	// FIX: adjusted_UV clampen damit es nie exakt 1.0 überschreitet durch float-Fehler
+	adjusted_UV = clamp(adjusted_UV, vec2(0.0), vec2(1.0));
 
 	// FRONT (+Z)
 	if (face.x == 0 && face.y == 0) {
 		vec4 color = texture(Texture, frameUV(adjusted_UV));
-		if (color.w >= image_alpha_cull && keep_image) {
+		if (color.a >= image_alpha_cull && keep_image) {
 			ALBEDO = color.rgb;
-			ALPHA = color.w;
+			ALPHA = color.a;
 		} else {
 			imgPoint first_pixel = imgExtrude(adjusted_UV, model_ray.xy, false);
 			ALBEDO = first_pixel.color.rgb;
-			ALPHA = first_pixel.color.w;
+			ALPHA = first_pixel.color.a;
+
 			vec3 point = vec3(UVtoXY(adjusted_UV), 2.0);
 			vec3 ray_intersection = PlaneLineIntersection(vec3(0.0), vec3(0.0,0.0,1.0), point, model_ray);
 			vec2 uv_point = XYtoUV(ray_intersection.xy) + vec2(0.0, 1.0);
+
 			if (isInImg(uv_point)) {
 				imgPoint second_pixel = imgExtrude(uv_point, -model_ray.xy, false);
 				if (model_ray.y <= 0.0 && second_pixel.uv.y < first_pixel.uv.y) ALPHA = 0.0;
@@ -166,19 +198,22 @@ void fragment() {
 			}
 		}
 	}
+
 	// BACK (-Z)
 	else if (face.x == 2 && face.y == 0) {
 		vec4 color = texture(Texture, flippedFrameUV(adjusted_UV));
-		if (color.w >= image_alpha_cull && keep_image) {
+		if (color.a >= image_alpha_cull && keep_image) {
 			ALBEDO = color.rgb;
-			ALPHA = color.w;
+			ALPHA = color.a;
 		} else {
 			imgPoint first_pixel = imgExtrude(adjusted_UV, vec2(-model_ray.x, model_ray.y), true);
 			ALBEDO = first_pixel.color.rgb;
-			ALPHA = first_pixel.color.w;
+			ALPHA = first_pixel.color.a;
+
 			vec3 point = vec3(UVtoXY(vec2(-adjusted_UV.x, adjusted_UV.y)), -2.0);
 			vec3 ray_intersection = PlaneLineIntersection(vec3(0.0), vec3(0.0,0.0,1.0), point, model_ray);
 			vec2 uv_point = XYtoUV(ray_intersection.xy) + vec2(1.0, 1.0);
+
 			if (isInImg(uv_point)) {
 				imgPoint second_pixel = imgExtrude(uv_point, -model_ray.xy, false);
 				if (model_ray.y <= 0.0 && second_pixel.uv.y < first_pixel.uv.y) ALPHA = 0.0;
@@ -186,82 +221,114 @@ void fragment() {
 			}
 		}
 	}
+
 	// RIGHT (+X)
 	else if (face.x == 1 && face.y == 0) {
+		if (hide_sides) discard;
 		vec3 point = vec3(0.0, UVtoXY(adjusted_UV).yx);
 		vec3 ray_intersection = PlaneLineIntersection(vec3(0.0), vec3(0.0,0.0,1.0), point, -model_ray);
 		vec3 image_intersection = PlaneLineIntersection(vec3(0.0), vec3(1.0,0.0,0.0), ray_intersection, vec3(model_ray.xy, 0.0));
 		vec2 new_uv = XYtoUV(image_intersection.xy) + vec2(0.5, 1.0);
+		new_uv = clamp(new_uv, vec2(0.0), vec2(1.0));
+
 		vec4 img_color = imgExtrude(new_uv, model_ray.xy, false).color;
 		ALBEDO = img_color.rgb;
-		ALPHA = img_color.w;
+		ALPHA = img_color.a;
+
 		vec2 xy = UVtoXY(adjusted_UV);
 		if (model_ray.z > 0.0) point = vec3(1.0, xy.y, -1.0 - xy.x);
 		else point = vec3(1.0, xy.y, 1.0 - xy.x);
+
 		ray_intersection = PlaneLineIntersection(vec3(0.0), vec3(0.0,0.0,1.0), point, model_ray);
 		vec2 uv_point = XYtoUV(ray_intersection.xy) + vec2(0.0, 1.0);
+
 		if (isInImg(uv_point)) {
 			vec4 ic = imgExtrude(uv_point, -model_ray.xy, false).color;
-			if (ic.w == 0.0) ALPHA = 0.0;
+			if (ic.a < 0.01) ALPHA = 0.0;
 		}
 	}
+
 	// LEFT (-X)
 	else if (face.x == 0 && face.y == 1) {
+		if (hide_sides) discard;
 		vec3 point = vec3(0.0, UVtoXY(adjusted_UV).yx);
 		vec3 ray_intersection = PlaneLineIntersection(vec3(0.0), vec3(0.0,0.0,1.0), point, -model_ray);
 		vec3 image_intersection = PlaneLineIntersection(vec3(0.0), vec3(-1.0,0.0,0.0), ray_intersection, vec3(model_ray.xy, 0.0));
 		vec2 new_uv = XYtoUV(image_intersection.xy) + vec2(-0.5, 1.0);
+		new_uv = clamp(new_uv, vec2(0.0), vec2(1.0));
+
 		vec4 img_color = imgExtrude(new_uv, model_ray.xy, false).color;
 		ALBEDO = img_color.rgb;
-		ALPHA = img_color.w;
+		ALPHA = img_color.a;
+
 		vec2 xy = UVtoXY(adjusted_UV);
 		if (model_ray.z > 0.0) point = vec3(-1.0, xy.y, -1.0 + xy.x);
 		else point = vec3(-1.0, xy.y, 1.0 + xy.x);
+
 		ray_intersection = PlaneLineIntersection(vec3(0.0), vec3(0.0,0.0,1.0), point, model_ray);
 		vec2 uv_point = XYtoUV(ray_intersection.xy) + vec2(0.0, 1.0);
+
 		if (isInImg(uv_point)) {
 			vec4 ic = imgExtrude(uv_point, -model_ray.xy, false).color;
-			if (ic.w == 0.0) ALPHA = 0.0;
+			if (ic.a < 0.01) ALPHA = 0.0;
 		}
 	}
+
 	// TOP (+Y)
 	else if (face.x == 1 && face.y == 1) {
+		if (hide_sides) discard;
 		vec2 rotated_UV = -UVtoXY(adjusted_UV);
 		vec3 point = vec3(rotated_UV.x, 0.0, rotated_UV.y);
+
 		vec3 ray_intersection = PlaneLineIntersection(vec3(0.0), vec3(0.0,0.0,1.0), point, -model_ray);
 		vec3 image_intersection = PlaneLineIntersection(vec3(0.0), vec3(0.0,1.0,0.0), ray_intersection, vec3(model_ray.xy, 0.0));
 		vec2 new_uv = XYtoUV(image_intersection.xy) + vec2(0.0, 0.5);
+		new_uv = clamp(new_uv, vec2(0.0), vec2(1.0));
+
 		vec4 img_color = imgExtrude(new_uv, model_ray.xy, false).color;
 		ALBEDO = img_color.rgb;
-		ALPHA = img_color.w;
+		ALPHA = img_color.a;
+
 		vec2 xy = UVtoXY(vec2(-adjusted_UV.x, adjusted_UV.y));
 		if (model_ray.z > 0.0) point = vec3(xy.x, 1.0, xy.y - 1.0);
 		else point = vec3(xy.x, 1.0, xy.y + 1.0);
+
 		ray_intersection = PlaneLineIntersection(vec3(0.0), vec3(0.0,0.0,1.0), point, model_ray);
 		vec2 uv_point = XYtoUV(ray_intersection.xy) + vec2(1.0, 1.0);
+
 		if (isInImg(uv_point)) {
 			vec4 ic = imgExtrude(uv_point, -model_ray.xy, false).color;
-			if (ic.w == 0.0) ALPHA = 0.0;
+			if (ic.a < 0.01) ALPHA = 0.0;
 		}
 	}
+
 	// BOTTOM (-Y)
 	else if (face.x == 2 && face.y == 1) {
+		if (hide_sides) discard;
 		vec2 XY = UVtoXY(adjusted_UV);
 		vec3 point = vec3(XY.x, 0.0, XY.y);
+
 		vec3 ray_intersection = PlaneLineIntersection(vec3(0.0), vec3(0.0,0.0,1.0), point, -model_ray);
 		vec3 image_intersection = PlaneLineIntersection(vec3(0.0), vec3(0.0,-1.0,0.0), ray_intersection, vec3(model_ray.xy, 0.0));
 		vec2 new_uv = XYtoUV(image_intersection.xy) + vec2(0.0, 1.5);
+		new_uv = clamp(new_uv, vec2(0.0), vec2(1.0));
+
 		vec4 img_color = imgExtrude(new_uv, model_ray.xy, false).color;
 		ALBEDO = img_color.rgb;
-		ALPHA = img_color.w;
+		ALPHA = img_color.a;
+
 		vec2 xy = UVtoXY(adjusted_UV);
 		if (model_ray.z > 0.0) point = vec3(xy.x, -1.0, xy.y - 1.0);
 		else point = vec3(xy.x, -1.0, xy.y + 1.0);
+
 		ray_intersection = PlaneLineIntersection(vec3(0.0), vec3(0.0,0.0,1.0), point, model_ray);
 		vec2 uv_point = XYtoUV(ray_intersection.xy) + vec2(0.0, 1.0);
+
 		if (isInImg(uv_point)) {
 			vec4 ic = imgExtrude(uv_point, -model_ray.xy, false).color;
-			if (ic.w == 0.0) ALPHA = 0.0;
+			if (ic.a < 0.01) ALPHA = 0.0;
 		}
 	}
+
+	if (ALPHA <= 0.01) discard;
 }

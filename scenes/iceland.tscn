@@ -1,4 +1,4 @@
-[gd_scene load_steps=78 format=4 uid="uid://yrer5qgxgwvb"]
+[gd_scene load_steps=77 format=4 uid="uid://yrer5qgxgwvb"]
 
 [ext_resource type="Shader" uid="uid://c140kjbm2bot5" path="res://shader/buckshot.gdshader" id="1_mxpyu"]
 [ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="3_ttydn"]
@@ -10,7 +10,6 @@
 [ext_resource type="PackedScene" uid="uid://je70iqlm248a" path="res://scenes/CastPowerUI.tscn" id="9_loenh"]
 [ext_resource type="PackedScene" uid="uid://b08obrprd472u" path="res://scenes/OptionsControl.tscn" id="10_7b1oh"]
 [ext_resource type="PackedScene" uid="uid://xt7f7m4i2iwi" path="res://scenes/touch.tscn" id="10_a0dtd"]
-[ext_resource type="Texture2D" uid="uid://e7t33pnr13bp" path="res://textures/These-images-of-clouds-are-created-exclusively-using-Perlin-noise-It-simulates-the_Q320.jpg" id="10_ttydn"]
 [ext_resource type="Script" uid="uid://bl1xotduehieu" path="res://scripts/camera_sway.gd" id="11_bdykf"]
 [ext_resource type="PackedScene" uid="uid://bgnalk1ruht4d" path="res://scenes/bait_hud.tscn" id="11_udt3j"]
 [ext_resource type="PackedScene" uid="uid://b5ew1rfc8ow8g" path="res://scenes/fishingRod.tscn" id="12_4j2b8"]
@@ -70,101 +69,207 @@ default_font = ExtResource("4_a0dtd")
 [sub_resource type="Theme" id="Theme_2phbr"]
 default_font = ExtResource("4_a0dtd")
 
-[sub_resource type="Shader" id="Shader_a0dtd"]
+[sub_resource type="Shader" id="Shader_va6r8"]
 code = "shader_type sky;
 
-group_uniforms Sky;
-/**
- * Use directional light for sun color
-*/
-uniform bool use_directional_light = true;
-uniform vec4 sun_color : source_color = vec4(1.0);
-uniform float sun_energy = 15.0;
-uniform vec4 cloud_color : source_color = vec4(0.296, 0.402, 0.521, 1.0);
-/**
- * Determines how much light the clouds absorb
-*/
-uniform float cloud_density = 5.0;
-/**
- * Depth of the parallax effect
-*/
-uniform float cloud_depth = 2.0;
-/**
- * Higher values give the clouds a heavier appearance
-*/
-uniform float cloud_sag = 2.0;
-uniform sampler2D noise_texture;
-uniform vec2 noise_tiling = vec2(1.0);
-uniform vec2 wind_speed = vec2(0.5);
-group_uniforms;
+// Wird vom AnimationPlayer gesteuert (0.0 = Mitternacht, 0.5 = Mittag, 1.0 = Mitternacht)
+uniform float time_of_day : hint_range(0.0, 1.0) = 0.35;
 
-group_uniforms Ground;
-uniform vec4 ground_bottom_color : source_color = vec4(0.2, 0.169, 0.133, 1.0);
-uniform float ground_curve : hint_range(0, 1) = 0.04;
-group_uniforms;
+// Tag-Farben
+uniform vec4 day_zenith   : source_color = vec4(0.18, 0.48, 0.90, 1.0);
+uniform vec4 day_horizon  : source_color = vec4(0.72, 0.90, 1.00, 1.0);
 
-uniform float exposure : hint_range(0, 128) = 1.0;
+// Sonnenaufgang/Untergang
+uniform vec4 sunset_zenith  : source_color = vec4(0.25, 0.12, 0.28, 1.0);
+uniform vec4 sunset_horizon : source_color = vec4(1.00, 0.45, 0.10, 1.0);
+uniform vec4 sunset_glow    : source_color = vec4(1.00, 0.70, 0.20, 1.0);
 
-// https://www.scratchapixel.com/lessons/3d-basic-rendering/minimal-ray-tracer-rendering-simple-shapes/ray-plane-and-ray-disk-intersection.html
-float ray_plane_intersection(vec3 origin, vec3 normal, vec3 ray_start, vec3 ray_dir) {
-	return dot(origin - ray_start, normal) / dot(ray_dir, normal);
+// Nacht-Farben
+uniform vec4 night_zenith  : source_color = vec4(0.01, 0.01, 0.06, 1.0);
+uniform vec4 night_horizon : source_color = vec4(0.03, 0.04, 0.12, 1.0);
+
+// Sonne & Mond
+uniform float sun_size       : hint_range(0.001, 0.15) = 0.025;
+uniform float sun_glow_power : hint_range(1.0, 16.0)   = 4.5;
+uniform float moon_size      : hint_range(0.001, 0.1)  = 0.018;
+
+// Wolken
+uniform float cloud_speed   : hint_range(0.0, 1.0) = 0.015;
+uniform float cloud_scale   : hint_range(0.1, 4.0) = 1.1;
+uniform float cloud_density : hint_range(0.0, 1.0) = 0.50;
+
+// ─────────────────────────────────────────────
+// Noise
+// ─────────────────────────────────────────────
+float hash(vec2 p) {
+    p = fract(p * vec2(127.1, 311.7));
+    p += dot(p, p + 19.19);
+    return fract(p.x * p.y);
 }
 
-float sample_height(vec2 uv) {
-	float height = texture(noise_texture, uv).r;
-	return pow(height, cloud_sag);
+float vnoise(vec2 p) {
+    vec2 i = floor(p);
+    vec2 f = fract(p);
+    vec2 u = f * f * (3.0 - 2.0 * f);
+    return mix(
+        mix(hash(i),             hash(i + vec2(1,0)), u.x),
+        mix(hash(i+vec2(0,1)),   hash(i + vec2(1,1)), u.x), u.y);
 }
 
-float beers_law(float absorption, float dist) {
-	return exp(-absorption * dist);
+float fbm(vec2 p) {
+    float v = 0.0; float a = 0.5;
+    mat2 rot = mat2(vec2(0.8, 0.6), vec2(-0.6, 0.8));
+    for (int i = 0; i < 5; i++) { v += a * vnoise(p); p = rot * p * 2.1; a *= 0.48; }
+    return v;
 }
 
+float cloud_shape(vec2 uv, float t, float offset) {
+    vec2 p = uv * cloud_scale + vec2(t + offset, offset * 0.3);
+    vec2 q = vec2(fbm(p), fbm(p + vec2(5.2, 1.3)));
+    float raw = fbm(p + q);
+    return step(cloud_density + offset * 0.04, raw);
+}
+
+// ─────────────────────────────────────────────
+// SKY
+// ─────────────────────────────────────────────
 void sky() {
-	vec3 light_color = vec3(0.0);
-	if (use_directional_light)
-		light_color = LIGHT0_COLOR * LIGHT0_ENERGY * dot(LIGHT0_DIRECTION, vec3(0.0, 1.0, 0.0));
-	else
-		light_color = sun_color.rgb * sun_energy;
+    vec3 dir = normalize(EYEDIR);
 
-	vec3 sky = cloud_color.rgb;
+    // time_of_day: 0=Nacht, 0.25=Sonnenaufgang, 0.5=Mittag, 0.75=Sonnenuntergang, 1=Nacht
+    float tod = time_of_day;
 
-	// Find view ray intersection with cloud layer
-	float t = ray_plane_intersection(vec3(0.0, 1.0, 0.0), vec3(0.0, -1.0, 0.0), vec3(0.0), EYEDIR);
-	if (t >= 0.0) {
-		vec3 wind = vec3(wind_speed.x, 0.0, wind_speed.y) * TIME * 0.1;
-		vec3 tiling = vec3(noise_tiling.x, 1.0, noise_tiling.y) * 0.2;
-		vec3 cloud_pos = EYEDIR * t * tiling + wind;
+    // Sonne dreht sich über den Himmel (Y-Kurve)
+    float sun_angle = tod * TAU;
+    vec3 sun_dir = normalize(vec3(sin(sun_angle), cos(sun_angle) * 0.8, -0.6));
 
-		// Parallax mapping
-		float height = sample_height(cloud_pos.xz);
-		cloud_pos += EYEDIR * height * cloud_depth * 0.1;
-		height = sample_height(cloud_pos.xz);
+    // Mond ist gegenüber der Sonne
+    vec3 moon_dir = -sun_dir;
 
-		// Attenuate light by view angle to simulate occlusion
-		float n_dot_v = dot(vec3(0.0, 1.0, 0.0), EYEDIR);
-		sky += light_color * beers_law(cloud_density, 1.0 - height * n_dot_v);
-	}
-	vec3 horizon = cloud_color.rgb + light_color * beers_law(cloud_density, 1.0);
-	vec3 ground = mix(horizon, ground_bottom_color.rgb, clamp(1.0 - pow(1.0 + EYEDIR.y, 1.0 / ground_curve), 0.0, 1.0));
-	COLOR = mix(ground, sky, step(0.0, EYEDIR.y)) * exposure;
+    // Wie hoch steht die Sonne? 0=Horizont/unter, 1=Zenit
+    float sun_height = clamp(sun_dir.y, 0.0, 1.0);
+    float sun_below  = clamp(-sun_dir.y, 0.0, 1.0); // Sonne unter Horizont = Nacht
+
+    // Tageszeit-Phasen
+    float is_day     = smoothstep(0.0, 0.15, sun_height);
+    float is_night   = smoothstep(0.0, 0.15, sun_below);
+    float is_sunset  = 1.0 - smoothstep(0.0, 0.22, abs(sun_dir.y)); // nahe Horizont
+
+    // ── Himmels-Gradient ──────────────────────────────────────────
+    float up = clamp(dir.y, 0.0, 1.0);
+
+    vec3 c_zenith  = mix(mix(night_zenith.rgb,  sunset_zenith.rgb,  is_sunset), day_zenith.rgb,  is_day);
+    vec3 c_horizon = mix(mix(night_horizon.rgb, sunset_horizon.rgb, is_sunset), day_horizon.rgb, is_day);
+
+    vec3 sky_col = mix(c_horizon, c_zenith, smoothstep(0.0, 0.6, up));
+
+    // Sonnenuntergangs-Glow am Horizont (Richtung Sonne)
+    float sun_horiz_dot = dot(dir, sun_dir) * 0.5 + 0.5;
+    sky_col += sunset_glow.rgb * pow(sun_horiz_dot, 8.0) * is_sunset * 0.8 * (1.0 - up * 2.0);
+
+    // ── Sterne (nur nachts) ───────────────────────────────────────
+    float star_brightness = is_night * (1.0 - is_sunset * 2.0);
+    if (dir.y > 0.0) {
+        vec2 star_uv = dir.xz / max(dir.y, 0.001) * 0.5;
+        float s1 = pow(clamp(hash(floor(star_uv * 60.0)), 0.0, 1.0), 120.0);
+        float s2 = pow(clamp(hash(floor(star_uv * 120.0) + vec2(13.7)), 0.0, 1.0), 200.0);
+        float twinkle = sin(TIME * 2.0 + hash(floor(star_uv * 60.0)) * 10.0) * 0.3 + 0.7;
+        sky_col += vec3(0.9, 0.92, 1.0) * (s1 + s2 * 0.5) * star_brightness * twinkle * 3.0;
+    }
+
+    // ── Milchstraße-Andeutung (nachts) ───────────────────────────
+    if (dir.y > 0.05) {
+        vec2 mw_uv = dir.xz / dir.y * 0.3;
+        float mw = fbm(mw_uv * 0.4 + vec2(1.3, 2.7)) * 0.06 * star_brightness;
+        sky_col += vec3(0.5, 0.55, 0.8) * mw;
+    }
+
+    // ── Sonne ─────────────────────────────────────────────────────
+    float sun_dot  = dot(dir, sun_dir);
+    float sun_disc = step(1.0 - sun_size, sun_dot);
+
+    // Glow-Ringe (harte Stufen für leichten Stylize-Look)
+    float g1 = step(1.0 - sun_size * 3.0,  sun_dot) * 0.25;
+    float g2 = step(1.0 - sun_size * 8.0,  sun_dot) * 0.12;
+    float g3 = step(1.0 - sun_size * 18.0, sun_dot) * 0.06;
+    float g4 = pow(clamp(sun_dot, 0.0, 1.0), sun_glow_power) * 0.5;
+
+    // Sonnenfarbe: weiß-gelb bei Tag, orange-rot bei Untergang
+    vec3 sun_col = mix(vec3(1.0, 0.55, 0.1), vec3(1.0, 0.97, 0.85), sun_height);
+    sky_col += sun_col * (sun_disc + g1 + g2 + g3 + g4) * (1.0 - is_night);
+
+    // ── Mond ──────────────────────────────────────────────────────
+    float moon_dot  = dot(dir, moon_dir);
+    float moon_disc = step(1.0 - moon_size, moon_dot);
+    float moon_glow = step(1.0 - moon_size * 5.0, moon_dot) * 0.08;
+    float moon_atm  = pow(clamp(moon_dot, 0.0, 1.0), 12.0) * 0.15;
+    // Mondsichel via zweiter Kreis-Subtraktion
+    vec3 moon_offset_dir = normalize(moon_dir + vec3(moon_size * 3.5, moon_size * 1.0, 0.0));
+    float moon_cut = step(1.0 - moon_size * 1.1, dot(dir, moon_offset_dir));
+    float moon_shape = clamp(moon_disc - moon_cut, 0.0, 1.0);
+
+    sky_col += vec3(0.92, 0.94, 1.0) * (moon_shape * 1.8 + moon_glow + moon_atm) * is_night;
+
+    // ── Wolken ────────────────────────────────────────────────────
+    float cloud_mask = smoothstep(-0.02, 0.15, dir.y);
+    float y_s = max(abs(dir.y), 0.015);
+    vec2 c_uv = dir.xz / y_s * 0.4;
+    float t   = TIME * cloud_speed;
+
+    float clouds = 0.0;
+    float shads  = 0.0;
+    for (int i = 0; i < 3; i++) {
+        float fi  = float(i);
+        float sf  = 1.0 - fi * 0.2;
+        float af  = 1.0 - fi * 0.28;
+        float c   = cloud_shape(c_uv * sf, t * (1.0 - fi * 0.22), fi * 2.3);
+        float sh  = cloud_shape(c_uv * sf + vec2(0.0, 0.018), t * (1.0 - fi * 0.22), fi * 2.3 + 0.1);
+        clouds   += c  * af;
+        shads    += max(sh - c, 0.0) * af * 0.5;
+    }
+    clouds = clamp(clouds, 0.0, 1.0) * cloud_mask;
+    shads  = clamp(shads,  0.0, 1.0) * cloud_mask;
+
+    // Wolkenfarbe abhängig von Tageszeit
+    vec3 cloud_day    = vec3(1.0, 0.98, 0.96);
+    vec3 cloud_sunset = vec3(1.0, 0.60, 0.25);
+    vec3 cloud_night  = vec3(0.12, 0.14, 0.22);
+    vec3 cloud_bot_d  = vec3(0.72, 0.76, 0.82);
+    vec3 cloud_bot_n  = vec3(0.05, 0.06, 0.10);
+
+    vec3 cloud_top = mix(mix(cloud_night, cloud_sunset, is_sunset), cloud_day, is_day);
+    vec3 cloud_bot = mix(cloud_bot_n, cloud_bot_d, is_day);
+
+    vec3 cloud_col = mix(cloud_bot, cloud_top, clamp(dir.y * 3.0, 0.0, 1.0));
+    sky_col = mix(sky_col, cloud_col,      clouds);
+    sky_col = mix(sky_col, cloud_bot * 0.6, shads * (1.0 - clouds));
+
+    // ── Posterize (leicht, für stilisierten Look) ─────────────────
+    float ps = 18.0; // mehr Stufen als Pixel-Shader → weicher
+    float r = floor(sky_col.r * ps) / ps;
+    float g = floor(sky_col.g * ps) / ps;
+    float b = floor(sky_col.b * ps) / ps;
+
+    COLOR = vec3(r, g, b);
 }
 "
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_55u6b"]
-shader = SubResource("Shader_a0dtd")
-shader_parameter/use_directional_light = true
-shader_parameter/sun_color = Color(1, 1, 1, 1)
-shader_parameter/sun_energy = 15.0
-shader_parameter/cloud_color = Color(0.675304, 0.826822, 0.984623, 1)
-shader_parameter/cloud_density = 3.62
-shader_parameter/cloud_depth = 2.0
-shader_parameter/cloud_sag = 2.0
-shader_parameter/noise_texture = ExtResource("10_ttydn")
-shader_parameter/noise_tiling = Vector2(1, 1)
-shader_parameter/wind_speed = Vector2(0.5, 0.5)
-shader_parameter/ground_bottom_color = Color(0, 0, 0, 1)
-shader_parameter/ground_curve = 0.04
-shader_parameter/exposure = 1.196
+shader = SubResource("Shader_va6r8")
+shader_parameter/time_of_day = 0.0
+shader_parameter/day_zenith = Color(0.0235294, 0.890196, 0.85098, 1)
+shader_parameter/day_horizon = Color(0.72, 0.9, 1, 1)
+shader_parameter/sunset_zenith = Color(0.25, 0.12, 0.28, 1)
+shader_parameter/sunset_horizon = Color(1, 0.45, 0.1, 1)
+shader_parameter/sunset_glow = Color(1, 0.7, 0.2, 1)
+shader_parameter/night_zenith = Color(0.419608, 0.0117647, 0.843137, 1)
+shader_parameter/night_horizon = Color(0.588235, 0.290196, 0.643137, 1)
+shader_parameter/sun_size = 0.013
+shader_parameter/sun_glow_power = 6.362
+shader_parameter/moon_size = 0.018
+shader_parameter/cloud_speed = 0.186
+shader_parameter/cloud_scale = 1.799
+shader_parameter/cloud_density = 0.524
 
 [sub_resource type="Sky" id="Sky_x537r"]
 sky_material = SubResource("ShaderMaterial_55u6b")
@@ -172,7 +277,6 @@ radiance_size = 0
 
 [sub_resource type="Environment" id="Environment_cfq0f"]
 background_mode = 2
-background_energy_multiplier = 0.33
 sky = SubResource("Sky_x537r")
 fog_light_color = Color(0.808262, 0.429746, 0.296975, 1)
 fog_light_energy = 0.0
@@ -1286,6 +1390,30 @@ tracks/2/keys = {
 "update": 0,
 "values": [Vector3(18.9142, 123.124, 1891.33)]
 }
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("../WorldEnvironment:environment:sky:sky_material:shader_parameter/time_of_day")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("../WorldEnvironment:environment:background_energy_multiplier")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [1.0]
+}
 
 [sub_resource type="Animation" id="Animation_ttydn"]
 resource_name = "circle"
@@ -1301,7 +1429,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0, 30, 60),
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
-"values": [Color(0.584973, 0.674503, 0.763378, 1), Color(0.113305, 0.326317, 0.783125, 1), Color(0.584973, 0.674503, 0.763378, 1)]
+"values": [Color(0.584973, 0.674503, 0.763378, 1), Color(0.350676, 0.310037, 0.655513, 1), Color(0.584973, 0.674503, 0.763378, 1)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -1326,6 +1454,30 @@ tracks/2/keys = {
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
 "values": [Vector3(18.9142, 123.124, 1891.33), Vector3(18.9142, -35.3694, 1891.33), Vector3(18.9142, 123.124, 1891.33)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("../WorldEnvironment:environment:sky:sky_material:shader_parameter/time_of_day")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 30, 60),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [0.0, 0.5, 1.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("../WorldEnvironment:environment:background_energy_multiplier")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 30, 60),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [0.63, 0.51, 0.82]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_ynv6u"]
