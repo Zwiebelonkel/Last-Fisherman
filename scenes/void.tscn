@@ -237,7 +237,7 @@ transform = Transform3D(0.925417, -0.163176, -0.34202, 0.173648, 0.984808, 0, 0.
 script = SubResource("GDScript_8wjpf")
 
 [node name="RodMesh" parent="PlayerCamera/FishingRod" index="0"]
-transform = Transform3D(0.8, 0, 0, 0, 0.773459, 0.204357, 0, -0.204357, 0.773459, 0, 0, -0.0166266)
+transform = Transform3D(1, 0, 0, 0, 0.966823, 0.255446, 0, -0.255446, 0.966823, 0, 0, -0.0166266)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.99211, -0.0720874, 0.10257, 4.89571e-09, 0.818149, 0.575006, -0.125368, -0.570469, 0.811694, 0, 7.52864, 2.88234)

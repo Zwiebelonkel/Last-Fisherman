@@ -98,10 +98,14 @@ radiance_size = 0
 background_mode = 2
 background_energy_multiplier = 0.5
 sky = SubResource("Sky_x537r")
+fog_enabled = true
 fog_light_color = Color(0.808262, 0.429746, 0.296975, 1)
 fog_light_energy = 0.0
-fog_sun_scatter = 1.0
-fog_sky_affect = 0.0
+fog_sun_scatter = 0.19
+fog_density = 0.0055
+fog_sky_affect = 0.352
+fog_height = 141.69
+fog_height_density = -0.4025
 volumetric_fog_enabled = true
 volumetric_fog_density = 0.0233
 volumetric_fog_length = 42.44
@@ -663,6 +667,8 @@ func start_charging_cast() -> void:
 	print(\"CHARGING CAST\")
 	state = STATE_CHARGING
 	cast_power = 0.0
+	anim.play(\"power\")  # ✅ Power-Animation starten
+
 	
 	if cast_power_ui and cast_power_ui.has_method(\"show_power\"):
 		cast_power_ui.show_power(0.0)
@@ -2046,7 +2052,7 @@ script = ExtResource("10_smrcg")
 sway_amount = 0.115
 
 [node name="FishingRod" parent="PlayerCamera" node_paths=PackedStringArray("rod_tip", "hook", "splash", "waterplane", "catch_result_ui", "camera", "fishbook_ui", "options", "journal_button", "inventory_button", "map_button", "left_button", "right_button", "interact_button", "settings_button", "inventory_ui") instance=ExtResource("11_y20ih")]
-transform = Transform3D(0.925417, -0.163176, -0.34202, 0.173648, 0.984808, 0, 0.336824, -0.0593912, 0.939693, 0.4, -0.40033, -1.03766)
+transform = Transform3D(0.925417, -0.163176, -0.34202, 0.173648, 0.984808, 0, 0.336824, -0.0593912, 0.939693, 0.4, -0.192291, -1.03766)
 script = SubResource("GDScript_8wjpf")
 rod_tip = NodePath("RodMesh/RodTip")
 hook = NodePath("../../Hook")
@@ -2055,7 +2061,6 @@ waterplane = NodePath("../../WaterPlane")
 catch_result_ui = NodePath("../../UI/CatchResultUI")
 rotation_speed = 300.0
 camera = NodePath("..")
-fishing_location = "desert"
 fishbook_ui = NodePath("../../UI/FishBook")
 options = NodePath("../../UI/OptionsControl")
 journal_button = NodePath("../../UI/Touch/TopLeftPanel/MarginContainer/VBoxContainer/JournalButton")
@@ -2067,9 +2072,6 @@ interact_button = NodePath("../../UI/Touch/InteractButton")
 settings_button = NodePath("../../UI/Touch/TopLeftPanel/MarginContainer/VBoxContainer/SettingsButton")
 cast_power_ui_scene = ExtResource("8_8cl07")
 inventory_ui = NodePath("../../UI/InventoryUI")
-
-[node name="RodMesh" parent="PlayerCamera/FishingRod" index="0"]
-transform = Transform3D(0.8, 0, 0, 0, 0.773459, 0.204357, 0, -0.204357, 0.773459, 0, 0, -0.0166266)
 
 [node name="WaterPlane" type="MeshInstance3D" parent="."]
 transform = Transform3D(-1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0, 0, 1, 0, -10.13, 129.833)

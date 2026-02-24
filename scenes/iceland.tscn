@@ -808,6 +808,8 @@ func start_charging_cast() -> void:
 	print(\"CHARGING CAST\")
 	state = STATE_CHARGING
 	cast_power = 0.0
+	anim.play(\"power\")  # ✅ Power-Animation starten
+
 	
 	if cast_power_ui and cast_power_ui.has_method(\"show_power\"):
 		cast_power_ui.show_power(0.0)
@@ -1720,7 +1722,7 @@ script = ExtResource("11_bdykf")
 sway_amount = 0.115
 
 [node name="FishingRod" parent="PlayerCamera" node_paths=PackedStringArray("rod_tip", "hook", "splash", "waterplane", "catch_result_ui", "camera", "fishbook_ui", "options", "journal_button", "inventory_button", "map_button", "left_button", "right_button", "interact_button", "settings_button", "inventory_ui") instance=ExtResource("12_4j2b8")]
-transform = Transform3D(0.925417, -0.163176, -0.34202, 0.173648, 0.984808, 0, 0.336824, -0.0593912, 0.939693, 0.4, -0.40033, -1.03766)
+transform = Transform3D(0.925417, -0.163176, -0.34202, 0.173648, 0.984808, 0, 0.336824, -0.0593912, 0.939693, 0.4, -0.245957, -1.03766)
 script = SubResource("GDScript_8wjpf")
 rod_tip = NodePath("RodMesh/RodTip")
 hook = NodePath("../../Hook")
@@ -1729,7 +1731,6 @@ waterplane = NodePath("../../WaterPlane")
 catch_result_ui = NodePath("../../UI/CatchResultUI")
 rotation_speed = 300.0
 camera = NodePath("..")
-fishing_location = "iceland"
 fishbook_ui = NodePath("../../UI/FishBook")
 options = NodePath("../../UI/OptionsControl")
 journal_button = NodePath("../../UI/Touch/TopLeftPanel/MarginContainer/VBoxContainer/JournalButton")
@@ -1741,9 +1742,6 @@ interact_button = NodePath("../../UI/Touch/InteractButton")
 settings_button = NodePath("../../UI/Touch/TopLeftPanel/MarginContainer/VBoxContainer/SettingsButton")
 cast_power_ui_scene = ExtResource("9_loenh")
 inventory_ui = NodePath("../../UI/InventoryUI")
-
-[node name="RodMesh" parent="PlayerCamera/FishingRod" index="0"]
-transform = Transform3D(0.8, 0, 0, 0, 0.773459, 0.204357, 0, -0.204357, 0.773459, 0, 0, -0.0166266)
 
 [node name="WaterPlane" type="MeshInstance3D" parent="."]
 transform = Transform3D(-0.0489544, 4.27973e-09, -0.998801, -8.74228e-08, -1, 0, -0.998801, 8.7318e-08, 0.0489544, -19.3102, -3.68562, 16.1898)

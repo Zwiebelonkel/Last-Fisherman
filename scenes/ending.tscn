@@ -652,6 +652,8 @@ func start_charging_cast() -> void:
 	print(\"CHARGING CAST\")
 	state = STATE_CHARGING
 	cast_power = 0.0
+	anim.play(\"power\")  # ✅ Power-Animation starten
+
 	
 	if cast_power_ui and cast_power_ui.has_method(\"show_power\"):
 		cast_power_ui.show_power(0.0)
@@ -1454,7 +1456,7 @@ cast_power_ui_scene = ExtResource("8_djqsd")
 inventory_ui = NodePath("../../UI/InventoryUI")
 
 [node name="RodMesh" parent="PlayerCamera/FishingRod" index="0"]
-transform = Transform3D(0.8, 0, 0, 0, 0.773459, 0.204357, 0, -0.204357, 0.773459, 0, 0, -0.0166266)
+transform = Transform3D(1, 0, 0, 0, 0.966823, 0.255446, 0, -0.255446, 0.966823, 0, 0, -0.0166266)
 
 [node name="WaterPlane" type="MeshInstance3D" parent="."]
 transform = Transform3D(-0.0489544, 4.27973e-09, -0.998801, -8.74228e-08, -1, 0, -0.998801, 8.7318e-08, 0.0489544, -19.3102, 0.176267, 16.1898)

@@ -1,4 +1,4 @@
-[gd_scene load_steps=69 format=3 uid="uid://cvkrlt4ri1i2u"]
+[gd_scene load_steps=71 format=3 uid="uid://cvkrlt4ri1i2u"]
 
 [ext_resource type="Shader" uid="uid://c140kjbm2bot5" path="res://shader/buckshot.gdshader" id="1_nmpot"]
 [ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="2_ikoiv"]
@@ -40,6 +40,81 @@
 [ext_resource type="AudioStream" uid="uid://qeh48myqvc8p" path="res://sounds/rarity/exotic.mp3" id="36_fukq0"]
 [ext_resource type="AudioStream" uid="uid://6a3ro0nq1u4" path="res://sounds/rarity/antique.mp3" id="37_4jd3d"]
 [ext_resource type="AudioStream" uid="uid://nvrc6arpsx6n" path="res://sounds/ocean.mp3" id="38_6pahv"]
+
+[sub_resource type="Shader" id="Shader_qf2lb"]
+code = "shader_type canvas_item;
+render_mode unshaded;
+
+#define iResolution 1.0/SCREEN_PIXEL_SIZE
+#define iTime TIME
+#define fragColor COLOR
+
+uniform sampler2D iChannel0 : hint_screen_texture, filter_linear_mipmap;
+uniform float frequency : hint_range(-10.0, 4.0, 0.1) = 0.0;
+uniform float size : hint_range(0.001, 0.05, 0.001) = 0.015;
+
+// Author: Élie Michel
+// License: CC BY 3.0
+// July 2017
+
+vec2 rand(vec2 c){
+    mat2 m = mat2(vec2(12.9898,.16180),vec2(78.233,.31415));
+	return fract(sin(m * c) * vec2(43758.5453, 14142.1));
+}
+
+vec2 noise(vec2 p){
+	vec2 co = floor(p);
+	vec2 mu = fract(p);
+	mu = 3.*mu*mu-2.*mu*mu*mu;
+	vec2 a = rand((co+vec2(0.,0.)));
+	vec2 b = rand((co+vec2(1.,0.)));
+	vec2 c = rand((co+vec2(0.,1.)));
+	vec2 d = rand((co+vec2(1.,1.)));
+	return mix(mix(a, b, mu.x), mix(c, d, mu.x), mu.y);
+}
+
+void fragment()
+{
+	vec2 u = UV,
+         v = UV * 0.1,
+         n = noise(v*200.); // Displacement
+    
+    fragColor = texture(iChannel0, u);
+    
+    // Loop through the different inverse sizes of drops
+    for (float r = 4. ; r > frequency ; r--) {
+        vec2 x = iResolution.xy * r * size,  // Number of potential drops (in a grid)
+             p = 6.28 * u * x + (n - .5) * 2.,
+             s = sin(p);
+        
+        // Current drop properties. Coordinates are rounded to ensure a
+        // consistent value among the fragment of a given drop.
+        //vec4 d = texture(iChannel1, round(u * x - 0.25) / x);
+        vec2 v = round(u * x - 0.25) / x;
+        vec4 d = vec4(noise(v*200.), noise(v));
+        
+        // Drop shape and fading
+        float t = (s.x+s.y) * max(0., 1. - fract(iTime * (d.b + .1) + d.g) * 2.);;
+        
+        // d.r -> only x% of drops are kept on, with x depending on the size of drops
+        if (d.r < (5.-r)*.08 && t > .5) {
+            // Drop normal
+            vec3 v = normalize(-vec3(cos(p), mix(.2, 2., t-.5)));
+             //fragColor = vec4(v * 0.5 + 0.5, 1.0);  // show normals
+            
+            // Poor man's refraction (no visual need to do more)
+            fragColor = texture(iChannel0, u - v.xy * .3);
+        }
+    }
+    
+    // Debug noise function
+    //f = vec4(n, 0.0, 1.0);
+}"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_snoms"]
+shader = SubResource("Shader_qf2lb")
+shader_parameter/frequency = 3.1
+shader_parameter/size = 0.008
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_nmpot"]
 shader = ExtResource("1_nmpot")
@@ -622,6 +697,7 @@ func start_charging_cast() -> void:
 	print(\"CHARGING CAST\")
 	state = STATE_CHARGING
 	cast_power = 0.0
+	anim.play(\"power\")  # ✅ Power-Animation starten
 	
 	if cast_power_ui and cast_power_ui.has_method(\"show_power\"):
 		cast_power_ui.show_power(0.0)
@@ -1774,14 +1850,17 @@ sky_material = SubResource("ShaderMaterial_6pahv")
 background_mode = 2
 background_energy_multiplier = 0.09
 sky = SubResource("Sky_snoms")
-ambient_light_energy = 12.17
+ambient_light_sky_contribution = 0.0
+ambient_light_energy = 0.0
 glow_enabled = true
-glow_intensity = 8.0
-glow_strength = 0.94
+glow_intensity = 5.69
+glow_strength = 0.77
 glow_hdr_threshold = 4.0
-glow_map_strength = 0.94
+glow_hdr_scale = 0.82
+glow_map_strength = 0.9
 volumetric_fog_enabled = true
 volumetric_fog_density = 0.0184
+volumetric_fog_length = 57.56
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_agolw"]
 emission_enabled = true
@@ -1795,6 +1874,19 @@ albedo_color = Color(0.194349, 0.194349, 0.194349, 1)
 albedo_color = Color(0.180005, 0.180005, 0.180005, 1)
 
 [node name="MainScene2" type="Node3D"]
+
+[node name="rain" type="CanvasLayer" parent="."]
+layer = 128
+
+[node name="PixelateOverlay" type="ColorRect" parent="rain"]
+material = SubResource("ShaderMaterial_snoms")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 28.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
 
 [node name="Filter" type="CanvasLayer" parent="."]
 layer = 0
@@ -1934,7 +2026,6 @@ waterplane = NodePath("../../WaterPlane")
 catch_result_ui = NodePath("../../UI/CatchResultUI")
 rotation_speed = 300.0
 camera = NodePath("..")
-fishing_location = "city"
 fishbook_ui = NodePath("../../UI/FishBook")
 options = NodePath("../../UI/OptionsControl")
 journal_button = NodePath("../../UI/Touch/TopLeftPanel/MarginContainer/VBoxContainer/JournalButton")
@@ -1946,9 +2037,6 @@ interact_button = NodePath("../../UI/Touch/InteractButton")
 settings_button = NodePath("../../UI/Touch/TopLeftPanel/MarginContainer/VBoxContainer/SettingsButton")
 cast_power_ui_scene = ExtResource("8_h3250")
 inventory_ui = NodePath("../../UI/InventoryUI")
-
-[node name="RodMesh" parent="PlayerCamera/FishingRod" index="0"]
-transform = Transform3D(0.8, 0, 0, 0, 0.773459, 0.204357, 0, -0.204357, 0.773459, 0, 0, -0.0166266)
 
 [node name="WaterPlane" type="MeshInstance3D" parent="."]
 transform = Transform3D(-1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0, 0, 1, 0, 8.93222, 91.1433)

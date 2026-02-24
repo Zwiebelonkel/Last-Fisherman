@@ -1,4 +1,4 @@
-[gd_scene load_steps=65 format=3 uid="uid://bwpkoys7chajb"]
+[gd_scene load_steps=66 format=3 uid="uid://bwpkoys7chajb"]
 
 [ext_resource type="Shader" uid="uid://c140kjbm2bot5" path="res://shader/buckshot.gdshader" id="1_0tnqg"]
 [ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="2_rtjjv"]
@@ -16,6 +16,7 @@
 [ext_resource type="PackedScene" uid="uid://ws4ms8iq4gg4" path="res://scenes/clock.tscn" id="12_i37rq"]
 [ext_resource type="Texture2D" uid="uid://cvllk03mhtybp" path="res://textures/723-normal.jpg" id="13_kyn5a"]
 [ext_resource type="Texture2D" uid="uid://d31603nl8y0gd" path="res://textures/Water_preview.jpgC878A51E-2B84-45CA-85CB-75E5BC88EEC8Large.jpg" id="14_2n20e"]
+[ext_resource type="Texture2D" uid="uid://cjl6h1xc3a12p" path="res://textures/foam.png" id="15_ros3w"]
 [ext_resource type="Shader" uid="uid://cfsuhiaq15sgu" path="res://shader/outline.gdshader" id="15_xp0e5"]
 [ext_resource type="PackedScene" uid="uid://8ljq0dpgsno5" path="res://scenes/bait.tscn" id="16_0tnqg"]
 [ext_resource type="Script" uid="uid://bymrcyid32xsp" path="res://scripts/line.gd" id="16_ros3w"]
@@ -260,8 +261,8 @@ var paused: bool = false
 var cast_power: float = 0.0
 var cast_power_speed: float = 3
 var max_cast_power: float = 1.0
-var min_distance: float = 4.0
-var max_distance: float = 5.0
+var min_distance: float = 3.0
+var max_distance: float = 4.8
 var last_cast_quality: float = 0.0  # Speichert die Qualität des letzten Wurfs
 
 # Minigame Variables
@@ -742,6 +743,7 @@ func start_charging_cast() -> void:
 	print(\"CHARGING CAST\")
 	state = STATE_CHARGING
 	cast_power = 0.0
+	anim.play(\"power\")  # ✅ Power-Animation starten
 	
 	if cast_power_ui and cast_power_ui.has_method(\"show_power\"):
 		cast_power_ui.show_power(0.0)
@@ -805,9 +807,9 @@ func cast_line(power: float = 1.0) -> void:
 	cast_right = cast_right.normalized()
 	
 	hook.global_position = rod_tip.global_position + cast_right * x + cast_forward * distance
-	hook.global_position.y = water_height
+	hook.global_position.y = water_height  # ✅ Hook auf Wasseroberfläche
 	hook.visible = true
-	hook_start_position = hook.global_position  # Weit weg im Wasser (0% Progress)
+	hook_start_position = hook.global_position  # 0% Progress = weit weg
 	
 	# 🔍 DEBUG: Überprüfe tatsächliche Distanz
 	var actual_distance = rod_tip.global_position.distance_to(hook_start_position)
@@ -817,15 +819,10 @@ func cast_line(power: float = 1.0) -> void:
 	print(\"  - Rod Tip Position: \", rod_tip.global_position)
 	print(\"  - Hook Start Position: \", hook_start_position)
 	
-	# ✅ FIX: End Position = min_distance vom Cast-Punkt (100% Progress)
-	# Berechne Richtung von Angel zum Hook (Cast-Richtung)
 	var cast_direction = (hook.global_position - rod_tip.global_position).normalized()
-	cast_direction.y = 0  # Nur horizontale Bewegung
-	
-	# End Position = min_distance in Cast-Richtung von der Angel
-	# Bei 100% Progress ist der Hook bei min_distance vom Ursprung
+	cast_direction.y = 0
 	hook_end_position = rod_tip.global_position + cast_direction * min_distance
-	hook_end_position.y = water_height  # Bleib auf Wasserhöhe
+	hook_end_position.y = water_height  # ✅ auch auf Wasseroberfläche
 
 	splash.global_position = hook_start_position
 	splash.visible = true
@@ -1035,7 +1032,7 @@ func update_catch_minigame(delta: float) -> void:
 	# ✅ Hook bewegt sich basierend auf Progress
 	var t := catch_progress.value / 100.0
 	var new_pos := hook_start_position.lerp(hook_end_position, t)
-	new_pos.y = waterplane.global_position.y - 7.0  # Bleib auf Wasserhöhe
+	new_pos.y = waterplane.global_position.y  # ✅ Einfach auf Wasseroberfläche
 	hook.global_position = new_pos
 
 	if input_active:
@@ -1214,7 +1211,7 @@ _data = {
 &"push": SubResource("Animation_kqfxt")
 }
 
-[sub_resource type="Shader" id="Shader_muv0v"]
+[sub_resource type="Shader" id="Shader_xp0e5"]
 code = "// The following shader is used in order to simulate a simple ocean using Gerstner waves.
 // This shader can be added in a plane mesh. For a more detailed ocean, increase the width and depth subdivision.
 // Note 1: On larger planes ex. 500x500, increasing the subdivision above 1000 comes at great performance cost
@@ -1604,7 +1601,7 @@ void fragment() {
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_k24pf"]
 render_priority = -128
-shader = SubResource("Shader_muv0v")
+shader = SubResource("Shader_xp0e5")
 shader_parameter/wave_1 = Vector4(0.3, 4, 0.2, 0.6)
 shader_parameter/wave_2 = Vector4(-0.26, -0.19, 0.01, 0.47)
 shader_parameter/wave_3 = Vector4(-7.67, 5.63, 0.1, 0.38)
@@ -1614,28 +1611,29 @@ shader_parameter/wave_6 = Vector4(1.2, 1.14, 0.01, 0.33)
 shader_parameter/wave_7 = Vector4(-1.6, 7.3, 0.11, 0.73)
 shader_parameter/wave_8 = Vector4(-0.42, -1.63, 0.15, 1.52)
 shader_parameter/time_factor = 6.975
-shader_parameter/noise_zoom = 3.885
-shader_parameter/noise_amp = 1.545
+shader_parameter/noise_zoom = 1.23
+shader_parameter/noise_amp = 0.385
 shader_parameter/base_water_color = Color(0.333744, 0.476375, 0.579797, 1)
 shader_parameter/fresnel_water_color = Color(0.531217, 0.72049, 0.725101, 1)
 shader_parameter/deep_water_color = Color(0.0667709, 0.0796512, 0.260051, 1)
 shader_parameter/shallow_water_color = Color(0.245687, 0.646821, 0.897423, 1)
-shader_parameter/beers_law = 0.405
+shader_parameter/beers_law = 2.84
 shader_parameter/depth_offset = 0.095
 shader_parameter/near = 7.0
 shader_parameter/far = 10000.0
-shader_parameter/edge_texture_scale = 5.17
+shader_parameter/edge_texture_scale = 12.11
 shader_parameter/edge_texture_offset = 1.0
-shader_parameter/edge_texture_speed = 0.17
-shader_parameter/edge_foam_intensity = 2.245
-shader_parameter/edge_fade_start = -3.0
-shader_parameter/edge_fade_end = 6.6
+shader_parameter/edge_texture_speed = 1.36
+shader_parameter/edge_foam_intensity = 21.305
+shader_parameter/edge_fade_start = 0.705
+shader_parameter/edge_fade_end = 7.04
+shader_parameter/edge_foam_texture = ExtResource("15_ros3w")
 shader_parameter/peak_height_threshold = 1.0
 shader_parameter/peak_color = Vector3(1, 1, 1)
 shader_parameter/peak_intensity = 1.0
 shader_parameter/foam_intensity = 1.0
 shader_parameter/foam_scale = 1.0
-shader_parameter/metallic = 2.805
+shader_parameter/metallic = 1.025
 shader_parameter/roughness = 0.115
 shader_parameter/uv_scale_text_a = 0.23
 shader_parameter/uv_speed_text_a = Vector2(0.42, 0)
@@ -1657,6 +1655,7 @@ lightmap_size_hint = Vector2i(251, 1001)
 material = SubResource("ShaderMaterial_k24pf")
 uv2_padding = 1.41
 size = Vector2(36.265, 10)
+subdivide_width = 200
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_8wjpf"]
 render_priority = 0
@@ -1893,7 +1892,7 @@ cast_power_ui_scene = ExtResource("8_rxgvs")
 inventory_ui = NodePath("../../UI/InventoryUI")
 
 [node name="RodMesh" parent="PlayerCamera/FishingRod" index="0"]
-transform = Transform3D(0.8, 0, 0, 0, 0.773459, 0.204357, 0, -0.204357, 0.773459, 0, 0, -0.0166266)
+transform = Transform3D(1, 0, 0, 0, 0.966823, 0.255446, 0, -0.255446, 0.966823, 0, 0, -0.0166266)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="PlayerCamera"]
 libraries = {
@@ -1902,7 +1901,7 @@ libraries = {
 speed_scale = 3.298
 
 [node name="WaterPlane" type="MeshInstance3D" parent="."]
-transform = Transform3D(-1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0, 0, 1, 0, 0.680026, 8.93399)
+transform = Transform3D(-1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0, 0, 1, 0, 0.508542, 8.93399)
 mesh = SubResource("PlaneMesh_66o8q")
 
 [node name="Hook" type="Node3D" parent="."]

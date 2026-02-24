@@ -154,9 +154,9 @@ FRYER_COOKING_START,Frittiere %s...,Frying %s...
 FRYER_COOKING_DONE,Backfisch fertig! Klicke erneut zum Aufnehmen,Fried fish ready! Click again to collect
 FRYER_NO_TRAY,Kein Tablett gefunden!,No tray found!
 FRYER_ITEM_ADDED_TO_TRAY,Backfisch auf Tablett gelegt!,Fried fish placed on tray!
-FRYER_PROMPT_IDLE,Klicken: Fisch waehlen,Select fish
+FRYER_PROMPT_IDLE,Fisch waehlen,Select fish
 FRYER_PROMPT_COOKING,Kocht...,Cooking...
-FRYER_PROMPT_READY,Klicken: Aufnehmen,Collect
+FRYER_PROMPT_READY,Aufnehmen,Collect
 
 # ====================
 # STATION SUSHI
@@ -165,9 +165,9 @@ SUSHI_STILL_COOKING,Noch am Kochen!,Still cooking!
 SUSHI_NO_FISH_INVENTORY,Keine Fische im Inventar!,No fish in inventory!
 SUSHI_CUSTOMER_NO_WANT,Kunde will keinen Sushi!,Customer doesn't want sushi!
 SUSHI_FISH_NOT_IN_INVENTORY,Fisch nicht im Inventar!,Fish not in inventory!
-SUSHI_PROMPT_IDLE,Klicken: Fisch wählen,Select fish
+SUSHI_PROMPT_IDLE,Fisch wählen,Select fish
 SUSHI_PROMPT_COOKING,Kocht...,Slicing...
-SUSHI_PROMPT_READY,Klicken: Aufnehmen,Collect
+SUSHI_PROMPT_READY,Aufnehmen,Collect
 
 # ====================
 # STATION DRINKS
@@ -175,7 +175,7 @@ SUSHI_PROMPT_READY,Klicken: Aufnehmen,Collect
 DRINKS_NO_CUSTOMER,Kein aktiver Kunde!,No active customer!
 DRINKS_NOT_ORDERED,Kunde hat kein Getränk bestellt!,Customer didn't order a drink!
 DRINKS_ALREADY_ON_TRAY,Getränk bereits auf dem Tablett!,Drink already on tray!
-DRINKS_PROMPT_HOVER,Klicken: Getränk hinzufügen,Add drink
+DRINKS_PROMPT_HOVER,Getränk hinzufügen,Add drink
 
 # ====================
 # CONTROLLER (GENERAL)
