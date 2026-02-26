@@ -475,7 +475,7 @@ var FISH_CITY = [
 		"description_key": "FISH_CITY_RADIOAKTIV_DESC",
 		"science_key": "FISH_CITY_RADIOAKTIV_SCIENCE",
 		"rarity": RARITY.EPISCH,
-		"base_value": 40,
+		"base_value": 32,
 		"icon": "res://assets/fish/radioactive.png",
 		"weight_min": 1.0,
 		"weight_max": 200.0
@@ -502,6 +502,17 @@ var FISH_CITY = [
 		"weight_min": 0.02,
 		"weight_max": 0.05
 	},
+{
+	"id": "SEATURTLE",
+	"name_key": "FISH_SEA_SEATURTLE_NAME",
+	"description_key": "FISH_SEA_SEATURTLE_DESC",
+	"science_key": "FISH_SEA_SEATURTLE_SCIENCE",
+	"rarity": RARITY.LEGENDAER,
+	"base_value": 50,
+	"icon": "res://assets/fish/seaturtle.png",
+	"weight_min": 80.0,
+	"weight_max": 250.0
+},
 	{
 		"id": "ALTSTADTGEIST",
 		"name_key": "FISH_CITY_ALTSTADTGEIST_NAME",
