@@ -552,6 +552,9 @@ FISH_DESERT_PAN_NAME,Pfanne,Frying Pan
 FISH_DESERT_PAN_DESC,"Blockt Projektile. Wahrscheinlich.","Blocks projectiles. Probably."
 FISH_DESERT_PAN_SCIENCE,"Eine Pfanne ist ein Kochutensil aus Metall. Unter bestimmten Umständen kann Metall überraschend widerstandsfähig sein.","A frying pan is a metal cooking utensil. Under certain circumstances, metal can be surprisingly resistant."
 
+FISH_DESERT_BETTA_NAME,Siamesischer Kampffisch,Siamese Fighting Fish
+FISH_DESERT_BETTA_DESC,"Er kämpft gegen Spiegelbilder. Und verliert nie.","He fights reflections. And never loses."
+FISH_DESERT_BETTA_SCIENCE,"Betta splendens stammt aus Südostasien. Männchen sind territorial und zeigen ausgeprägtes Drohverhalten.","Betta splendens originates from Southeast Asia and males are highly territorial."
 
 FISH_ICELAND_EISFISCH_NAME,Eisfisch,Ice Fish
 FISH_ICELAND_EISFISCH_DESC,Durchsichtiger Fisch ohne rote Blutkörperchen - fast wie aus Glas gemacht.,Transparent fish without red blood cells - almost made of glass.
