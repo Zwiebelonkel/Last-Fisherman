@@ -544,6 +544,10 @@ FISH_DESERT_DUENENHAI_NAME,Dünenhai,Dune Shark
 FISH_DESERT_DUENENHAI_DESC,"Schwimmt dort, wo kein Wasser sein sollte.","Swims where there shouldn't be water."
 FISH_DESERT_DUENENHAI_SCIENCE,"Sandbewohnende Tiere nutzen wellenartige Bewegungen zur Fortbewegung.","Sand-dwelling animals use wave-like movements to travel."
 
+FISH_DESERT_PAN_NAME,Pfanne,Frying Pan
+FISH_DESERT_PAN_DESC,"Blockt Projektile. Wahrscheinlich.","Blocks projectiles. Probably."
+FISH_DESERT_PAN_SCIENCE,"Eine Pfanne ist ein Kochutensil aus Metall. Unter bestimmten Umständen kann Metall überraschend widerstandsfähig sein.","A frying pan is a metal cooking utensil. Under certain circumstances, metal can be surprisingly resistant."
+
 
 FISH_ICELAND_EISFISCH_NAME,Eisfisch,Ice Fish
 FISH_ICELAND_EISFISCH_DESC,Durchsichtiger Fisch ohne rote Blutkörperchen - fast wie aus Glas gemacht.,Transparent fish without red blood cells - almost made of glass.
