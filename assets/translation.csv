@@ -490,6 +490,10 @@ FISH_FOREST_WURMFUERST_NAME,Wurmfürst,Worm Lord
 FISH_FOREST_WURMFUERST_DESC,"Regiert über nichts. Aber mit Würde.","Rules over nothing. But with dignity."
 FISH_FOREST_WURMFUERST_SCIENCE,"Einige Fischarten ernähren sich fast ausschließlich von Wirbellosen im Sediment.","Some fish species feed almost exclusively on sediment-dwelling invertebrates."
 
+FISH_FOREST_CLOWNFISH_NAME,Clownfisch,Clownfish
+FISH_FOREST_CLOWNFISH_DESC,"Er trägt ein Lächeln, das nie seine Wahl war.","He wears a smile he never chose."
+FISH_FOREST_CLOWNFISH_SCIENCE,"Clownfische leben in Symbiose mit Seeanemonen und sind gegen deren Nesselgift resistent.","Clownfish live in symbiosis with sea anemones and are resistant to their venom."
+
 
 FISH_DESERT_SCHMUTZGRUNDEL_NAME,Schmutzgrundel,Dirt Goby
 FISH_DESERT_SCHMUTZGRUNDEL_DESC,Lebt im Dreck. Buchstäblich. Wie deine Ernährungsgewohnheiten.,Lives in dirt. Literally. Like your eating habits.
