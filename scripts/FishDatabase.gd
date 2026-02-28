@@ -509,7 +509,7 @@ var FISH_CITY = [
 	"science_key": "FISH_CITY_SEATURTLE_SCIENCE",
 	"rarity": RARITY.LEGENDAER,
 	"base_value": 50,
-	"icon": "res://assets/fish/seaturtle.png",
+	"icon": "res://assets/fish/schildkröte.png",
 	"weight_min": 80.0,
 	"weight_max": 250.0
 },
@@ -840,7 +840,7 @@ var FISH_FOREST = [
 	"science_key": "FISH_FOREST_CLOWNFISH_SCIENCE",
 	"rarity": RARITY.NORMAL,
 	"base_value": 20,
-	"icon": "res://assets/fish/clownfish.png",
+	"icon": "res://assets/fish/clownfisch.png",
 	"weight_min": 0.2,
 	"weight_max": 0.8
 },
@@ -1022,7 +1022,7 @@ var FISH_DESERT = [
 	"science_key": "FISH_DESERT_BETTA_SCIENCE",
 	"rarity": RARITY.UNGEWOEHNLICH,
 	"base_value": 29,
-	"icon": "res://assets/fish/betta.png",
+	"icon": "res://assets/fish/kampffisch.png",
 	"weight_min": 0.1,
 	"weight_max": 0.4
 },
@@ -1121,7 +1121,7 @@ var FISH_DESERT = [
 	"science_key": "FISH_DESERT_PAN_SCIENCE",
 	"rarity": RARITY.LEGENDAER,
 	"base_value": 150,
-	"icon": "res://assets/fish/pan.png",
+	"icon": "res://assets/fish/pfanne.png",
 	"weight_min": 2.0,
 	"weight_max": 6.0
 },

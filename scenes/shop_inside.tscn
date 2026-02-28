@@ -169,7 +169,6 @@ shadow_blur = 2.12
 
 [node name="RodPreview" parent="." instance=ExtResource("1_3qbwi")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.005, -2.792)
-script = null
 
 [node name="AnimationPlayer2" type="AnimationPlayer" parent="RodPreview"]
 libraries = {

@@ -1084,6 +1084,9 @@ interact_button = NodePath("../../UI2/Touch/InteractButton")
 settings_button = NodePath("../../UI2/Touch/TopLeftPanel/MarginContainer/VBoxContainer/SettingsButton")
 inventory_ui = NodePath("../../UI2/InventoryUI")
 
+[node name="RodMesh" parent="PlayerCamera/FishingRod" index="0"]
+transform = Transform3D(1, 0, 0, 0, 0.966823, 0.255446, 0, -0.255446, 0.966823, 0, 0, -0.0166266)
+
 [node name="UI2" type="CanvasLayer" parent="."]
 
 [node name="BiteIndicator" type="TextureRect" parent="UI2"]
