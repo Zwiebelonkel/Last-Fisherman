@@ -194,7 +194,6 @@ func show_spot_popup(spot_name: String):
 			popup_buy_button.visible = false
 			popup_go_button.visible = true
 		else:
-			# Zeige Vendor-Lock Status
 			var progress = Player.get_story_item_progress()
 			var found = progress["found"]
 			var total = progress["total"]
@@ -202,7 +201,6 @@ func show_spot_popup(spot_name: String):
 			popup_price.text = get_text("vendor_locked") + "\n"
 			popup_price.text += get_text("vendor_progress") % [found, total]
 			
-			# Zeige fehlende Items
 			var missing_items := []
 			for item_id in Player.REQUIRED_STORY_ITEMS:
 				if not Player.used_story_items.has(item_id):
@@ -214,43 +212,71 @@ func show_spot_popup(spot_name: String):
 			popup_buy_button.visible = false
 			popup_go_button.visible = false
 		
-		# Bestehende Signale trennen
 		_disconnect_all(popup_go_button)
 		
-		# Neue Signale verbinden
 		if unlocked:
 			popup_go_button.pressed.connect(func():
 				go_to_spot(selected_spot)
 			)
+		
+		call_deferred("_resize_popup")
 		return
 	
 	# Normale Spots
-	# 🌍 Lokalisierter Preis-Text
 	if unlocked:
 		popup_price.text = get_text("unlocked")
 	else:
 		popup_price.text = get_text("price") % price
 	
-	# Sichtbarkeit der Buttons
 	popup_buy_button.visible = not unlocked
 	popup_go_button.visible = unlocked
 	
-	# 🌍 Buy Button Text
 	if not unlocked:
 		popup_buy_button.text = get_text("buy_button") % price
 		popup_buy_button.disabled = Player.money < price
 	
-	# Bestehende Signale trennen
 	_disconnect_all(popup_buy_button)
 	_disconnect_all(popup_go_button)
 	
-	# Neue Signale verbinden
 	popup_buy_button.pressed.connect(func():
 		buy_spot(selected_spot)
 	)
 	popup_go_button.pressed.connect(func():
 		go_to_spot(selected_spot)
 	)
+	
+	call_deferred("_resize_popup")
+
+func _resize_popup() -> void:
+	# Warte einen Frame damit Labels ihre Größe kennen
+	await get_tree().process_frame
+	
+	var padding_x := 24.0
+	var padding_y := 20.0
+	var min_width := 160.0
+	
+	# Breite: breitestes Element bestimmen
+	var max_width := min_width
+	max_width = max(max_width, popup_title.get_minimum_size().x)
+	max_width = max(max_width, popup_price.get_minimum_size().x)
+	
+	var new_width := max_width + padding_x * 2
+	
+	# Höhe: alle sichtbaren Elemente aufaddieren
+	var content_height := padding_y
+	content_height += popup_title.get_minimum_size().y + 8
+	content_height += popup_price.get_minimum_size().y + 8
+	if popup_buy_button.visible:
+		content_height += popup_buy_button.get_minimum_size().y + 8
+	if popup_go_button.visible:
+		content_height += popup_go_button.get_minimum_size().y + 8
+	content_height += popup_close_btn.get_minimum_size().y + padding_y
+	
+	popup.set_deferred("size", Vector2(new_width, content_height))
+	
+	# Zentriere Popup auf dem Screen
+	var viewport_size := get_viewport_rect().size
+	popup.set_deferred("position", (viewport_size - Vector2(new_width, content_height)) / 2.0)
 
 func buy_spot(spot_name: String):
 	var cost = Player.spot_prices[spot_name]

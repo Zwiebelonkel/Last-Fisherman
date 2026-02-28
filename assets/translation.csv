@@ -40,7 +40,7 @@ CAST,Auswerfen,Cast
 INTERACT,Interagieren,Interact
 FIGHT,Kämpfen,Fight
 TURNAROUND,Umsehen,Turn Around
-CAST_INTERACT_FIGHT,"Auswerfen, Interagieren, Kämpfen","Cast, Interact, Fight"
+CAST_INTERACT_FIGHT,"Auswerfen, Interagieren","Cast, Interact"
 INVENTORY,Inventar,Inventory
 FISHBOOK,Fischbuch,Fishbook
 MAP,Karte,Map

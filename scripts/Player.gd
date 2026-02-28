@@ -44,12 +44,12 @@ var completed_biomes: Dictionary = {
 
 var unlocked_spots = {
 	"lake": true, "city": false, "sewer": false,
-	"forest": false, "desert": false, "iceland": false, "home": true, "van": false  # 🔧 van startet locked
+	"forest": false, "desert": false, "iceland": false, "home": true, "ocean": false, "van": false  # 🔧 van startet locked
 }
 
 var spot_prices = {
 	"lake": 0, "city": 500, "sewer": 1200,
-	"forest": 2000, "desert": 4000, "iceland": 6000, "home": 0, "van": 0  # 🔧 van kostet 0 (wird durch Items freigeschaltet)
+	"forest": 2000, "desert": 4000, "iceland": 6000, "home": 0,"ocean": 0, "van": 0  # 🔧 van kostet 0 (wird durch Items freigeschaltet)
 }
 
 # Köder-Inventar
@@ -325,6 +325,8 @@ func get_biome_fish_list(biome: String) -> Array:
 		"forest": return FishDB.FISH_FOREST
 		"desert": return FishDB.FISH_DESERT
 		"iceland": return FishDB.FISH_ICELAND
+		"ocean": return FishDB.FISH_OCEAN
+
 		_: return []
 
 func trigger_biome_completion_event(biome: String) -> void:
@@ -333,7 +335,7 @@ func trigger_biome_completion_event(biome: String) -> void:
 	
 	var rewards = {
 		"lake": 500, "city": 1000, "sewer": 1500,
-		"forest": 2000, "desert": 3000, "iceland": 4000
+		"forest": 2000, "desert": 3000, "iceland": 4000, "ocean":10000
 	}
 	
 	var reward = rewards.get(biome, 0)
@@ -355,6 +357,8 @@ func _add_all_fish() -> void:
 	for fish in FishDB.FISH_DESERT:
 		add_fish(fish)
 	for fish in FishDB.FISH_ICELAND:
+		add_fish(fish)
+	for fish in FishDB.FISH_OCEAN:
 		add_fish(fish)
 
 func clear_inventory():
@@ -431,7 +435,7 @@ func reset() -> void:
 	unlocked_spots = {
 		"lake": true, "city": false, "sewer": false,
 		"forest": false, "desert": false, "iceland": false,
-		"home": true, "van": false
+		"home": true, "ocean": true, "van": false
 	}
 	bait_inventory = {
 		"Common": 0, "Uncommon": 0, "Rare": 0,

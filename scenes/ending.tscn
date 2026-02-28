@@ -286,6 +286,7 @@ var hook_end_position: Vector3
 
 
 func _ready() -> void:
+	Engine.time_scale = 1
 	if hook:
 		ripple_anim = hook.get_node_or_null(\"AnimationPlayer\")
 	anim.play(\"idle\")
@@ -326,8 +327,8 @@ func play_ocean_jumpscare() -> void:
 	# -------------------------
 	# JUMPSCARE
 	# -------------------------
-	var jumpscare_scene := preload(\"res://scenes/JumpscareOverlay.tscn\")
-	var jumpscare := jumpscare_scene.instantiate()
+	var jumpscare_scene: PackedScene = load(\"res://scenes/JumpscareOverlay.tscn\") as PackedScene
+	var jumpscare: Node = jumpscare_scene.instantiate()
 	get_tree().root.add_child(jumpscare)
 
 	print(\"🎬 Jumpscare gestartet\")
@@ -1442,7 +1443,6 @@ waterplane = NodePath("../../WaterPlane")
 catch_result_ui = NodePath("../../UI/CatchResultUI")
 rotation_speed = 300.0
 camera = NodePath("..")
-fishing_location = "ocean"
 fishbook_ui = NodePath("../../UI/FishBook")
 options = NodePath("../../UI/OptionsControl")
 journal_button = NodePath("../../UI/Touch/TopLeftPanel/MarginContainer/VBoxContainer/JournalButton")
@@ -1454,9 +1454,6 @@ interact_button = NodePath("../../UI/Touch/InteractButton")
 settings_button = NodePath("../../UI/Touch/TopLeftPanel/MarginContainer/VBoxContainer/SettingsButton")
 cast_power_ui_scene = ExtResource("8_djqsd")
 inventory_ui = NodePath("../../UI/InventoryUI")
-
-[node name="RodMesh" parent="PlayerCamera/FishingRod" index="0"]
-transform = Transform3D(1, 0, 0, 0, 0.966823, 0.255446, 0, -0.255446, 0.966823, 0, 0, -0.0166266)
 
 [node name="WaterPlane" type="MeshInstance3D" parent="."]
 transform = Transform3D(-0.0489544, 4.27973e-09, -0.998801, -8.74228e-08, -1, 0, -0.998801, 8.7318e-08, 0.0489544, -19.3102, 0.176267, 16.1898)
