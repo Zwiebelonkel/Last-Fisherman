@@ -341,6 +341,9 @@ FISH_CITY_ZIGARETTEN_SCIENCE,Zigarettenfilter bestehen aus Zelluloseacetat – s
 FISH_CITY_RADIOAKTIV_NAME,Radioaktiver Molch,Radioactive Newt
 FISH_CITY_RADIOAKTIV_DESC,Nicht direkt reingucken. Und auch nicht küssen. Wegen radioaktiven Isotopen. Leider...,Don't look directly into it. And don't kiss it either. Because of radioactive isotopes. Unfortunately...
 FISH_CITY_RADIOAKTIV_SCIENCE,Molche besitzen eine außergewöhnliche Fähigkeit zur Regeneration von Gliedmaßen.,Newts possess an exceptional ability to regenerate lost limbs.
+FISH_CITY_SEATURTLE_NAME,Meeresschildkröte,Sea Turtle
+FISH_CITY_SEATURTLE_DESC,"Sie war hier, bevor alles begann. Und sie wird hier sein, wenn nichts mehr bleibt.","She was here before everything began. And she will remain when nothing else does."
+FISH_CITY_SEATURTLE_SCIENCE,"Meeresschildkröten existieren seit über 100 Millionen Jahren und navigieren mithilfe des Erdmagnetfeldes über tausende Kilometer.","Sea turtles have existed for over 100 million years and navigate using Earth's magnetic field."
 FISH_CITY_ALTSTADTGEIST_NAME,Altstadtgeist,Old Town Ghost
 FISH_CITY_ALTSTADTGEIST_DESC,Erzählt dir Geschichten von früher. Alle langweilig.,Tells you stories from the past. All boring.
 FISH_CITY_ALTSTADTGEIST_SCIENCE,Viele Tiefseefische nutzen transparente Gewebe um unsichtbar zu wirken – quasi biologische Tarnkappen.,Many deep-sea fish use transparent tissue to appear invisible - biological invisibility cloaks basically.
@@ -487,6 +490,10 @@ FISH_FOREST_WURMFUERST_NAME,Wurmfürst,Worm Lord
 FISH_FOREST_WURMFUERST_DESC,"Regiert über nichts. Aber mit Würde.","Rules over nothing. But with dignity."
 FISH_FOREST_WURMFUERST_SCIENCE,"Einige Fischarten ernähren sich fast ausschließlich von Wirbellosen im Sediment.","Some fish species feed almost exclusively on sediment-dwelling invertebrates."
 
+FISH_FOREST_CLOWNFISH_NAME,Clownfisch,Clownfish
+FISH_FOREST_CLOWNFISH_DESC,"Er trägt ein Lächeln, das nie seine Wahl war.","He wears a smile he never chose."
+FISH_FOREST_CLOWNFISH_SCIENCE,"Clownfische leben in Symbiose mit Seeanemonen und sind gegen deren Nesselgift resistent.","Clownfish live in symbiosis with sea anemones and are resistant to their venom."
+
 
 FISH_DESERT_SCHMUTZGRUNDEL_NAME,Schmutzgrundel,Dirt Goby
 FISH_DESERT_SCHMUTZGRUNDEL_DESC,Lebt im Dreck. Buchstäblich. Wie deine Ernährungsgewohnheiten.,Lives in dirt. Literally. Like your eating habits.
@@ -541,6 +548,13 @@ FISH_DESERT_DUENENHAI_NAME,Dünenhai,Dune Shark
 FISH_DESERT_DUENENHAI_DESC,"Schwimmt dort, wo kein Wasser sein sollte.","Swims where there shouldn't be water."
 FISH_DESERT_DUENENHAI_SCIENCE,"Sandbewohnende Tiere nutzen wellenartige Bewegungen zur Fortbewegung.","Sand-dwelling animals use wave-like movements to travel."
 
+FISH_DESERT_PAN_NAME,Pfanne,Frying Pan
+FISH_DESERT_PAN_DESC,"Blockt Projektile. Wahrscheinlich.","Blocks projectiles. Probably."
+FISH_DESERT_PAN_SCIENCE,"Eine Pfanne ist ein Kochutensil aus Metall. Unter bestimmten Umständen kann Metall überraschend widerstandsfähig sein.","A frying pan is a metal cooking utensil. Under certain circumstances, metal can be surprisingly resistant."
+
+FISH_DESERT_BETTA_NAME,Siamesischer Kampffisch,Siamese Fighting Fish
+FISH_DESERT_BETTA_DESC,"Er kämpft gegen Spiegelbilder. Und verliert nie.","He fights reflections. And never loses."
+FISH_DESERT_BETTA_SCIENCE,"Betta splendens stammt aus Südostasien. Männchen sind territorial und zeigen ausgeprägtes Drohverhalten.","Betta splendens originates from Southeast Asia and males are highly territorial."
 
 FISH_ICELAND_EISFISCH_NAME,Eisfisch,Ice Fish
 FISH_ICELAND_EISFISCH_DESC,Durchsichtiger Fisch ohne rote Blutkörperchen - fast wie aus Glas gemacht.,Transparent fish without red blood cells - almost made of glass.
