@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://dme4l6a6jg0g6"]
+[gd_scene load_steps=23 format=3 uid="uid://dme4l6a6jg0g6"]
 
 [ext_resource type="PackedScene" uid="uid://b5ew1rfc8ow8g" path="res://scenes/fishingRod.tscn" id="1_3qbwi"]
 [ext_resource type="Script" uid="uid://cl5fc0glwmnhs" path="res://scripts/UpgradeShop.gd" id="1_i2sg0"]
@@ -11,6 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://5eeohonkr6bu" path="res://textures/hillybilly.glb" id="7_pmnnn"]
 [ext_resource type="PackedScene" uid="uid://dcm523ldl7b5d" path="res://scenes/shop_dialog.tscn" id="8_bj8dr"]
 [ext_resource type="PackedScene" uid="uid://dguwyn5rc7uog" path="res://scenes/splash.tscn" id="9_d207q"]
+[ext_resource type="AudioStream" uid="uid://yibilks5nghc" path="res://sounds/click.mp3" id="11_po5ig"]
 
 [sub_resource type="Environment" id="Environment_pmnnn"]
 background_mode = 1
@@ -433,6 +434,10 @@ bus = &"Music"
 
 [node name="interact" type="AudioStreamPlayer" parent="Audio"]
 stream = ExtResource("5_ltjmg")
+bus = &"SFX"
+
+[node name="click" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("11_po5ig")
 bus = &"SFX"
 
 [node name="floor" type="MeshInstance3D" parent="."]

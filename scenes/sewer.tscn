@@ -2005,7 +2005,7 @@ bus = &"SFX"
 
 [node name="lake" type="AudioStreamPlayer" parent="Audio"]
 stream = ExtResource("35_xp0e5")
-volume_db = -9.35
+volume_db = -0.436
 autoplay = true
 bus = &"SFX"
 

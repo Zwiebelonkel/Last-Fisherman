@@ -21,6 +21,7 @@ extends Node3D
 @onready var rod_preview: Node3D = $RodPreview
 @onready var music: AudioStreamPlayer = $Audio/music
 @onready var interact: AudioStreamPlayer = $Audio/interact
+@onready var click: AudioStreamPlayer = $Audio/click
 @onready var splash: GPUParticles3D = $RodPreview/Splash
 
 # 🆕 Köder-Shop Toggle
@@ -315,4 +316,5 @@ func _on_LineButton_pressed():
 
 
 func _on_BackButton_pressed():
+	click.play()
 	Player.go_to_last_scene()

@@ -6,6 +6,8 @@ extends Control
 @onready var total_value_label: Label = $PanelContainer/VBoxContainer/TotalValue
 
 @onready var bait_grid: GridContainer = $PanelContainer2/VBoxContainer/ScrollContainer/MarginContainer/BaitGrid
+@onready var click: AudioStreamPlayer = $Audio/click
+
 
 var item_scene := preload("res://scenes/FishingItem.tscn")
 var is_open := false
@@ -238,7 +240,7 @@ func _get_fish_icon(fish: Dictionary):
 func _on_sell_all_pressed() -> void:
 	if Inventory.fish_inventory.is_empty():
 		return
-
+	click.play()
 	var money := Inventory.get_total_value()
 	var fish_count := Inventory.fish_inventory.size()
 	
@@ -254,10 +256,12 @@ func _on_sell_all_pressed() -> void:
 func _on_activate_bait_pressed(rarity: String) -> void:
 	if Player.activate_bait(rarity):
 		print("🎣 Köder aktiviert:", rarity)
+		click.play()
 	else:
 		print("❌ Kein Köder verfügbar:", rarity)
 
 	refresh()
 
 func _on_close_pressed() -> void:
+	click.play()
 	toggle()

@@ -64,6 +64,7 @@ var _scrolling := false
 var _wait_for_input := false
 
 func _ready() -> void:
+	SteamAchievements.unlock("ACH_COMLETED_GAME")
 	bye.play()
 	background.color = Color.BLACK
 

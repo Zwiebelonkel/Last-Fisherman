@@ -6,12 +6,14 @@ extends Control
 @onready var total_label: Label = $Panel/TotalLabel
 @onready var bait_level_label: Label = $Panel/BaitLevelLabel
 @onready var title_label: Label = $Panel/TitleLabel
+@onready var click: AudioStreamPlayer = $Audio/click
 
 func _ready() -> void:
 	print("📊 Stats UI bereit!")
 	close_button.pressed.connect(hide)
 	visibility_changed.connect(_on_visibility_changed)
 	_update_static_labels()
+	click.play()
 	hide()
 
 func _update_static_labels() -> void:

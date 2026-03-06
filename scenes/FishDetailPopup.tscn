@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://cg8rbxtbp2jfr"]
+[gd_scene load_steps=6 format=3 uid="uid://cg8rbxtbp2jfr"]
 
 [ext_resource type="Script" uid="uid://r5al0h1otsbr" path="res://scripts/FishDetailPopup.gd" id="1_script"]
 [ext_resource type="PackedScene" uid="uid://5t2nyo7in3m0" path="res://test.tscn" id="2_dprfu"]
+[ext_resource type="AudioStream" uid="uid://yibilks5nghc" path="res://sounds/click.mp3" id="3_npbgx"]
 
 [sub_resource type="StyleBoxFlat" id="overlay_style"]
 bg_color = Color(0, 0, 0, 0.7)
@@ -194,3 +195,9 @@ custom_minimum_size = Vector2(150, 50)
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
 text = "CLOSE"
+
+[node name="Audio" type="Node" parent="."]
+
+[node name="click" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("3_npbgx")
+bus = &"SFX"

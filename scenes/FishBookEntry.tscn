@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://w8jskswnq2el"]
+[gd_scene load_steps=7 format=3 uid="uid://w8jskswnq2el"]
 
 [ext_resource type="Script" uid="uid://dqb2iyy8oxwvv" path="res://scripts/FishBookEntry.gd" id="1_so62u"]
 [ext_resource type="Shader" uid="uid://bstde7wsk0sgt" path="res://shader/icon.gdshader" id="2_l54rb"]
 [ext_resource type="Texture2D" uid="uid://cdqevtqdy43fr" path="res://assets/fish/unknown.png" id="2_ri3oc"]
+[ext_resource type="AudioStream" uid="uid://yibilks5nghc" path="res://sounds/click.mp3" id="4_iqtxn"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ri3oc"]
 bg_color = Color(0.12, 0.12, 0.12, 0.85)
@@ -135,3 +136,9 @@ theme_override_constants/shadow_offset_y = 1
 theme_override_font_sizes/font_size = 12
 text = "Value"
 horizontal_alignment = 1
+
+[node name="Audio" type="Node" parent="."]
+
+[node name="click" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("4_iqtxn")
+bus = &"SFX"

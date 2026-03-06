@@ -1,4 +1,4 @@
-[gd_scene load_steps=41 format=3 uid="uid://bw5el7n36awdr"]
+[gd_scene load_steps=42 format=3 uid="uid://bw5el7n36awdr"]
 
 [ext_resource type="Script" uid="uid://cslkhtib5limu" path="res://scripts/mainMenu.gd" id="1_tov5d"]
 [ext_resource type="Shader" uid="uid://c140kjbm2bot5" path="res://shader/buckshot.gdshader" id="2_l4mxc"]
@@ -16,6 +16,7 @@
 [ext_resource type="PackedScene" uid="uid://b5ew1rfc8ow8g" path="res://scenes/fishingRod.tscn" id="15_5p8yk"]
 [ext_resource type="PackedScene" uid="uid://bswqivqayur26" path="res://scenes/fireflies.tscn" id="15_amia2"]
 [ext_resource type="PackedScene" uid="uid://ng3k0vguw2ww" path="res://assets/chair.glb" id="16_25e00"]
+[ext_resource type="AudioStream" uid="uid://yibilks5nghc" path="res://sounds/click.mp3" id="17_jfr2g"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_l4mxc"]
 shader = ExtResource("2_l4mxc")
@@ -525,6 +526,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.360468, 0, 2.4308)
 [node name="Cube" parent="chair" index="0"]
 transform = Transform3D(-0.194647, 0, -0.0117244, 0, 0.017, 0, 0.0117244, 0, -0.194647, 0.399169, 1.18351, -1.60142)
 mesh = SubResource("ArrayMesh_jfr2g")
+
+[node name="Audio" type="Node" parent="."]
+
+[node name="click" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("17_jfr2g")
+bus = &"SFX"
 
 [connection signal="pressed" from="UI/MenuContainer/ButtonsContainer/Start" to="." method="_on_button_pressed"]
 [connection signal="pressed" from="UI/MenuContainer/ButtonsContainer/Quit" to="." method="_on_quit_pressed"]

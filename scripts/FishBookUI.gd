@@ -3,7 +3,7 @@ extends Control
 # ===========================
 #  FISCHBUCH UI SCENE
 # ===========================
-
+@onready var click: AudioStreamPlayer = $Audio/click
 var grid_container: GridContainer
 var location_selector: OptionButton
 var stats_label: Label
@@ -392,4 +392,5 @@ func _input(event):
 		get_tree().root.set_input_as_handled()
 
 func _on_close_pressed() -> void:
+	click.play()
 	hide()

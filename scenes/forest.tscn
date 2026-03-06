@@ -2172,7 +2172,7 @@ bus = &"SFX"
 
 [node name="lake" type="AudioStreamPlayer" parent="Audio"]
 stream = ExtResource("36_eos0w")
-volume_db = -6.379
+volume_db = 2.535
 pitch_scale = 0.84
 autoplay = true
 bus = &"SFX"

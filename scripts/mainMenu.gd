@@ -11,6 +11,7 @@ const CONFIRM_RESET_MODAL = preload("res://scenes/ConfirmResetModal.tscn")
 @onready var title_label = $UI/MenuContainer/TitleContainer/Label
 @onready var wishlist_button = $UI/ActionButtons/WishlistPanel/Button2
 @onready var start_button = $UI/MenuContainer/ButtonsContainer/Start
+@onready var click: AudioStreamPlayer = $Audio/click
 
 func _ready() -> void:
 	var ani : AnimationPlayer = $DirectionalLight3D/AnimationPlayer
@@ -87,6 +88,7 @@ func _unhandled_input(event: InputEvent) -> void:
 
 # Button Click Handlers
 func _on_button_pressed() -> void:
+	click.play()
 	# Click Animation
 	animate_button_click(start_button)
 	await get_tree().create_timer(0.2).timeout
@@ -95,6 +97,7 @@ func _on_button_pressed() -> void:
 	Transition.change_scene("res://scenes/MainScene.tscn", 0.8)
 
 func _on_reset_button_pressed() -> void:
+	click.play()
 	# Zeige Confirm Modal
 	show_reset_confirmation()
 
@@ -107,6 +110,7 @@ func show_reset_confirmation() -> void:
 	modal.cancel_reset.connect(_on_reset_cancelled)
 
 func _on_reset_confirmed() -> void:
+	click.play()
 	print("Reset bestätigt!")
 	
 	# Reset durchführen
@@ -126,9 +130,11 @@ func _on_reset_confirmed() -> void:
 	get_tree().reload_current_scene()
 
 func _on_reset_cancelled() -> void:
+	click.play()
 	print("Reset abgebrochen")
 
 func _on_quit_pressed() -> void:
+	click.play()
 	get_tree().quit()
 
 func _on_settings_pressed() -> void:
@@ -138,6 +144,7 @@ func _on_settings_pressed() -> void:
 		showSettings()
 
 func showSettings() -> void:
+	click.play()
 	options.modulate = Color(1, 1, 1, 0)
 	options.show()
 	
@@ -149,6 +156,7 @@ func showSettings() -> void:
 	optionsActive = true
 
 func hideSettings() -> void:
+	click.play()
 	var tween = create_tween()
 	tween.set_ease(Tween.EASE_IN)
 	tween.set_trans(Tween.TRANS_CUBIC)
@@ -159,10 +167,12 @@ func hideSettings() -> void:
 	optionsActive = false
 
 func _on_credits_pressed() -> void:
+	click.play()
 	Transition.change_scene("res://scenes/credits.tscn", 0.5)
 
 # 🆕 Submit your fish - Google Forms (mit Animation)
 func _on_submit_fish_pressed() -> void:
+	click.play()
 	var submit_button = $UI/ActionButtons/SubmitFishPanel/Button
 	animate_button_click(submit_button)
 	await get_tree().create_timer(0.15).timeout
@@ -171,6 +181,7 @@ func _on_submit_fish_pressed() -> void:
 
 # 🆕 Wishlist now - Steam Store (mit grüner Explosion)
 func _on_wishlist_pressed() -> void:
+	click.play()
 	# Grüner Flash Effekt
 	var flash = ColorRect.new()
 	flash.color = Color(0.2, 1, 0.3, 0)

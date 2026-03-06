@@ -11,6 +11,7 @@ extends Control
 @onready var description_text: RichTextLabel = $CenterContainer/PopupPanel/MarginContainer/VBoxContainer/Description
 @onready var close_button: Button = $CenterContainer/PopupPanel/MarginContainer/VBoxContainer/ButtonContainer/CloseButton
 @onready var overlay: Panel = $Overlay
+@onready var click: AudioStreamPlayer = $Audio/click
 
 var fish_data: Dictionary = {}
 
@@ -293,6 +294,7 @@ func _play_open_animation():
 # ============================================
 
 func _on_close_pressed():
+	click.play()
 	hide_popup()
 
 func _on_overlay_clicked(event: InputEvent):

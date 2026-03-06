@@ -1,5 +1,7 @@
 extends PanelContainer
 
+@onready var click: AudioStreamPlayer = $Audio/click
+
 var icon: TextureRect
 var question_overlay: Label
 var name_label: Label
@@ -86,6 +88,7 @@ func _gui_input(event: InputEvent):
 func show_fish_details():
 	if fishbook_ui and fishbook_ui.has_method("show_fish_detail_popup"):
 		fishbook_ui.show_fish_detail_popup(fish_data)
+		click.play()
 	else:
 		var parent = get_parent()
 		var depth = 0

@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://be7bs5po2ukhi"]
+[gd_scene load_steps=6 format=3 uid="uid://be7bs5po2ukhi"]
 
 [ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="1_h6whl"]
 [ext_resource type="Script" uid="uid://jxikjspekvvp" path="res://scripts/FishBookUI.gd" id="1_mijii"]
 [ext_resource type="StyleBox" uid="uid://c8rkdsvu78m67" path="res://materials/PanelCustom.tres" id="3_a2f2e"]
+[ext_resource type="AudioStream" uid="uid://yibilks5nghc" path="res://sounds/click.mp3" id="4_xmosw"]
 
 [sub_resource type="Theme" id="Theme_a2f2e"]
 default_font = ExtResource("1_h6whl")
@@ -111,5 +112,11 @@ offset_right = -31.0
 offset_bottom = 51.0
 grow_horizontal = 0
 text = "X"
+
+[node name="Audio" type="Node" parent="."]
+
+[node name="click" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("4_xmosw")
+bus = &"SFX"
 
 [connection signal="pressed" from="close" to="." method="_on_close_pressed"]
