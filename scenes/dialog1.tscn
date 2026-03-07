@@ -1,3 +1,133 @@
-[gd_scene format=3 uid="uid://bfxsggnjqkgjg"]
+[gd_scene load_steps=8 format=3 uid="uid://bfxsggnjqkgjg"]
 
-[node name="Dialog1" type="Node2D"]
+[ext_resource type="Script" uid="uid://2x0qbvs7u1xb" path="res://scripts/story_dialog.gd" id="1_script"]
+[ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="2_font"]
+[ext_resource type="Shader" uid="uid://c140kjbm2bot5" path="res://shader/buckshot.gdshader" id="2_mcmqs"]
+[ext_resource type="StyleBox" uid="uid://c8rkdsvu78m67" path="res://materials/PanelCustom.tres" id="3_stylebox"]
+[ext_resource type="Texture2D" uid="uid://c602plve2gqkw" path="res://assets/fisherman.png" id="4_sprite"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rrr6u"]
+shader = ExtResource("2_mcmqs")
+shader_parameter/exposure = 1.0
+shader_parameter/contrast = 1.1
+shader_parameter/saturation = 1.12
+shader_parameter/enable_pixelate = true
+shader_parameter/pixel_factor = 3.0
+shader_parameter/enable_posterize = true
+shader_parameter/color_levels = 16.0
+shader_parameter/dither_strength = 0.35
+shader_parameter/chrom_aberration = 0.01
+shader_parameter/vignette_strength = 1.0
+shader_parameter/grain_strength = 0.2
+shader_parameter/tint_color = Vector3(0.95, 1.03, 0.9)
+shader_parameter/tint_strength = 0.15
+shader_parameter/viewport_size_override = Vector2(0, 0)
+
+[sub_resource type="Theme" id="Theme_dialog"]
+default_font = ExtResource("2_font")
+
+[node name="StoryDialog" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+
+[node name="Filter" type="CanvasLayer" parent="."]
+layer = 0
+
+[node name="PixelateOverlay" type="ColorRect" parent="Filter"]
+material = SubResource("ShaderMaterial_rrr6u")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 28.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="PixelateOverlay2" type="ColorRect" parent="Filter"]
+material = SubResource("ShaderMaterial_rrr6u")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 28.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.0687983, 0.0687983, 0.0687982, 1)
+
+[node name="CharacterSprite" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_left = 247.0
+offset_top = -13.0
+offset_right = 895.0
+offset_bottom = -13.0
+grow_vertical = 2
+texture = ExtResource("4_sprite")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -180.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_styles/panel = ExtResource("3_stylebox")
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/MarginContainer"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme = SubResource("Theme_dialog")
+theme_override_colors/font_color = Color(1, 1, 0, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "Fremder:"
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+theme = SubResource("Theme_dialog")
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+fit_content = true
+
+[node name="ContinueHint" type="Label" parent="Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme = SubResource("Theme_dialog")
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+text = "[ Klicken zum Weiter ]"
+horizontal_alignment = 2
+
+[connection signal="gui_input" from="Panel" to="." method="_on_Panel_gui_input"]

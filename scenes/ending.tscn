@@ -1292,7 +1292,6 @@ material = SubResource("StandardMaterial3D_7xda3")
 [node name="MainScene" type="Node3D"]
 
 [node name="rain" type="CanvasLayer" parent="."]
-layer = 128
 
 [node name="PixelateOverlay" type="ColorRect" parent="rain"]
 material = SubResource("ShaderMaterial_ytxmq")
@@ -1454,9 +1453,6 @@ interact_button = NodePath("../../UI/Touch/InteractButton")
 settings_button = NodePath("../../UI/Touch/TopLeftPanel/MarginContainer/VBoxContainer/SettingsButton")
 cast_power_ui_scene = ExtResource("8_djqsd")
 inventory_ui = NodePath("../../UI/InventoryUI")
-
-[node name="RodMesh" parent="PlayerCamera/FishingRod" index="0"]
-transform = Transform3D(1, 0, 0, 0, 0.966823, 0.255446, 0, -0.255446, 0.966823, 0, 0, -0.0166266)
 
 [node name="WaterPlane" type="MeshInstance3D" parent="."]
 transform = Transform3D(-0.0489544, 4.27973e-09, -0.998801, -8.74228e-08, -1, 0, -0.998801, 8.7318e-08, 0.0489544, -19.3102, 0.176267, 16.1898)
