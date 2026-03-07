@@ -15,6 +15,7 @@
 [ext_resource type="PackedScene" uid="uid://ws4ms8iq4gg4" path="res://scenes/clock.tscn" id="12_nw1vn"]
 [ext_resource type="Texture2D" uid="uid://e7t33pnr13bp" path="res://textures/These-images-of-clouds-are-created-exclusively-using-Perlin-noise-It-simulates-the_Q320.jpg" id="13_d60cl"]
 [ext_resource type="Script" uid="uid://bl1xotduehieu" path="res://scripts/camera_sway.gd" id="14_kfm7u"]
+[ext_resource type="PackedScene" uid="uid://dshxvgjjo0fx5" path="res://scenes/catch_ui.tscn" id="14_ytxmq"]
 [ext_resource type="PackedScene" uid="uid://b5ew1rfc8ow8g" path="res://scenes/fishingRod.tscn" id="15_pt7ci"]
 [ext_resource type="Shader" uid="uid://c37jx2ebwp1a3" path="res://shader/shader_water.gdshader" id="16_5lvs8"]
 [ext_resource type="Texture2D" uid="uid://cvllk03mhtybp" path="res://textures/723-normal.jpg" id="16_rnvy1"]
@@ -60,9 +61,6 @@ shader_parameter/grain_strength = 0.2
 shader_parameter/tint_color = Vector3(0.95, 1.03, 0.9)
 shader_parameter/tint_strength = 0.15
 shader_parameter/viewport_size_override = Vector2(0, 0)
-
-[sub_resource type="Theme" id="Theme_25dfr"]
-default_font = ExtResource("3_5fodb")
 
 [sub_resource type="Theme" id="Theme_kjvyo"]
 default_font = ExtResource("3_5fodb")
@@ -280,12 +278,15 @@ var is_rotating: bool = false
 
 # Nur Fishing Position (kein Shop)
 const ROTATION_FISHING: float = 180.0
+const BIOME_POPUP = preload(\"res://scenes/BiomePopUp.tscn\")
+
 
 var hook_start_position: Vector3
 var hook_end_position: Vector3
 
 
 func _ready() -> void:
+	Player.biome_progress.connect(_on_biome_progress)
 	Engine.time_scale = 1
 	if hook:
 		ripple_anim = hook.get_node_or_null(\"AnimationPlayer\")
@@ -311,6 +312,17 @@ func _ready() -> void:
 	
 	Player.biome_completed.connect(_on_biome_completed)
 
+func _on_biome_progress(biome: String, percent: int):
+	var popup = BIOME_POPUP.instantiate()
+	get_node(\"../../UI\").add_child(popup)
+
+	var text = \"\"
+	if percent == 50:
+		text = \"🐟 50% der Fische im \" + biome + \" entdeckt!\"
+	else:
+		text = \"🏆 Alle Fische im \" + biome + \" gefangen!\"
+
+	popup.show_popup(text, biome, percent)  # ← biome + percent übergeben
 
 func _on_story_item_used(biome: String) -> void:
 	if biome != \"ocean\":
@@ -816,6 +828,7 @@ func show_bite_indicator() -> void:
 # CATCH MINIGAME
 # ---------------------------------------------------------
 func start_catch_minigame() -> void:
+	sweet_spot.modulate = Player.BIOME_COLORS.get(fishing_location, Color.WHITE)
 	reel_sound.play()
 	state = STATE_MINIGAME
 	catch_ui.visible = true
@@ -986,7 +999,7 @@ func end_catch_minigame(success: bool) -> void:
 	camera.start_screenshake(0.4, 0.3)
 	if success:
 		var fish = current_fish
-		Player.add_fish(fish)
+		Player.add_fish(fish, fishing_location)
 		Player.caught_fish_species[fish[\"id\"]] = true
 		# 🎵 Spiele Rarität-spezifischen Sound
 		play_rarity_sound(fish.get(\"rarity\", FishDB.RARITY.NORMAL))
@@ -1332,66 +1345,6 @@ grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("2_hpe61")
 
-[node name="CatchUI" type="Control" parent="UI"]
-layout_mode = 3
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-grow_horizontal = 2
-grow_vertical = 2
-theme = SubResource("Theme_25dfr")
-
-[node name="BarBackground" type="ColorRect" parent="UI/CatchUI"]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -300.0
-offset_top = 256.0
-offset_right = 300.0
-offset_bottom = 276.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0.458405, 0.458405, 0.458405, 1)
-
-[node name="SweetSpot" type="ColorRect" parent="UI/CatchUI/BarBackground"]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -60.0
-offset_top = -10.0
-offset_right = 60.0
-offset_bottom = 10.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(1, 0.486275, 0.482353, 1)
-
-[node name="Marker" type="ColorRect" parent="UI/CatchUI/BarBackground"]
-layout_mode = 0
-offset_right = 6.0
-offset_bottom = 20.0
-
-[node name="CatchProgress" type="ProgressBar" parent="UI/CatchUI"]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -300.0
-offset_top = 279.0
-offset_right = 300.0
-offset_bottom = 306.0
-grow_horizontal = 2
-grow_vertical = 2
-
 [node name="CatchResultUI" parent="UI" instance=ExtResource("4_43m4r")]
 offset_top = -197.0
 offset_bottom = 197.0
@@ -1422,6 +1375,8 @@ offset_bottom = 82.52
 animation_player = NodePath("../../DirectionalLight3D/AnimationPlayer")
 animation_name = "circle"
 day_time_offset_seconds = 30.0
+
+[node name="CatchUI" parent="UI" instance=ExtResource("14_ytxmq")]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_ccyyx")
@@ -1594,5 +1549,7 @@ transform = Transform3D(-0.185706, -1.18963, -0.632375, -0.000701904, 0.638439, 
 [node name="Node3D5" parent="." instance=ExtResource("29_ccyyx")]
 transform = Transform3D(0.669928, 0, -3.16998, 0, 3.24, 0, 3.16998, 0, 0.669928, -22.8293, 1.14626, 0)
 
+[editable path="UI/CatchResultUI"]
 [editable path="UI/Touch"]
+[editable path="UI/CatchUI"]
 [editable path="PlayerCamera/FishingRod"]

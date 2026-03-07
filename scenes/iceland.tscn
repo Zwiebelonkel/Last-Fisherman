@@ -389,12 +389,15 @@ const ROTATION_FISHING: float = 180.0
 const ROTATION_SHOP: float = 90.0
 const ROTATION_EMPTY_1: float = 0.0
 const ROTATION_EMPTY_2: float = 270.0
+const BIOME_POPUP = preload(\"res://scenes/BiomePopUp.tscn\")
+
 
 var hook_start_position: Vector3
 var hook_end_position: Vector3
 
 
 func _ready() -> void:
+	Player.biome_progress.connect(_on_biome_progress)
 	anim.play(\"idle\")
 	animCircle.play(\"circle\")
 	hook.visible = false
@@ -414,6 +417,17 @@ func _ready() -> void:
 	
 	Player.biome_completed.connect(_on_biome_completed)
 
+func _on_biome_progress(biome: String, percent: int):
+	var popup = BIOME_POPUP.instantiate()
+	get_node(\"../../UI\").add_child(popup)
+
+	var text = \"\"
+	if percent == 50:
+		text = \"🐟 50% der Fische im \" + biome + \" entdeckt!\"
+	else:
+		text = \"🏆 Alle Fische im \" + biome + \" gefangen!\"
+
+	popup.show_popup(text, biome, percent)  # ← biome + percent übergeben
 
 # 🆕 Story-Item wurde \\\"verwendet\\\"
 func _on_story_item_used(biome: String) -> void:
@@ -988,6 +1002,7 @@ func show_bite_indicator() -> void:
 # CATCH MINIGAME
 # ---------------------------------------------------------
 func start_catch_minigame() -> void:
+	sweet_spot.modulate = Player.BIOME_COLORS.get(fishing_location, Color.WHITE)
 	reel_sound.play()
 	state = STATE_MINIGAME
 	catch_ui.visible = true
@@ -1158,7 +1173,7 @@ func end_catch_minigame(success: bool) -> void:
 	camera.start_screenshake(0.4,0.3)
 	if success:
 		var fish = current_fish
-		Player.add_fish(fish)
+		Player.add_fish(fish, fishing_location)
 		Player.caught_fish_species[fish[\"id\"]] = true
 		# 🎵 Spiele Rarität-spezifischen Sound
 		play_rarity_sound(fish.get(\"rarity\", FishDB.RARITY.NORMAL))

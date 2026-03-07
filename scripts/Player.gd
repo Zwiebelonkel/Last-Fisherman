@@ -4,6 +4,7 @@ signal biome_completed(biome_name: String, reward: int)
 signal fish_caught(fish_id: String)
 signal money_gained(amount: int)
 signal vendor_unlocked  # 🆕 Neues Signal
+signal biome_progress(biome_name: String, percent: int)
 
 var touch_buttons: Node = null
 
@@ -35,6 +36,16 @@ var current_language: String = "de"
 # Gewichtsrekorde pro Fischart (✅ fish_id als Key)
 var fish_weight_records: Dictionary = {}
 var fish_catch_count: Dictionary = {}  # ✅ fish_id als Key
+
+const BIOME_COLORS = {
+	"lake":    Color(0.15, 0.55, 1.0),
+	"city":    Color(0.85, 0.45, 0.1),
+	"sewer":   Color(0.45, 0.75, 0.1),
+	"forest":  Color(0.1, 0.72, 0.3),
+	"desert":  Color(1.0, 0.72, 0.1),
+	"iceland": Color(0.55, 0.88, 1.0),
+	"ocean":   Color(0.0, 0.85, 0.75),
+}
 
 # Biom-Completion Tracking
 var completed_biomes: Dictionary = {
@@ -261,17 +272,14 @@ func go_to_last_scene() -> void:
 	Transition.change_scene_reverse(last_scene, 0.5)
 
 # ✅ Bereits korrekt: Nutzt fish_data["id"]
-func add_fish(fish_data: Dictionary) -> void:
+func add_fish(fish_data: Dictionary, biome: String = "") -> void:
 	Inventory.add_fish(fish_data)
 	
-	# ✅ Validierung: Prüfe ob ID vorhanden
 	if not fish_data.has("id"):
 		push_error("❌ add_fish: Fish ohne ID!")
 		return
 	
 	var fish_id: String = fish_data["id"]
-	
-	# 🔧 OPTIMIERT: Ein Aufruf statt zwei
 	update_catch_count(fish_id)
 	GodotSteam.update_fish(get_total_fish_caught())
 	
@@ -282,8 +290,8 @@ func add_fish(fish_data: Dictionary) -> void:
 		caught_fish_species[fish_id] = true
 		emit_signal("fish_caught", fish_id)
 	
+	check_biome_progress(biome)  # ← direkt übergeben
 	save_game()
-
 # ✅ Bereits korrekt: fish_id als Parameter
 func update_weight_record(fish_id: String, weight: float) -> void:
 	if not fish_weight_records.has(fish_id) or weight > fish_weight_records.get(fish_id, 0.0):
@@ -316,6 +324,27 @@ func check_biome_completion(fish_data: Dictionary) -> void:
 			return
 	
 	trigger_biome_completion_event(biome)
+	
+func check_biome_progress(biome: String) -> void:
+	var biome_fish = get_biome_fish_list(biome)
+	if biome_fish.is_empty():
+		return
+
+	var caught := 0
+	for fish in biome_fish:
+		if caught_fish_species.has(fish["id"]):
+			caught += 1
+
+	var percent := float(caught) / float(biome_fish.size())
+
+	# 50%
+	if percent >= 0.5 and not completed_biomes.get(biome + "_half", false):
+		completed_biomes[biome + "_half"] = true
+		emit_signal("biome_progress", biome, 50)
+
+	# 100%
+	if percent >= 1.0:
+		emit_signal("biome_progress", biome, 100)
 
 func get_biome_fish_list(biome: String) -> Array:
 	match biome:
