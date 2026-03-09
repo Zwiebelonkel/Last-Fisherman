@@ -28,7 +28,7 @@ var tutorial_pages = {
 				"",
 				"🖱️ LINKSKLICK / Leertaste bei Biss = Einholen starten",
 				"🖱️ IM MINIGAME HALTEN = Fortschritt",
-				"🎯 Marker muss im gelben Bereich sein!",
+				"🎯 Marker muss im farbigen Bereich sein!",
 				"❌ Außerhalb = Fortschritt geht verloren"
 			]
 		},

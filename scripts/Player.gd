@@ -38,13 +38,13 @@ var fish_weight_records: Dictionary = {}
 var fish_catch_count: Dictionary = {}  # ✅ fish_id als Key
 
 const BIOME_COLORS = {
-	"lake":    Color(0.15, 0.55, 1.0),
-	"city":    Color(0.85, 0.45, 0.1),
-	"sewer":   Color(0.45, 0.75, 0.1),
-	"forest":  Color(0.1, 0.72, 0.3),
-	"desert":  Color(1.0, 0.72, 0.1),
-	"iceland": Color(0.55, 0.88, 1.0),
-	"ocean":   Color(0.0, 0.85, 0.75),
+	"lake":    Color(0.99, 0.55, 0.27),
+	"city":    Color(0.0, 0.80, 1.0),
+	"sewer":   Color(0.12, 0.80, 0.61),
+	"forest":  Color(0.12, 0.61, 0.54),
+	"desert":  Color(0.96, 0.88, 0.54),
+	"iceland": Color(0.55, 1.0, 1.0),
+	"ocean":   Color(0.55, 0.16, 1.0),
 }
 
 # Biom-Completion Tracking

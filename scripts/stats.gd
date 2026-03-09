@@ -88,7 +88,6 @@ func _create_biome_completion_stats() -> void:
 		"iceland": "BIOME_ICELAND"
 	}
 	
-	# ✅ FIX 1: Nutze get_fish_name() statt get_translated_name()
 	for biome in Player.completed_biomes.keys():
 		var is_complete: bool = Player.completed_biomes[biome]
 		var biome_display: String = tr(biome_keys.get(biome, biome.to_upper()))
@@ -97,8 +96,7 @@ func _create_biome_completion_stats() -> void:
 		var caught_fish: int = 0
 		
 		for fish in biome_fish_list:
-			var display_name := FishDB.get_fish_name(fish)
-			if Player.caught_fish_species.has(display_name):
+			if Player.caught_fish_species.has(fish["id"]):  # ← fish["id"] statt display_name
 				caught_fish += 1
 		
 		var progress_text := tr("STATS_BIOME_PROGRESS").format({
@@ -110,7 +108,6 @@ func _create_biome_completion_stats() -> void:
 		var color := Color.GREEN if is_complete else Color.GRAY
 		
 		_create_simple_entry(status_icon + " " + progress_text, color)
-
 func _create_weight_records() -> void:
 	var records: Array = []
 	
