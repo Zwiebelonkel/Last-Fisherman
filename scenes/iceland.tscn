@@ -882,7 +882,7 @@ func update_rotation(delta: float) -> void:
 		current_rotation += 360.0
 
 	if camera:
-		camera.rotation.y = deg_to_rad(current_rotation)
+		camera.target_rotation_y = deg_to_rad(current_rotation)
 
 	if abs(current_rotation - target_rotation) < 0.5:
 		current_rotation = target_rotation
@@ -1949,9 +1949,6 @@ interact_button = NodePath("../../UI/Touch/InteractButton")
 settings_button = NodePath("../../UI/Touch/TopLeftPanel/MarginContainer/VBoxContainer/SettingsButton")
 cast_power_ui_scene = ExtResource("9_loenh")
 inventory_ui = NodePath("../../UI/InventoryUI")
-
-[node name="RodMesh" parent="PlayerCamera/FishingRod" index="0"]
-transform = Transform3D(1, 0, 0, 0, 0.966823, 0.255446, 0, -0.255446, 0.966823, 0, 0, -0.0166266)
 
 [node name="WaterPlane" type="MeshInstance3D" parent="."]
 transform = Transform3D(-0.0489544, 4.27973e-09, -0.998801, -8.74228e-08, -1, 0, -0.998801, 8.7318e-08, 0.0489544, -19.3102, -3.68562, 16.1898)

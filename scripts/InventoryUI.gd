@@ -80,6 +80,7 @@ func _build_context_menu() -> void:
 	# --- Trennlinie ---
 	var sep := HSeparator.new()
 	sep.modulate = Color(0.8, 0.6, 0.2, 0.5)
+	sep.MOUSE_FILTER_IGNORE
 	vbox.add_child(sep)
 
 	# --- Buttons ---

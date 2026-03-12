@@ -790,7 +790,7 @@ func update_rotation(delta: float) -> void:
 		current_rotation += 360.0
 
 	if camera:
-		camera.rotation.y = deg_to_rad(current_rotation)
+		camera.target_rotation_y = deg_to_rad(current_rotation)
 
 	if abs(current_rotation - target_rotation) < 0.5:
 		current_rotation = target_rotation
