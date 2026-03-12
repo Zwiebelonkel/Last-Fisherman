@@ -172,30 +172,23 @@ func _process(delta: float) -> void:
 		$StationSecurity/OutlineMesh.hide()
 
 func update_camera_direction() -> void:
-	# Berechnet die Blickrichtung der Kamera (4 Richtungen)
-	var camera = get_viewport().get_camera_3d()
-	if not camera:
-		return
-	
-	# Hole Rotation der Kamera (in Grad)
-	var rotation_deg = camera.global_rotation_degrees.y
+	var rotation_deg := main_camera.global_rotation_degrees.y
 	
 	# Normalisiere auf 0-360
 	rotation_deg = fmod(rotation_deg, 360.0)
 	if rotation_deg < 0:
 		rotation_deg += 360.0
 	
-	# Bestimme Richtung basierend auf Rotation
-	# 0° = Nord (Forward, -Z), 90° = Ost (+X), 180° = Süd (+Z), 270° = West (-X)
 	if rotation_deg >= 315 or rotation_deg < 45:
-		current_camera_direction = Vector3.FORWARD  # 0° (Nord)
+		current_camera_direction = Vector3.FORWARD
 	elif rotation_deg >= 45 and rotation_deg < 135:
-		current_camera_direction = Vector3.RIGHT  # 90° (Ost)
+		current_camera_direction = Vector3.RIGHT
 	elif rotation_deg >= 135 and rotation_deg < 225:
-		current_camera_direction = Vector3.BACK  # 180° (Süd) - KUNDE
+		current_camera_direction = Vector3.BACK
 	elif rotation_deg >= 225 and rotation_deg < 315:
-		current_camera_direction = Vector3.LEFT  # 270° (West)
-
+		current_camera_direction = Vector3.LEFT
+		
+		
 func update_hover_by_direction() -> void:
 	# Aktualisiert Hover basierend auf Kamera-Richtung
 	# Reset alle Hover
