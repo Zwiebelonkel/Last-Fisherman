@@ -1,4 +1,4 @@
-[gd_scene load_steps=86 format=3 uid="uid://bw5el7n36awdr"]
+[gd_scene load_steps=86 format=3 uid="uid://cx2sffjjdjuw5"]
 
 [ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="1_2phbr"]
 [ext_resource type="PackedScene" uid="uid://b5ew1rfc8ow8g" path="res://scenes/fishingRod.tscn" id="1_echbf"]
@@ -15,7 +15,7 @@
 [ext_resource type="PackedScene" uid="uid://xt7f7m4i2iwi" path="res://scenes/touch.tscn" id="11_r3sjc"]
 [ext_resource type="PackedScene" uid="uid://bgnalk1ruht4d" path="res://scenes/bait_hud.tscn" id="12_wsqty"]
 [ext_resource type="Shader" uid="uid://cfsuhiaq15sgu" path="res://shader/outline.gdshader" id="13_0ehpd"]
-[ext_resource type="PackedScene" uid="uid://ws4ms8iq4gg4" path="res://scenes/clock.tscn" id="13_7yh6i"]
+[ext_resource type="PackedScene" path="res://scenes/clock.tscn" id="13_7yh6i"]
 [ext_resource type="PackedScene" uid="uid://brmbdno888s38" path="res://assets/tree.glb" id="14_08o8g"]
 [ext_resource type="PackedScene" uid="uid://bw80sbvfcwe1p" path="res://scenes/cigarette.tscn" id="14_fto0a"]
 [ext_resource type="PackedScene" uid="uid://cfptx2e41wve1" path="res://scenes/shop.tscn" id="15_0cxu4"]
@@ -46,12 +46,12 @@
 [ext_resource type="Material" uid="uid://cj86wv7c01tef" path="res://materials/outlineWhite.tres" id="35_y15d6"]
 [ext_resource type="AudioStream" uid="uid://bqcbwput2tdy3" path="res://sounds/reeling.mp3" id="36_qnen4"]
 [ext_resource type="PackedScene" uid="uid://ctqxalvjd2b1k" path="res://assets/palm.glb" id="36_u55b3"]
-[ext_resource type="PackedScene" uid="uid://bswqivqayur26" path="res://scenes/fireflies.tscn" id="38_oiest"]
+[ext_resource type="PackedScene" path="res://scenes/fireflies.tscn" id="38_oiest"]
 [ext_resource type="AudioStream" uid="uid://nvrc6arpsx6n" path="res://sounds/ocean.mp3" id="38_xuwja"]
 [ext_resource type="PackedScene" uid="uid://ng3k0vguw2ww" path="res://assets/chair.glb" id="45_pwxld"]
-[ext_resource type="PackedScene" uid="uid://4vuswgb4ap52" path="res://scenes/story1.tscn" id="46_cw1g3"]
-[ext_resource type="PackedScene" uid="uid://cw1hh2dbog4uj" path="res://scenes/TutorialOverlay.tscn" id="47_yc0gu"]
-[ext_resource type="Script" uid="uid://dk2ge7v8wh41k" path="res://scripts/Biomecinematic.gd" id="52_xuwja"]
+[ext_resource type="PackedScene" path="res://scenes/story1.tscn" id="46_cw1g3"]
+[ext_resource type="PackedScene" path="res://scenes/TutorialOverlay.tscn" id="47_yc0gu"]
+[ext_resource type="Script" path="res://scripts/Biomecinematic.gd" id="52_xuwja"]
 
 [sub_resource type="Shader" id="Shader_7tuqu"]
 code = "shader_type canvas_item;
@@ -1710,7 +1710,7 @@ _data = {
 }
 point_count = 2
 
-[node name="MainScene3" type="Node3D"]
+[node name="MainScene5" type="Node3D"]
 
 [node name="Filter" type="CanvasLayer" parent="."]
 layer = 0
@@ -1870,12 +1870,13 @@ script = ExtResource("1_ibiss")
 [node name="FishingRod" parent="PlayerCamera" node_paths=PackedStringArray("rod_tip", "hook", "splash", "waterplane", "catch_result_ui", "camera", "fishbook_ui", "options", "explosion", "journal_button", "inventory_button", "map_button", "left_button", "right_button", "interact_button", "settings_button", "inventory_ui") instance=ExtResource("1_echbf")]
 transform = Transform3D(0.925417, -0.163176, -0.34202, 0.173648, 0.984808, 0, 0.336824, -0.0593912, 0.939693, 0.4, -0.252114, -1.03766)
 script = SubResource("GDScript_8wjpf")
+rotation_speed = 300.0
+cast_power_ui_scene = ExtResource("11_7wwop")
 rod_tip = NodePath("RodMesh/RodTip")
 hook = NodePath("../../Hook")
 splash = NodePath("../../Splash")
 waterplane = NodePath("../../WaterPlane")
 catch_result_ui = NodePath("../../UI/CatchResultUI")
-rotation_speed = 300.0
 camera = NodePath("..")
 fishbook_ui = NodePath("../../UI/FishBook")
 options = NodePath("../../UI/OptionsControl")
@@ -1887,7 +1888,6 @@ left_button = NodePath("../../UI/Touch/BottomCenterPanel/HBoxContainer/LeftButto
 right_button = NodePath("../../UI/Touch/BottomCenterPanel/HBoxContainer/RightButton")
 interact_button = NodePath("../../UI/Touch/InteractButton")
 settings_button = NodePath("../../UI/Touch/TopLeftPanel/MarginContainer/VBoxContainer/SettingsButton")
-cast_power_ui_scene = ExtResource("11_7wwop")
 inventory_ui = NodePath("../../UI/InventoryUI")
 
 [node name="RodMesh" parent="PlayerCamera/FishingRod" index="0"]

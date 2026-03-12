@@ -12,9 +12,9 @@
 [ext_resource type="Texture2D" uid="uid://d31603nl8y0gd" path="res://textures/Water_preview.jpgC878A51E-2B84-45CA-85CB-75E5BC88EEC8Large.jpg" id="12_uwljm"]
 [ext_resource type="PackedScene" uid="uid://ckje0fw3pep83" path="res://assets/skyscaper.glb" id="13_vt84v"]
 [ext_resource type="PackedScene" uid="uid://brmbdno888s38" path="res://assets/tree.glb" id="14_3wx87"]
-[ext_resource type="Script" uid="uid://cl0pxnxn7ux1x" path="res://scripts/checker.gd" id="14_lam2r"]
+[ext_resource type="Script" path="res://scripts/checker.gd" id="14_lam2r"]
 [ext_resource type="PackedScene" uid="uid://b5ew1rfc8ow8g" path="res://scenes/fishingRod.tscn" id="15_5p8yk"]
-[ext_resource type="PackedScene" uid="uid://bswqivqayur26" path="res://scenes/fireflies.tscn" id="15_amia2"]
+[ext_resource type="PackedScene" path="res://scenes/fireflies.tscn" id="15_amia2"]
 [ext_resource type="PackedScene" uid="uid://ng3k0vguw2ww" path="res://assets/chair.glb" id="16_25e00"]
 [ext_resource type="AudioStream" uid="uid://yibilks5nghc" path="res://sounds/click.mp3" id="17_jfr2g"]
 
@@ -284,7 +284,7 @@ material = SubResource("StandardMaterial3D_kp0ql")
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_jfr2g"]
 
-[node name="MainScene2" type="Node3D" node_paths=PackedStringArray("options")]
+[node name="MainScene4" type="Node3D" node_paths=PackedStringArray("options")]
 script = ExtResource("1_tov5d")
 options = NodePath("UI/OptionsControl")
 

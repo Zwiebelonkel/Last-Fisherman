@@ -14,7 +14,7 @@
 [ext_resource type="PackedScene" uid="uid://xt7f7m4i2iwi" path="res://scenes/touch.tscn" id="10_g34gq"]
 [ext_resource type="PackedScene" uid="uid://bgnalk1ruht4d" path="res://scenes/bait_hud.tscn" id="11_0fv5i"]
 [ext_resource type="Texture2D" uid="uid://cvllk03mhtybp" path="res://textures/723-normal.jpg" id="11_4uh7g"]
-[ext_resource type="PackedScene" uid="uid://ws4ms8iq4gg4" path="res://scenes/clock.tscn" id="12_7q4h0"]
+[ext_resource type="PackedScene" path="res://scenes/clock.tscn" id="12_7q4h0"]
 [ext_resource type="Texture2D" uid="uid://d31603nl8y0gd" path="res://textures/Water_preview.jpgC878A51E-2B84-45CA-85CB-75E5BC88EEC8Large.jpg" id="12_len2l"]
 [ext_resource type="Shader" uid="uid://b8mxoacu7poqc" path="res://shader/sky.gdshader" id="13_7jawt"]
 [ext_resource type="Shader" uid="uid://cfsuhiaq15sgu" path="res://shader/outline.gdshader" id="13_fcatt"]
@@ -40,12 +40,12 @@
 [ext_resource type="AudioStream" uid="uid://bpy3o38b3nar3" path="res://sounds/rarity/rare.mp3" id="31_7jawt"]
 [ext_resource type="AudioStream" uid="uid://rcuhs2eom22x" path="res://sounds/rarity/epic.mp3" id="32_jyv4r"]
 [ext_resource type="AudioStream" uid="uid://c0e0t3u3yvvhg" path="res://sounds/rarity/legendary.mp3" id="33_lvx2t"]
-[ext_resource type="PackedScene" uid="uid://bswqivqayur26" path="res://scenes/fireflies.tscn" id="34_4uh7g"]
+[ext_resource type="PackedScene" path="res://scenes/fireflies.tscn" id="34_4uh7g"]
 [ext_resource type="AudioStream" uid="uid://qeh48myqvc8p" path="res://sounds/rarity/exotic.mp3" id="34_dn1w7"]
 [ext_resource type="AudioStream" uid="uid://6a3ro0nq1u4" path="res://sounds/rarity/antique.mp3" id="35_6sryq"]
 [ext_resource type="AudioStream" uid="uid://c413rhml1623r" path="res://sounds/lake.mp3" id="36_eos0w"]
-[ext_resource type="PackedScene" uid="uid://i8dug7jmonh4" path="res://scenes/story4.tscn" id="37_7q4h0"]
-[ext_resource type="Script" uid="uid://dk2ge7v8wh41k" path="res://scripts/Biomecinematic.gd" id="46_7jawt"]
+[ext_resource type="PackedScene" path="res://scenes/story4.tscn" id="37_7q4h0"]
+[ext_resource type="Script" path="res://scripts/Biomecinematic.gd" id="46_7jawt"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_lvx2t"]
 shader = ExtResource("1_u01n2")
@@ -1932,7 +1932,7 @@ _data = {
 }
 point_count = 4
 
-[node name="MainScene3" type="Node3D"]
+[node name="MainScene5" type="Node3D"]
 
 [node name="Filter" type="CanvasLayer" parent="."]
 layer = 0
@@ -2070,12 +2070,13 @@ script = ExtResource("9_qu0hn")
 [node name="FishingRod" parent="PlayerCamera" node_paths=PackedStringArray("rod_tip", "hook", "splash", "waterplane", "catch_result_ui", "camera", "fishbook_ui", "options", "journal_button", "inventory_button", "map_button", "left_button", "right_button", "interact_button", "settings_button", "inventory_ui") instance=ExtResource("10_0fv5i")]
 transform = Transform3D(0.925417, -0.163176, -0.34202, 0.173648, 0.984808, 0, 0.336824, -0.0593912, 0.939693, 0.4, -0.255, -1.038)
 script = SubResource("GDScript_8wjpf")
+rotation_speed = 300.0
+cast_power_ui_scene = ExtResource("8_u01n2")
 rod_tip = NodePath("RodMesh/RodTip")
 hook = NodePath("../../Hook")
 splash = NodePath("../../Splash")
 waterplane = NodePath("../../WaterPlane")
 catch_result_ui = NodePath("../../UI/CatchResultUI")
-rotation_speed = 300.0
 camera = NodePath("..")
 fishbook_ui = NodePath("../../UI/FishBook")
 options = NodePath("../../UI/OptionsControl")
@@ -2086,8 +2087,10 @@ left_button = NodePath("../../UI/Touch/BottomCenterPanel/HBoxContainer/LeftButto
 right_button = NodePath("../../UI/Touch/BottomCenterPanel/HBoxContainer/RightButton")
 interact_button = NodePath("../../UI/Touch/InteractButton")
 settings_button = NodePath("../../UI/Touch/TopLeftPanel/MarginContainer/VBoxContainer/SettingsButton")
-cast_power_ui_scene = ExtResource("8_u01n2")
 inventory_ui = NodePath("../../UI/InventoryUI")
+
+[node name="RodMesh" parent="PlayerCamera/FishingRod" index="0"]
+transform = Transform3D(1, 0, 0, 0, 0.966823, 0.255446, 0, -0.255446, 0.966823, 0, 0, -0.0166266)
 
 [node name="WaterPlane" type="MeshInstance3D" parent="."]
 transform = Transform3D(-1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0, 0, 1, 0.26741, -0.0716674, 23.5144)
