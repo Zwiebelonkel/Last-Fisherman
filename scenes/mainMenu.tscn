@@ -155,6 +155,8 @@ shader_parameter/moon_size = 0.018
 shader_parameter/cloud_speed = 0.015
 shader_parameter/cloud_scale = 1.1
 shader_parameter/cloud_density = 5.0
+shader_parameter/horizon_fog_strength = 0.55
+shader_parameter/horizon_fog_color = Color(0.08, 0.1, 0.2, 1)
 
 [sub_resource type="Sky" id="Sky_x537r"]
 sky_material = SubResource("ShaderMaterial_cfq0f")

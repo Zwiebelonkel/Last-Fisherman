@@ -999,6 +999,7 @@ func end_catch_minigame(success: bool) -> void:
 	camera.start_screenshake(0.4, 0.3)
 	if success:
 		var fish = current_fish
+		_launch_fish_sprite(fish)
 		Player.add_fish(fish, fishing_location)
 		Player.caught_fish_species[fish[\"id\"]] = true
 		# 🎵 Spiele Rarität-spezifischen Sound
@@ -1063,6 +1064,58 @@ func trigger_splash_burst() -> void:
 	
 	if splash and state == STATE_MINIGAME:
 		splash.emitting = false
+		
+func _launch_fish_sprite(fish_data: Dictionary) -> void:
+	var sprite := Sprite3D.new()
+	sprite.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+	sprite.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
+	sprite.pixel_size = 0.01
+	sprite.shaded = false
+	sprite.texture = FishDB.get_fish_icon(fish_data)
+	
+	var rarity_color := FishDB.get_rarity_color(fish_data)
+	sprite.modulate = rarity_color
+	
+	var rarity: int = fish_data.get(\"rarity\", FishDB.RARITY.NORMAL)
+	var size_map := {
+		FishDB.RARITY.NORMAL: 0.7, FishDB.RARITY.UNGEWOEHNLICH: 0.85,
+		FishDB.RARITY.SELTEN: 1.0, FishDB.RARITY.EPISCH: 1.2,
+		FishDB.RARITY.LEGENDAER: 1.5, FishDB.RARITY.EXOTISCH: 1.8,
+		FishDB.RARITY.ANTIK: 2.0
+	}
+	sprite.scale = Vector3.ONE * size_map.get(rarity, 1.0)
+	
+	# ✅ ERST add_child, DANN global_position setzen
+	get_tree().current_scene.add_child(sprite)
+	sprite.global_position = hook.global_position
+	
+	if rarity >= FishDB.RARITY.LEGENDAER:
+		var light := OmniLight3D.new()
+		light.light_color = rarity_color
+		light.light_energy = 2.0
+		light.omni_range = 1.5
+		sprite.add_child(light)
+	
+	var start_pos := hook.global_position
+	# ✅ Weniger hoch (1.2 statt 3.5)
+	var to_cam := (camera.global_position - hook.global_position).normalized()
+	var target_pos := start_pos + to_cam * 1.5 + Vector3(0, 0.8, 0)
+	
+	# ✅ Tween nach add_child erstellen
+	var tween := sprite.create_tween()
+	tween.set_parallel(true)
+	tween.tween_property(sprite, \"global_position\", target_pos, 0.7)\\
+		.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	tween.tween_property(sprite, \"rotation_degrees:y\", 360.0, 0.7)\\
+		.set_ease(Tween.EASE_OUT)
+	
+	await get_tree().create_timer(0.45).timeout
+	
+	var fade := sprite.create_tween()
+	fade.tween_property(sprite, \"modulate:a\", 0.0, 0.35)
+	await fade.finished
+	
+	sprite.queue_free()
 "
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_edxmc"]

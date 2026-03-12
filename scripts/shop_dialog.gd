@@ -50,7 +50,11 @@ extends Control
 	"dlg_38": { "de": "Pass auf, manche Köder ziehen… Dinge an. Nicht nur Fische.", "en": "Careful, some bait attracts… things. Not just fish." },
 	"dlg_39": { "de": "Wenn du mutig bist, probier mal den teuren Köder.", "en": "If you're brave, try the expensive bait." },
 	"dlg_40": { "de": "Die anderen Händler reden schlecht über dich. Ich nicht.", "en": "The other merchants talk badly about you. Not me." },
-	"dlg_41": { "de": "Ich bin stolz auf dich. Ein bisschen. Nicht übertreiben.", "en": "I'm proud of you. A little. Don't overdo it." }
+	"dlg_41": { "de": "Ich bin stolz auf dich. Ein bisschen. Nicht übertreiben.", "en": "I'm proud of you. A little. Don't overdo it." },
+	"dlg_42": { "de": "Soll ich dir sagen, wie du einen Wall-Sack-Kilt bauen kannst?", "en": "Should i tell you how to create a whale-ballsack-kilt?" },
+	"dlg_43": { "de": "Ich existiere nur in deinem Kopf.", "en": "I am only existing in your head." }
+
+
 }
 
 @export var change_interval := 5.0    # Zeit zwischen Textwechseln

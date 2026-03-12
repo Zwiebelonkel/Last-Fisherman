@@ -1,4 +1,4 @@
-[gd_scene load_steps=84 format=3 uid="uid://bw5el7n36awdr"]
+[gd_scene load_steps=86 format=3 uid="uid://bw5el7n36awdr"]
 
 [ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="1_2phbr"]
 [ext_resource type="PackedScene" uid="uid://b5ew1rfc8ow8g" path="res://scenes/fishingRod.tscn" id="1_echbf"]
@@ -51,6 +51,7 @@
 [ext_resource type="PackedScene" uid="uid://ng3k0vguw2ww" path="res://assets/chair.glb" id="45_pwxld"]
 [ext_resource type="PackedScene" uid="uid://4vuswgb4ap52" path="res://scenes/story1.tscn" id="46_cw1g3"]
 [ext_resource type="PackedScene" uid="uid://cw1hh2dbog4uj" path="res://scenes/TutorialOverlay.tscn" id="47_yc0gu"]
+[ext_resource type="Script" uid="uid://dk2ge7v8wh41k" path="res://scripts/Biomecinematic.gd" id="52_xuwja"]
 
 [sub_resource type="Shader" id="Shader_7tuqu"]
 code = "shader_type canvas_item;
@@ -221,6 +222,8 @@ shader_parameter/moon_size = 0.018
 shader_parameter/cloud_speed = 0.015
 shader_parameter/cloud_scale = 1.1
 shader_parameter/cloud_density = 0.644
+shader_parameter/horizon_fog_strength = 0.55
+shader_parameter/horizon_fog_color = Color(0.08, 0.1, 0.2, 1)
 
 [sub_resource type="Sky" id="Sky_cw1g3"]
 sky_material = SubResource("ShaderMaterial_cfq0f")
@@ -236,13 +239,16 @@ glow_strength = 0.29
 glow_hdr_scale = 1.17
 glow_hdr_luminance_cap = 4.75
 glow_map_strength = 0.0
+fog_enabled = true
 fog_mode = 1
-fog_light_color = Color(0.329998, 0.612876, 0.536744, 1)
-fog_light_energy = 0.0
-fog_sun_scatter = 0.15
+fog_light_color = Color(0.3121, 0.422069, 0.844684, 1)
+fog_light_energy = 2.07
 fog_density = 1.0
 fog_sky_affect = 0.0
-fog_height = -167.45
+fog_height = 218.87
+fog_depth_curve = 0.574349
+fog_depth_begin = 0.0
+fog_depth_end = 305.3
 volumetric_fog_enabled = true
 volumetric_fog_density = 0.0563
 volumetric_fog_length = 42.44
@@ -1183,6 +1189,7 @@ func end_catch_minigame(success: bool) -> void:
 
 	if success:
 		var fish = current_fish
+		_launch_fish_sprite(fish)
 		Player.add_fish(fish, fishing_location)
 		Player.caught_fish_species[fish[\"id\"]] = true
 
@@ -1250,6 +1257,57 @@ func trigger_splash_burst() -> void:
 	if splash and state == STATE_MINIGAME:
 		splash.emitting = false
 		
+func _launch_fish_sprite(fish_data: Dictionary) -> void:
+	var sprite := Sprite3D.new()
+	sprite.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+	sprite.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
+	sprite.pixel_size = 0.01
+	sprite.shaded = false
+	sprite.texture = FishDB.get_fish_icon(fish_data)
+	
+	var rarity_color := FishDB.get_rarity_color(fish_data)
+	sprite.modulate = rarity_color
+	
+	var rarity: int = fish_data.get(\"rarity\", FishDB.RARITY.NORMAL)
+	var size_map := {
+		FishDB.RARITY.NORMAL: 0.7, FishDB.RARITY.UNGEWOEHNLICH: 0.85,
+		FishDB.RARITY.SELTEN: 1.0, FishDB.RARITY.EPISCH: 1.2,
+		FishDB.RARITY.LEGENDAER: 1.5, FishDB.RARITY.EXOTISCH: 1.8,
+		FishDB.RARITY.ANTIK: 2.0
+	}
+	sprite.scale = Vector3.ONE * size_map.get(rarity, 1.0)
+	
+	# ✅ ERST add_child, DANN global_position setzen
+	get_tree().current_scene.add_child(sprite)
+	sprite.global_position = hook.global_position
+	
+	if rarity >= FishDB.RARITY.LEGENDAER:
+		var light := OmniLight3D.new()
+		light.light_color = rarity_color
+		light.light_energy = 2.0
+		light.omni_range = 1.5
+		sprite.add_child(light)
+	
+	var start_pos := hook.global_position
+	# ✅ Weniger hoch (1.2 statt 3.5)
+	var to_cam := (camera.global_position - hook.global_position).normalized()
+	var target_pos := start_pos + to_cam * 1.5 + Vector3(0, 0.8, 0)
+	
+	# ✅ Tween nach add_child erstellen
+	var tween := sprite.create_tween()
+	tween.set_parallel(true)
+	tween.tween_property(sprite, \"global_position\", target_pos, 0.7)\\
+		.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	tween.tween_property(sprite, \"rotation_degrees:y\", 360.0, 0.7)\\
+		.set_ease(Tween.EASE_OUT)
+	
+	await get_tree().create_timer(0.45).timeout
+	
+	var fade := sprite.create_tween()
+	fade.tween_property(sprite, \"modulate:a\", 0.0, 0.35)
+	await fade.finished
+	
+	sprite.queue_free()
 "
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_e65ta"]
@@ -1457,6 +1515,18 @@ tracks/5/keys = {
 "update": 0,
 "values": [0.0563]
 }
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("../WorldEnvironment:environment:fog_light_color")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(0.3121, 0.422069, 0.844684, 1)]
+}
 
 [sub_resource type="Animation" id="Animation_vt84v"]
 resource_name = "circle"
@@ -1533,6 +1603,18 @@ tracks/5/keys = {
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
 "values": [0.0163, 0.0163, 0.182]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("../WorldEnvironment:environment:fog_light_color")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0, 15.5655, 49.9734, 60),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Color(0.604798, 0.694294, 0.955241, 1), Color(0.478086, 0.169163, 0.132829, 1), Color(0.478086, 0.169163, 0.132829, 1), Color(0.604798, 0.694294, 0.955241, 1)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_amia2"]
@@ -1620,6 +1702,13 @@ _data = {
 &"RESET": SubResource("Animation_y15d6"),
 &"boat": SubResource("Animation_kwqb8")
 }
+
+[sub_resource type="Curve3D" id="Curve3D_g8282"]
+_data = {
+"points": PackedVector3Array(0, 0, 0, -0.415, 0, 0, -11.7611, 3.74274, 16.4618, 0, 0, 0, 3.48, 0, -0.465, 14.96, 1.46672, 17.2884),
+"tilts": PackedFloat32Array(0, 0)
+}
+point_count = 2
 
 [node name="MainScene3" type="Node3D"]
 
@@ -1751,6 +1840,12 @@ transform = Transform3D(-0.260732, 0, 0.248231, 0, 0.36, 0, -0.248231, 0, -0.260
 [node name="skyscaper5" parent="UI" instance=ExtResource("10_7wwop")]
 transform = Transform3D(-0.260732, 0, 0.248231, 0, 0.36, 0, -0.248231, 0, -0.260732, 30.3949, 6.24582, 1.11404)
 
+[node name="skyscaper7" parent="UI" instance=ExtResource("10_7wwop")]
+transform = Transform3D(-0.289803, 0, -0.213575, 0, 0.36, 0, 0.213575, 0, -0.289803, 0.853029, 6.24582, -30.5143)
+
+[node name="skyscaper8" parent="UI" instance=ExtResource("10_7wwop")]
+transform = Transform3D(-0.289803, 0, -0.213575, 0, 0.36, 0, 0.213575, 0, -0.289803, 11.0446, 10.0401, -30.5143)
+
 [node name="skyscaper6" parent="UI" instance=ExtResource("10_7wwop")]
 transform = Transform3D(-0.391098, 0, 0.372347, 0, 0.54, 0, -0.372347, 0, -0.391098, 33.8869, 9.08063, -4.52298)
 
@@ -1866,7 +1961,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.02284, 0, 17.0507)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.52933, 0, 28.9893)
 
 [node name="tree2" parent="." instance=ExtResource("14_08o8g")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.40193, 0.164468, 2.28083)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.40193, 0.164468, 2.50031)
 
 [node name="Shop" parent="." instance=ExtResource("15_0cxu4")]
 transform = Transform3D(-3.12536e-08, 0, 0.715, 0, 0.715, 0, -0.715, 0, -3.12536e-08, -2.74395, 0.673682, -0.208801)
@@ -2033,6 +2128,20 @@ surface_material_override/0 = ExtResource("35_y15d6")
 
 [node name="van" parent="." instance=ExtResource("46_cw1g3")]
 transform = Transform3D(0.51845, 0.420864, 0.744368, -0.0534179, 0.884736, -0.463022, -0.853438, 0.200291, 0.481173, -11.4535, 4.99099, -27.7274)
+
+[node name="CinematicPath" type="Path3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0698357, 1, 1.6984)
+curve = SubResource("Curve3D_g8282")
+
+[node name="PathFollow" type="PathFollow3D" parent="CinematicPath"]
+transform = Transform3D(-4.37096e-08, 0, 0.999949, 0, 0.999917, 0, -0.99996, 0, -4.37092e-08, -11.7611, 3.74274, 16.4618)
+loop = false
+
+[node name="Biomecinematic" type="Node" parent="." node_paths=PackedStringArray("cinematic_path")]
+script = ExtResource("52_xuwja")
+fishing_location = "lake"
+cinematic_path = NodePath("../CinematicPath")
+fade_duration = 0.0
 
 [editable path="UI/Touch"]
 [editable path="PlayerCamera/FishingRod"]

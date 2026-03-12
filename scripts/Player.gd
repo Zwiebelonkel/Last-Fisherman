@@ -20,6 +20,7 @@ var options: String = "res://scenes/OptionsControl.tscn"
 var caught_fish_species: Dictionary = {}  # ✅ Speichert fish_id: bool
 var used_story_items: Array = []
 var tutorial_seen: bool = false  # 🆕 Tutorial wurde angesehen
+var visited_biomes: Dictionary = {}
 
 # 🆕 Story Items für Vendor Unlock
 const REQUIRED_STORY_ITEMS = ["van", "opensign", "friteuse", "sushimesser"]
@@ -89,7 +90,42 @@ func activate_bait(rarity: String) -> bool:
 		save_game()
 		return true
 	return false
-
+	
+	
+const RARITY_TO_BAIT_KEY = {
+	0: "Common",     # RARITY.NORMAL
+	1: "Uncommon",   # RARITY.UNGEWOEHNLICH
+	2: "Rare",       # RARITY.SELTEN
+	3: "Epic",       # RARITY.EPISCH
+	4: "Legendary",  # RARITY.LEGENDAER
+	5: "Exotic",     # RARITY.EXOTISCH
+	6: "Common"      # RARITY.ANTIK → fallback auf Common
+}
+# 🆕 Fisch direkt in Köder seiner Rarity umwandeln und equippen
+func use_fish_as_bait(fish_data: Dictionary, inventory_index: int) -> bool:
+	var rarity_enum: int = fish_data.get("rarity", FishDB.RARITY.NORMAL)
+	
+	# Enum → Bait-Key
+	var rarity_string: String = RARITY_TO_BAIT_KEY.get(rarity_enum, "Common")
+	
+	if not bait_inventory.has(rarity_string):
+		push_error("❌ use_fish_as_bait: Unbekannter Bait-Key: " + rarity_string)
+		return false
+	
+	# Falls bereits ein Köder aktiv ist, zurück ins Inventar
+	if active_bait != "":
+		bait_inventory[active_bait] += 1
+		print("🔄 Aktiver Köder '%s' zurückgelegt" % active_bait)
+	
+	# Fisch aus Inventar entfernen
+	Inventory.remove_fish(inventory_index)
+	
+	# Direkt equippen
+	active_bait = rarity_string
+	
+	print("🎣 Fisch [Rarity %d] → Köder: %s (equipped)" % [rarity_enum, rarity_string])
+	save_game()
+	return true
 func deactivate_bait() -> void:
 	if active_bait != "":
 		bait_inventory[active_bait] += 1
@@ -343,7 +379,9 @@ func check_biome_progress(biome: String) -> void:
 		emit_signal("biome_progress", biome, 50)
 
 	# 100%
-	if percent >= 1.0:
+# 100%
+	if percent >= 1.0 and not completed_biomes.get(biome + "_full", false):
+		completed_biomes[biome + "_full"] = true
 		emit_signal("biome_progress", biome, 100)
 
 func get_biome_fish_list(biome: String) -> Array:
@@ -414,7 +452,8 @@ func save_game() -> void:
 		"used_story_items": used_story_items,
 		"bait_inventory": bait_inventory,
 		"active_bait": active_bait,
-		"tutorial_seen": tutorial_seen
+		"tutorial_seen": tutorial_seen,
+		"visited_biomes": visited_biomes,
 	}
 	
 	var file = FileAccess.open("user://savegame.dat", FileAccess.WRITE)
@@ -443,6 +482,7 @@ func load_game() -> void:
 		bait_inventory = save_data.get("bait_inventory", bait_inventory)
 		active_bait = save_data.get("active_bait", "")
 		tutorial_seen = save_data.get("tutorial_seen", false)  # 🆕 Tutorial-Status laden
+		visited_biomes = save_data.get("visited_biomes", {})
 
 func reset() -> void:
 	money = 0
@@ -472,6 +512,7 @@ func reset() -> void:
 	}
 	active_bait = ""
 	tutorial_seen = false
+	visited_biomes.clear()
 	
 	# 🆕 Reset Lore
 	LoreManager.reset()
@@ -485,3 +526,10 @@ func get_total_fish_caught() -> int:
 	for v in fish_catch_count.values():
 		total += v
 	return total
+	
+func has_visited_biome(biome: String) -> bool:
+	return visited_biomes.get(biome, false)
+
+func mark_biome_visited(biome: String) -> void:
+	visited_biomes[biome] = true
+	save_game()

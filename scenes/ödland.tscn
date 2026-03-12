@@ -1,4 +1,4 @@
-[gd_scene load_steps=71 format=3 uid="uid://bnj4irwko1m1j"]
+[gd_scene load_steps=73 format=3 uid="uid://bnj4irwko1m1j"]
 
 [ext_resource type="Shader" uid="uid://bso2ewb2ieq7x" path="res://shader/warp.gdshader" id="1_tx5p3"]
 [ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="2_acjgc"]
@@ -41,6 +41,7 @@
 [ext_resource type="AudioStream" uid="uid://c0e0t3u3yvvhg" path="res://sounds/rarity/legendary.mp3" id="34_p58cv"]
 [ext_resource type="AudioStream" uid="uid://qeh48myqvc8p" path="res://sounds/rarity/exotic.mp3" id="35_f6jba"]
 [ext_resource type="AudioStream" uid="uid://6a3ro0nq1u4" path="res://sounds/rarity/antique.mp3" id="36_8rul8"]
+[ext_resource type="Script" uid="uid://dk2ge7v8wh41k" path="res://scripts/Biomecinematic.gd" id="42_yqxbp"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_lbf82"]
 shader = ExtResource("1_tx5p3")
@@ -89,6 +90,8 @@ shader_parameter/moon_size = 0.018
 shader_parameter/cloud_speed = 0.015
 shader_parameter/cloud_scale = 0.545
 shader_parameter/cloud_density = 0.703
+shader_parameter/horizon_fog_strength = 0.55
+shader_parameter/horizon_fog_color = Color(0.08, 0.1, 0.2, 1)
 
 [sub_resource type="Sky" id="Sky_x537r"]
 sky_material = SubResource("ShaderMaterial_yqxbp")
@@ -189,7 +192,7 @@ var paused: bool = false
 var cast_power: float = 0.0
 var cast_power_speed: float = 3
 var max_cast_power: float = 1.0
-var min_distance: float = 25
+var min_distance: float = 40
 var max_distance: float = 60
 var last_cast_quality: float = 0.0  # Speichert die Qualität des letzten Wurfs
 
@@ -1030,6 +1033,7 @@ func end_catch_minigame(success: bool) -> void:
 	camera.start_screenshake(0.4,0.3)
 	if success:
 		var fish = current_fish
+		_launch_fish_sprite(fish)
 		Player.add_fish(fish, fishing_location)
 		Player.caught_fish_species[fish[\"id\"]] = true
 				# 🎵 Spiele Rarität-spezifischen Sound
@@ -1094,6 +1098,58 @@ func trigger_splash_burst() -> void:
 	
 	if splash and state == STATE_MINIGAME:
 		splash.emitting = false
+		
+func _launch_fish_sprite(fish_data: Dictionary) -> void:
+	var sprite := Sprite3D.new()
+	sprite.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+	sprite.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
+	sprite.pixel_size = 0.01
+	sprite.shaded = false
+	sprite.texture = FishDB.get_fish_icon(fish_data)
+	
+	var rarity_color := FishDB.get_rarity_color(fish_data)
+	sprite.modulate = rarity_color
+	
+	var rarity: int = fish_data.get(\"rarity\", FishDB.RARITY.NORMAL)
+	var size_map := {
+		FishDB.RARITY.NORMAL: 0.7, FishDB.RARITY.UNGEWOEHNLICH: 0.85,
+		FishDB.RARITY.SELTEN: 1.0, FishDB.RARITY.EPISCH: 1.2,
+		FishDB.RARITY.LEGENDAER: 1.5, FishDB.RARITY.EXOTISCH: 1.8,
+		FishDB.RARITY.ANTIK: 2.0
+	}
+	sprite.scale = Vector3.ONE * size_map.get(rarity, 1.0)
+	
+	# ✅ ERST add_child, DANN global_position setzen
+	get_tree().current_scene.add_child(sprite)
+	sprite.global_position = hook.global_position
+	
+	if rarity >= FishDB.RARITY.LEGENDAER:
+		var light := OmniLight3D.new()
+		light.light_color = rarity_color
+		light.light_energy = 2.0
+		light.omni_range = 1.5
+		sprite.add_child(light)
+	
+	var start_pos := hook.global_position
+	# ✅ Weniger hoch (1.2 statt 3.5)
+	var to_cam := (camera.global_position - hook.global_position).normalized()
+	var target_pos := start_pos + to_cam * 1.5 + Vector3(0, 0.8, 0)
+	
+	# ✅ Tween nach add_child erstellen
+	var tween := sprite.create_tween()
+	tween.set_parallel(true)
+	tween.tween_property(sprite, \"global_position\", target_pos, 0.7)\\
+		.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	tween.tween_property(sprite, \"rotation_degrees:y\", 360.0, 0.7)\\
+		.set_ease(Tween.EASE_OUT)
+	
+	await get_tree().create_timer(0.45).timeout
+	
+	var fade := sprite.create_tween()
+	fade.tween_property(sprite, \"modulate:a\", 0.0, 0.35)
+	await fade.finished
+	
+	sprite.queue_free()
 "
 
 [sub_resource type="Shader" id="Shader_muv0v"]
@@ -1922,6 +1978,13 @@ _data = {
 &"implode": SubResource("Animation_flfji")
 }
 
+[sub_resource type="Curve3D" id="Curve3D_uxuqp"]
+_data = {
+"points": PackedVector3Array(0, 0, 0, 0, 0, 0, -15.3012, 0, -6.94455, -1.095, 0, 0.35, 6.3, 0, 0, -10.0589, 4.38416, -10.3511, -1.435, 0, -3.05, 0.13, 0.105, 0.72, -2.58075, 6.36461, -7.89087, 0, 0, 0, 0, 0, 0, 1.7688e-08, 2.01583, -0.202327),
+"tilts": PackedFloat32Array(0, 0, 0, 0)
+}
+point_count = 4
+
 [node name="MainScene2" type="Node3D"]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
 
@@ -2250,6 +2313,19 @@ transform = Transform3D(2.46045, 0, -2.64165, 0, 3.61, 0, 2.64165, 0, 2.46045, -
 
 [node name="skyscaper" parent="." instance=ExtResource("26_acjgc")]
 transform = Transform3D(0.878719, -0.277194, 0.388609, 0.300839, 0.953675, 0, -0.370607, 0.116909, 0.921403, 66.4738, -12.1969, 68.7822)
+
+[node name="CinematicPath" type="Path3D" parent="."]
+curve = SubResource("Curve3D_uxuqp")
+
+[node name="PathFollow" type="PathFollow3D" parent="CinematicPath"]
+transform = Transform3D(0.544856, -0.481389, -0.686491, 1.49004e-08, 0.818676, -0.574116, 0.838472, 0.312816, 0.446096, -15.3012, 0, -6.94455)
+loop = false
+
+[node name="Biomecinematic" type="Node" parent="." node_paths=PackedStringArray("cinematic_path")]
+script = ExtResource("42_yqxbp")
+fishing_location = "desert"
+cinematic_path = NodePath("../CinematicPath")
+fade_duration = 0.0
 
 [editable path="UI/Touch"]
 [editable path="PlayerCamera/FishingRod"]

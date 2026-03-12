@@ -23,8 +23,9 @@ const DIALOG_DATA = {
 		"sprite": "res://assets/characters/stranger.png",  # 🔧 Pfad anpassen
 		"lines": {
 			"de": [
-				"Zwei Teile... du kommst der Sache näher.",
-				"Aber der Weg ist noch nicht zu Ende."
+				"Es gefällt mir nicht, dass du so tust als wäre nichts gewesen...",
+				"Es ist noch nicht zuende.",
+				"Ich beobachte dich."
 			],
 			"en": [
 				"Two pieces... you're getting closer.",
@@ -40,8 +41,8 @@ const DIALOG_DATA = {
 		"sprite": "res://assets/characters/stranger.png",  # 🔧 Pfad anpassen
 		"lines": {
 			"de": [
-				"Alle Teile... unglaublich.",
-				"Du hast es geschafft. Der Imbiss kann nun öffnen!"
+				"Du hast es vollbracht.",
+				"Ignoranter Narr. Was ist aus der Menschheit geworden?!"
 			],
 			"en": [
 				"All pieces... unbelievable.",

@@ -1,4 +1,4 @@
-[gd_scene load_steps=78 format=3 uid="uid://bru2npwxw6p10"]
+[gd_scene load_steps=79 format=3 uid="uid://bru2npwxw6p10"]
 
 [ext_resource type="Shader" uid="uid://c140kjbm2bot5" path="res://shader/buckshot.gdshader" id="1_u01n2"]
 [ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="2_8wf4g"]
@@ -15,8 +15,8 @@
 [ext_resource type="PackedScene" uid="uid://bgnalk1ruht4d" path="res://scenes/bait_hud.tscn" id="11_0fv5i"]
 [ext_resource type="Texture2D" uid="uid://cvllk03mhtybp" path="res://textures/723-normal.jpg" id="11_4uh7g"]
 [ext_resource type="PackedScene" uid="uid://ws4ms8iq4gg4" path="res://scenes/clock.tscn" id="12_7q4h0"]
-[ext_resource type="Texture2D" uid="uid://e7t33pnr13bp" path="res://textures/These-images-of-clouds-are-created-exclusively-using-Perlin-noise-It-simulates-the_Q320.jpg" id="12_fcatt"]
 [ext_resource type="Texture2D" uid="uid://d31603nl8y0gd" path="res://textures/Water_preview.jpgC878A51E-2B84-45CA-85CB-75E5BC88EEC8Large.jpg" id="12_len2l"]
+[ext_resource type="Shader" uid="uid://b8mxoacu7poqc" path="res://shader/sky.gdshader" id="13_7jawt"]
 [ext_resource type="Shader" uid="uid://cfsuhiaq15sgu" path="res://shader/outline.gdshader" id="13_fcatt"]
 [ext_resource type="Script" uid="uid://bymrcyid32xsp" path="res://scripts/line.gd" id="14_7q4h0"]
 [ext_resource type="PackedScene" uid="uid://brmbdno888s38" path="res://assets/tree.glb" id="15_lr7uy"]
@@ -45,6 +45,7 @@
 [ext_resource type="AudioStream" uid="uid://6a3ro0nq1u4" path="res://sounds/rarity/antique.mp3" id="35_6sryq"]
 [ext_resource type="AudioStream" uid="uid://c413rhml1623r" path="res://sounds/lake.mp3" id="36_eos0w"]
 [ext_resource type="PackedScene" uid="uid://i8dug7jmonh4" path="res://scenes/story4.tscn" id="37_7q4h0"]
+[ext_resource type="Script" uid="uid://dk2ge7v8wh41k" path="res://scripts/Biomecinematic.gd" id="46_7jawt"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_lvx2t"]
 shader = ExtResource("1_u01n2")
@@ -72,101 +73,24 @@ default_font = ExtResource("3_lhlip")
 [sub_resource type="Theme" id="Theme_2arrk"]
 default_font = ExtResource("3_lhlip")
 
-[sub_resource type="Shader" id="Shader_kqfxt"]
-code = "shader_type sky;
-
-group_uniforms Sky;
-/**
- * Use directional light for sun color
-*/
-uniform bool use_directional_light = true;
-uniform vec4 sun_color : source_color = vec4(1.0);
-uniform float sun_energy = 15.0;
-uniform vec4 cloud_color : source_color = vec4(0.296, 0.402, 0.521, 1.0);
-/**
- * Determines how much light the clouds absorb
-*/
-uniform float cloud_density = 5.0;
-/**
- * Depth of the parallax effect
-*/
-uniform float cloud_depth = 2.0;
-/**
- * Higher values give the clouds a heavier appearance
-*/
-uniform float cloud_sag = 2.0;
-uniform sampler2D noise_texture;
-uniform vec2 noise_tiling = vec2(1.0);
-uniform vec2 wind_speed = vec2(0.5);
-group_uniforms;
-
-group_uniforms Ground;
-uniform vec4 ground_bottom_color : source_color = vec4(0.2, 0.169, 0.133, 1.0);
-uniform float ground_curve : hint_range(0, 1) = 0.04;
-group_uniforms;
-
-uniform float exposure : hint_range(0, 128) = 1.0;
-
-// https://www.scratchapixel.com/lessons/3d-basic-rendering/minimal-ray-tracer-rendering-simple-shapes/ray-plane-and-ray-disk-intersection.html
-float ray_plane_intersection(vec3 origin, vec3 normal, vec3 ray_start, vec3 ray_dir) {
-	return dot(origin - ray_start, normal) / dot(ray_dir, normal);
-}
-
-float sample_height(vec2 uv) {
-	float height = texture(noise_texture, uv).r;
-	return pow(height, cloud_sag);
-}
-
-float beers_law(float absorption, float dist) {
-	return exp(-absorption * dist);
-}
-
-void sky() {
-	vec3 light_color = vec3(0.0);
-	if (use_directional_light)
-		light_color = LIGHT0_COLOR * LIGHT0_ENERGY * dot(LIGHT0_DIRECTION, vec3(0.0, 1.0, 0.0));
-	else
-		light_color = sun_color.rgb * sun_energy;
-
-	vec3 sky = cloud_color.rgb;
-
-	// Find view ray intersection with cloud layer
-	float t = ray_plane_intersection(vec3(0.0, 1.0, 0.0), vec3(0.0, -1.0, 0.0), vec3(0.0), EYEDIR);
-	if (t >= 0.0) {
-		vec3 wind = vec3(wind_speed.x, 0.0, wind_speed.y) * TIME * 0.1;
-		vec3 tiling = vec3(noise_tiling.x, 1.0, noise_tiling.y) * 0.2;
-		vec3 cloud_pos = EYEDIR * t * tiling + wind;
-
-		// Parallax mapping
-		float height = sample_height(cloud_pos.xz);
-		cloud_pos += EYEDIR * height * cloud_depth * 0.1;
-		height = sample_height(cloud_pos.xz);
-
-		// Attenuate light by view angle to simulate occlusion
-		float n_dot_v = dot(vec3(0.0, 1.0, 0.0), EYEDIR);
-		sky += light_color * beers_law(cloud_density, 1.0 - height * n_dot_v);
-	}
-	vec3 horizon = cloud_color.rgb + light_color * beers_law(cloud_density, 1.0);
-	vec3 ground = mix(horizon, ground_bottom_color.rgb, clamp(1.0 - pow(1.0 + EYEDIR.y, 1.0 / ground_curve), 0.0, 1.0));
-	COLOR = mix(ground, sky, step(0.0, EYEDIR.y)) * exposure;
-}
-"
-
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_cfq0f"]
-shader = SubResource("Shader_kqfxt")
-shader_parameter/use_directional_light = true
-shader_parameter/sun_color = Color(0.125911, 0.125911, 0.125911, 1)
-shader_parameter/sun_energy = -0.36
-shader_parameter/cloud_color = Color(0.151276, 0.151276, 0.151276, 1)
-shader_parameter/cloud_density = 3.98
-shader_parameter/cloud_depth = 0.165
-shader_parameter/cloud_sag = 2.03
-shader_parameter/noise_texture = ExtResource("12_fcatt")
-shader_parameter/noise_tiling = Vector2(1, 1)
-shader_parameter/wind_speed = Vector2(0.01, 0.31)
-shader_parameter/ground_bottom_color = Color(0, 0, 0, 1)
-shader_parameter/ground_curve = 0.04
-shader_parameter/exposure = 128.0
+shader = ExtResource("13_7jawt")
+shader_parameter/time_of_day = 0.5
+shader_parameter/day_zenith = Color(0.18, 0.48, 0.9, 1)
+shader_parameter/day_horizon = Color(0.72, 0.9, 1, 1)
+shader_parameter/sunset_zenith = Color(0.25, 0.12, 0.28, 1)
+shader_parameter/sunset_horizon = Color(1, 0.45, 0.1, 1)
+shader_parameter/sunset_glow = Color(1, 0.7, 0.2, 1)
+shader_parameter/night_zenith = Color(0.01, 0.02, 0.08, 1)
+shader_parameter/night_horizon = Color(0.04, 0.06, 0.18, 1)
+shader_parameter/sun_size = 0.025
+shader_parameter/sun_glow_power = 4.5
+shader_parameter/moon_size = 0.018
+shader_parameter/cloud_speed = 0.015
+shader_parameter/cloud_scale = 1.1
+shader_parameter/cloud_density = 0.6
+shader_parameter/horizon_fog_strength = 0.55
+shader_parameter/horizon_fog_color = Color(0.08, 0.1, 0.2, 1)
 
 [sub_resource type="Sky" id="Sky_x537r"]
 sky_material = SubResource("ShaderMaterial_cfq0f")
@@ -174,7 +98,7 @@ radiance_size = 0
 
 [sub_resource type="Environment" id="Environment_di3lw"]
 background_mode = 2
-background_energy_multiplier = 0.15
+background_energy_multiplier = 0.96
 sky = SubResource("Sky_x537r")
 glow_enabled = true
 glow_intensity = 1.06
@@ -239,6 +163,30 @@ tracks/3/keys = {
 "update": 0,
 "values": [128.0]
 }
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath(".:environment:sky:sky_material:shader_parameter/time_of_day")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.5]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath(".:environment:sky:sky_material:shader_parameter/cloud_density")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.6]
+}
 
 [sub_resource type="Animation" id="Animation_bjond"]
 resource_name = "circle"
@@ -291,6 +239,30 @@ tracks/3/keys = {
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
 "values": [0.0, 128.0, 0.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath(".:environment:sky:sky_material:shader_parameter/time_of_day")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 44.941, 60),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [0.5, 1.0, 0.5]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath(".:environment:sky:sky_material:shader_parameter/cloud_density")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0, 44.7069, 60),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [0.651, 0.557, 0.651]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_soql2"]
@@ -1219,6 +1191,7 @@ func end_catch_minigame(success: bool) -> void:
 	camera.start_screenshake(0.4,0.3)
 	if success:
 		var fish = current_fish
+		_launch_fish_sprite(fish)
 		Player.add_fish(fish, fishing_location)
 		Player.caught_fish_species[fish[\"id\"]] = true
 		# 🎵 Spiele Rarität-spezifischen Sound
@@ -1282,6 +1255,58 @@ func trigger_splash_burst() -> void:
 	
 	if splash and state == STATE_MINIGAME:
 		splash.emitting = false
+		
+func _launch_fish_sprite(fish_data: Dictionary) -> void:
+	var sprite := Sprite3D.new()
+	sprite.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+	sprite.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
+	sprite.pixel_size = 0.01
+	sprite.shaded = false
+	sprite.texture = FishDB.get_fish_icon(fish_data)
+	
+	var rarity_color := FishDB.get_rarity_color(fish_data)
+	sprite.modulate = rarity_color
+	
+	var rarity: int = fish_data.get(\"rarity\", FishDB.RARITY.NORMAL)
+	var size_map := {
+		FishDB.RARITY.NORMAL: 0.7, FishDB.RARITY.UNGEWOEHNLICH: 0.85,
+		FishDB.RARITY.SELTEN: 1.0, FishDB.RARITY.EPISCH: 1.2,
+		FishDB.RARITY.LEGENDAER: 1.5, FishDB.RARITY.EXOTISCH: 1.8,
+		FishDB.RARITY.ANTIK: 2.0
+	}
+	sprite.scale = Vector3.ONE * size_map.get(rarity, 1.0)
+	
+	# ✅ ERST add_child, DANN global_position setzen
+	get_tree().current_scene.add_child(sprite)
+	sprite.global_position = hook.global_position
+	
+	if rarity >= FishDB.RARITY.LEGENDAER:
+		var light := OmniLight3D.new()
+		light.light_color = rarity_color
+		light.light_energy = 2.0
+		light.omni_range = 1.5
+		sprite.add_child(light)
+	
+	var start_pos := hook.global_position
+	# ✅ Weniger hoch (1.2 statt 3.5)
+	var to_cam := (camera.global_position - hook.global_position).normalized()
+	var target_pos := start_pos + to_cam * 1.5 + Vector3(0, 0.8, 0)
+	
+	# ✅ Tween nach add_child erstellen
+	var tween := sprite.create_tween()
+	tween.set_parallel(true)
+	tween.tween_property(sprite, \"global_position\", target_pos, 0.7)\\
+		.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	tween.tween_property(sprite, \"rotation_degrees:y\", 360.0, 0.7)\\
+		.set_ease(Tween.EASE_OUT)
+	
+	await get_tree().create_timer(0.45).timeout
+	
+	var fade := sprite.create_tween()
+	fade.tween_property(sprite, \"modulate:a\", 0.0, 0.35)
+	await fade.finished
+	
+	sprite.queue_free()
 "
 
 [sub_resource type="Shader" id="Shader_muv0v"]
@@ -1900,6 +1925,13 @@ particles_anim_loop = false
 material = SubResource("StandardMaterial3D_len2l")
 size = Vector2(0.5, 0.5)
 
+[sub_resource type="Curve3D" id="Curve3D_jyv4r"]
+_data = {
+"points": PackedVector3Array(0, 0, 0, -3.795, 0, -8.69, 23.0493, -4.85, -1.2188, 0, 0, 0, -0.29, -0.445, -1.215, 14.93, -4.33591, -11.0463, 0, 0, 0, -4.645, 0, 0.37, 4.72362, -3.08515, -10.4609, 0, 0, 0, 0, 0, 0, 0.0520447, -3.13619, -1.92083),
+"tilts": PackedFloat32Array(0, 0, 0, 0)
+}
+point_count = 4
+
 [node name="MainScene3" type="Node3D"]
 
 [node name="Filter" type="CanvasLayer" parent="."]
@@ -2272,6 +2304,20 @@ draw_pass_1 = SubResource("QuadMesh_fcatt")
 
 [node name="knife" parent="." instance=ExtResource("37_7q4h0")]
 transform = Transform3D(0.35, 0, 0, 0, 0.212426, -0.278164, 0, 0.278164, 0.212426, 14.3321, 2.09544, -6.71958)
+
+[node name="CinematicPath" type="Path3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0698357, 5.20745, 1.6984)
+curve = SubResource("Curve3D_jyv4r")
+
+[node name="PathFollow" type="PathFollow3D" parent="CinematicPath"]
+transform = Transform3D(0.916376, 0, 0.400184, 0, 0.999914, 0, -0.400189, 0, 0.916364, 23.0493, -4.85, -1.2188)
+loop = false
+
+[node name="Biomecinematic" type="Node" parent="." node_paths=PackedStringArray("cinematic_path")]
+script = ExtResource("46_7jawt")
+fishing_location = "forest"
+cinematic_path = NodePath("../CinematicPath")
+fade_duration = 0.0
 
 [editable path="UI/Touch"]
 [editable path="PlayerCamera/FishingRod"]

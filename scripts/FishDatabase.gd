@@ -310,6 +310,17 @@ var FISH_LAKE = [
 		"weight_max": 15.0
 	},
 	{
+		"id": "ANLEITUNG",
+		"name_key": "FISH_LAKE_ANLEITUNG_NAME",
+		"description_key": "FISH_LAKE_ANLEITUNG_DESC",
+		"science_key": "FISH_LAKE_ANLEITUNG_SCIENCE",
+		"rarity": RARITY.LEGENDAER,
+		"base_value": 50,
+		"icon": "res://assets/fish/Anleitung.png",
+		"weight_min": 0.05,
+		"weight_max": 0.5
+	},
+	{
 		"id": "GEISTERFORELLE",
 		"name_key": "FISH_LAKE_GEISTERFORELLE_NAME",
 		"description_key": "FISH_LAKE_GEISTERFORELLE_DESC",

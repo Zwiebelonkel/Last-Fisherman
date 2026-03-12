@@ -280,6 +280,10 @@ FISH_LAKE_KARPENKOENIGIN_NAME,Karpfenkönigin,Carp Queen
 FISH_LAKE_KARPENKOENIGIN_DESC,"Erwartet, dass du kniest. Und das zu Recht.","Expects you to kneel. And rightfully so."
 FISH_LAKE_KARPENKOENIGIN_SCIENCE,"Große Karpfen entwickeln komplexe soziale Hierarchien, in denen dominante Tiere bevorzugte Futterplätze erhalten.","Large carp develop complex social hierarchies where dominant individuals control preferred feeding spots."
 
+FISH_LAKE_ANLEITUNG_NAME,Mysteriöse Anleitung,Mysterious Handbook
+FISH_LAKE_ANLEITUNG_DESC,"Es wurde unterzeichnet. Das muss also korrekt sein.","It was signed. That must mean it's correct."
+FISH_LAKE_ANLEITUNG_SCIENCE,"Anleitung: Walsack spannen und im Meereswind trocknen. In Kiltform schneiden und Falten legen. Kokosöl einreiben und über Nacht ruhen lassen. Flamingo-Samen gegen den Fischgeruch aufsprühen. Innenseite verstärken, Riemen anbringen, Ränder versiegeln. Zum Schluss im Wind prüfen.","Manual: Stretch whale sack and dry it in ocean wind. Cut into kilt shape and form pleats. Rub in coconut oil and let it rest overnight. Spray flamingo semen to remove the fish smell. Reinforce the inside, attach straps, seal the edges, and test it in the wind."
+
 FISH_LAKE_GEISTERFORELLE_NAME,Geisterforelle,Ghost Trout
 FISH_LAKE_GEISTERFORELLE_DESC,"Ist tot. Schwimmt trotzdem. Frag nicht.","It's dead. Still swimming. Don't ask."
 FISH_LAKE_GEISTERFORELLE_SCIENCE,"Forellen reagieren extrem empfindlich auf Sauerstoffgehalt im Wasser – manche Arten benötigen nahezu Trinkwasserqualität.","Trout are extremely sensitive to oxygen levels – some species require near drinking-water quality."
@@ -616,3 +620,6 @@ FISH_OCEAN_STEAM_PLAYER_SCIENCE,Homo Sapiens Digitalis - Eine seltene Spezies, d
 FISH_OCEAN_STEAM_PLAYER_STORY,Du starrst auf den gefangenen Fisch und erkennst dein eigenes Gesicht im eisigen Wasser. Ein Moment der Selbsterkenntnis - oder der Wahnsinn des langen Angelns? Die Reise endet hier, wo sie begann: Bei dir selbst.
 
 ANY_KEY,[Beliebige Taste],[Any Key]
+
+FISH_ACTION_SELL, Fisch verkaufen, Sell fish
+FISH_ACTION_USE_AS_BAIT, Als Köder nutzen, Use as bait

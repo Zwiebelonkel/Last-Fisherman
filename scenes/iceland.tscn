@@ -1,4 +1,4 @@
-[gd_scene load_steps=77 format=4 uid="uid://yrer5qgxgwvb"]
+[gd_scene load_steps=79 format=4 uid="uid://yrer5qgxgwvb"]
 
 [ext_resource type="Shader" uid="uid://c140kjbm2bot5" path="res://shader/buckshot.gdshader" id="1_mxpyu"]
 [ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="3_ttydn"]
@@ -42,6 +42,7 @@
 [ext_resource type="AudioStream" uid="uid://qeh48myqvc8p" path="res://sounds/rarity/exotic.mp3" id="33_ofk2b"]
 [ext_resource type="AudioStream" uid="uid://6a3ro0nq1u4" path="res://sounds/rarity/antique.mp3" id="34_5ki3x"]
 [ext_resource type="AudioStream" uid="uid://nvrc6arpsx6n" path="res://sounds/ocean.mp3" id="37_fv5f2"]
+[ext_resource type="Script" uid="uid://dk2ge7v8wh41k" path="res://scripts/Biomecinematic.gd" id="43_fv5f2"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1wiy7"]
 shader = ExtResource("1_mxpyu")
@@ -85,18 +86,30 @@ uniform vec4 sunset_horizon : source_color = vec4(1.00, 0.45, 0.10, 1.0);
 uniform vec4 sunset_glow    : source_color = vec4(1.00, 0.70, 0.20, 1.0);
 
 // Nacht-Farben
-uniform vec4 night_zenith  : source_color = vec4(0.01, 0.01, 0.06, 1.0);
-uniform vec4 night_horizon : source_color = vec4(0.03, 0.04, 0.12, 1.0);
+uniform vec4 night_zenith  : source_color = vec4(0.01, 0.02, 0.08, 1.0);
+uniform vec4 night_horizon : source_color = vec4(0.04, 0.06, 0.18, 1.0);
 
 // Sonne & Mond
 uniform float sun_size       : hint_range(0.001, 0.15) = 0.025;
 uniform float sun_glow_power : hint_range(1.0, 16.0)   = 4.5;
 uniform float moon_size      : hint_range(0.001, 0.1)  = 0.018;
 
+// Sonnenbahn
+// sun_angle_offset: dreht den Aufgangspunkt (0=Osten, 0.25=Süden, 0.5=Westen, 0.75=Norden)
+uniform float sun_angle_offset : hint_range(0.0, 1.0)  = 0.0;
+// sun_zenith_height: wie hoch die Sonne steigt (0.5=flach/polar, 1.0=senkrecht/tropisch)
+uniform float sun_zenith_height : hint_range(0.2, 1.5) = 0.8;
+// sun_north_south: Versatz der Bahn nach Nord/Süd (-1=weit nördlich, 1=weit südlich)
+uniform float sun_north_south : hint_range(-1.0, 1.0)  = -0.6;
+
 // Wolken
 uniform float cloud_speed   : hint_range(0.0, 1.0) = 0.015;
 uniform float cloud_scale   : hint_range(0.1, 4.0) = 1.1;
 uniform float cloud_density : hint_range(0.0, 1.0) = 0.50;
+
+// Nebel am Horizont
+uniform float horizon_fog_strength : hint_range(0.0, 1.0) = 0.55;
+uniform vec4  horizon_fog_color    : source_color = vec4(0.08, 0.10, 0.20, 1.0);
 
 // ─────────────────────────────────────────────
 // Noise
@@ -107,13 +120,19 @@ float hash(vec2 p) {
     return fract(p.x * p.y);
 }
 
+float hash3(vec3 p) {
+    p = fract(p * vec3(127.1, 311.7, 74.7));
+    p += dot(p, p + 19.19);
+    return fract(p.x * p.y + p.y * p.z);
+}
+
 float vnoise(vec2 p) {
     vec2 i = floor(p);
     vec2 f = fract(p);
     vec2 u = f * f * (3.0 - 2.0 * f);
     return mix(
-        mix(hash(i),             hash(i + vec2(1,0)), u.x),
-        mix(hash(i+vec2(0,1)),   hash(i + vec2(1,1)), u.x), u.y);
+        mix(hash(i),           hash(i + vec2(1,0)), u.x),
+        mix(hash(i+vec2(0,1)), hash(i + vec2(1,1)), u.x), u.y);
 }
 
 float fbm(vec2 p) {
@@ -131,70 +150,143 @@ float cloud_shape(vec2 uv, float t, float offset) {
 }
 
 // ─────────────────────────────────────────────
+// Sterne: mehrere Größenklassen + Farbtönung
+// ─────────────────────────────────────────────
+vec3 star_layer(vec2 uv, float grid, float threshold, float size, vec3 tint, float time_offset) {
+    vec2 gv  = fract(uv * grid) - 0.5;
+    vec2 id  = floor(uv * grid);
+    float rnd = hash(id);
+    if (rnd < threshold) return vec3(0.0);
+
+    // Twinkle
+    float twinkle = 0.7 + 0.3 * sin(TIME * (1.5 + rnd * 3.0) + rnd * 47.3 + time_offset);
+    // Weicher Punkt
+    float d = length(gv);
+    float brightness = smoothstep(size, 0.0, d) * twinkle;
+
+    // Leichte Zufallsfärbung (warmweiß bis kaltblau)
+    vec3 color = mix(vec3(1.0, 0.85, 0.6), vec3(0.7, 0.85, 1.0), hash(id + vec2(7.3, 2.1)));
+    return tint * color * brightness * (0.6 + rnd * 0.8);
+}
+
+// ─────────────────────────────────────────────
 // SKY
 // ─────────────────────────────────────────────
 void sky() {
     vec3 dir = normalize(EYEDIR);
 
-    // time_of_day: 0=Nacht, 0.25=Sonnenaufgang, 0.5=Mittag, 0.75=Sonnenuntergang, 1=Nacht
     float tod = time_of_day;
 
-    // Sonne dreht sich über den Himmel (Y-Kurve)
-    float sun_angle = tod * TAU;
-    vec3 sun_dir = normalize(vec3(sin(sun_angle), cos(sun_angle) * 0.8, -0.6));
-
-    // Mond ist gegenüber der Sonne
+    float sun_angle = tod * TAU + sun_angle_offset * TAU;
+    vec3 sun_dir = normalize(vec3(sin(sun_angle), cos(sun_angle) * sun_zenith_height, sun_north_south));
     vec3 moon_dir = -sun_dir;
 
-    // Wie hoch steht die Sonne? 0=Horizont/unter, 1=Zenit
     float sun_height = clamp(sun_dir.y, 0.0, 1.0);
-    float sun_below  = clamp(-sun_dir.y, 0.0, 1.0); // Sonne unter Horizont = Nacht
+    float sun_below  = clamp(-sun_dir.y, 0.0, 1.0);
 
-    // Tageszeit-Phasen
-    float is_day     = smoothstep(0.0, 0.15, sun_height);
-    float is_night   = smoothstep(0.0, 0.15, sun_below);
-    float is_sunset  = 1.0 - smoothstep(0.0, 0.22, abs(sun_dir.y)); // nahe Horizont
+    float is_day    = smoothstep(0.0, 0.15, sun_height);
+    float is_night  = smoothstep(0.0, 0.15, sun_below);
+    float is_sunset = 1.0 - smoothstep(0.0, 0.22, abs(sun_dir.y));
 
     // ── Himmels-Gradient ──────────────────────────────────────────
     float up = clamp(dir.y, 0.0, 1.0);
 
-    vec3 c_zenith  = mix(mix(night_zenith.rgb,  sunset_zenith.rgb,  is_sunset), day_zenith.rgb,  is_day);
-    vec3 c_horizon = mix(mix(night_horizon.rgb, sunset_horizon.rgb, is_sunset), day_horizon.rgb, is_day);
+    // Nachts: tiefes Blau-Schwarz mit etwas mehr Tiefe
+    vec3 night_z = mix(night_zenith.rgb, vec3(0.005, 0.008, 0.04), 0.4);
+    vec3 night_h = night_horizon.rgb;
 
-    vec3 sky_col = mix(c_horizon, c_zenith, smoothstep(0.0, 0.6, up));
+    vec3 c_zenith  = mix(mix(night_z,           sunset_zenith.rgb,  is_sunset), day_zenith.rgb,  is_day);
+    vec3 c_horizon = mix(mix(night_h,            sunset_horizon.rgb, is_sunset), day_horizon.rgb, is_day);
 
-    // Sonnenuntergangs-Glow am Horizont (Richtung Sonne)
+    // Weicherer Gradient-Übergang (stärkere Kurve nachts)
+    float grad_curve = mix(0.5, 0.35, is_night);
+    vec3 sky_col = mix(c_horizon, c_zenith, smoothstep(0.0, grad_curve + 0.25, up));
+
+    // ── Horizont-Nebel (Tag & Nacht) ──────────────────────────────
+    // Blendet nahe am Horizont (dir.y ≈ 0) einen Nebelschleier ein
+    vec3 fog_col_day   = mix(day_horizon.rgb, vec3(0.8, 0.88, 0.95), 0.3);
+    vec3 fog_col_night = horizon_fog_color.rgb;
+    vec3 fog_col       = mix(fog_col_night, fog_col_day, is_day);
+
+    float fog_band = smoothstep(0.18, -0.04, dir.y); // nur nahe Horizont
+    sky_col = mix(sky_col, fog_col, fog_band * horizon_fog_strength);
+
+    // Sonnenuntergangs-Glow am Horizont
     float sun_horiz_dot = dot(dir, sun_dir) * 0.5 + 0.5;
     sky_col += sunset_glow.rgb * pow(sun_horiz_dot, 8.0) * is_sunset * 0.8 * (1.0 - up * 2.0);
 
-    // ── Sterne (nur nachts) ───────────────────────────────────────
+    // ── Atmosphärische Streuung am Nachthorizont ──────────────────
+    // Mondschein-Aufhellung am Horizont
+    float moon_horiz = dot(dir, vec3(moon_dir.x, 0.0, moon_dir.z));
+    float moon_scatter = pow(clamp(moon_horiz * 0.5 + 0.5, 0.0, 1.0), 6.0);
+    sky_col += vec3(0.05, 0.07, 0.18) * moon_scatter * is_night * (1.0 - up) * 0.6;
+
+    // ── Sterne ───────────────────────────────────────────────────
     float star_brightness = is_night * (1.0 - is_sunset * 2.0);
-    if (dir.y > 0.0) {
-        vec2 star_uv = dir.xz / max(dir.y, 0.001) * 0.5;
-        float s1 = pow(clamp(hash(floor(star_uv * 60.0)), 0.0, 1.0), 120.0);
-        float s2 = pow(clamp(hash(floor(star_uv * 120.0) + vec2(13.7)), 0.0, 1.0), 200.0);
-        float twinkle = sin(TIME * 2.0 + hash(floor(star_uv * 60.0)) * 10.0) * 0.3 + 0.7;
-        sky_col += vec3(0.9, 0.92, 1.0) * (s1 + s2 * 0.5) * star_brightness * twinkle * 3.0;
+    star_brightness = clamp(star_brightness, 0.0, 1.0);
+
+    if (dir.y > -0.05 && star_brightness > 0.01) {
+        // Projektion: gleichmäßig über die Himmelskugel
+        float y_safe = max(dir.y, 0.001);
+        vec2 star_uv = dir.xz / (y_safe + 0.3) * 0.6;
+
+        // Schicht 1: Viele kleine, schwache Sterne
+        vec3 s1 = star_layer(star_uv, 80.0,  0.94, 0.018, vec3(0.6), 0.0);
+        // Schicht 2: Mittelgroße Sterne
+        vec3 s2 = star_layer(star_uv, 40.0,  0.88, 0.028, vec3(0.9), 1.7);
+        // Schicht 3: Helle Sterne (wenige)
+        vec3 s3 = star_layer(star_uv, 18.0,  0.85, 0.04,  vec3(1.4), 3.3);
+        // Schicht 4: Sehr helle Einzelsterne
+        vec3 s4 = star_layer(star_uv, 9.0,   0.92, 0.055, vec3(2.2), 6.1);
+
+        // Sterne verblassen nahe Horizont (atmosphärische Extinktion)
+        float horizon_fade = smoothstep(0.0, 0.12, dir.y);
+        vec3 all_stars = (s1 + s2 + s3 + s4) * horizon_fade;
+
+        sky_col += all_stars * star_brightness;
     }
 
-    // ── Milchstraße-Andeutung (nachts) ───────────────────────────
-    if (dir.y > 0.05) {
-        vec2 mw_uv = dir.xz / dir.y * 0.3;
-        float mw = fbm(mw_uv * 0.4 + vec2(1.3, 2.7)) * 0.06 * star_brightness;
-        sky_col += vec3(0.5, 0.55, 0.8) * mw;
+    // ── Milchstraße ───────────────────────────────────────────────
+    if (dir.y > 0.0 && star_brightness > 0.01) {
+        float y_safe = max(dir.y, 0.001);
+        vec2 mw_uv = dir.xz / y_safe * 0.25;
+
+        // Milchstraßen-Band: breites fbm-Band
+        float mw_band = fbm(mw_uv * 0.3 + vec2(2.1, 0.7));
+        float mw_thin = fbm(mw_uv * 0.7 + vec2(0.4, 3.2));
+
+        // Band-Maske: konzentriert sich in einem Bogen
+        float band_mask = exp(-pow(dir.x * 1.5 + 0.3, 2.0) * 2.0);
+        band_mask *= smoothstep(0.02, 0.2, dir.y);
+
+        float mw = (mw_band * 0.7 + mw_thin * 0.3) * band_mask;
+
+        // Farbige Milchstraße: bläulich-lila Kern, warm außen
+        vec3 mw_core  = vec3(0.30, 0.35, 0.60);
+        vec3 mw_outer = vec3(0.15, 0.18, 0.35);
+        vec3 mw_col   = mix(mw_outer, mw_core, mw_band);
+
+        sky_col += mw_col * mw * 0.18 * star_brightness;
+
+        // Extra: helle Kerndichte als Leuchten
+        float mw_bright = max(mw - 0.5, 0.0) * 2.0;
+        sky_col += vec3(0.4, 0.42, 0.7) * mw_bright * band_mask * 0.12 * star_brightness;
     }
+
+    // ── Nachts: subtile Himmelsaufhellung (Airglow) ──────────────
+    // In der Realität leuchtet der Nachthimmel leicht durch Airglow
+    float airglow = smoothstep(0.0, 1.0, up) * 0.025 * is_night;
+    sky_col += vec3(0.1, 0.15, 0.35) * airglow;
 
     // ── Sonne ─────────────────────────────────────────────────────
     float sun_dot  = dot(dir, sun_dir);
     float sun_disc = step(1.0 - sun_size, sun_dot);
 
-    // Glow-Ringe (harte Stufen für leichten Stylize-Look)
     float g1 = step(1.0 - sun_size * 3.0,  sun_dot) * 0.25;
     float g2 = step(1.0 - sun_size * 8.0,  sun_dot) * 0.12;
     float g3 = step(1.0 - sun_size * 18.0, sun_dot) * 0.06;
     float g4 = pow(clamp(sun_dot, 0.0, 1.0), sun_glow_power) * 0.5;
 
-    // Sonnenfarbe: weiß-gelb bei Tag, orange-rot bei Untergang
     vec3 sun_col = mix(vec3(1.0, 0.55, 0.1), vec3(1.0, 0.97, 0.85), sun_height);
     sky_col += sun_col * (sun_disc + g1 + g2 + g3 + g4) * (1.0 - is_night);
 
@@ -203,12 +295,22 @@ void sky() {
     float moon_disc = step(1.0 - moon_size, moon_dot);
     float moon_glow = step(1.0 - moon_size * 5.0, moon_dot) * 0.08;
     float moon_atm  = pow(clamp(moon_dot, 0.0, 1.0), 12.0) * 0.15;
-    // Mondsichel via zweiter Kreis-Subtraktion
+
+    // Weicheres Mondleuchten (atmosphärischer Halo)
+    float moon_halo = pow(clamp(moon_dot, 0.0, 1.0), 60.0) * 0.4;
+    sky_col += vec3(0.55, 0.60, 0.75) * moon_halo * is_night;
+
+    // Mondsichel
     vec3 moon_offset_dir = normalize(moon_dir + vec3(moon_size * 3.5, moon_size * 1.0, 0.0));
-    float moon_cut = step(1.0 - moon_size * 1.1, dot(dir, moon_offset_dir));
+    float moon_cut   = step(1.0 - moon_size * 1.1, dot(dir, moon_offset_dir));
     float moon_shape = clamp(moon_disc - moon_cut, 0.0, 1.0);
 
-    sky_col += vec3(0.92, 0.94, 1.0) * (moon_shape * 1.8 + moon_glow + moon_atm) * is_night;
+    // Mondfarbe: leicht gelblich-weiß
+    vec3 moon_col = mix(vec3(0.85, 0.88, 0.95), vec3(0.95, 0.92, 0.80), 0.3);
+    sky_col += moon_col * (moon_shape * 2.0 + moon_glow + moon_atm) * is_night;
+
+    // Mond beleuchtet Wolken/Umgebung leicht
+    sky_col += vec3(0.08, 0.09, 0.18) * moon_shape * is_night * (1.0 - up * 0.5);
 
     // ── Wolken ────────────────────────────────────────────────────
     float cloud_mask = smoothstep(-0.02, 0.15, dir.y);
@@ -230,22 +332,23 @@ void sky() {
     clouds = clamp(clouds, 0.0, 1.0) * cloud_mask;
     shads  = clamp(shads,  0.0, 1.0) * cloud_mask;
 
-    // Wolkenfarbe abhängig von Tageszeit
     vec3 cloud_day    = vec3(1.0, 0.98, 0.96);
     vec3 cloud_sunset = vec3(1.0, 0.60, 0.25);
-    vec3 cloud_night  = vec3(0.12, 0.14, 0.22);
+    // Nachts: Wolken vom Mond leicht beleuchtet (silbrig-blau)
+    vec3 cloud_night  = mix(vec3(0.05, 0.06, 0.12), vec3(0.18, 0.20, 0.30), moon_dot * 0.5 + 0.5) * is_night;
     vec3 cloud_bot_d  = vec3(0.72, 0.76, 0.82);
-    vec3 cloud_bot_n  = vec3(0.05, 0.06, 0.10);
+    vec3 cloud_bot_n  = vec3(0.04, 0.05, 0.10);
 
     vec3 cloud_top = mix(mix(cloud_night, cloud_sunset, is_sunset), cloud_day, is_day);
     vec3 cloud_bot = mix(cloud_bot_n, cloud_bot_d, is_day);
 
     vec3 cloud_col = mix(cloud_bot, cloud_top, clamp(dir.y * 3.0, 0.0, 1.0));
-    sky_col = mix(sky_col, cloud_col,      clouds);
+    sky_col = mix(sky_col, cloud_col,       clouds);
     sky_col = mix(sky_col, cloud_bot * 0.6, shads * (1.0 - clouds));
 
-    // ── Posterize (leicht, für stilisierten Look) ─────────────────
-    float ps = 18.0; // mehr Stufen als Pixel-Shader → weicher
+    // ── Posterize ─────────────────────────────────────────────────
+    // Nachts weniger Posterize → weichere Farbverläufe
+    float ps = mix(10.0, 18.0, is_day);
     float r = floor(sky_col.r * ps) / ps;
     float g = floor(sky_col.g * ps) / ps;
     float b = floor(sky_col.b * ps) / ps;
@@ -267,9 +370,14 @@ shader_parameter/night_horizon = Color(0.588235, 0.290196, 0.643137, 1)
 shader_parameter/sun_size = 0.013
 shader_parameter/sun_glow_power = 6.362
 shader_parameter/moon_size = 0.018
+shader_parameter/sun_angle_offset = 0.0
+shader_parameter/sun_zenith_height = 0.8
+shader_parameter/sun_north_south = -0.6
 shader_parameter/cloud_speed = 0.186
 shader_parameter/cloud_scale = 1.799
 shader_parameter/cloud_density = 0.524
+shader_parameter/horizon_fog_strength = 0.55
+shader_parameter/horizon_fog_color = Color(0.08, 0.1, 0.2, 1)
 
 [sub_resource type="Sky" id="Sky_x537r"]
 sky_material = SubResource("ShaderMaterial_55u6b")
@@ -1173,6 +1281,7 @@ func end_catch_minigame(success: bool) -> void:
 	camera.start_screenshake(0.4,0.3)
 	if success:
 		var fish = current_fish
+		_launch_fish_sprite(fish)
 		Player.add_fish(fish, fishing_location)
 		Player.caught_fish_species[fish[\"id\"]] = true
 		# 🎵 Spiele Rarität-spezifischen Sound
@@ -1237,6 +1346,58 @@ func trigger_splash_burst() -> void:
 	
 	if splash and state == STATE_MINIGAME:
 		splash.emitting = false
+		
+func _launch_fish_sprite(fish_data: Dictionary) -> void:
+	var sprite := Sprite3D.new()
+	sprite.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+	sprite.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
+	sprite.pixel_size = 0.01
+	sprite.shaded = false
+	sprite.texture = FishDB.get_fish_icon(fish_data)
+	
+	var rarity_color := FishDB.get_rarity_color(fish_data)
+	sprite.modulate = rarity_color
+	
+	var rarity: int = fish_data.get(\"rarity\", FishDB.RARITY.NORMAL)
+	var size_map := {
+		FishDB.RARITY.NORMAL: 0.7, FishDB.RARITY.UNGEWOEHNLICH: 0.85,
+		FishDB.RARITY.SELTEN: 1.0, FishDB.RARITY.EPISCH: 1.2,
+		FishDB.RARITY.LEGENDAER: 1.5, FishDB.RARITY.EXOTISCH: 1.8,
+		FishDB.RARITY.ANTIK: 2.0
+	}
+	sprite.scale = Vector3.ONE * size_map.get(rarity, 1.0)
+	
+	# ✅ ERST add_child, DANN global_position setzen
+	get_tree().current_scene.add_child(sprite)
+	sprite.global_position = hook.global_position
+	
+	if rarity >= FishDB.RARITY.LEGENDAER:
+		var light := OmniLight3D.new()
+		light.light_color = rarity_color
+		light.light_energy = 2.0
+		light.omni_range = 1.5
+		sprite.add_child(light)
+	
+	var start_pos := hook.global_position
+	# ✅ Weniger hoch (1.2 statt 3.5)
+	var to_cam := (camera.global_position - hook.global_position).normalized()
+	var target_pos := start_pos + to_cam * 1.5 + Vector3(0, 0.8, 0)
+	
+	# ✅ Tween nach add_child erstellen
+	var tween := sprite.create_tween()
+	tween.set_parallel(true)
+	tween.tween_property(sprite, \"global_position\", target_pos, 0.7)\\
+		.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	tween.tween_property(sprite, \"rotation_degrees:y\", 360.0, 0.7)\\
+		.set_ease(Tween.EASE_OUT)
+	
+	await get_tree().create_timer(0.45).timeout
+	
+	var fade := sprite.create_tween()
+	fade.tween_property(sprite, \"modulate:a\", 0.0, 0.35)
+	await fade.finished
+	
+	sprite.queue_free()
 "
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ynv6u"]
@@ -1431,6 +1592,18 @@ tracks/4/keys = {
 "update": 0,
 "values": [1.0]
 }
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("../WorldEnvironment:environment:sky:sky_material:shader_parameter/cloud_density")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.524]
+}
 
 [sub_resource type="Animation" id="Animation_ttydn"]
 resource_name = "circle"
@@ -1495,6 +1668,18 @@ tracks/4/keys = {
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
 "values": [0.63, 0.51, 0.82]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("../WorldEnvironment:environment:sky:sky_material:shader_parameter/cloud_density")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0, 30.1947, 60),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [0.524, 1.0, 0.524]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_ynv6u"]
@@ -1604,6 +1789,13 @@ roughness = 0.43
 [sub_resource type="BoxMesh" id="BoxMesh_ynv6u"]
 material = SubResource("StandardMaterial3D_ttydn")
 size = Vector3(20, 100, 20)
+
+[sub_resource type="Curve3D" id="Curve3D_gvq24"]
+_data = {
+"points": PackedVector3Array(0, 0, 0, 0, 0, 0, -29.7912, -4.76902, -31.1316, -0.325, 0, -8.47, 0, -1.595, 0, -13.9511, -5.23788, -27.1559, 0, 0, 0.655, -1.19, 8.3, 7.68, -5.29924, -0.789563, -18.5562, 0, 0, 0, 0, 0, 0, 0, 1.897, 0.491),
+"tilts": PackedFloat32Array(0, 0, 0, 0)
+}
+point_count = 4
 
 [node name="MainScene" type="Node3D"]
 
@@ -1780,7 +1972,7 @@ libraries = {
 [node name="Bait" parent="Hook" instance=ExtResource("17_mxpyu")]
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(0.99211, -0.0720875, 0.10257, 4.89571e-09, 0.81815, 0.575006, -0.125368, -0.570469, 0.811694, -137.661, 103.025, 134.683)
+transform = Transform3D(0.99211, -0.0720875, 0.10257, 4.89571e-09, 0.81815, 0.575005, -0.125368, -0.570469, 0.811694, -137.661, 103.025, 134.683)
 light_color = Color(0.584973, 0.674503, 0.763378, 1)
 light_energy = 7.564
 light_indirect_energy = 5.041
@@ -1931,6 +2123,19 @@ mesh = SubResource("BoxMesh_a0dtd")
 [node name="eisblock" type="MeshInstance3D" parent="."]
 transform = Transform3D(0.815026, -0.0552243, 0.576787, 0.11908, 0.990163, -0.0734618, -0.567056, 0.128557, 0.813585, 76.0395, 15.2951, 0)
 mesh = SubResource("BoxMesh_ynv6u")
+
+[node name="CinematicPath" type="Path3D" parent="."]
+curve = SubResource("Curve3D_gvq24")
+
+[node name="PathFollow" type="PathFollow3D" parent="CinematicPath"]
+transform = Transform3D(-0.243429, 0.0278316, -0.969465, 0, 0.999504, 0.0286957, 0.969877, 0.00698544, -0.243326, -29.7912, -4.76902, -31.1316)
+loop = false
+
+[node name="Biomecinematic" type="Node" parent="." node_paths=PackedStringArray("cinematic_path")]
+script = ExtResource("43_fv5f2")
+fishing_location = "iceland"
+cinematic_path = NodePath("../CinematicPath")
+fade_duration = 0.0
 
 [editable path="UI/Touch"]
 [editable path="PlayerCamera/FishingRod"]

@@ -110,6 +110,13 @@ func update_display():
 	if icon == null or name_label == null or rarity_label == null or value_label == null:
 		return
 	
+	# Disconnect alte Hover-Signals
+	for c in mouse_entered.get_connections():
+		mouse_entered.disconnect(c["callable"])
+	for c in mouse_exited.get_connections():
+		mouse_exited.disconnect(c["callable"])
+	scale = Vector2.ONE
+	
 	# 🆕 SPEZIALBEHANDLUNG FÜR LORE
 	if fish_data.get("is_lore", false):
 		update_lore_display()
@@ -147,8 +154,41 @@ func update_display():
 		if rarity >= FishDB.RARITY.EPISCH:
 			add_glow_effect(rarity_color)
 		
+		# Klickbar-Indikator
+		mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		
+		var normal_style := get_theme_stylebox("panel").duplicate()
+		
+		mouse_entered.connect(func():
+			var hover_style := StyleBoxFlat.new()
+			hover_style.bg_color = Color(0.18, 0.18, 0.18, 0.95)
+			hover_style.border_width_left = 3
+			hover_style.border_width_top = 3
+			hover_style.border_width_right = 3
+			hover_style.border_width_bottom = 3
+			hover_style.border_color = rarity_color.lightened(0.3)
+			hover_style.corner_radius_top_left = 10
+			hover_style.corner_radius_top_right = 10
+			hover_style.corner_radius_bottom_right = 10
+			hover_style.corner_radius_bottom_left = 10
+			hover_style.corner_detail = 13
+			hover_style.shadow_size = 8
+			hover_style.shadow_color = Color(rarity_color.r, rarity_color.g, rarity_color.b, 0.4)
+			add_theme_stylebox_override("panel", hover_style)
+			modulate = Color(1.15, 1.15, 1.15)
+			pivot_offset = size / 2
+		)
+		
+		mouse_exited.connect(func():
+			add_theme_stylebox_override("panel", normal_style)
+			modulate = Color.WHITE
+			# Zurück gleiten
+		)
+		
 	else:
 		# UNBEKANNTER FISCH
+		mouse_default_cursor_shape = Control.CURSOR_ARROW
+		
 		icon.modulate = Color(0.3, 0.3, 0.3, 0.5)
 		
 		if question_overlay:
@@ -165,7 +205,6 @@ func update_display():
 		value_label.hide()
 		update_border_color(Color(0.4, 0.4, 0.4, 1))
 		modulate = Color(0.7, 0.7, 0.7)
-
 # ===========================
 #  🆕 LORE DISPLAY
 # ===========================
@@ -213,24 +252,88 @@ func update_lore_display():
 # ===========================
 
 func update_border_color(color: Color):
+	var rarity = fish_data.get("rarity", FishDB.RARITY.NORMAL)
 	var style_box = StyleBoxFlat.new()
 	style_box.bg_color = Color(0.12, 0.12, 0.12, 0.85)
-	style_box.border_width_left = 3
-	style_box.border_width_top = 3
-	style_box.border_width_right = 3
-	style_box.border_width_bottom = 3
-	style_box.border_color = color
 	style_box.corner_radius_top_left = 10
 	style_box.corner_radius_top_right = 10
 	style_box.corner_radius_bottom_right = 10
 	style_box.corner_radius_bottom_left = 10
 	style_box.corner_detail = 13
-	style_box.shadow_size = 6
-	style_box.shadow_offset = Vector2(0, 3)
-	style_box.shadow_color = Color(0, 0, 0, 0.6)
-	
-	add_theme_stylebox_override("panel", style_box)
 
+	match rarity:
+		FishDB.RARITY.NORMAL, FishDB.RARITY.UNGEWOEHNLICH:
+			# Schlicht — nur einfacher Rand
+			style_box.border_width_left = 2
+			style_box.border_width_top = 2
+			style_box.border_width_right = 2
+			style_box.border_width_bottom = 2
+			style_box.border_color = color
+			style_box.shadow_size = 3
+			style_box.shadow_color = Color(0, 0, 0, 0.4)
+
+		FishDB.RARITY.SELTEN:
+			# Dicker Rand + leichter Schatten
+			style_box.border_width_left = 3
+			style_box.border_width_top = 3
+			style_box.border_width_right = 3
+			style_box.border_width_bottom = 3
+			style_box.border_color = color
+			style_box.shadow_size = 5
+			style_box.shadow_offset = Vector2(0, 2)
+			style_box.shadow_color = Color(color.r, color.g, color.b, 0.35)
+
+		FishDB.RARITY.EPISCH:
+			# Dicker Rand + farbiger Schatten
+			style_box.border_width_left = 3
+			style_box.border_width_top = 3
+			style_box.border_width_right = 3
+			style_box.border_width_bottom = 3
+			style_box.border_color = color
+			style_box.shadow_size = 8
+			style_box.shadow_offset = Vector2(0, 3)
+			style_box.shadow_color = Color(color.r, color.g, color.b, 0.5)
+			# Leicht dunklerer Hintergrund
+			style_box.bg_color = Color(0.10, 0.08, 0.14, 0.92)
+
+		FishDB.RARITY.LEGENDAER:
+			# Breiter goldener Rand + starker Schatten + dunkleres BG
+			style_box.border_width_left = 4
+			style_box.border_width_top = 4
+			style_box.border_width_right = 4
+			style_box.border_width_bottom = 4
+			style_box.border_color = color
+			style_box.shadow_size = 12
+			style_box.shadow_offset = Vector2(0, 4)
+			style_box.shadow_color = Color(color.r, color.g, color.b, 0.6)
+			style_box.bg_color = Color(0.13, 0.11, 0.06, 0.95)
+
+		FishDB.RARITY.EXOTISCH:
+			# Sehr breiter Rand + intensiver Schatten + roter Schimmer im BG
+			style_box.border_width_left = 4
+			style_box.border_width_top = 4
+			style_box.border_width_right = 4
+			style_box.border_width_bottom = 4
+			style_box.border_color = color
+			style_box.shadow_size = 14
+			style_box.shadow_offset = Vector2(0, 4)
+			style_box.shadow_color = Color(color.r, color.g, color.b, 0.7)
+			style_box.bg_color = Color(0.14, 0.06, 0.08, 0.95)
+
+		FishDB.RARITY.ANTIK:
+			# Cyan-Schimmer, doppelter Rand-Effekt durch extra dunkles BG
+			style_box.border_width_left = 4
+			style_box.border_width_top = 1
+			style_box.border_width_right = 4
+			style_box.border_width_bottom = 1
+			style_box.border_color = color
+			style_box.shadow_size = 12
+			style_box.shadow_offset = Vector2(0, 3)
+			style_box.shadow_color = Color(color.r, color.g, color.b, 0.55)
+			style_box.bg_color = Color(0.06, 0.12, 0.14, 0.95)
+
+	add_theme_stylebox_override("panel", style_box)
+	
 func add_glow_effect(color: Color):
 	var tween = create_tween().set_loops()
 	tween.tween_property(self, "modulate:a", 0.9, 1.0)

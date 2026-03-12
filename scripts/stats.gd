@@ -89,6 +89,8 @@ func _create_biome_completion_stats() -> void:
 	}
 	
 	for biome in Player.completed_biomes.keys():
+		if "_half" in biome or "_full" in biome:
+			continue
 		var is_complete: bool = Player.completed_biomes[biome]
 		var biome_display: String = tr(biome_keys.get(biome, biome.to_upper()))
 		var biome_fish_list = Player.get_biome_fish_list(biome)
@@ -108,6 +110,7 @@ func _create_biome_completion_stats() -> void:
 		var color := Color.GREEN if is_complete else Color.GRAY
 		
 		_create_simple_entry(status_icon + " " + progress_text, color)
+
 func _create_weight_records() -> void:
 	var records: Array = []
 	
