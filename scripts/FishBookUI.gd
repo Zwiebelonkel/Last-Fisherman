@@ -205,14 +205,13 @@ func _on_visibility_changed() -> void:
 	if visible:
 		print("📖 FishBook wurde geöffnet - Lade aktuellen Ort...")
 		
-		# Versuche fishing_location aus FishingRod zu holen
-		var fishing_rod = get_tree().root.get_node_or_null("MainScene3/PlayerCamera/FishingRod")
+		var fishing_rod: Node = null
 		
-		if not fishing_rod:
-			for scene_name in ["MainScene", "MainScene2", "forest", "ocean"]:
-				fishing_rod = get_tree().root.get_node_or_null(scene_name + "/PlayerCamera/FishingRod")
-				if fishing_rod:
-					break
+		# Alle Kinder des Root durchsuchen (funktioniert unabhängig vom Szenennamen)
+		for child in get_tree().root.get_children():
+			fishing_rod = child.find_child("FishingRod", true, false)
+			if fishing_rod:
+				break
 		
 		if fishing_rod and "fishing_location" in fishing_rod:
 			var detected_location = fishing_rod.fishing_location

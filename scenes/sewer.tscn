@@ -13,7 +13,7 @@
 [ext_resource type="PackedScene" uid="uid://xt7f7m4i2iwi" path="res://scenes/touch.tscn" id="10_rtjjv"]
 [ext_resource type="PackedScene" uid="uid://b5ew1rfc8ow8g" path="res://scenes/fishingRod.tscn" id="11_c82cw"]
 [ext_resource type="PackedScene" uid="uid://bgnalk1ruht4d" path="res://scenes/bait_hud.tscn" id="11_s0tj3"]
-[ext_resource type="PackedScene" path="res://scenes/clock.tscn" id="12_i37rq"]
+[ext_resource type="PackedScene" uid="uid://ws4ms8iq4gg4" path="res://scenes/clock.tscn" id="12_i37rq"]
 [ext_resource type="Texture2D" uid="uid://cvllk03mhtybp" path="res://textures/723-normal.jpg" id="13_kyn5a"]
 [ext_resource type="Texture2D" uid="uid://d31603nl8y0gd" path="res://textures/Water_preview.jpgC878A51E-2B84-45CA-85CB-75E5BC88EEC8Large.jpg" id="14_2n20e"]
 [ext_resource type="Texture2D" uid="uid://cjl6h1xc3a12p" path="res://textures/foam.png" id="15_ros3w"]
@@ -34,7 +34,7 @@
 [ext_resource type="AudioStream" uid="uid://bqcbwput2tdy3" path="res://sounds/reeling.mp3" id="28_2n20e"]
 [ext_resource type="AudioStream" uid="uid://bm2wkiirbpowg" path="res://sounds/rarity/uncommon.mp3" id="29_xp0e5"]
 [ext_resource type="AudioStream" uid="uid://bpy3o38b3nar3" path="res://sounds/rarity/rare.mp3" id="30_ros3w"]
-[ext_resource type="PackedScene" path="res://scenes/story3.tscn" id="31_skxsd"]
+[ext_resource type="PackedScene" uid="uid://c2enm5wyfs6mc" path="res://scenes/story3.tscn" id="31_skxsd"]
 [ext_resource type="AudioStream" uid="uid://rcuhs2eom22x" path="res://sounds/rarity/epic.mp3" id="31_vqh58"]
 [ext_resource type="AudioStream" uid="uid://c0e0t3u3yvvhg" path="res://sounds/rarity/legendary.mp3" id="32_cl88l"]
 [ext_resource type="AudioStream" uid="uid://qeh48myqvc8p" path="res://sounds/rarity/exotic.mp3" id="33_aj5s8"]
@@ -1948,13 +1948,12 @@ script = ExtResource("10_11ck5")
 [node name="FishingRod" parent="PlayerCamera" node_paths=PackedStringArray("rod_tip", "hook", "splash", "waterplane", "catch_result_ui", "camera", "fishbook_ui", "options", "journal_button", "inventory_button", "map_button", "left_button", "right_button", "interact_button", "settings_button", "inventory_ui") instance=ExtResource("11_c82cw")]
 transform = Transform3D(0.925417, -0.163176, -0.34202, 0.173648, 0.984808, 0, 0.336824, -0.0593912, 0.939693, 0.4, -0.40033, -1.03766)
 script = SubResource("GDScript_qk11g")
-rotation_speed = 300.0
-cast_power_ui_scene = ExtResource("8_rxgvs")
 rod_tip = NodePath("RodMesh/RodTip")
 hook = NodePath("../../Hook")
 splash = NodePath("../../Splash")
 waterplane = NodePath("../../WaterPlane")
 catch_result_ui = NodePath("../../UI/CatchResultUI")
+rotation_speed = 300.0
 camera = NodePath("..")
 fishbook_ui = NodePath("../../UI/FishBook")
 options = NodePath("../../UI/OptionsControl")
@@ -1965,6 +1964,7 @@ left_button = NodePath("../../UI/Touch/BottomCenterPanel/HBoxContainer/LeftButto
 right_button = NodePath("../../UI/Touch/BottomCenterPanel/HBoxContainer/RightButton")
 interact_button = NodePath("../../UI/Touch/InteractButton")
 settings_button = NodePath("../../UI/Touch/TopLeftPanel/MarginContainer/VBoxContainer/SettingsButton")
+cast_power_ui_scene = ExtResource("8_rxgvs")
 inventory_ui = NodePath("../../UI/InventoryUI")
 
 [node name="RodMesh" parent="PlayerCamera/FishingRod" index="0"]

@@ -14,7 +14,7 @@
 [ext_resource type="PackedScene" uid="uid://brmbdno888s38" path="res://assets/tree.glb" id="14_3wx87"]
 [ext_resource type="Script" path="res://scripts/checker.gd" id="14_lam2r"]
 [ext_resource type="PackedScene" uid="uid://b5ew1rfc8ow8g" path="res://scenes/fishingRod.tscn" id="15_5p8yk"]
-[ext_resource type="PackedScene" path="res://scenes/fireflies.tscn" id="15_amia2"]
+[ext_resource type="PackedScene" uid="uid://bswqivqayur26" path="res://scenes/fireflies.tscn" id="15_amia2"]
 [ext_resource type="PackedScene" uid="uid://ng3k0vguw2ww" path="res://assets/chair.glb" id="16_25e00"]
 [ext_resource type="AudioStream" uid="uid://yibilks5nghc" path="res://sounds/click.mp3" id="17_jfr2g"]
 

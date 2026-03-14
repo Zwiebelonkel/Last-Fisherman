@@ -245,7 +245,7 @@ func get_lore_stats() -> Dictionary:
 # ===========================
 func get_all_bestiary_stats() -> Dictionary:
 	var stats = {}
-	
+	0
 	for location in LOCATION_FISH.keys():
 		stats[location] = get_bestiary_stats(location)
 	
