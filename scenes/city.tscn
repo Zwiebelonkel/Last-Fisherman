@@ -900,15 +900,36 @@ func start_catch_minigame() -> void:
 	# ---------------------------
 	var target_rarity: String = \"\"
 	if Player.has_active_bait():
-		target_rarity = Player.get_active_bait_rarity()
+		var bait_rarity = Player.get_active_bait_rarity()
+		var roll := randf()
+
+		if roll < 0.01:
+			var rarity_order = [\"Common\", \"Uncommon\", \"Rare\", \"Epic\", \"Legendary\", \"Exotic\"]
+			var current_index = rarity_order.find(bait_rarity)
+			if current_index < rarity_order.size() - 1:
+				target_rarity = rarity_order[current_index + 1]
+				print(\"🌟 LUCKY! Rarity erhöht: %s → %s\" % [bait_rarity, target_rarity])
+			else:
+				target_rarity = bait_rarity
+		elif roll < 0.76:
+			target_rarity = bait_rarity
+			print(\"🎯 Köder wirkt: %s\" % target_rarity)
+		else:
+			print(\"🎲 Köder verfehlt: Zufallsfisch\")
 
 	var quality_multiplier: float = 1.0 + (last_cast_quality * 0.15)
 	var effective_bait: int = max(1, int(Player.upgrade_bait * quality_multiplier))
 
 	if target_rarity != \"\":
-		current_fish = FishDB.get_random_fish_by_rarity(FishDB.get_fish_list_for_biome(fishing_location),target_rarity)
+		current_fish = FishDB.get_random_fish_by_rarity(
+			FishDB.get_fish_list_for_biome(fishing_location),
+			target_rarity
+		)
 	else:
-		current_fish = FishDB.get_random_from_list(FishDB.FISH_CITY, effective_bait)
+		current_fish = FishDB.get_random_from_list(
+			FishDB.get_fish_list_for_biome(fishing_location),
+			effective_bait
+		)
 
 	print(\"🎣 Gefangen:\", FishDB.get_fish_name(current_fish))
 
@@ -1046,6 +1067,12 @@ func update_catch_minigame(delta: float) -> void:
 func end_catch_minigame(success: bool) -> void:
 	reel_sound.stop()
 	camera.start_screenshake(0.4,0.3)
+	
+		# 🆕 Köder VERBRAUCHEN
+	if Player.has_active_bait():
+		Player.consume_active_bait()
+	
+	
 	if success:
 		var fish = current_fish
 		_launch_fish_sprite(fish)
@@ -1057,9 +1084,7 @@ func end_catch_minigame(success: bool) -> void:
 		SteamAchievements.check_total_fish_caught()
 		SteamAchievements.check_species_discovered()
 		
-		# 🆕 Köder VERBRAUCHEN
-		if Player.has_active_bait():
-			Player.consume_active_bait()
+
 
 		if catch_result_ui:
 			catch_result_ui.show_fish(fish)
