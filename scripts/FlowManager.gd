@@ -20,7 +20,7 @@ const DIALOG_DATA = {
 			"de": "Fremder",
 			"en": "Stranger"
 		},
-		"sprite": "res://assets/characters/stranger.png",  # 🔧 Pfad anpassen
+		"sprite": "res://assets/characters/fisherman.png",  # 🔧 Pfad anpassen
 		"lines": {
 			"de": [
 				"Es gefällt mir nicht, dass du so tust als wäre nichts gewesen...",
@@ -28,8 +28,9 @@ const DIALOG_DATA = {
 				"Ich beobachte dich."
 			],
 			"en": [
-				"Two pieces... you're getting closer.",
-				"But the journey isn't over yet."
+				"I don’t like that you’re acting as if nothing happened…",
+				"It’s not over yet.",
+				"I am watching you."
 			]
 		}
 	},
@@ -38,15 +39,15 @@ const DIALOG_DATA = {
 			"de": "Fremder",
 			"en": "Stranger"
 		},
-		"sprite": "res://assets/characters/stranger.png",  # 🔧 Pfad anpassen
+		"sprite": "res://assets/fisherman.png",  # 🔧 Pfad anpassen
 		"lines": {
 			"de": [
 				"Du hast es vollbracht.",
 				"Ignoranter Narr. Was ist aus der Menschheit geworden?!"
 			],
 			"en": [
-				"All pieces... unbelievable.",
-				"You did it. The food truck can now open!"
+				"You really did it...",
+				"Ignorant fool. What has humanity become?!"
 			]
 		}
 	}

@@ -2175,6 +2175,9 @@ settings_button = NodePath("../../UI/Touch/TopLeftPanel/MarginContainer/VBoxCont
 cast_power_ui_scene = ExtResource("8_8cl07")
 inventory_ui = NodePath("../../UI/InventoryUI")
 
+[node name="RodMesh" parent="PlayerCamera/FishingRod" index="0"]
+transform = Transform3D(1, 0, 0, 0, 0.966823, 0.255446, 0, -0.255446, 0.966823, 0, 0, -0.0166266)
+
 [node name="WaterPlane" type="MeshInstance3D" parent="."]
 transform = Transform3D(-1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0, 0, 1, 0, -10.13, 129.833)
 mesh = SubResource("PlaneMesh_eank5")

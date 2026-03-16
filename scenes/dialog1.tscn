@@ -1,6 +1,6 @@
 [gd_scene load_steps=8 format=3 uid="uid://bfxsggnjqkgjg"]
 
-[ext_resource type="Script" uid="uid://2x0qbvs7u1xb" path="res://scripts/story_dialog.gd" id="1_script"]
+[ext_resource type="Script" path="res://scripts/story_dialog.gd" id="1_script"]
 [ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="2_font"]
 [ext_resource type="Shader" uid="uid://c140kjbm2bot5" path="res://shader/buckshot.gdshader" id="2_mcmqs"]
 [ext_resource type="StyleBox" uid="uid://c8rkdsvu78m67" path="res://materials/PanelCustom.tres" id="3_stylebox"]
