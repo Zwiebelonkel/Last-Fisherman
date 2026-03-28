@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://dnc7mjyuic21u"]
+
+[ext_resource type="PackedScene" uid="uid://ckje0fw3pep83" path="res://assets/skyscaper.glb" id="1_i727j"]
+[ext_resource type="Script" uid="uid://b1yvcoi0vtbe1" path="res://scripts/skyscraper.gd" id="2_j46gg"]
+
+[node name="skyscaper" instance=ExtResource("1_i727j")]
+script = ExtResource("2_j46gg")
+warble_strength = 3.005
+warble_speed = 4.715
+wind_strength = 5.77
+wind_speed = 2.96

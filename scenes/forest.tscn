@@ -2142,7 +2142,7 @@ cast_power_ui_scene = ExtResource("8_u01n2")
 inventory_ui = NodePath("../../UI/InventoryUI")
 
 [node name="left_hand" parent="PlayerCamera/FishingRod/RodMesh" index="5"]
-transform = Transform3D(-0.211648, -0.037744, 0.254183, -0.17704, 0.278759, -0.094085, -0.207091, -0.199734, -0.179344, -0.113471, -0.850528, 0.246808)
+transform = Transform3D(-0.211648, -0.0377439, 0.254183, -0.17704, 0.278759, -0.0940853, -0.207091, -0.199734, -0.179344, -0.113471, -0.850528, 0.246808)
 
 [node name="WaterPlane" type="MeshInstance3D" parent="."]
 transform = Transform3D(-1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0, 0, 1, 0.26741, -0.0716674, 23.5144)

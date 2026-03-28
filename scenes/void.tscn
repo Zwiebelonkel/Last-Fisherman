@@ -236,9 +236,6 @@ sway_amount = 0.115
 transform = Transform3D(0.925417, -0.163176, -0.34202, 0.173648, 0.984808, 0, 0.336824, -0.0593912, 0.939693, 0.4, -0.40033, -1.03766)
 script = SubResource("GDScript_8wjpf")
 
-[node name="RodMesh" parent="PlayerCamera/FishingRod" index="0"]
-transform = Transform3D(1, 0, 0, 0, 0.966823, 0.255446, 0, -0.255446, 0.966823, 0, 0, -0.0166266)
-
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.99211, -0.0720874, 0.10257, 4.89571e-09, 0.818149, 0.575006, -0.125368, -0.570469, 0.811694, 0, 7.52864, 2.88234)
 light_color = Color(0.584973, 0.674503, 0.763378, 1)
@@ -305,5 +302,7 @@ libraries = {
 }
 
 [editable path="PlayerCamera/FishingRod"]
+[editable path="PlayerCamera/FishingRod/RodMesh/right_hand"]
+[editable path="PlayerCamera/FishingRod/RodMesh/left_hand"]
 [editable path="Customer"]
 [editable path="Customer/MeshInstance3D"]

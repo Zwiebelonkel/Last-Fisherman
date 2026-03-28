@@ -1,0 +1,7 @@
+[gd_scene load_steps=3 format=3 uid="uid://c3vplql7mia58"]
+
+[ext_resource type="PackedScene" uid="uid://brmbdno888s38" path="res://assets/tree.glb" id="1_huoei"]
+[ext_resource type="Script" uid="uid://xed3u7aq3koy" path="res://scripts/tree.gd" id="2_gpdnr"]
+
+[node name="tree" instance=ExtResource("1_huoei")]
+script = ExtResource("2_gpdnr")

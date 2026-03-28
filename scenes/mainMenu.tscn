@@ -12,12 +12,12 @@
 [ext_resource type="AudioStream" uid="uid://gqmombudmim" path="res://sounds/Fisher.mp3" id="11_tov5d"]
 [ext_resource type="Texture2D" uid="uid://d31603nl8y0gd" path="res://textures/Water_preview.jpgC878A51E-2B84-45CA-85CB-75E5BC88EEC8Large.jpg" id="12_uwljm"]
 [ext_resource type="PackedScene" uid="uid://ckje0fw3pep83" path="res://assets/skyscaper.glb" id="13_vt84v"]
-[ext_resource type="PackedScene" uid="uid://brmbdno888s38" path="res://assets/tree.glb" id="14_3wx87"]
 [ext_resource type="Script" path="res://scripts/checker.gd" id="14_lam2r"]
 [ext_resource type="PackedScene" uid="uid://b5ew1rfc8ow8g" path="res://scenes/fishingRod.tscn" id="15_5p8yk"]
 [ext_resource type="PackedScene" uid="uid://bswqivqayur26" path="res://scenes/fireflies.tscn" id="15_amia2"]
 [ext_resource type="PackedScene" uid="uid://ng3k0vguw2ww" path="res://assets/chair.glb" id="16_25e00"]
 [ext_resource type="AudioStream" uid="uid://yibilks5nghc" path="res://sounds/click.mp3" id="17_jfr2g"]
+[ext_resource type="PackedScene" uid="uid://c3vplql7mia58" path="res://assets/tree.tscn" id="18_5i7h7"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_l4mxc"]
 shader = ExtResource("2_l4mxc")
@@ -520,17 +520,11 @@ libraries = {
 transform = Transform3D(26.165, 0, 0, 0, 26.165, 0, 0, 0, 26.165, 0, 2.72752, 228.721)
 mesh = SubResource("SphereMesh_08o8g")
 
-[node name="tree" parent="." instance=ExtResource("14_3wx87")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.02284, 0, 17.0507)
-
-[node name="tree3" parent="." instance=ExtResource("14_3wx87")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.52933, 0, 28.9893)
-
 [node name="FishingRod" parent="." instance=ExtResource("15_5p8yk")]
 transform = Transform3D(-0.925417, 0.163176, 0.34202, 0.173648, 0.984808, 0, -0.336824, 0.0593912, -0.939693, -0.4, 1.60667, 1.08245)
 
 [node name="left_hand" parent="FishingRod/RodMesh" index="5"]
-transform = Transform3D(-0.211648, -0.037744, 0.254183, -0.17704, 0.278759, -0.094085, -0.207091, -0.199734, -0.179344, -0.113471, -0.850528, 0.246808)
+transform = Transform3D(-0.211648, -0.0377439, 0.254183, -0.17704, 0.278759, -0.0940853, -0.207091, -0.199734, -0.179344, -0.113471, -0.850528, 0.246808)
 
 [node name="Music" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("11_tov5d")
@@ -566,6 +560,12 @@ mesh = SubResource("ArrayMesh_jfr2g")
 [node name="click" type="AudioStreamPlayer" parent="Audio"]
 stream = ExtResource("17_jfr2g")
 bus = &"SFX"
+
+[node name="tree2" parent="." instance=ExtResource("18_5i7h7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.15115, 0, 17.1215)
+
+[node name="tree4" parent="." instance=ExtResource("18_5i7h7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.53857, 0, 28.9885)
 
 [connection signal="pressed" from="UI/MenuContainer/ButtonsContainer/Start" to="." method="_on_button_pressed"]
 [connection signal="pressed" from="UI/MenuContainer/ButtonsContainer/Quit" to="." method="_on_quit_pressed"]

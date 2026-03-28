@@ -1,4 +1,4 @@
-[gd_scene load_steps=88 format=3 uid="uid://cx2sffjjdjuw5"]
+[gd_scene load_steps=90 format=3 uid="uid://cx2sffjjdjuw5"]
 
 [ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="1_2phbr"]
 [ext_resource type="PackedScene" uid="uid://b5ew1rfc8ow8g" path="res://scenes/fishingRod.tscn" id="1_echbf"]
@@ -18,6 +18,7 @@
 [ext_resource type="PackedScene" uid="uid://bgnalk1ruht4d" path="res://scenes/bait_hud.tscn" id="12_wsqty"]
 [ext_resource type="Shader" uid="uid://cfsuhiaq15sgu" path="res://shader/outline.gdshader" id="13_0ehpd"]
 [ext_resource type="PackedScene" uid="uid://ws4ms8iq4gg4" path="res://scenes/clock.tscn" id="13_7yh6i"]
+[ext_resource type="Script" uid="uid://b1yvcoi0vtbe1" path="res://scripts/skyscraper.gd" id="13_fupde"]
 [ext_resource type="PackedScene" uid="uid://brmbdno888s38" path="res://assets/tree.glb" id="14_08o8g"]
 [ext_resource type="PackedScene" uid="uid://bw80sbvfcwe1p" path="res://scenes/cigarette.tscn" id="14_fto0a"]
 [ext_resource type="PackedScene" uid="uid://cfptx2e41wve1" path="res://scenes/shop.tscn" id="15_0cxu4"]
@@ -39,6 +40,7 @@
 [ext_resource type="AudioStream" uid="uid://rcuhs2eom22x" path="res://sounds/rarity/epic.mp3" id="27_pwxld"]
 [ext_resource type="AudioStream" uid="uid://b4h6tfle8d5uh" path="res://sounds/NERVES.mp3" id="27_wsqty"]
 [ext_resource type="AudioStream" uid="uid://c0e0t3u3yvvhg" path="res://sounds/rarity/legendary.mp3" id="28_cw1g3"]
+[ext_resource type="Script" uid="uid://xed3u7aq3koy" path="res://scripts/tree.gd" id="28_e65ta"]
 [ext_resource type="PackedScene" uid="uid://bmbrqb7ef6c5i" path="res://assets/tripod.glb" id="28_qavw1"]
 [ext_resource type="PackedScene" uid="uid://bw4vof4oddwco" path="res://assets/ödland.glb" id="29_i7ifx"]
 [ext_resource type="AudioStream" uid="uid://qeh48myqvc8p" path="res://sounds/rarity/exotic.mp3" id="29_yc0gu"]
@@ -1750,27 +1752,59 @@ visible = false
 
 [node name="skyscaper" parent="UI" instance=ExtResource("10_7wwop")]
 transform = Transform3D(0.307902, 0, 0.186538, 0, 0.36, 0, -0.186538, 0, 0.307902, 41.717, 6.24582, 38.3284)
+script = ExtResource("13_fupde")
+warble_speed = 0.6
+wind_strength = 0.045
+wind_speed = 0.84
 
 [node name="skyscaper2" parent="UI" instance=ExtResource("10_7wwop")]
 transform = Transform3D(0.307902, 0, 0.186538, 0, 0.36, 0, -0.186538, 0, 0.307902, 46.7262, 6.24582, 35.5814)
+script = ExtResource("13_fupde")
+warble_speed = 0.6
+wind_strength = 0.045
+wind_speed = 0.84
 
 [node name="skyscaper3" parent="UI" instance=ExtResource("10_7wwop")]
 transform = Transform3D(0.461853, 0, 0.279807, 0, 0.54, 0, -0.279807, 0, 0.461853, 51.2507, 9.08063, 40.429)
+script = ExtResource("13_fupde")
+warble_speed = 0.6
+wind_strength = 0.045
+wind_speed = 0.84
 
 [node name="skyscaper4" parent="UI" instance=ExtResource("10_7wwop")]
 transform = Transform3D(-0.260732, 0, 0.248231, 0, 0.36, 0, -0.248231, 0, -0.260732, 34.359, 6.24582, 5.22791)
+script = ExtResource("13_fupde")
+warble_speed = 0.6
+wind_strength = 0.045
+wind_speed = 0.84
 
 [node name="skyscaper5" parent="UI" instance=ExtResource("10_7wwop")]
 transform = Transform3D(-0.260732, 0, 0.248231, 0, 0.36, 0, -0.248231, 0, -0.260732, 30.3949, 6.24582, 1.11404)
+script = ExtResource("13_fupde")
+warble_speed = 0.6
+wind_strength = 0.045
+wind_speed = 0.84
 
 [node name="skyscaper7" parent="UI" instance=ExtResource("10_7wwop")]
 transform = Transform3D(-0.289803, 0, -0.213575, 0, 0.36, 0, 0.213575, 0, -0.289803, 0.853029, 6.24582, -30.5143)
+script = ExtResource("13_fupde")
+warble_speed = 0.6
+wind_strength = 0.045
+wind_speed = 0.84
 
 [node name="skyscaper8" parent="UI" instance=ExtResource("10_7wwop")]
 transform = Transform3D(-0.289803, 0, -0.213575, 0, 0.36, 0, 0.213575, 0, -0.289803, 11.0446, 10.0401, -30.5143)
+script = ExtResource("13_fupde")
+warble_speed = 0.6
+wind_strength = 0.045
+wind_speed = 0.84
 
 [node name="skyscaper6" parent="UI" instance=ExtResource("10_7wwop")]
 transform = Transform3D(-0.391098, 0, 0.372347, 0, 0.54, 0, -0.372347, 0, -0.391098, 33.8869, 9.08063, -4.52298)
+script = ExtResource("13_fupde")
+warble_speed = 0.6
+wind_strength = 0.045
+wind_speed = 0.84
 
 [node name="Touch" parent="UI" instance=ExtResource("11_r3sjc")]
 
@@ -1814,7 +1848,7 @@ cast_power_ui_scene = ExtResource("11_7wwop")
 inventory_ui = NodePath("../../UI/InventoryUI")
 
 [node name="left_hand" parent="PlayerCamera/FishingRod/RodMesh" index="5"]
-transform = Transform3D(-0.211648, -0.037744, 0.254183, -0.17704, 0.278759, -0.094085, -0.207091, -0.199734, -0.179344, -0.113471, -0.850528, 0.246808)
+transform = Transform3D(-0.211648, -0.0377439, 0.254183, -0.17704, 0.278759, -0.0940853, -0.207091, -0.199734, -0.179344, -0.113471, -0.850528, 0.246808)
 
 [node name="cigaratte" parent="PlayerCamera" instance=ExtResource("14_fto0a")]
 transform = Transform3D(0.789812, 0.0794083, 0.274757, -0.0560458, 0.8343, -0.0800153, -0.280456, 0.0569025, 0.789751, -0.156605, -0.13869, -0.260703)
@@ -1879,12 +1913,15 @@ mesh = SubResource("SphereMesh_08o8g")
 
 [node name="tree" parent="." instance=ExtResource("14_08o8g")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.02284, 0, 17.0507)
+script = ExtResource("28_e65ta")
 
 [node name="tree3" parent="." instance=ExtResource("14_08o8g")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.52933, 0, 28.9893)
+script = ExtResource("28_e65ta")
 
 [node name="tree2" parent="." instance=ExtResource("14_08o8g")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.40193, 0.164468, 2.50031)
+script = ExtResource("28_e65ta")
 
 [node name="Shop" parent="." instance=ExtResource("15_0cxu4")]
 transform = Transform3D(-3.12536e-08, 0, 0.715, 0, 0.715, 0, -0.715, 0, -3.12536e-08, -2.74395, 0.673682, -0.208801)
@@ -2066,10 +2103,12 @@ fishing_location = "lake"
 cinematic_path = NodePath("../CinematicPath")
 fade_duration = 0.0
 
+[editable path="UI/skyscaper"]
 [editable path="UI/Touch"]
 [editable path="PlayerCamera/FishingRod"]
 [editable path="PlayerCamera/FishingRod/RodMesh/right_hand"]
 [editable path="PlayerCamera/FishingRod/RodMesh/left_hand"]
+[editable path="tree"]
 [editable path="Shop"]
 [editable path="Shop/shop"]
 [editable path="Shop/cigs"]
