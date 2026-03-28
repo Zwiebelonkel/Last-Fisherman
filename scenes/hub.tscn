@@ -1,4 +1,4 @@
-[gd_scene load_steps=42 format=3 uid="uid://cor735uf1n5si"]
+[gd_scene load_steps=44 format=3 uid="uid://cor735uf1n5si"]
 
 [ext_resource type="Script" uid="uid://cjxfvb4fkjrhh" path="res://scripts/note_manager.gd" id="1_8hrlh"]
 [ext_resource type="Shader" uid="uid://c140kjbm2bot5" path="res://shader/buckshot.gdshader" id="1_d1od2"]
@@ -12,13 +12,14 @@
 [ext_resource type="PackedScene" uid="uid://xt7f7m4i2iwi" path="res://scenes/touch.tscn" id="10_7t3s2"]
 [ext_resource type="PackedScene" uid="uid://c14q5y0ltbxbs" path="res://scenes/stats.tscn" id="10_mw5nc"]
 [ext_resource type="Script" uid="uid://dcpmiuqpwqgew" path="res://scripts/Aquarium.gd" id="11_lcd1r"]
+[ext_resource type="Shader" uid="uid://imf547kyj0bj" path="res://shader/CRT.gdshader" id="11_qrwm6"]
 [ext_resource type="AudioStream" uid="uid://dmsahwwgrlg3s" path="res://sounds/cabin.mp3" id="12_glsmu"]
 [ext_resource type="Script" uid="uid://b20gpacd3w34" path="res://scripts/fps.gd" id="12_s6eg2"]
 [ext_resource type="PackedScene" uid="uid://b1al4ihr573ig" path="res://assets/ticket.glb" id="13_glsmu"]
 [ext_resource type="PackedScene" uid="uid://cbxqcwmep1mf8" path="res://scenes/note.tscn" id="14_phvbg"]
 [ext_resource type="PackedScene" uid="uid://sxspmj8y0jsf" path="res://scenes/note_ui.tscn" id="15_3q32m"]
 [ext_resource type="Texture2D" uid="uid://5olhq7vqrcxm" path="res://textures/map3.png" id="17_5ox4q"]
-[ext_resource type="Script" uid="uid://fqcrjuca5d75" path="res://scripts/leaderboard.gd" id="19_7t3s2"]
+[ext_resource type="Script" path="res://scripts/leaderboard.gd" id="19_7t3s2"]
 [ext_resource type="PackedScene" uid="uid://b5ew1rfc8ow8g" path="res://scenes/fishingRod.tscn" id="20_7n2o6"]
 [ext_resource type="PackedScene" uid="uid://cyys33sgvu4h4" path="res://scenes/keypad.tscn" id="21_rtbv5"]
 
@@ -44,6 +45,26 @@ default_font = ExtResource("3_s6eg2")
 
 [sub_resource type="Theme" id="Theme_2hkft"]
 default_font = ExtResource("3_s6eg2")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_fm13a"]
+shader = ExtResource("11_qrwm6")
+shader_parameter/grain_intensity = 0.1
+shader_parameter/min_lum = 0.0
+shader_parameter/max_lum = 0.654
+shader_parameter/time_scale = 0.5
+shader_parameter/vignette_darkness = 0.0
+shader_parameter/vignette_outer_radius = 0.7
+shader_parameter/vignette_inner_radius = 0.2
+shader_parameter/scanline_intensity = 0.488
+shader_parameter/barrel_distortion = 0.137
+shader_parameter/chromatic_aberration = 0.0
+shader_parameter/crt_vignette_power = 0.562
+shader_parameter/pixel_resolution_x = 1080
+shader_parameter/pixel_resolution_y = 900
+shader_parameter/enable_color_quantization = true
+shader_parameter/color_quant_steps = 23.895
+shader_parameter/warble_amount = 0.0
+shader_parameter/warble_speed = 3.104
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_2hkft"]
 size = Vector3(42.417, 94.3036, 68.8503)
@@ -249,6 +270,17 @@ visible = false
 theme = SubResource("Theme_2hkft")
 
 [node name="StatsUI" parent="UI" instance=ExtResource("10_mw5nc")]
+
+[node name="CRT" type="ColorRect" parent="UI"]
+z_index = 4096
+material = SubResource("ShaderMaterial_fm13a")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 28.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
 
 [node name="Cabin" parent="." instance=ExtResource("1_qssp3")]
 transform = Transform3D(0.025, 0, 0, 0, 0.025, 0, 0, 0, 0.025, -2.79241, -4.36985, 1.98553)

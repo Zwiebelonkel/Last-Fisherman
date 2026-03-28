@@ -33,6 +33,7 @@ var resolution_scale: float = 1.0
 var frame_limit: int = 0
 var fullscreen: bool = false
 var current_language: String = "de"
+var crt_enabled: bool = true
 
 # Gewichtsrekorde pro Fischart (✅ fish_id als Key)
 var fish_weight_records: Dictionary = {}
@@ -221,7 +222,8 @@ func save_settings() -> void:
 		"resolution_scale": resolution_scale,
 		"frame_limit": frame_limit,
 		"fullscreen": fullscreen,
-		"language": current_language
+		"language": current_language,
+		"crt_enabled": crt_enabled
 	}
 	var file = FileAccess.open("user://settings.dat", FileAccess.WRITE)
 	file.store_var(settings_data)
@@ -237,6 +239,7 @@ func load_settings() -> void:
 		frame_limit = settings_data.get("frame_limit", 0)
 		fullscreen = settings_data.get("fullscreen", false)
 		current_language = settings_data.get("language", "de")
+		crt_enabled = settings_data.get("crt_enabled", true)
 		
 		apply_settings()
 		TranslationServer.set_locale(current_language)
@@ -264,6 +267,13 @@ func apply_settings() -> void:
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
 	
 	Engine.max_fps = frame_limit
+	_set_crt_visible(get_tree().root, crt_enabled)
+
+func _set_crt_visible(node: Node, enabled: bool) -> void:
+	for child in node.get_children():
+		if child.name == "CRT":
+			child.visible = enabled
+		_set_crt_visible(child, enabled)
 
 func set_touch_buttons_visible(visible: bool) -> void:
 	if touch_buttons:

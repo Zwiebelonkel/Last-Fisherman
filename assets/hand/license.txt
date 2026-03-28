@@ -1,0 +1,11 @@
+Model Information:
+* title:	Lopwoly rigged hand in PSX/PS1 style
+* source:	https://sketchfab.com/3d-models/lopwoly-rigged-hand-in-psxps1-style-8e89510d963a4d6f99e863bd2742ab01
+* author:	Alexander Snitko (https://sketchfab.com/alexandersnitko)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Lopwoly rigged hand in PSX/PS1 style" (https://sketchfab.com/3d-models/lopwoly-rigged-hand-in-psxps1-style-8e89510d963a4d6f99e863bd2742ab01) by Alexander Snitko (https://sketchfab.com/alexandersnitko) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

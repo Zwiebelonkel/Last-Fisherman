@@ -1,4 +1,4 @@
-[gd_scene load_steps=79 format=4 uid="uid://yrer5qgxgwvb"]
+[gd_scene load_steps=81 format=4 uid="uid://yrer5qgxgwvb"]
 
 [ext_resource type="Shader" uid="uid://c140kjbm2bot5" path="res://shader/buckshot.gdshader" id="1_mxpyu"]
 [ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="3_ttydn"]
@@ -15,6 +15,7 @@
 [ext_resource type="PackedScene" uid="uid://b5ew1rfc8ow8g" path="res://scenes/fishingRod.tscn" id="12_4j2b8"]
 [ext_resource type="PackedScene" uid="uid://ws4ms8iq4gg4" path="res://scenes/clock.tscn" id="12_bvxjy"]
 [ext_resource type="Texture2D" uid="uid://cvllk03mhtybp" path="res://textures/723-normal.jpg" id="13_cdxfo"]
+[ext_resource type="Shader" uid="uid://imf547kyj0bj" path="res://shader/CRT.gdshader" id="13_gvq24"]
 [ext_resource type="Texture2D" uid="uid://d31603nl8y0gd" path="res://textures/Water_preview.jpgC878A51E-2B84-45CA-85CB-75E5BC88EEC8Large.jpg" id="14_ectmg"]
 [ext_resource type="Shader" uid="uid://cfsuhiaq15sgu" path="res://shader/outline.gdshader" id="15_vl7g7"]
 [ext_resource type="Shader" uid="uid://c37jx2ebwp1a3" path="res://shader/shader_water.gdshader" id="16_fv5f2"]
@@ -69,6 +70,26 @@ default_font = ExtResource("4_a0dtd")
 
 [sub_resource type="Theme" id="Theme_2phbr"]
 default_font = ExtResource("4_a0dtd")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ofk2b"]
+shader = ExtResource("13_gvq24")
+shader_parameter/grain_intensity = 0.1
+shader_parameter/min_lum = 0.0
+shader_parameter/max_lum = 0.654
+shader_parameter/time_scale = 0.5
+shader_parameter/vignette_darkness = 0.0
+shader_parameter/vignette_outer_radius = 0.7
+shader_parameter/vignette_inner_radius = 0.2
+shader_parameter/scanline_intensity = 0.488
+shader_parameter/barrel_distortion = 0.137
+shader_parameter/chromatic_aberration = 0.0
+shader_parameter/crt_vignette_power = 0.072
+shader_parameter/pixel_resolution_x = 1080
+shader_parameter/pixel_resolution_y = 900
+shader_parameter/enable_color_quantization = true
+shader_parameter/color_quant_steps = 23.895
+shader_parameter/warble_amount = 0.0
+shader_parameter/warble_speed = 3.104
 
 [sub_resource type="Shader" id="Shader_va6r8"]
 code = "shader_type sky;
@@ -528,14 +549,12 @@ func _ready() -> void:
 func _on_biome_progress(biome: String, percent: int):
 	var popup = BIOME_POPUP.instantiate()
 	get_node(\"../../UI\").add_child(popup)
-
 	var text = \"\"
 	if percent == 50:
-		text = \"🐟 50% der Fische im \" + biome + \" entdeckt!\"
+		text = tr(\"BIOME_PROGRESS_50\").format({\"biome\": tr(\"BIOME_\" + biome.to_upper())})
 	else:
-		text = \"🏆 Alle Fische im \" + biome + \" gefangen!\"
-
-	popup.show_popup(text, biome, percent)  # ← biome + percent übergeben
+		text = tr(\"BIOME_PROGRESS_100\").format({\"biome\": tr(\"BIOME_\" + biome.to_upper())})
+	popup.show_popup(text, biome, percent)
 
 # 🆕 Story-Item wurde \\\"verwendet\\\"
 func _on_story_item_used(biome: String) -> void:
@@ -1941,6 +1960,17 @@ animation_player = NodePath("../../DirectionalLight3D/AnimationPlayer")
 animation_name = "circle"
 day_time_offset_seconds = 30.0
 
+[node name="CRT" type="ColorRect" parent="UI"]
+z_index = 4096
+material = SubResource("ShaderMaterial_ofk2b")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 28.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_cfq0f")
 
@@ -1951,7 +1981,7 @@ script = ExtResource("11_bdykf")
 sway_amount = 0.115
 
 [node name="FishingRod" parent="PlayerCamera" node_paths=PackedStringArray("rod_tip", "hook", "splash", "waterplane", "catch_result_ui", "camera", "fishbook_ui", "options", "journal_button", "inventory_button", "map_button", "left_button", "right_button", "interact_button", "settings_button", "inventory_ui") instance=ExtResource("12_4j2b8")]
-transform = Transform3D(0.925417, -0.163176, -0.34202, 0.173648, 0.984808, 0, 0.336824, -0.0593912, 0.939693, 0.4, -0.245957, -1.03766)
+transform = Transform3D(0.925417, -0.163176, -0.34202, 0.173648, 0.984808, 0, 0.336824, -0.0593912, 0.939693, 0.4, 0.000335217, -1.24747)
 script = SubResource("GDScript_8wjpf")
 rod_tip = NodePath("RodMesh/RodTip")
 hook = NodePath("../../Hook")
@@ -1972,8 +2002,8 @@ settings_button = NodePath("../../UI/Touch/TopLeftPanel/MarginContainer/VBoxCont
 cast_power_ui_scene = ExtResource("9_loenh")
 inventory_ui = NodePath("../../UI/InventoryUI")
 
-[node name="RodMesh" parent="PlayerCamera/FishingRod" index="0"]
-transform = Transform3D(1, 0, 0, 0, 0.966823, 0.255446, 0, -0.255446, 0.966823, 0, 0, -0.0166266)
+[node name="left_hand" parent="PlayerCamera/FishingRod/RodMesh" index="5"]
+transform = Transform3D(-0.211648, -0.037744, 0.254183, -0.17704, 0.278759, -0.094085, -0.207091, -0.199734, -0.179344, -0.113471, -0.850528, 0.246808)
 
 [node name="WaterPlane" type="MeshInstance3D" parent="."]
 transform = Transform3D(-0.0489544, 4.27973e-09, -0.998801, -8.74228e-08, -1, 0, -0.998801, 8.7318e-08, 0.0489544, -19.3102, -3.68562, 16.1898)
@@ -2013,6 +2043,7 @@ sky_mode = 1
 libraries = {
 &"": SubResource("AnimationLibrary_ynv6u")
 }
+speed_scale = 0.1
 
 [node name="Line" type="MeshInstance3D" parent="." node_paths=PackedStringArray("rod_tip", "hook", "fishing_script")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.319973, 1.53619, 0.170711)
@@ -2161,6 +2192,8 @@ fade_duration = 0.0
 
 [editable path="UI/Touch"]
 [editable path="PlayerCamera/FishingRod"]
+[editable path="PlayerCamera/FishingRod/RodMesh/right_hand"]
+[editable path="PlayerCamera/FishingRod/RodMesh/left_hand"]
 [editable path="Shop"]
 [editable path="Shop/shop"]
 [editable path="Shop/cigs"]

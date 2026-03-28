@@ -20,7 +20,7 @@ const DIALOG_DATA = {
 			"de": "Fremder",
 			"en": "Stranger"
 		},
-		"sprite": "res://assets/characters/fisherman.png",  # 🔧 Pfad anpassen
+		"sprite": "res://assets/assets/fisherman.png",  # 🔧 Pfad anpassen
 		"lines": {
 			"de": [
 				"Es gefällt mir nicht, dass du so tust als wäre nichts gewesen...",

@@ -1,6 +1,6 @@
-[gd_scene load_steps=65 format=3 uid="uid://b6exh44q6u50p"]
+[gd_scene load_steps=67 format=3 uid="uid://b6exh44q6u50p"]
 
-[ext_resource type="Shader" uid="uid://cn35ulb5u6yxj" path="res://shader/screen_rain.gdshader" id="1_edxmc"]
+[ext_resource type="Shader" path="res://shader/screen_rain.gdshader" id="1_edxmc"]
 [ext_resource type="Shader" uid="uid://c140kjbm2bot5" path="res://shader/buckshot.gdshader" id="1_mbbil"]
 [ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="2_hpe61"]
 [ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="3_5fodb"]
@@ -16,6 +16,7 @@
 [ext_resource type="Texture2D" uid="uid://e7t33pnr13bp" path="res://textures/These-images-of-clouds-are-created-exclusively-using-Perlin-noise-It-simulates-the_Q320.jpg" id="13_d60cl"]
 [ext_resource type="Script" uid="uid://bl1xotduehieu" path="res://scripts/camera_sway.gd" id="14_kfm7u"]
 [ext_resource type="PackedScene" uid="uid://dshxvgjjo0fx5" path="res://scenes/catch_ui.tscn" id="14_ytxmq"]
+[ext_resource type="Shader" uid="uid://imf547kyj0bj" path="res://shader/CRT.gdshader" id="15_djqsd"]
 [ext_resource type="PackedScene" uid="uid://b5ew1rfc8ow8g" path="res://scenes/fishingRod.tscn" id="15_pt7ci"]
 [ext_resource type="Shader" uid="uid://c37jx2ebwp1a3" path="res://shader/shader_water.gdshader" id="16_5lvs8"]
 [ext_resource type="Texture2D" uid="uid://cvllk03mhtybp" path="res://textures/723-normal.jpg" id="16_rnvy1"]
@@ -67,6 +68,26 @@ default_font = ExtResource("3_5fodb")
 
 [sub_resource type="Theme" id="Theme_2phbr"]
 default_font = ExtResource("3_5fodb")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wwpln"]
+shader = ExtResource("15_djqsd")
+shader_parameter/grain_intensity = 0.1
+shader_parameter/min_lum = 0.0
+shader_parameter/max_lum = 0.654
+shader_parameter/time_scale = 0.5
+shader_parameter/vignette_darkness = 0.0
+shader_parameter/vignette_outer_radius = 0.7
+shader_parameter/vignette_inner_radius = 0.2
+shader_parameter/scanline_intensity = 0.488
+shader_parameter/barrel_distortion = 0.137
+shader_parameter/chromatic_aberration = 0.0
+shader_parameter/crt_vignette_power = 0.562
+shader_parameter/pixel_resolution_x = 1080
+shader_parameter/pixel_resolution_y = 900
+shader_parameter/enable_color_quantization = true
+shader_parameter/color_quant_steps = 23.895
+shader_parameter/warble_amount = 0.0
+shader_parameter/warble_speed = 3.104
 
 [sub_resource type="Shader" id="Shader_a0dtd"]
 code = "shader_type sky;
@@ -1431,6 +1452,17 @@ day_time_offset_seconds = 30.0
 
 [node name="CatchUI" parent="UI" instance=ExtResource("14_ytxmq")]
 
+[node name="CRT" type="ColorRect" parent="UI"]
+z_index = 4096
+material = SubResource("ShaderMaterial_wwpln")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 28.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_ccyyx")
 
@@ -1461,6 +1493,12 @@ interact_button = NodePath("../../UI/Touch/InteractButton")
 settings_button = NodePath("../../UI/Touch/TopLeftPanel/MarginContainer/VBoxContainer/SettingsButton")
 cast_power_ui_scene = ExtResource("8_djqsd")
 inventory_ui = NodePath("../../UI/InventoryUI")
+
+[node name="RodMesh" parent="PlayerCamera/FishingRod" index="0"]
+transform = Transform3D(1, 0, 0, 0, 0.966823, 0.255446, 0, -0.255446, 0.966823, 0, 0, -0.0166266)
+
+[node name="left_hand" parent="PlayerCamera/FishingRod/RodMesh" index="5"]
+transform = Transform3D(-0.211648, -0.037744, 0.254183, -0.17704, 0.278759, -0.094085, -0.207091, -0.199734, -0.179344, -0.113471, -0.850528, 0.246808)
 
 [node name="WaterPlane" type="MeshInstance3D" parent="."]
 transform = Transform3D(-0.0489544, 4.27973e-09, -0.998801, -8.74228e-08, -1, 0, -0.998801, 8.7318e-08, 0.0489544, -19.3102, 0.176267, 16.1898)
@@ -1606,3 +1644,5 @@ transform = Transform3D(0.669928, 0, -3.16998, 0, 3.24, 0, 3.16998, 0, 0.669928,
 [editable path="UI/Touch"]
 [editable path="UI/CatchUI"]
 [editable path="PlayerCamera/FishingRod"]
+[editable path="PlayerCamera/FishingRod/RodMesh/right_hand"]
+[editable path="PlayerCamera/FishingRod/RodMesh/left_hand"]

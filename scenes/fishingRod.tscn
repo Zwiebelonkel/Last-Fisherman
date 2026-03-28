@@ -1,7 +1,9 @@
-[gd_scene load_steps=18 format=3 uid="uid://b5ew1rfc8ow8g"]
+[gd_scene load_steps=21 format=3 uid="uid://b5ew1rfc8ow8g"]
 
 [ext_resource type="Material" uid="uid://cj86wv7c01tef" path="res://materials/outlineWhite.tres" id="2_wjujl"]
 [ext_resource type="Shader" uid="uid://cfsuhiaq15sgu" path="res://shader/outline.gdshader" id="3_8r45t"]
+[ext_resource type="PackedScene" uid="uid://hdtv2nks26p4" path="res://assets/hand/scene.gltf" id="3_byvj7"]
+[ext_resource type="Texture2D" uid="uid://dblechu7phlme" path="res://assets/hand/textures/Hand_baseColor.png" id="4_6deuo"]
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_4swrq"]
 material = ExtResource("2_wjujl")
@@ -49,6 +51,10 @@ metallic = 0.87
 material = SubResource("StandardMaterial3D_byvj7")
 size = Vector3(0.05, 0.015, 0.105)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dtr8f"]
+albedo_color = Color(0.544974, 0.544974, 0.544974, 1)
+albedo_texture = ExtResource("4_6deuo")
+
 [sub_resource type="Animation" id="Animation_wjujl"]
 length = 0.001
 tracks/0/type = "value"
@@ -86,6 +92,42 @@ tracks/2/keys = {
 "transitions": PackedFloat32Array(1),
 "update": 0,
 "values": [Vector3(1, 1, 1)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("RodMesh/left_hand:visible")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("RodMesh/left_hand:rotation")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0.293696, 2.18525, -0.565829)]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("RodMesh/left_hand:position")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(-0.113471, -0.850528, 0.246808)]
 }
 
 [sub_resource type="Animation" id="Animation_8r45t"]
@@ -126,6 +168,18 @@ tracks/2/keys = {
 "transitions": PackedFloat32Array(2, 2, 2, 2),
 "update": 0,
 "values": [Vector3(0, 0, -0.0166266), Vector3(0, -0.015, 0.02), Vector3(0, 0.008, -0.015), Vector3(0, 0, -0.0166266)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("RodMesh/left_hand:visible")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
 }
 
 [sub_resource type="Animation" id="Animation_6deuo"]
@@ -168,6 +222,30 @@ tracks/2/keys = {
 "update": 0,
 "values": [Vector3(0, 0, -0.0166266), Vector3(0, -0.018, 0.022), Vector3(0, 0, -0.0166266), Vector3(0, -0.015, 0.018)]
 }
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("RodMesh/left_hand:visible")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("RodMesh/left_hand:rotation")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(),
+"transitions": PackedFloat32Array(),
+"update": 0,
+"values": []
+}
 
 [sub_resource type="Animation" id="Animation_stpr7"]
 resource_name = "idle"
@@ -208,6 +286,18 @@ tracks/2/keys = {
 "transitions": PackedFloat32Array(2, 2, 2),
 "update": 0,
 "values": [Vector3(0, 0, -0.0166266), Vector3(0, -0.002, -0.014), Vector3(0, 0, -0.0166266)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("RodMesh/left_hand:visible")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
 }
 
 [sub_resource type="Animation" id="Animation_dtr8f"]
@@ -250,6 +340,18 @@ tracks/2/keys = {
 "update": 0,
 "values": [Vector3(0, 0, 0), Vector3(0.015, 0.01, 0.06), Vector3(0, 0.022, 0.1), Vector3(-0.015, 0.01, 0.06), Vector3(0, 0, 0), Vector3(0.015, -0.01, 0.06), Vector3(0, -0.022, 0.1), Vector3(-0.015, -0.01, 0.06), Vector3(0, 0, 0)]
 }
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("RodMesh/left_hand:visible")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
 
 [sub_resource type="Animation" id="Animation_byvj7"]
 resource_name = "reel"
@@ -290,6 +392,30 @@ tracks/2/keys = {
 "update": 0,
 "values": [Vector3(0, 0, -0.0166266), Vector3(0, 0.01, -0.022), Vector3(0, -0.02, 0.025), Vector3(0, 0, -0.0166266)]
 }
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("RodMesh/left_hand:position")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.4, 0.409395),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(-0.113471, -0.850528, 0.246808), Vector3(-0.113, -2.021, 0.392), Vector3(-0.113471, -0.850528, 0.246808)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("RodMesh/left_hand:visible")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 0.401068),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_6deuo"]
 _data = {
@@ -326,7 +452,66 @@ mesh = SubResource("BoxMesh_6deuo")
 transform = Transform3D(-0.00739106, -0.999901, 0.0119594, 0.955586, -0.0105862, -0.294521, 0.294619, 0.00925145, 0.95557, -0.0891956, -0.540106, 0.0475879)
 mesh = SubResource("CylinderMesh_dtr8f")
 
+[node name="right_hand" parent="RodMesh" instance=ExtResource("3_byvj7")]
+transform = Transform3D(-0.0551827, 1.92784e-08, -0.301073, -0.340077, -0.0183264, 0.0487158, 0.0180904, -0.344513, -0.00259146, 0.0433904, -0.832659, 0.41662)
+
+[node name="Skeleton3D" parent="RodMesh/right_hand/Sketchfab_model/root/GLTF_SceneRootNode/Hand_21/GLTF_created_0" index="0"]
+bones/2/rotation = Quaternion(-0.00889641, 0.0410467, 0.0590542, 0.997371)
+bones/3/rotation = Quaternion(0.53522, 0.0074198, 0.0198048, 0.844448)
+bones/4/rotation = Quaternion(0.763652, -0.0153934, 0.00563387, 0.64542)
+bones/5/rotation = Quaternion(0.420321, 0.0217611, 0.089205, 0.902718)
+bones/6/rotation = Quaternion(-0.0887791, 0.297913, 0.382829, 0.869947)
+bones/7/rotation = Quaternion(0.102168, -0.0783656, 0.0369183, 0.990988)
+bones/8/rotation = Quaternion(0.0456357, -0.00951051, 0.0401028, 0.998108)
+bones/9/rotation = Quaternion(-0.0160575, 0.0177572, -0.00435525, 0.999704)
+bones/10/rotation = Quaternion(0.539296, 0.0203917, 0.00221502, 0.841867)
+bones/11/rotation = Quaternion(0.825962, 0.0133524, -0.00839752, 0.563505)
+bones/12/rotation = Quaternion(0.465725, 0.0052152, 0.0152625, 0.884782)
+bones/13/rotation = Quaternion(0.0137978, -0.056843, -0.0568759, 0.996666)
+bones/14/rotation = Quaternion(0.515711, 0.0739335, -0.0869386, 0.849128)
+bones/15/rotation = Quaternion(0.59148, 0.0814562, 0.00481646, 0.802181)
+bones/16/rotation = Quaternion(0.613141, -0.0581361, 0.0574103, 0.785737)
+bones/17/rotation = Quaternion(-0.0201144, -0.155817, -0.16301, 0.974035)
+bones/18/rotation = Quaternion(0.42043, 0.211207, -0.0111593, 0.88233)
+bones/19/rotation = Quaternion(0.702584, 0.000557421, 0.00721052, 0.711564)
+bones/20/rotation = Quaternion(0.466369, 0.0551923, -0.0224541, 0.882581)
+
+[node name="Object_7" parent="RodMesh/right_hand/Sketchfab_model/root/GLTF_SceneRootNode/Hand_21/GLTF_created_0/Skeleton3D" index="0"]
+transform = Transform3D(1, 2.98023e-08, -1.30385e-08, 0, 1, 3.72529e-09, 0, 0, 1, 0.0456467, -0.14364, -0.00836647)
+surface_material_override/0 = SubResource("StandardMaterial3D_dtr8f")
+
+[node name="left_hand" parent="RodMesh" instance=ExtResource("3_byvj7")]
+transform = Transform3D(-0.211648, -0.037744, 0.254183, -0.17704, 0.278759, -0.094085, -0.207091, -0.199734, -0.179344, -0.113471, -0.850528, 0.246808)
+
+[node name="Skeleton3D" parent="RodMesh/left_hand/Sketchfab_model/root/GLTF_SceneRootNode/Hand_21/GLTF_created_0" index="0"]
+bones/2/rotation = Quaternion(-0.00797006, 0.0438006, 0.0910826, 0.994848)
+bones/3/rotation = Quaternion(0.433654, -0.0274041, -0.0431754, 0.899627)
+bones/4/rotation = Quaternion(0.500321, 0.0159333, 0.00195675, 0.865691)
+bones/5/rotation = Quaternion(0.298675, 0.00375259, -0.0252568, 0.954013)
+bones/6/rotation = Quaternion(0.0507233, 0.472662, 0.366419, 0.799847)
+bones/7/rotation = Quaternion(0.371418, -0.0520631, 0.120236, 0.919174)
+bones/8/rotation = Quaternion(0.35796, 0.0215718, 0.0832403, 0.929769)
+bones/9/rotation = Quaternion(-0.00590959, 0.0184964, -0.00488415, 0.9998)
+bones/10/rotation = Quaternion(0.453281, 0.0353094, 0.0474997, 0.889401)
+bones/11/rotation = Quaternion(0.654018, -0.0516213, -0.00612269, 0.754691)
+bones/12/rotation = Quaternion(0.55593, -0.00846288, -0.00617005, 0.831163)
+bones/13/rotation = Quaternion(0.0271158, -0.100369, -0.0546371, 0.993079)
+bones/14/rotation = Quaternion(0.472217, 0.138555, -0.0266798, 0.870116)
+bones/15/rotation = Quaternion(0.599998, 0.0186258, -0.00335154, 0.799778)
+bones/16/rotation = Quaternion(0.558138, -0.0677948, -0.0407933, 0.825967)
+bones/17/rotation = Quaternion(-0.010811, -0.160429, -0.164692, 0.973151)
+bones/18/rotation = Quaternion(0.517978, 0.202589, -0.0233, 0.830731)
+bones/19/rotation = Quaternion(0.615371, 0.0279011, -0.0120413, 0.787651)
+bones/20/rotation = Quaternion(0.549224, -0.02144, -0.0038492, 0.835391)
+
+[node name="Object_7" parent="RodMesh/left_hand/Sketchfab_model/root/GLTF_SceneRootNode/Hand_21/GLTF_created_0/Skeleton3D" index="0"]
+transform = Transform3D(0.999814, 0.0119708, -0.0150993, -0.0109159, 0.997617, 0.0681122, 0.0158782, -0.0679344, 0.997563, -0.0141163, -0.230533, 0.0879307)
+surface_material_override/0 = SubResource("StandardMaterial3D_dtr8f")
+
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
 &"": SubResource("AnimationLibrary_6deuo")
 }
+
+[editable path="RodMesh/right_hand"]
+[editable path="RodMesh/left_hand"]

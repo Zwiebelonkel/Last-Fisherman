@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://ggkmsps3bdnn"]
 
-[ext_resource type="Script" uid="uid://cf2xeyiqvg8rg" path="res://scripts/BiomePopUp.gd" id="1_7lqxf"]
+[ext_resource type="Script" path="res://scripts/BiomePopUp.gd" id="1_7lqxf"]
 [ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="2_font"]
 
 [node name="BiomePopup" type="Control"]

@@ -18,6 +18,7 @@
 [ext_resource type="PackedScene" uid="uid://ws4ms8iq4gg4" path="res://scenes/clock.tscn" id="12_gi457"]
 [ext_resource type="Shader" uid="uid://cfsuhiaq15sgu" path="res://shader/outline.gdshader" id="12_h3250"]
 [ext_resource type="Script" uid="uid://bymrcyid32xsp" path="res://scripts/line.gd" id="13_my70f"]
+[ext_resource type="Shader" uid="uid://imf547kyj0bj" path="res://shader/CRT.gdshader" id="13_snoms"]
 [ext_resource type="PackedScene" uid="uid://cfptx2e41wve1" path="res://scenes/shop.tscn" id="15_nmpot"]
 [ext_resource type="PackedScene" uid="uid://8ljq0dpgsno5" path="res://scenes/bait.tscn" id="16_nmpot"]
 [ext_resource type="PackedScene" uid="uid://btgasvjdkp460" path="res://assets/hotel.glb" id="18_agolw"]
@@ -142,6 +143,26 @@ default_font = ExtResource("3_agolw")
 
 [sub_resource type="Theme" id="Theme_ikoiv"]
 default_font = ExtResource("3_agolw")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_r7ypu"]
+shader = ExtResource("13_snoms")
+shader_parameter/grain_intensity = 0.1
+shader_parameter/min_lum = 0.0
+shader_parameter/max_lum = 0.654
+shader_parameter/time_scale = 0.5
+shader_parameter/vignette_darkness = 0.0
+shader_parameter/vignette_outer_radius = 0.7
+shader_parameter/vignette_inner_radius = 0.2
+shader_parameter/scanline_intensity = 0.488
+shader_parameter/barrel_distortion = 0.137
+shader_parameter/chromatic_aberration = 0.0
+shader_parameter/crt_vignette_power = 0.562
+shader_parameter/pixel_resolution_x = 1080
+shader_parameter/pixel_resolution_y = 900
+shader_parameter/enable_color_quantization = true
+shader_parameter/color_quant_steps = 23.895
+shader_parameter/warble_amount = 0.0
+shader_parameter/warble_speed = 3.104
 
 [sub_resource type="GDScript" id="GDScript_dqb0a"]
 script/source = "extends Node3D
@@ -272,14 +293,12 @@ func _ready() -> void:
 func _on_biome_progress(biome: String, percent: int):
 	var popup = BIOME_POPUP.instantiate()
 	get_node(\"../../UI\").add_child(popup)
-
 	var text = \"\"
 	if percent == 50:
-		text = \"🐟 50% der Fische im \" + biome + \" entdeckt!\"
+		text = tr(\"BIOME_PROGRESS_50\").format({\"biome\": tr(\"BIOME_\" + biome.to_upper())})
 	else:
-		text = \"🏆 Alle Fische im \" + biome + \" gefangen!\"
-
-	popup.show_popup(text, biome, percent)  # ← biome + percent übergeben
+		text = tr(\"BIOME_PROGRESS_100\").format({\"biome\": tr(\"BIOME_\" + biome.to_upper())})
+	popup.show_popup(text, biome, percent)
 
 # 🆕 Story-Item wurde \"verwendet\"
 func _on_story_item_used(biome: String) -> void:
@@ -1962,12 +1981,6 @@ emission_enabled = true
 emission = Color(1, 0, 0, 1)
 emission_energy_multiplier = 15.74
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_86b61"]
-albedo_color = Color(0.194349, 0.194349, 0.194349, 1)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nmpot"]
-albedo_color = Color(0.180005, 0.180005, 0.180005, 1)
-
 [sub_resource type="Curve3D" id="Curve3D_snoms"]
 _data = {
 "points": PackedVector3Array(0, 0, 0, 0, 0, 0, 27.7752, -4.53328, 17.2884, 1.52, 0.115, -9.35, -0.205, 0.05, 0.31, 7.49081, 2.43252, 16.4618, -0.335, 0, 0.635, 0, 0, 0, 3.56221, -1.05666, 26.7223),
@@ -2111,6 +2124,17 @@ offset_bottom = 82.52
 
 [node name="Clock" parent="UI" instance=ExtResource("12_gi457")]
 
+[node name="CRT" type="ColorRect" parent="UI"]
+z_index = 4096
+material = SubResource("ShaderMaterial_r7ypu")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 28.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
 [node name="PlayerCamera" type="Camera3D" parent="."]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 12.867, 0.0447942)
 near = 0.108
@@ -2139,8 +2163,8 @@ settings_button = NodePath("../../UI/Touch/TopLeftPanel/MarginContainer/VBoxCont
 cast_power_ui_scene = ExtResource("8_h3250")
 inventory_ui = NodePath("../../UI/InventoryUI")
 
-[node name="RodMesh" parent="PlayerCamera/FishingRod" index="0"]
-transform = Transform3D(1, 0, 0, 0, 0.966823, 0.255446, 0, -0.255446, 0.966823, 0, 0, -0.0166266)
+[node name="left_hand" parent="PlayerCamera/FishingRod/RodMesh" index="5"]
+transform = Transform3D(-0.211648, -0.037744, 0.254183, -0.17704, 0.278759, -0.094085, -0.207091, -0.199734, -0.179344, -0.113471, -0.850528, 0.246808)
 
 [node name="WaterPlane" type="MeshInstance3D" parent="."]
 transform = Transform3D(-1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0, 0, 1, 0, 8.93222, 91.1433)
@@ -2389,14 +2413,8 @@ bus = &"SFX"
 [node name="ödland" parent="." instance=ExtResource("29_86b61")]
 transform = Transform3D(1, 0, 0, 0, 1.765, 0, 0, 0, 0.475, -14.9951, 5.05564, -85.7626)
 
-[node name="Plane" parent="ödland" index="0"]
-surface_material_override/0 = SubResource("StandardMaterial3D_86b61")
-
 [node name="ödland2" parent="." instance=ExtResource("29_86b61")]
 transform = Transform3D(-0.0550024, 0, 0.474281, 0, 1.765, 0, -0.998486, 0, -0.0261261, 179.55, 4.99006, 5.19084)
-
-[node name="Plane" parent="ödland2" index="0"]
-surface_material_override/0 = SubResource("StandardMaterial3D_nmpot")
 
 [node name="openSign" parent="." instance=ExtResource("33_w6q1s")]
 transform = Transform3D(-2.25114e-08, 0, 0.515, 0, 0.515, 0, -0.515, 0, -2.25114e-08, -6.1921, 10.6631, -1.06699)
@@ -2418,6 +2436,8 @@ fade_duration = 0.0
 
 [editable path="UI/Touch"]
 [editable path="PlayerCamera/FishingRod"]
+[editable path="PlayerCamera/FishingRod/RodMesh/right_hand"]
+[editable path="PlayerCamera/FishingRod/RodMesh/left_hand"]
 [editable path="Shop"]
 [editable path="Shop/shop"]
 [editable path="Shop/cigs"]

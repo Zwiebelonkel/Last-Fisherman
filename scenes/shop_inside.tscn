@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://dme4l6a6jg0g6"]
+[gd_scene load_steps=24 format=3 uid="uid://dme4l6a6jg0g6"]
 
 [ext_resource type="PackedScene" uid="uid://b5ew1rfc8ow8g" path="res://scenes/fishingRod.tscn" id="1_3qbwi"]
 [ext_resource type="Script" uid="uid://cl5fc0glwmnhs" path="res://scripts/UpgradeShop.gd" id="1_i2sg0"]
@@ -115,6 +115,26 @@ _data = {
 &"idle": SubResource("Animation_3qbwi")
 }
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_po5ig"]
+shader = ExtResource("2_nnl43")
+shader_parameter/grain_intensity = 0.1
+shader_parameter/min_lum = 0.0
+shader_parameter/max_lum = 0.654
+shader_parameter/time_scale = 0.5
+shader_parameter/vignette_darkness = 0.0
+shader_parameter/vignette_outer_radius = 0.7
+shader_parameter/vignette_inner_radius = 0.2
+shader_parameter/scanline_intensity = 0.488
+shader_parameter/barrel_distortion = 0.137
+shader_parameter/chromatic_aberration = 0.0
+shader_parameter/crt_vignette_power = 0.562
+shader_parameter/pixel_resolution_x = 1080
+shader_parameter/pixel_resolution_y = 900
+shader_parameter/enable_color_quantization = true
+shader_parameter/color_quant_steps = 23.895
+shader_parameter/warble_amount = 0.0
+shader_parameter/warble_speed = 3.104
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pmnnn"]
 bg_color = Color(0.133196, 0.133196, 0.133196, 0.709804)
 border_color = Color(0.650128, 0.650128, 0.650128, 1)
@@ -181,6 +201,17 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.964781, 0.205272)
 amount = 75
 
 [node name="UI" type="CanvasLayer" parent="."]
+
+[node name="CRT" type="ColorRect" parent="UI"]
+z_index = 4096
+material = SubResource("ShaderMaterial_po5ig")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 28.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
 
 [node name="ShopContainer" type="CenterContainer" parent="UI"]
 anchors_preset = 6

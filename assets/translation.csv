@@ -336,6 +336,11 @@ FISH_CITY_BARRAKUDA_SCIENCE,Barrakudas erreichen dank Muskelzusammensetzung und 
 FISH_CITY_LOAF_FISH_NAME,Loaf-fish,Loaf-fish
 FISH_CITY_LOAF_FISH_DESC,Ist halt ein Brot mit Flossen und Kiemen. Übelst sauer und schlecht gelaunt.,It's just bread with fins and gills. Super sour and in a bad mood.
 FISH_CITY_LOAF_FISH_SCIENCE,Ein Fleisch-Sandwich kann bis zu 15.544 Liter Wasser verbrauchen während ein Gurken-Sandwich (aus 1 kg Gurken) nur etwa 28 Liter Wasser benötigt.,A meat sandwich can consume up to 15544 liters of water while a cucumber sandwich (from 1 kg cucumbers) only needs about 28 liters of water.
+
+FISH_CITY_WHITE_DOG_NAME,Weißer Hund,White Dog
+FISH_CITY_WHITE_DOG_DESC,Oh... wie kommst du denn hier her Hund? Gut dass du schwimmen kannst.,Now how'd you find this place dog? Good thing you can swim!
+FISH_CITY_WHITE_DOG_SCIENCE,Ungewöhnlich helle Tiere entstehen oft durch Pigmentverlust (Leuzismus oder Albinismus). In dunklen Umgebungen kann diese Anpassung helfen Energie zu sparen.,Unusually pale animals often result from pigment loss (leucism or albinism). In dark environments this adaptation can help conserve energy.
+
 FISH_CITY_NEONFLOSSER_NAME,Neonflosser,Neon Fin
 FISH_CITY_NEONFLOSSER_DESC,Sieht aus wie ein Rave im Aquarium.,Looks like a rave in an aquarium.
 FISH_CITY_NEONFLOSSER_SCIENCE,Biolumineszenz bei Fischen entsteht häufig durch symbiotische Bakterien – Natur die Party macht.,Bioluminescence in fish often occurs through symbiotic bacteria - nature throwing a party.
@@ -623,3 +628,13 @@ ANY_KEY,[Beliebige Taste],[Any Key]
 
 FISH_ACTION_SELL, Fisch verkaufen, Sell fish
 FISH_ACTION_USE_AS_BAIT, Als Köder nutzen, Use as bait
+
+BIOME_PROGRESS_50,🐟 50% der Fische im {biome} entdeckt!,🐟 50% of the fish in {biome} discovered!
+BIOME_PROGRESS_100,🏆 Alle Fische im {biome} gefangen!,🏆 All fish in {biome} caught!
+BIOME_LAKE,See,Lake
+BIOME_CITY,Stadt,City
+BIOME_SEWER,Kanalisation,Sewer
+BIOME_FOREST,Wald,Forest
+BIOME_DESERT,Wüste,Desert
+BIOME_ICELAND,Island,Iceland
+BIOME_OCEAN,Ozean,Ocean

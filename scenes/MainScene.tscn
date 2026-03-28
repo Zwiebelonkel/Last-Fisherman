@@ -1,9 +1,11 @@
-[gd_scene load_steps=86 format=3 uid="uid://cx2sffjjdjuw5"]
+[gd_scene load_steps=88 format=3 uid="uid://cx2sffjjdjuw5"]
 
 [ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="1_2phbr"]
 [ext_resource type="PackedScene" uid="uid://b5ew1rfc8ow8g" path="res://scenes/fishingRod.tscn" id="1_echbf"]
+[ext_resource type="Shader" uid="uid://c140kjbm2bot5" path="res://shader/buckshot.gdshader" id="1_g8282"]
 [ext_resource type="Script" uid="uid://bl1xotduehieu" path="res://scripts/camera_sway.gd" id="1_ibiss"]
 [ext_resource type="PackedScene" uid="uid://cdb3sodlv6np7" path="res://scenes/MoneyHUD.tscn" id="1_kp0ql"]
+[ext_resource type="Shader" uid="uid://imf547kyj0bj" path="res://shader/CRT.gdshader" id="2_7tuqu"]
 [ext_resource type="PackedScene" uid="uid://cqtn78ty1fa7" path="res://scenes/CatchResultUI.tscn" id="2_o3jky"]
 [ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="3_8wjpf"]
 [ext_resource type="PackedScene" uid="uid://be7bs5po2ukhi" path="res://scenes/FishBook.tscn" id="7_a7pbh"]
@@ -53,135 +55,8 @@
 [ext_resource type="PackedScene" uid="uid://cw1hh2dbog4uj" path="res://scenes/TutorialOverlay.tscn" id="47_yc0gu"]
 [ext_resource type="Script" path="res://scripts/Biomecinematic.gd" id="52_xuwja"]
 
-[sub_resource type="Shader" id="Shader_7tuqu"]
-code = "shader_type canvas_item;
-
-uniform sampler2D screen_tex : hint_screen_texture;
-
-uniform float exposure    : hint_range(0.5, 2.0) = 1.0;
-uniform float contrast    : hint_range(0.5, 2.0) = 1.1;
-uniform float saturation  : hint_range(0.0, 2.0) = 1.12;
-
-uniform bool  enable_pixelate = true;
-uniform float pixel_factor    : hint_range(0.5, 6.0) = 3.0;
-
-uniform bool  enable_posterize = true;
-uniform float color_levels     : hint_range(2.0, 16.0) = 16.0;
-uniform float dither_strength  : hint_range(0.0, 1.0) = 0.35;
-
-uniform float chrom_aberration : hint_range(0.0, 2.0) = 0.01;
-uniform float vignette_strength: hint_range(0.0, 2.0) = 1.0;
-uniform float grain_strength   : hint_range(0.0, 1.0) = 0.2;
-
-uniform vec3  tint_color = vec3(0.95, 1.03, 0.9);
-uniform float tint_strength : hint_range(0.0, 1.0) = 0.15;
-
-uniform vec2  viewport_size_override = vec2(0.0);
-
-float bayer4x4(vec2 p){
-    int x = int(mod(p.x, 4.0));
-    int y = int(mod(p.y, 4.0));
-    int m[16] = int[16](
-        0,  8,  2, 10,
-       12,  4, 14,  6,
-        3, 11,  1,  9,
-       15,  7, 13,  5
-    );
-    return (float(m[y*4 + x]) + 0.5) / 16.0;
-}
-
-vec3 to_hsv(vec3 c){
-    float cmax = max(c.r, max(c.g, c.b));
-    float cmin = min(c.r, min(c.g, c.b));
-    float d = cmax - cmin;
-    float h = 0.0;
-    if (d > 1e-5) {
-        if      (cmax == c.r) h = mod((c.g - c.b) / d, 6.0);
-        else if (cmax == c.g) h = (c.b - c.r) / d + 2.0;
-        else                  h = (c.r - c.g) / d + 4.0;
-        h /= 6.0;
-        if (h < 0.0) h += 1.0;
-    }
-    float s = cmax <= 1e-5 ? 0.0 : d / cmax;
-    float v = cmax;
-    return vec3(h, s, v);
-}
-
-vec3 to_rgb(vec3 hsv){
-    float h = hsv.x * 6.0;
-    float s = hsv.y;
-    float v = hsv.z;
-    int i = int(floor(h));
-    float f = h - float(i);
-    float p = v * (1.0 - s);
-    float q = v * (1.0 - s * f);
-    float t = v * (1.0 - s * (1.0 - f));
-    if(i == 0) return vec3(v, t, p);
-    if(i == 1) return vec3(q, v, p);
-    if(i == 2) return vec3(p, v, t);
-    if(i == 3) return vec3(p, q, v);
-    if(i == 4) return vec3(t, p, v);
-    return vec3(v, p, q);
-}
-
-float luma(vec3 c){ return dot(c, vec3(0.2126, 0.7152, 0.0722)); }
-
-vec3 adjust_contrast_saturation(vec3 c, float contrast_, float saturation_){
-    c = (c - 0.5) * contrast_ + 0.5;
-    vec3 hsv = to_hsv(c);
-    hsv.y *= saturation_;
-    return clamp(to_rgb(hsv), 0.0, 1.0);
-}
-
-void fragment(){
-    vec2 uv = SCREEN_UV;
-
-    vec2 px = SCREEN_PIXEL_SIZE;
-    if (viewport_size_override.x > 0.0 && viewport_size_override.y > 0.0){
-        px = 1.0 / viewport_size_override;
-    }
-
-    if (enable_pixelate){
-        vec2 step_uv = px * pixel_factor;
-        uv = floor(uv / step_uv) * step_uv + step_uv * 0.5;
-    }
-
-    vec2 center = vec2(0.5);
-    vec2 dir = uv - center;
-    float dist = length(dir);
-    float ca = chrom_aberration * dist * dist;
-
-    vec3 col;
-    col.r = texture(screen_tex, uv + dir * ( ca)).r;
-    col.g = texture(screen_tex, uv                    ).g;
-    col.b = texture(screen_tex, uv - dir * ( ca)).b;
-
-    col *= exposure;
-
-    col = mix(col, col * tint_color, tint_strength);
-
-    if (enable_posterize){
-        vec2 frag_xy = floor(uv / px);
-        float b = bayer4x4(frag_xy);
-
-        vec3 q = floor(col * color_levels + b * dither_strength);
-        col = q / (color_levels - 1.0);
-    }
-
-    col = adjust_contrast_saturation(col, contrast, saturation);
-
-    float vignette = smoothstep(0.5, 0.9, dist) * vignette_strength;
-    col *= clamp(1.0 - vignette, 0.0, 1.0);
-
-    float n = fract(sin(dot(floor(uv/px), vec2(12.9898, 78.233)) + TIME * 37.0) * 43758.5453);
-    col += (n - 0.5) * (px.x + px.y) * 2.0 * grain_strength;
-
-    COLOR = vec4(clamp(col, 0.0, 1.0), 1.0);
-}
-"
-
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1wiy7"]
-shader = SubResource("Shader_7tuqu")
+shader = ExtResource("1_g8282")
 shader_parameter/exposure = 1.0
 shader_parameter/contrast = 1.1
 shader_parameter/saturation = 1.14
@@ -196,6 +71,26 @@ shader_parameter/grain_strength = 0.2
 shader_parameter/tint_color = Vector3(0.95, 1.03, 0.9)
 shader_parameter/tint_strength = 0.15
 shader_parameter/viewport_size_override = Vector2(0, 0)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_fupde"]
+shader = ExtResource("2_7tuqu")
+shader_parameter/grain_intensity = 0.1
+shader_parameter/min_lum = 0.0
+shader_parameter/max_lum = 0.654
+shader_parameter/time_scale = 0.5
+shader_parameter/vignette_darkness = 0.0
+shader_parameter/vignette_outer_radius = 0.7
+shader_parameter/vignette_inner_radius = 0.2
+shader_parameter/scanline_intensity = 0.488
+shader_parameter/barrel_distortion = 0.137
+shader_parameter/chromatic_aberration = 0.0
+shader_parameter/crt_vignette_power = 0.562
+shader_parameter/pixel_resolution_x = 1080
+shader_parameter/pixel_resolution_y = 900
+shader_parameter/enable_color_quantization = true
+shader_parameter/color_quant_steps = 23.895
+shader_parameter/warble_amount = 0.0
+shader_parameter/warble_speed = 3.104
 
 [sub_resource type="Theme" id="Theme_25dfr"]
 default_font = ExtResource("3_8wjpf")
@@ -392,14 +287,12 @@ func _ready() -> void:
 func _on_biome_progress(biome: String, percent: int):
 	var popup = BIOME_POPUP.instantiate()
 	get_node(\"../../UI\").add_child(popup)
-
 	var text = \"\"
 	if percent == 50:
-		text = \"🐟 50% der Fische im \" + biome + \" entdeckt!\"
+		text = tr(\"BIOME_PROGRESS_50\").format({\"biome\": tr(\"BIOME_\" + biome.to_upper())})
 	else:
-		text = \"🏆 Alle Fische im \" + biome + \" gefangen!\"
-
-	popup.show_popup(text, biome, percent)  # ← biome + percent übergeben
+		text = tr(\"BIOME_PROGRESS_100\").format({\"biome\": tr(\"BIOME_\" + biome.to_upper())})
+	popup.show_popup(text, biome, percent)
 
 # 🆕 Story-Item wurde \"verwendet\"
 func _on_story_item_used(biome: String) -> void:
@@ -1733,7 +1626,8 @@ point_count = 2
 [node name="Filter" type="CanvasLayer" parent="."]
 layer = 0
 
-[node name="PixelateOverlay" type="ColorRect" parent="Filter"]
+[node name="PixelateOverlay2" type="ColorRect" parent="Filter"]
+z_index = 4096
 material = SubResource("ShaderMaterial_1wiy7")
 anchors_preset = 15
 anchor_right = 1.0
@@ -1744,6 +1638,17 @@ grow_vertical = 2
 mouse_filter = 2
 
 [node name="UI" type="CanvasLayer" parent="."]
+
+[node name="CRT" type="ColorRect" parent="UI"]
+z_index = 4096
+material = SubResource("ShaderMaterial_fupde")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 28.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
 
 [node name="TutorialOverlay" parent="UI" instance=ExtResource("47_yc0gu")]
 
@@ -1886,7 +1791,7 @@ transform = Transform3D(-1, 0, -1.50996e-07, 0, 1, 0, 1.50996e-07, 0, -1, 0, 2.0
 script = ExtResource("1_ibiss")
 
 [node name="FishingRod" parent="PlayerCamera" node_paths=PackedStringArray("rod_tip", "hook", "splash", "waterplane", "catch_result_ui", "camera", "fishbook_ui", "options", "explosion", "journal_button", "inventory_button", "map_button", "left_button", "right_button", "interact_button", "settings_button", "inventory_ui") instance=ExtResource("1_echbf")]
-transform = Transform3D(0.925417, -0.163176, -0.34202, 0.173648, 0.984808, 0, 0.336824, -0.0593912, 0.939693, 0.4, -0.252114, -1.03766)
+transform = Transform3D(0.925417, -0.163176, -0.34202, 0.173648, 0.984808, 0, 0.336824, -0.0593912, 0.939693, 0.4, 0.22803, -1.03766)
 script = SubResource("GDScript_8wjpf")
 rod_tip = NodePath("RodMesh/RodTip")
 hook = NodePath("../../Hook")
@@ -1908,8 +1813,8 @@ settings_button = NodePath("../../UI/Touch/TopLeftPanel/MarginContainer/VBoxCont
 cast_power_ui_scene = ExtResource("11_7wwop")
 inventory_ui = NodePath("../../UI/InventoryUI")
 
-[node name="RodMesh" parent="PlayerCamera/FishingRod" index="0"]
-transform = Transform3D(1, 0, 0, 0, 0.966823, 0.255446, 0, -0.255446, 0.966823, 0, 0, -0.0166266)
+[node name="left_hand" parent="PlayerCamera/FishingRod/RodMesh" index="5"]
+transform = Transform3D(-0.211648, -0.037744, 0.254183, -0.17704, 0.278759, -0.094085, -0.207091, -0.199734, -0.179344, -0.113471, -0.850528, 0.246808)
 
 [node name="cigaratte" parent="PlayerCamera" instance=ExtResource("14_fto0a")]
 transform = Transform3D(0.789812, 0.0794083, 0.274757, -0.0560458, 0.8343, -0.0800153, -0.280456, 0.0569025, 0.789751, -0.156605, -0.13869, -0.260703)
@@ -2163,6 +2068,8 @@ fade_duration = 0.0
 
 [editable path="UI/Touch"]
 [editable path="PlayerCamera/FishingRod"]
+[editable path="PlayerCamera/FishingRod/RodMesh/right_hand"]
+[editable path="PlayerCamera/FishingRod/RodMesh/left_hand"]
 [editable path="Shop"]
 [editable path="Shop/shop"]
 [editable path="Shop/cigs"]
