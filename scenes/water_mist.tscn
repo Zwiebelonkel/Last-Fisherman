@@ -1,0 +1,81 @@
+[gd_scene load_steps=3 format=3 uid="uid://cvguxck880557"]
+
+[sub_resource type="GDScript" id="GDScript_5ova0"]
+script/source = "extends Node3D
+
+@export var mist_color: Color = Color(0.6, 0.75, 0.8, 0.04)
+@export var wind_strength: float = 0.3
+@export var wind_direction: Vector3 = Vector3(1.0, 0.05, 0.2)
+
+@onready var particles: GPUParticles3D = $GPUParticles3D
+
+func _ready() -> void:
+	_setup_mist()
+
+func _setup_mist() -> void:
+	particles.amount = 800
+	particles.lifetime = 18.0
+	particles.preprocess = 10.0
+	particles.visibility_aabb = AABB(Vector3(-80, 0, -80), Vector3(160, 6, 160))
+
+	var mat := particles.process_material as ParticleProcessMaterial
+
+	mat.emission_shape = ParticleProcessMaterial.EMISSION_SHAPE_BOX
+	mat.emission_box_extents = Vector3(60, 0.1, 60)
+
+	mat.direction = wind_direction.normalized()
+	mat.spread = 8.0
+	mat.initial_velocity_min = wind_strength * 0.3
+	mat.initial_velocity_max = wind_strength
+
+	mat.gravity = Vector3(0, 0.015, 0)
+
+	mat.turbulence_enabled = true
+	mat.turbulence_noise_strength = 0.8
+	mat.turbulence_noise_scale = 0.4
+	mat.turbulence_noise_speed_random = 0.15
+	mat.turbulence_influence_min = 0.06
+	mat.turbulence_influence_max = 0.18
+
+	mat.scale_min = 8.0
+	mat.scale_max = 22.0
+
+	var color_ramp := Gradient.new()
+	color_ramp.add_point(0.0,  Color(mist_color.r, mist_color.g, mist_color.b, 0.0))
+	color_ramp.add_point(0.2,  Color(mist_color.r, mist_color.g, mist_color.b, mist_color.a))
+	color_ramp.add_point(0.8,  Color(mist_color.r, mist_color.g, mist_color.b, mist_color.a))
+	color_ramp.add_point(1.0,  Color(mist_color.r, mist_color.g, mist_color.b, 0.0))
+	var grad_tex := GradientTexture1D.new()
+	grad_tex.gradient = color_ramp
+	mat.color_ramp = grad_tex
+
+	var mist_mat := StandardMaterial3D.new()
+	mist_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	mist_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	mist_mat.billboard_mode = BaseMaterial3D.BILLBOARD_ENABLED
+	mist_mat.depth_draw_mode = BaseMaterial3D.DEPTH_DRAW_DISABLED
+	mist_mat.albedo_color = Color(1, 1, 1, 1)
+	mist_mat.emission_enabled = true
+	mist_mat.emission = Color(0.55, 0.65, 0.7)
+	mist_mat.emission_energy_multiplier = 0.08
+
+	var quad := QuadMesh.new()
+	quad.size = Vector2(1, 1)
+	quad.material = mist_mat
+
+	particles.draw_pass_1 = quad
+	particles.emitting = true
+	
+
+func set_night_intensity(t: float) -> void:
+	var mat := particles.process_material as ParticleProcessMaterial
+	mat.color = Color(0.25, 0.28, 0.35, lerpf(0.02, 0.07, t))
+"
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_5ova0"]
+
+[node name="WaterMist" type="Node3D"]
+script = SubResource("GDScript_5ova0")
+
+[node name="GPUParticles3D" type="GPUParticles3D" parent="."]
+process_material = SubResource("ParticleProcessMaterial_5ova0")

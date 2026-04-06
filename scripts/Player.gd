@@ -73,7 +73,7 @@ var bait_inventory: Dictionary = {
 var active_bait: String = ""
 
 const BAIT_PRICES = {
-	"Common": 50,"Uncommon": 150, "Rare": 400, "Epic": 900, "Legendary": 2000, "Exotic": 4500
+	"Common": 50,"Uncommon": 150, "Rare": 400, "Epic": 900, "Legendary": 2500, "Exotic": 10000
 }
 
 func buy_bait(rarity: String, amount: int = 1) -> bool:

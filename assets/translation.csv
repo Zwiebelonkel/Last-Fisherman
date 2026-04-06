@@ -503,6 +503,10 @@ FISH_FOREST_CLOWNFISH_NAME,Clownfisch,Clownfish
 FISH_FOREST_CLOWNFISH_DESC,"Er trägt ein Lächeln, das nie seine Wahl war.","He wears a smile he never chose."
 FISH_FOREST_CLOWNFISH_SCIENCE,"Clownfische leben in Symbiose mit Seeanemonen und sind gegen deren Nesselgift resistent.","Clownfish live in symbiosis with sea anemones and are resistant to their venom."
 
+FISH_FOREST_KUGELFISCH_NAME,Wald-Kugelfisch,Forest Pufferfish
+FISH_FOREST_KUGELFISCH_DESC,"Er schwebt zwischen überwucherten Wurzeln im dunklen Wasser. Wenn er sich aufbläht, treiben Blätter an ihm vorbei, als hätten sie Angst, ihn zu berühren.","It drifts between overgrown roots in the dark water. When it inflates, leaves float past it as if afraid to touch it."
+FISH_FOREST_KUGELFISCH_SCIENCE,"Kugelfische kommen auch in Süßwasser vor und besiedeln Flüsse sowie überschwemmte Waldgebiete. Sie können sich aufblasen, um Fressfeinde abzuschrecken, und besitzen oft starke Toxine als zusätzlichen Schutzmechanismus.","Pufferfish can also inhabit freshwater environments, including rivers and flooded forest regions. They inflate to deter predators and often carry potent toxins as an additional defense mechanism."
+
 
 FISH_DESERT_SCHMUTZGRUNDEL_NAME,Schmutzgrundel,Dirt Goby
 FISH_DESERT_SCHMUTZGRUNDEL_DESC,Lebt im Dreck. Buchstäblich. Wie deine Ernährungsgewohnheiten.,Lives in dirt. Literally. Like your eating habits.
@@ -580,6 +584,10 @@ FISH_ICELAND_BLAUER_MARLIN_SCIENCE,Sie sind extrem schnelle Jäger der Hochsee d
 FISH_ICELAND_SCHWARZER_MARLIN_NAME,Schwarzer Marlin,Black Marlin
 FISH_ICELAND_SCHWARZER_MARLIN_DESC,Man könnte sagen dass der Entwickler zu faul gewesen ist um ein neues Asset zu erstellen,One could say the developer was too lazy to create a new asset
 FISH_ICELAND_SCHWARZER_MARLIN_SCIENCE,Der schwarze Marlin gilt als der schnellste Fisch der Welt mit dokumentierten Spitzengeschwindigkeiten von bis zu 129 km/h.,The black marlin is considered the fastest fish in the world with documented top speeds of up to 129 km/h.
+
+FISH_ICELAND_OARFISH_NAME,Eisband-Riemenfisch,Frozen Ribbon Oarfish
+FISH_ICELAND_OARFISH_DESC,"Er windet sich lautlos unter der Eisdecke. Sein endloser Körper spiegelt sich im gefrorenen Wasser – als würde etwas Zweites ihm folgen.","It coils silently beneath the ice. Its endless body reflects in the frozen water—as if something else is following it."
+FISH_ICELAND_OARFISH_SCIENCE,"Riemenfische sind Tiefseefische, die selten an die Oberfläche gelangen. In polaren Regionen können extreme Temperaturen und Druckverhältnisse ihr Verhalten verändern, wodurch sie gelegentlich in flacheren, eisnahen Gewässern beobachtet werden.","Oarfish are deep-sea fish that rarely approach the surface. In polar regions, extreme temperatures and pressure conditions may alter their behavior, occasionally bringing them into shallower, ice-adjacent waters."
 
 FISH_ICELAND_KRISTALL_FISCH_NAME,Kristallfisch,Crystal Fish
 FISH_ICELAND_KRISTALL_FISCH_DESC,Ein sehr seltenes und stinkendes Fisch-Gerippe aus Kristall.,A rare and stinky fish skeleton made of crystal.

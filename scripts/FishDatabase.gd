@@ -922,6 +922,17 @@ var FISH_FOREST = [
 		"weight_max": 30.0
 	},
 	{
+		"id": "KUGELFISCH",
+		"name_key": "FISH_FOREST_KUGELFISCH_NAME",
+		"description_key": "FISH_FOREST_KUGELFISCH_DESC",
+		"science_key": "FISH_FOREST_KUGELFISCH_SCIENCE",
+		"rarity": RARITY.EPISCH,
+		"base_value": 70,
+		"icon": "res://assets/fish/kugelfisch.png",
+		"weight_min": 1.0,
+		"weight_max": 3.0
+	},
+	{
 	"id": "WURMFUERST",
 	"name_key": "FISH_FOREST_WURMFUERST_NAME",
 	"description_key": "FISH_FOREST_WURMFUERST_DESC",
@@ -1252,6 +1263,17 @@ var FISH_ICELAND = [
 		"icon": "res://assets/fish/speerfisch.png",
 		"weight_min": 1.0,
 		"weight_max": 10.0
+	},
+		{
+		"id": "OARFISH",
+		"name_key": "FISH_ICELAND_OARFISH_NAME",
+		"description_key": "FISH_ICELAND_OARFISH_DESC",
+		"science_key": "FISH_ICELAND_OARFISH_SCIENCE",
+		"rarity": RARITY.EPISCH,
+		"base_value": 100,
+		"icon": "res://assets/fish/oarfish.png",
+		"weight_min": 100.0,
+		"weight_max": 300.0
 	},
 	{
 		"id": "KRISTALL_FISCH",

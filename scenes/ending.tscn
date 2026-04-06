@@ -1,4 +1,4 @@
-[gd_scene load_steps=67 format=3 uid="uid://b6exh44q6u50p"]
+[gd_scene load_steps=68 format=3 uid="uid://b6exh44q6u50p"]
 
 [ext_resource type="Shader" path="res://shader/screen_rain.gdshader" id="1_edxmc"]
 [ext_resource type="Shader" uid="uid://c140kjbm2bot5" path="res://shader/buckshot.gdshader" id="1_mbbil"]
@@ -21,6 +21,7 @@
 [ext_resource type="Shader" uid="uid://c37jx2ebwp1a3" path="res://shader/shader_water.gdshader" id="16_5lvs8"]
 [ext_resource type="Texture2D" uid="uid://cvllk03mhtybp" path="res://textures/723-normal.jpg" id="16_rnvy1"]
 [ext_resource type="Texture2D" uid="uid://d31603nl8y0gd" path="res://textures/Water_preview.jpgC878A51E-2B84-45CA-85CB-75E5BC88EEC8Large.jpg" id="17_4slvv"]
+[ext_resource type="Script" uid="uid://djh7laekqf23b" path="res://scripts/flashlight.gd" id="17_wwpln"]
 [ext_resource type="Shader" uid="uid://cfsuhiaq15sgu" path="res://shader/outline.gdshader" id="18_aj30w"]
 [ext_resource type="PackedScene" uid="uid://8ljq0dpgsno5" path="res://scenes/bait.tscn" id="19_mirgg"]
 [ext_resource type="Script" uid="uid://bymrcyid32xsp" path="res://scripts/line.gd" id="20_bpcwl"]
@@ -1466,11 +1467,24 @@ mouse_filter = 2
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_ccyyx")
 
-[node name="PlayerCamera" type="Camera3D" parent="."]
+[node name="flashlight" type="SpotLight3D" parent="."]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -0.653736, 1.6481, 0.0447942)
+light_color = Color(0.585816, 0.741666, 0.782178, 1)
+light_energy = 11.288
+light_indirect_energy = 1.474
+light_volumetric_fog_energy = 0.407
+shadow_enabled = true
+spot_range = 9.392
+spot_attenuation = 0.56
+spot_angle = 17.04
+script = ExtResource("17_wwpln")
+
+[node name="PlayerCamera" type="Camera3D" parent="." node_paths=PackedStringArray("flashlight")]
 transform = Transform3D(-1, 0, -1.50996e-07, 0, 1, 0, 1.50996e-07, 0, -1, 0, 2.007, 0.0447942)
 far = 2293.99
 script = ExtResource("14_kfm7u")
 sway_amount = 0.115
+flashlight = NodePath("../flashlight")
 
 [node name="FishingRod" parent="PlayerCamera" node_paths=PackedStringArray("rod_tip", "hook", "splash", "waterplane", "catch_result_ui", "camera", "fishbook_ui", "options", "journal_button", "inventory_button", "map_button", "left_button", "right_button", "interact_button", "settings_button", "inventory_ui") instance=ExtResource("15_pt7ci")]
 transform = Transform3D(0.925417, -0.163176, -0.34202, 0.173648, 0.984808, 0, 0.336824, -0.0593912, 0.939693, 0.4, -0.40033, -1.03766)

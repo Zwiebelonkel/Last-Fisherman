@@ -5,6 +5,10 @@ extends Camera3D
 @export var rotation_smoothing: float = 6.0
 @export var mouse_tilt_amount: float = 0.03
 @export var mouse_tilt_smoothing: float = 4.0
+@export var flashlight: Node3D
+@export var flashlight_follow_speed: float = 5.0
+@export var fishing_rod: Node3D
+@export var rod_follow_speed := 8.0
 
 var base_position: Vector3
 var target_rotation_y: float = 0.0
@@ -62,6 +66,34 @@ func _process(delta: float) -> void:
 		current_rotation_y - current_tilt.x,
 		0.0
 	)
+	
+	if flashlight:
+		# Position smooth folgen
+		flashlight.global_position = flashlight.global_position.lerp(
+			global_position,
+			delta * flashlight_follow_speed
+		)
+
+	# Rotation smooth folgen
+		var current_basis = flashlight.global_transform.basis
+		var target_basis = global_transform.basis
+
+		flashlight.global_transform.basis = current_basis.slerp(
+			target_basis,
+			delta * flashlight_follow_speed
+		)
+	if fishing_rod:
+		var target_transform = global_transform
+
+		fishing_rod.global_position = fishing_rod.global_position.lerp(
+			target_transform.origin,
+			delta * rod_follow_speed
+		)
+
+		fishing_rod.global_transform.basis = fishing_rod.global_transform.basis.slerp(
+			target_transform.basis,
+			delta * rod_follow_speed
+		)
 
 func start_screenshake(intensity: float, duration: float) -> void:
 	shake_intensity = intensity

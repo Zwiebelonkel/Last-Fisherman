@@ -148,7 +148,7 @@ vec3 PlaneLineIntersection(vec3 plane_point, vec3 plane_normal, vec3 line_point,
     vec3 dir_n = normalize(line_dir);
     float denom = dot(plane_normal, dir_n);
 
-    if (abs(denom) < 0.01) { 
+    if (abs(denom) < 0.01) {
         return line_point;
     }
 

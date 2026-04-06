@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://bfxsggnjqkgjg"]
+[gd_scene load_steps=11 format=3 uid="uid://bfxsggnjqkgjg"]
 
 [ext_resource type="Script" path="res://scripts/story_dialog.gd" id="1_script"]
 [ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="2_font"]
@@ -6,6 +6,7 @@
 [ext_resource type="Shader" uid="uid://imf547kyj0bj" path="res://shader/CRT.gdshader" id="3_rrr6u"]
 [ext_resource type="StyleBox" uid="uid://c8rkdsvu78m67" path="res://materials/PanelCustom.tres" id="3_stylebox"]
 [ext_resource type="Texture2D" uid="uid://c602plve2gqkw" path="res://assets/fisherman.png" id="4_sprite"]
+[ext_resource type="AudioStream" uid="uid://ydbqid75yts0" path="res://sounds/decision.mp3" id="7_u3rmv"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_rrr6u"]
 shader = ExtResource("2_mcmqs")
@@ -161,5 +162,10 @@ theme = SubResource("Theme_dialog")
 theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
 text = "[ Klicken zum Weiter ]"
 horizontal_alignment = 2
+
+[node name="music" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("7_u3rmv")
+autoplay = true
+bus = &"Music"
 
 [connection signal="gui_input" from="Panel" to="." method="_on_Panel_gui_input"]
