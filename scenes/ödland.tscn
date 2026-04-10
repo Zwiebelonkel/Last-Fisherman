@@ -957,7 +957,7 @@ func start_catch_minigame() -> void:
 		FishDB.RARITY.EXOTISCH:
 			sweet_spot.size.x = bar_width * 0.06
 		FishDB.RARITY.ANTIK:
-			sweet_spot.size.x = bar_width * 0.05
+			sweet_spot.size.x = bar_width * 0.3
 		_:
 			sweet_spot.size.x = bar_width * 0.25
 
@@ -2243,9 +2243,6 @@ interact_button = NodePath("../../UI/Touch/InteractButton")
 settings_button = NodePath("../../UI/Touch/TopLeftPanel/MarginContainer/VBoxContainer/SettingsButton")
 cast_power_ui_scene = ExtResource("8_8cl07")
 inventory_ui = NodePath("../../UI/InventoryUI")
-
-[node name="RodMesh" parent="PlayerCamera/FishingRod" index="0"]
-transform = Transform3D(1, 0, 0, 0, 0.966823, 0.255446, 0, -0.255446, 0.966823, 0, 0, -0.0166266)
 
 [node name="Skeleton3D" parent="PlayerCamera/FishingRod/RodMesh/right_hand/Sketchfab_model/root/GLTF_SceneRootNode/Hand_21/GLTF_created_0" index="0"]
 bones/2/rotation = Quaternion(-0.00889867, 0.0410461, 0.0589842, 0.997375)

@@ -21,6 +21,7 @@ var current_input: String = ""
 var is_active: bool = false
 var player: CharacterBody3D = null
 var event_echo: EventEcho = null
+var is_processing: bool = false
 
 # -------------------------
 # Node References
@@ -99,23 +100,29 @@ func remove_last_digit() -> void:
 # Code Validation
 # -------------------------
 func check_code() -> void:
+	if is_processing:
+		return
+	
 	if current_input == correct_code:
 		on_correct_code()
 	else:
 		on_incorrect_code()
 
 func on_correct_code() -> void:
-	print("✅ KORREKTER CODE!")
+	if is_processing:
+		return
+	
+	is_processing = true  # 🔒 LOCK
+	
+	print("✅ CORRECT CODE!")
 	
 	play_success()
 	display_label.modulate = Color.GREEN
 	
 	emit_signal("code_correct")
 	
-	# Deaktiviere weitere Eingaben
 	is_active = false
 	
-	# Warte kurz, dann zeige Event Echo
 	await get_tree().create_timer(1.0).timeout
 	show_event_echo()
 

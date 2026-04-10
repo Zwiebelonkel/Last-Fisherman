@@ -9,36 +9,63 @@ extends Node2D
 @onready var music2:     AudioStreamPlayer = $"../music2"
 @onready var headshot:   AudioStreamPlayer = $"../headshot"
 
-@onready var bad_ending:   Sprite2D = $"../BadEnding"
-@onready var bad_ending2:  Sprite2D = $"../BadEnding2"
+@onready var bad_ending:   AnimatedSprite2D = $"../BadEnding"
+@onready var bad_ending2:  AnimatedSprite2D = $"../BadEnding2"
 @onready var good_ending:  Sprite2D = $"../GoodEnding"
-@onready var good_ending2: Sprite2D = $"../GoodEnding2"
-@onready var good_ending3: Sprite2D = $"../GoodEnding3"
+@onready var good_ending2: AnimatedSprite2D = $"../GoodEnding2"
+@onready var good_ending3: AnimatedSprite2D = $"../GoodEnding3"
 
 const VCR_FONT_PATH: String = "res://fonts/VCR_OSD_MONO_1.001.ttf"
 const NEXT_SCENE:    String = "res://scenes/endingScreen.tscn"
 const SCENE_DELAY:   float  = 4.0
 
-const BAD_TEXT: String = \
-"Es war nie jemand da.\nKein Gegner. Kein Fremder. Kein Ausweg.\n\n" + \
-"Nur du.\nVon Anfang an.\n\n" + \
-"Du hast gekämpft…\ngegen etwas, das dich nie verlassen hat.\n\n" + \
-"Dein Spiegelbild.\nDeine Gedanken.\nDein eigener Schatten.\n\n" + \
-"Und am Ende… hast du gewonnen.\nAber es gab nie etwas zu besiegen.\n\n" + \
-"In dem Moment, in dem du abgedrückt hast…\nhast du dich selbst getroffen.\n\n" + \
-"Kein Geräusch. Kein Widerstand.\n\nNur Stille.\n\n" + \
-"Und zum ersten Mal…\nbist du wirklich allein."
+var localized_texts := {
+	"bad_text": {
+		"de":
+"Es war nie jemand da.\nKein Gegner. Kein Fremder. Kein Ausweg.\n\n" +
+"Nur du.\nVon Anfang an.\n\n" +
+"Du hast gekämpft…\ngegen etwas, das dich nie verlassen hat.\n\n" +
+"Dein Spiegelbild.\nDeine Gedanken.\nDein eigener Schatten.\n\n" +
+"Und am Ende… hast du gewonnen.\nAber es gab nie etwas zu besiegen.\n\n" +
+"In dem Moment, in dem du abgedrückt hast…\nhast du dich selbst getroffen.\n\n" +
+"Kein Geräusch. Kein Widerstand.\n\nNur Stille.\n\n" +
+"Und zum ersten Mal…\nbist du wirklich allein.",
 
-const GOOD_TEXT: String = \
-"Du hörst sie noch. Die Stimmen.\nLeise… aber da.\n\n" + \
-"Doch diesmal… kontrollieren sie dich nicht mehr.\n\n" + \
-"Du hast verstanden,\ndass sie nie von außen kamen.\n\nSie waren du.\n\n" + \
-"Und zum ersten Mal…\nläufst du nicht mehr davon.\n\n" + \
-"Du bleibst stehen. Du siehst hin.\nDu akzeptierst.\n\n" + \
-"Du hast dich selbst gefunden.\n\n…\n\n" + \
-"Aber die Welt hat sich nicht verändert.\nSie ist immer noch leer. Kalt. Verlassen.\n\n" + \
-"Niemand wartet auf dich.\nNiemand kommt zurück.\n\n" + \
-"Doch diesmal… bist du nicht mehr verloren.\n\nDu gehst weiter.\n\nAllein."
+		"en":
+"There was never anyone there.\nNo enemy. No stranger. No escape.\n\n" +
+"Only you.\nFrom the very beginning.\n\n" +
+"You fought…\nagainst something that never left you.\n\n" +
+"Your reflection.\nYour thoughts.\nYour own shadow.\n\n" +
+"And in the end… you won.\nBut there was never anything to defeat.\n\n" +
+"In the moment you pulled the trigger…\nyou shot yourself.\n\n" +
+"No sound. No resistance.\n\nOnly silence.\n\n" +
+"And for the first time…\nyou are truly alone."
+	},
+
+	"good_text": {
+		"de":
+"Du hörst sie noch. Die Stimmen.\nLeise… aber da.\n\n" +
+"Doch diesmal… kontrollieren sie dich nicht mehr.\n\n" +
+"Du hast verstanden,\ndass sie nie von außen kamen.\n\nSie waren du.\n\n" +
+"Und zum ersten Mal…\nläufst du nicht mehr davon.\n\n" +
+"Du bleibst stehen. Du siehst hin.\nDu akzeptierst.\n\n" +
+"Du hast dich selbst gefunden.\n\n…\n\n" +
+"Aber die Welt hat sich nicht verändert.\nSie ist immer noch leer. Kalt. Verlassen.\n\n" +
+"Niemand wartet auf dich.\nNiemand kommt zurück.\n\n" +
+"Doch diesmal… bist du nicht mehr verloren.\n\nDu gehst weiter.\n\nAllein.",
+
+		"en":
+"You can still hear them. The voices.\nQuiet… but there.\n\n" +
+"But this time… they no longer control you.\n\n" +
+"You understood\nthat they never came from the outside.\n\nThey were you.\n\n" +
+"And for the first time…\nyou stop running.\n\n" +
+"You stand still. You look.\nYou accept.\n\n" +
+"You found yourself.\n\n…\n\n" +
+"But the world hasn’t changed.\nIt is still empty. Cold. Abandoned.\n\n" +
+"No one is waiting for you.\nNo one is coming back.\n\n" +
+"But this time… you are no longer lost.\n\nYou keep walking.\n\nAlone."
+	}
+}
 
 var _recoil:      float = 0.0
 var _wobble_time: float = 0.0
@@ -47,7 +74,15 @@ var _game_over:   bool  = false
 # Eigener CanvasLayer über dem CRT-Filter — Labels werden hier rein verschoben
 var _text_canvas: CanvasLayer
 
-
+func get_text(key: String) -> String:
+	var current_lang = Player.current_language
+	
+	if localized_texts.has(key) and localized_texts[key].has(current_lang):
+		return localized_texts[key][current_lang]
+	elif localized_texts.has(key) and localized_texts[key].has("de"):
+		return localized_texts[key]["de"]
+	
+	return key
 # ---------------------------------------------------------------------------
 # Ready: Labels aus dem gefilterten Tree raus, in eigenen CanvasLayer rein
 # ---------------------------------------------------------------------------
@@ -84,7 +119,7 @@ func _get_good_label() -> RichTextLabel:
 # ---------------------------------------------------------------------------
 # Font + Kontrastfarbe
 # ---------------------------------------------------------------------------
-func _style_label(label: RichTextLabel, sprite: Sprite2D) -> void:
+func _style_label(label: RichTextLabel, node: Node) -> void:
 	if label == null:
 		push_error("_style_label: label ist null!")
 		return
@@ -93,12 +128,24 @@ func _style_label(label: RichTextLabel, sprite: Sprite2D) -> void:
 	label.visible_characters = 0
 	label.text               = ""
 
+	for child in label.get_children():
+		if child is VScrollBar:
+			child.visible = false
+
 	var font := load(VCR_FONT_PATH) as FontFile
 	if font:
 		label.add_theme_font_override("normal_font", font)
 		label.add_theme_font_size_override("normal_font_size", 18)
 
-	var tex: Texture2D = sprite.texture
+	# Textur je nach Node-Typ holen
+	var tex: Texture2D
+	if node is Sprite2D:
+		tex = node.texture
+	elif node is AnimatedSprite2D:
+		var frames: SpriteFrames = node.sprite_frames
+		if frames:
+			tex = frames.get_frame_texture(node.animation, node.frame)
+
 	if tex == null:
 		return
 	var img: Image = tex.get_image()
@@ -117,15 +164,13 @@ func _style_label(label: RichTextLabel, sprite: Sprite2D) -> void:
 	var avg_lum: float = lum_sum / 100.0
 	label.add_theme_color_override("default_color",
 		Color.BLACK if avg_lum > 0.5 else Color.WHITE)
-		
-
 # ---------------------------------------------------------------------------
 # Typewriter
 # ---------------------------------------------------------------------------
 func _typewrite(label: RichTextLabel, full_text: String, cps: float = 20.0) -> void:
 	label.text = full_text
 	label.visible_characters = 0
-	label.scroll_active = true
+	label.scroll_active = false
 
 	var total: int = full_text.length()
 	var elapsed: float = 0.0
@@ -220,21 +265,28 @@ func _start_bad_ending() -> void:
 	body.visible = false
 	arm.visible  = false
 
+	# BadEnding Animation einmalig starten
+	bad_ending.frame = 0
+	bad_ending.play("default")
 	await _fade_in(bad_ending, 0.8)
 	await get_tree().create_timer(3.0).timeout
 	await _fade_out(bad_ending, 0.4)
+
+	# BadEnding2 Animation einmalig starten
+	bad_ending2.sprite_frames.set_animation_loop("default", false)
+	bad_ending2.frame = 0
+	bad_ending2.play("default")
 
 	var lbl := _get_bad_label()
 	_style_label(lbl, bad_ending2)
 	await _fade_in(bad_ending2, 0.6)
 	if lbl:
 		lbl.visible = true
-		await _typewrite(lbl, BAD_TEXT, 18.0)
+		await _typewrite(lbl, get_text("bad_text"), 18.0)
 
 	await get_tree().create_timer(SCENE_DELAY).timeout
+	SteamAchievements.unlock("ACH_COMPLETE_GAME2")
 	get_tree().change_scene_to_file(NEXT_SCENE)
-
-
 # ---------------------------------------------------------------------------
 # Good Ending
 # ---------------------------------------------------------------------------
@@ -249,20 +301,24 @@ func _start_good_ending() -> void:
 	await get_tree().create_timer(3.0).timeout
 	await _fade_out(good_ending, 0.4)
 
+	good_ending2.frame = 0
+	good_ending2.play("default")
 	await _fade_in(good_ending2, 0.8)
 	await get_tree().create_timer(3.0).timeout
 	await _fade_out(good_ending2, 0.4)
 
 	var lbl := _get_good_label()
 	_style_label(lbl, good_ending3)
+	good_ending3.frame = 0
+	good_ending3.play("default")
 	await _fade_in(good_ending3, 0.8)
 	if lbl:
 		lbl.visible = true
-		await _typewrite(lbl, GOOD_TEXT, 18.0)
+		await _typewrite(lbl, get_text("good_text"), 18.0)
 
 	await get_tree().create_timer(SCENE_DELAY).timeout
+	SteamAchievements.unlock("ACH_COMPLETE_GAME")
 	get_tree().change_scene_to_file(NEXT_SCENE)
-
 
 # ---------------------------------------------------------------------------
 # Visuals

@@ -1,20 +1,28 @@
-[gd_scene load_steps=21 format=3 uid="uid://bc6ykb7gjc08v"]
+[gd_scene load_steps=33 format=3 uid="uid://bc6ykb7gjc08v"]
 
 [ext_resource type="Shader" uid="uid://c140kjbm2bot5" path="res://shader/buckshot.gdshader" id="1_4swvt"]
 [ext_resource type="Texture2D" uid="uid://cb58f4pvmnhcb" path="res://assets/decision.png.png" id="1_body"]
 [ext_resource type="Texture2D" uid="uid://cv41hhx7nsikl" path="res://assets/arm_gun.png.png" id="2_arm"]
-[ext_resource type="Texture2D" uid="uid://he6ruqddguqy" path="res://assets/dead.png" id="2_qp6ew"]
+[ext_resource type="Texture2D" uid="uid://x57womixbbsa" path="res://assets/shot/shot0.png" id="3_lnbi7"]
+[ext_resource type="Texture2D" uid="uid://cdua8n7fgmunx" path="res://assets/dead/dead0.png" id="3_yuyrr"]
 [ext_resource type="Script" uid="uid://ce7xyn68u7f0x" path="res://scripts/arm_pivot.gd" id="4_arm"]
 [ext_resource type="Texture2D" uid="uid://4do4u33eqi2e" path="res://assets/hug.png" id="4_bv7wu"]
 [ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="4_dj7lv"]
-[ext_resource type="Texture2D" uid="uid://b6nh0onf241d6" path="res://assets/combine.png" id="5_dj7lv"]
-[ext_resource type="Texture2D" uid="uid://dtghmc7wacn0w" path="res://assets/regret.png" id="6_2an8w"]
+[ext_resource type="Texture2D" uid="uid://d3yyfe0oaqdsa" path="res://assets/shot/shot5.png" id="4_kkkae"]
+[ext_resource type="Texture2D" uid="uid://d18krvc1el0xa" path="res://assets/dead/dead1.png" id="4_orj58"]
+[ext_resource type="Texture2D" uid="uid://cccmf0qnd22av" path="res://assets/dead/dead2.png" id="5_lnbi7"]
 [ext_resource type="AudioStream" uid="uid://cvwa3awhwlrki" path="res://sounds/gunshot.mp3" id="6_e23qt"]
+[ext_resource type="Texture2D" uid="uid://bni66urw7p826" path="res://assets/dead/dead3.png" id="6_kkkae"]
+[ext_resource type="Texture2D" uid="uid://cney7cbdjkel4" path="res://assets/dead/dead4.png" id="7_aavxm"]
 [ext_resource type="Texture2D" uid="uid://3y3py357tn2t" path="res://assets/badEnding.png" id="7_end"]
 [ext_resource type="AudioStream" uid="uid://ydbqid75yts0" path="res://sounds/decision.mp3" id="7_w3s3v"]
 [ext_resource type="AudioStream" uid="uid://cy367djhhlunp" path="res://sounds/headshot.mp3" id="8_27a5e"]
 [ext_resource type="Script" uid="uid://c3qmj8l2tg322" path="res://scripts/textShake.gd" id="9_2an8w"]
+[ext_resource type="Texture2D" uid="uid://bguvnsyom72ub" path="res://assets/merge/merge0.png" id="12_kkkae"]
+[ext_resource type="Texture2D" uid="uid://cfgd4ba3hikii" path="res://assets/merge/merge1.png" id="13_aavxm"]
 [ext_resource type="AudioStream" uid="uid://dryinm5g7b2u0" path="res://sounds/hope.mp3" id="13_dj7lv"]
+[ext_resource type="Texture2D" uid="uid://d3f3c7itq2i2w" path="res://assets/regret/regret0.png" id="14_aavxm"]
+[ext_resource type="Texture2D" uid="uid://dg60235mf4a0w" path="res://assets/regret/regret1.png" id="15_6iaed"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_e23qt"]
 shader = ExtResource("1_4swvt")
@@ -221,6 +229,71 @@ shader_parameter/color_quant_steps = 23.895
 shader_parameter/warble_amount = 0.003
 shader_parameter/warble_speed = 2.058
 
+[sub_resource type="SpriteFrames" id="SpriteFrames_aavxm"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_lnbi7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_kkkae")
+}],
+"loop": false,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_6iaed"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_yuyrr")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_orj58")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_lnbi7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_kkkae")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_aavxm")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_cmkub"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("12_kkkae")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_aavxm")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_wo3l4"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("14_aavxm")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_6iaed")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_e23qt"]
 size = Vector2(116, 513)
 
@@ -237,6 +310,7 @@ offset_right = 28.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+metadata/_edit_use_anchors_ = true
 
 [node name="PixelateOverlay2" type="ColorRect" parent="Filter"]
 material = SubResource("ShaderMaterial_w3s3v")
@@ -247,6 +321,7 @@ offset_right = 28.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+metadata/_edit_use_anchors_ = true
 
 [node name="CRT" type="ColorRect" parent="Filter"]
 z_index = 4096
@@ -258,31 +333,45 @@ offset_right = 28.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+metadata/_edit_use_anchors_ = true
 
-[node name="BadEnding" type="Sprite2D" parent="."]
+[node name="BadEndingold" type="Sprite2D" parent="."]
 visible = false
 z_index = 270
 position = Vector2(459, 371)
 scale = Vector2(2.71766, 2.64844)
 texture = ExtResource("7_end")
 
-[node name="BadEnding2" type="Sprite2D" parent="."]
+[node name="BadEnding" type="AnimatedSprite2D" parent="."]
 visible = false
 z_index = 270
+position = Vector2(459, 371)
+scale = Vector2(2.71766, 2.64844)
+sprite_frames = SubResource("SpriteFrames_aavxm")
+frame = 1
+frame_progress = 1.0
+
+[node name="BadEnding2" type="AnimatedSprite2D" parent="."]
+visible = false
 position = Vector2(626, 371)
 scale = Vector2(2.71766, 2.64844)
-texture = ExtResource("2_qp6ew")
+sprite_frames = SubResource("SpriteFrames_6iaed")
+frame = 3
+frame_progress = 0.0522726
+speed_scale = 0.1
 
 [node name="BadEndingText" type="RichTextLabel" parent="BadEnding2"]
 light_mask = 2
 visibility_layer = 2
 z_index = 4096
 texture_filter = 1
-offset_left = -167.0
-offset_top = -129.0
-offset_right = 176.0
-offset_bottom = 60.0
+offset_left = -195.0
+offset_top = -112.0
+offset_right = 1100.0
+offset_bottom = 77.0
+mouse_filter = 2
 theme_override_colors/default_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 1
 theme_override_fonts/normal_font = ExtResource("4_dj7lv")
 text = "Es war nie jemand da.
@@ -322,28 +411,34 @@ position = Vector2(549, 324)
 scale = Vector2(2.53483, 2.33924)
 texture = ExtResource("4_bv7wu")
 
-[node name="GoodEnding2" type="Sprite2D" parent="."]
+[node name="GoodEnding2" type="AnimatedSprite2D" parent="."]
 visible = false
 z_index = 270
 position = Vector2(549, 324)
 scale = Vector2(2.53483, 2.33924)
-texture = ExtResource("5_dj7lv")
+sprite_frames = SubResource("SpriteFrames_cmkub")
+frame = 1
+frame_progress = 0.7537
 
-[node name="GoodEnding3" type="Sprite2D" parent="."]
+[node name="GoodEnding3" type="AnimatedSprite2D" parent="."]
 visible = false
 z_index = 270
 position = Vector2(577, 367)
 scale = Vector2(2.53483, 2.33924)
-texture = ExtResource("6_2an8w")
+sprite_frames = SubResource("SpriteFrames_wo3l4")
+frame_progress = 0.851548
+speed_scale = 0.3
 
 [node name="GoodEnding" type="RichTextLabel" parent="GoodEnding3"]
 z_index = 4096
 texture_filter = 1
 offset_left = -167.0
 offset_top = -129.0
-offset_right = 176.0
+offset_right = 115.0
 offset_bottom = 274.0
+mouse_filter = 2
 theme_override_colors/default_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 1
 theme_override_fonts/normal_font = ExtResource("4_dj7lv")
 text = "Du hörst sie noch.
@@ -411,6 +506,7 @@ theme_override_font_sizes/normal_font_size = 46
 text = "DECIDE"
 horizontal_alignment = 1
 script = ExtResource("9_2an8w")
+metadata/_edit_use_anchors_ = true
 
 [node name="ShoulderPivot" type="Node2D" parent="."]
 position = Vector2(744, 234)

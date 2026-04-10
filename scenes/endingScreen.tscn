@@ -1,9 +1,10 @@
-[gd_scene load_steps=10 format=3 uid="uid://de43b6r65xqkx"]
+[gd_scene load_steps=11 format=3 uid="uid://de43b6r65xqkx"]
 
 [ext_resource type="Script" path="res://scripts/ending_screen.gd" id="1_cas3l"]
 [ext_resource type="Texture2D" uid="uid://b4vpo3k0sv7oo" path="res://assets/echos/ending.png" id="2_nrc21"]
 [ext_resource type="AudioStream" uid="uid://dy3uepyjrgdit" path="res://sounds/ending.mp3" id="3_q3b0u"]
 [ext_resource type="Shader" uid="uid://c140kjbm2bot5" path="res://shader/buckshot.gdshader" id="4_304tg"]
+[ext_resource type="AudioStream" uid="uid://dryinm5g7b2u0" path="res://sounds/hope.mp3" id="4_amowu"]
 [ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="5_amowu"]
 [ext_resource type="Shader" uid="uid://imf547kyj0bj" path="res://shader/CRT.gdshader" id="5_q3b0u"]
 [ext_resource type="AudioStream" uid="uid://ckynhrbv4216v" path="res://sounds/bye.mp3" id="6_nrc21"]
@@ -77,7 +78,8 @@ scale = Vector2(0.5, 0.5)
 texture = ExtResource("2_nrc21")
 
 [node name="EndingMusic" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("3_q3b0u")
+stream = ExtResource("4_amowu")
+pitch_scale = 0.94
 bus = &"Music"
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]

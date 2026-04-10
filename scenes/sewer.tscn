@@ -1025,7 +1025,7 @@ func start_catch_minigame() -> void:
 		FishDB.RARITY.EXOTISCH:
 			sweet_spot.size.x = bar_width * 0.06
 		FishDB.RARITY.ANTIK:
-			sweet_spot.size.x = bar_width * 0.05
+			sweet_spot.size.x = bar_width * 0.3
 		_:
 			sweet_spot.size.x = bar_width * 0.25
 
@@ -2033,9 +2033,6 @@ interact_button = NodePath("../../UI/Touch/InteractButton")
 settings_button = NodePath("../../UI/Touch/TopLeftPanel/MarginContainer/VBoxContainer/SettingsButton")
 cast_power_ui_scene = ExtResource("8_rxgvs")
 inventory_ui = NodePath("../../UI/InventoryUI")
-
-[node name="RodMesh" parent="PlayerCamera/FishingRod" index="0"]
-transform = Transform3D(1, 0, 0, 0, 0.966823, 0.255446, 0, -0.255446, 0.966823, 0, 0, -0.0166266)
 
 [node name="left_hand" parent="PlayerCamera/FishingRod/RodMesh" index="5"]
 transform = Transform3D(-0.211648, -0.0377439, 0.254183, -0.17704, 0.278759, -0.0940853, -0.207091, -0.199734, -0.179344, -0.113471, -0.850528, 0.246808)
