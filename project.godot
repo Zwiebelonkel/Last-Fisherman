@@ -26,6 +26,7 @@ FishDB="*res://scripts/FishDatabase.gd"
 Player="*res://scripts/Player.gd"
 FishBook="*res://scripts/FishBook.gd"
 Transition="*res://scripts/transition.gd"
+PS1Jitter="*res://scripts/PS1Jitter.gd"
 
 [display]
 
