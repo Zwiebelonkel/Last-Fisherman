@@ -2007,10 +2007,12 @@ spot_attenuation = 0.56
 spot_angle = 27.9032
 script = ExtResource("14_aj5s8")
 
-[node name="PlayerCamera" type="Camera3D" parent="." node_paths=PackedStringArray("flashlight")]
+[node name="PlayerCamera" type="Camera3D" parent="." node_paths=PackedStringArray("flashlight", "fishing_rod")]
 transform = Transform3D(-1, 0, -2.53518e-06, 0, 1, 0, 2.53518e-06, 0, -1, 0, 2.007, 1.85558)
 script = ExtResource("10_11ck5")
 flashlight = NodePath("../flashlight")
+fishing_rod = NodePath("FishingRod")
+rod_rotation_sway = 0.8
 
 [node name="FishingRod" parent="PlayerCamera" node_paths=PackedStringArray("rod_tip", "hook", "splash", "waterplane", "catch_result_ui", "camera", "fishbook_ui", "options", "journal_button", "inventory_button", "map_button", "left_button", "right_button", "interact_button", "settings_button", "inventory_ui") instance=ExtResource("11_c82cw")]
 transform = Transform3D(0.925417, -0.163176, -0.34202, 0.173648, 0.984808, 0, 0.336824, -0.0593912, 0.939693, 0.4, -0.0418648, -1.16913)
@@ -2071,6 +2073,17 @@ fishing_script = NodePath("../PlayerCamera/FishingRod")
 
 [node name="Shop" parent="." instance=ExtResource("17_vqh58")]
 transform = Transform3D(-3.12536e-08, 0, 0.715, 0, 0.715, 0, -0.715, 0, -3.12536e-08, -6.26471, 1.14132, 1.59074)
+
+[node name="SpotLight3D" parent="Shop" index="1"]
+script = ExtResource("14_aj5s8")
+flicker_speed = 20.0
+flicker_intensity = 0.4
+base_energy = 16.0
+min_energy = 13.0
+enable_outage = true
+outage_chance = 0.002
+outage_duration_min = 0.05
+outage_duration_max = 0.25
 
 [node name="Audio" type="Node" parent="."]
 
@@ -2158,6 +2171,9 @@ bus = &"SFX"
 [node name="Node3D" parent="." instance=ExtResource("24_kqfxt")]
 transform = Transform3D(0.00425863, 0, 0.999991, 0, 1, 0, -0.999991, 0, 0.00425863, 1.28816, -0.459404, 6.44432)
 
+[node name="SpotLight3D2" parent="Node3D/Sketchfab_Scene/Sketchfab_model/berlin ubahn station-12-14_obj_cleaner_materialmerger_gles/Object_3" index="2"]
+script = ExtResource("14_aj5s8")
+
 [node name="Node3D2" parent="." instance=ExtResource("24_kqfxt")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -16.931, -0.534, -6.719)
 
@@ -2171,6 +2187,9 @@ light_specular = 12.02
 shadow_enabled = true
 spot_range = 7.33554
 spot_angle = 51.9014
+script = ExtResource("14_aj5s8")
+base_energy = 16.0
+min_energy = 13.0
 
 [node name="SpotLight3D11" type="SpotLight3D" parent="."]
 transform = Transform3D(0.684942, -0.322881, -0.653147, 0.623594, -0.203822, 0.75471, -0.376807, -0.924232, 0.0617406, 0.19, 4.381, 0.447)
@@ -2182,6 +2201,9 @@ light_specular = 2.036
 shadow_enabled = true
 spot_range = 10.232
 spot_angle = 31.74
+script = ExtResource("14_aj5s8")
+base_energy = 16.0
+min_energy = 13.0
 
 [node name="SpotLight3D2" type="SpotLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -0.260505, 0.965473, 0, -0.965473, -0.260505, 10.7706, 4.321, 6.59503)
@@ -2193,6 +2215,9 @@ light_specular = 12.02
 shadow_enabled = true
 spot_range = 7.33554
 spot_angle = 51.9014
+script = ExtResource("14_aj5s8")
+base_energy = 16.0
+min_energy = 13.0
 
 [node name="SpotLight3D3" type="SpotLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -0.260505, 0.965473, 0, -0.965473, -0.260505, -11.9803, 4.321, 6.59503)
@@ -2204,6 +2229,9 @@ light_specular = 12.02
 shadow_enabled = true
 spot_range = 7.33554
 spot_angle = 51.9014
+script = ExtResource("14_aj5s8")
+base_energy = 16.0
+min_energy = 13.0
 
 [node name="SpotLight3D4" type="SpotLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -0.260505, 0.965473, 0, -0.965473, -0.260505, -26.116, 4.321, 6.59503)
@@ -2215,6 +2243,9 @@ light_specular = 12.02
 shadow_enabled = true
 spot_range = 7.33554
 spot_angle = 51.9014
+script = ExtResource("14_aj5s8")
+base_energy = 16.0
+min_energy = 13.0
 
 [node name="SpotLight3D5" type="SpotLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -0.260505, 0.965473, 0, -0.965473, -0.260505, -38.1143, 4.321, 6.59503)
@@ -2226,6 +2257,9 @@ light_specular = 12.02
 shadow_enabled = true
 spot_range = 7.33554
 spot_angle = 51.9014
+script = ExtResource("14_aj5s8")
+base_energy = 16.0
+min_energy = 13.0
 
 [node name="SpotLight3D6" type="SpotLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.683732, 0.729733, 0, -0.729733, 0.683732, 0.189737, 2.96389, -6.21125)
@@ -2237,6 +2271,9 @@ light_specular = 12.02
 shadow_enabled = true
 spot_range = 7.33554
 spot_angle = 51.9014
+script = ExtResource("14_aj5s8")
+base_energy = 16.0
+min_energy = 13.0
 
 [node name="SpotLight3D7" type="SpotLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.683732, 0.729733, 0, -0.729733, 0.683732, 10.7706, 2.96389, -6.21125)
@@ -2248,6 +2285,9 @@ light_specular = 12.02
 shadow_enabled = true
 spot_range = 7.33554
 spot_angle = 51.9014
+script = ExtResource("14_aj5s8")
+base_energy = 16.0
+min_energy = 13.0
 
 [node name="SpotLight3D8" type="SpotLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.683732, 0.729733, 0, -0.729733, 0.683732, -11.9803, 2.96389, -6.21125)
@@ -2259,6 +2299,9 @@ light_specular = 12.02
 shadow_enabled = true
 spot_range = 7.33554
 spot_angle = 51.9014
+script = ExtResource("14_aj5s8")
+base_energy = 16.0
+min_energy = 13.0
 
 [node name="SpotLight3D9" type="SpotLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.683732, 0.729733, 0, -0.729733, 0.683732, -26.116, 2.96389, -6.21125)
@@ -2270,6 +2313,9 @@ light_specular = 12.02
 shadow_enabled = true
 spot_range = 7.33554
 spot_angle = 51.9014
+script = ExtResource("14_aj5s8")
+base_energy = 16.0
+min_energy = 13.0
 
 [node name="SpotLight3D10" type="SpotLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.683732, 0.729733, 0, -0.729733, 0.683732, -38.1143, 2.96389, -6.21125)
@@ -2281,6 +2327,9 @@ light_specular = 12.02
 shadow_enabled = true
 spot_range = 7.33554
 spot_angle = 51.9014
+script = ExtResource("14_aj5s8")
+base_energy = 16.0
+min_energy = 13.0
 
 [node name="hillybilly2" parent="." instance=ExtResource("18_cl88l")]
 transform = Transform3D(-0.508764, 0, -0.485346, 0, 0.8, 0, 0.388277, 0, -0.635955, -2.63632, 1.49931, 0.338636)
@@ -2331,8 +2380,8 @@ fade_duration = 0.0
 [editable path="PlayerCamera/FishingRod/RodMesh/right_hand"]
 [editable path="PlayerCamera/FishingRod/RodMesh/left_hand"]
 [editable path="Shop"]
-[editable path="Shop/shop"]
 [editable path="Shop/cigs"]
+[editable path="Shop/shop2"]
 [editable path="Node3D"]
 [editable path="Node3D/Sketchfab_Scene"]
 [editable path="hillybilly2"]

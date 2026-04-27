@@ -1479,12 +1479,14 @@ spot_attenuation = 0.56
 spot_angle = 17.04
 script = ExtResource("17_wwpln")
 
-[node name="PlayerCamera" type="Camera3D" parent="." node_paths=PackedStringArray("flashlight")]
+[node name="PlayerCamera" type="Camera3D" parent="." node_paths=PackedStringArray("flashlight", "fishing_rod")]
 transform = Transform3D(-1, 0, -1.50996e-07, 0, 1, 0, 1.50996e-07, 0, -1, 0, 2.007, 0.0447942)
 far = 2293.99
 script = ExtResource("14_kfm7u")
 sway_amount = 0.115
 flashlight = NodePath("../flashlight")
+fishing_rod = NodePath("FishingRod")
+rod_rotation_sway = 0.8
 
 [node name="FishingRod" parent="PlayerCamera" node_paths=PackedStringArray("rod_tip", "hook", "splash", "waterplane", "catch_result_ui", "camera", "fishbook_ui", "options", "journal_button", "inventory_button", "map_button", "left_button", "right_button", "interact_button", "settings_button", "inventory_ui") instance=ExtResource("15_pt7ci")]
 transform = Transform3D(0.925417, -0.163176, -0.34202, 0.173648, 0.984808, 0, 0.336824, -0.0593912, 0.939693, 0.4, -0.40033, -1.03766)

@@ -123,8 +123,9 @@ radiance_size = 0
 background_mode = 2
 background_energy_multiplier = 0.5
 sky = SubResource("Sky_x537r")
+glow_enabled = true
 fog_enabled = true
-fog_light_color = Color(0.808262, 0.429746, 0.296975, 1)
+fog_light_color = Color(0.821732, 0.427451, 0.161951, 1)
 fog_light_energy = 0.0
 fog_sun_scatter = 0.19
 fog_density = 0.0055
@@ -1805,6 +1806,18 @@ tracks/7/keys = {
 "update": 1,
 "values": [false]
 }
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("../WorldEnvironment:environment:fog_light_energy")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
 
 [sub_resource type="Animation" id="Animation_acjgc"]
 resource_name = "circle"
@@ -1892,7 +1905,7 @@ tracks/6/keys = {
 "times": PackedFloat32Array(0, 30.0189, 60),
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
-"values": [0.0076, 0.0305, 0.0076]
+"values": [0.0247, 0.0076, 0.0247]
 }
 tracks/7/type = "value"
 tracks/7/imported = false
@@ -1905,6 +1918,18 @@ tracks/7/keys = {
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 1,
 "values": [false, true, false]
+}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("../WorldEnvironment:environment:fog_light_energy")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(0, 30.2523, 60),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [5.13, 0.0, 5.13]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_lbf82"]
@@ -2215,12 +2240,14 @@ spot_attenuation = 0.56
 spot_angle = 21.3
 script = ExtResource("16_p58cv")
 
-[node name="PlayerCamera" type="Camera3D" parent="." node_paths=PackedStringArray("flashlight")]
+[node name="PlayerCamera" type="Camera3D" parent="." node_paths=PackedStringArray("flashlight", "fishing_rod")]
 transform = Transform3D(-1, 0, -1.50996e-07, 0, 1, 0, 1.50996e-07, 0, -1, 0, 2.007, 0.0447942)
 far = 432.7
 script = ExtResource("10_smrcg")
 sway_amount = 0.115
 flashlight = NodePath("../flashlight")
+fishing_rod = NodePath("FishingRod")
+rod_rotation_sway = 0.8
 
 [node name="FishingRod" parent="PlayerCamera" node_paths=PackedStringArray("rod_tip", "hook", "splash", "waterplane", "catch_result_ui", "camera", "fishbook_ui", "options", "journal_button", "inventory_button", "map_button", "left_button", "right_button", "interact_button", "settings_button", "inventory_ui") instance=ExtResource("11_y20ih")]
 transform = Transform3D(0.925417, -0.163176, -0.34202, 0.173648, 0.984808, 0, 0.336824, -0.0593912, 0.939693, 0.4, -0.00974202, -1.3384)
@@ -2245,49 +2272,49 @@ cast_power_ui_scene = ExtResource("8_8cl07")
 inventory_ui = NodePath("../../UI/InventoryUI")
 
 [node name="Skeleton3D" parent="PlayerCamera/FishingRod/RodMesh/right_hand/Sketchfab_model/root/GLTF_SceneRootNode/Hand_21/GLTF_created_0" index="0"]
-bones/2/rotation = Quaternion(-0.00889867, 0.0410461, 0.0589842, 0.997375)
-bones/3/rotation = Quaternion(0.0345443, 0.00429494, -0.0143058, 0.999292)
-bones/4/rotation = Quaternion(0.0478138, 0.0058983, 0.00631819, 0.998819)
-bones/5/rotation = Quaternion(0.0364596, 0.0161463, 0.0143837, 0.999101)
-bones/6/rotation = Quaternion(-0.0564475, 0.324876, 0.302155, 0.894412)
-bones/7/rotation = Quaternion(0.10961, -0.0710333, -0.00151664, 0.991432)
-bones/8/rotation = Quaternion(0.0428093, -0.00833916, 0.0185949, 0.998875)
-bones/9/rotation = Quaternion(-0.0160953, 0.0177544, -0.00435325, 0.999703)
-bones/10/rotation = Quaternion(0.0543446, 0.00373826, 0.0233037, 0.998243)
-bones/11/rotation = Quaternion(0.00335905, 0.0151685, 0.010059, 0.999829)
-bones/12/rotation = Quaternion(0.0624741, 0.00470781, 0.00276982, 0.998032)
-bones/13/rotation = Quaternion(0.0137193, -0.0562276, -0.0569171, 0.9967)
-bones/14/rotation = Quaternion(0.0169119, 0.0899491, 0.037333, 0.995103)
-bones/15/rotation = Quaternion(-0.0171848, 0.0296436, 0.0318867, 0.998904)
-bones/16/rotation = Quaternion(0.203637, 0.0382302, 0.014745, 0.978189)
-bones/17/rotation = Quaternion(-0.0201351, -0.15587, -0.163001, 0.974028)
-bones/18/rotation = Quaternion(0.0147973, 0.0724878, 0.083617, 0.993748)
-bones/19/rotation = Quaternion(0.134957, 0.0526864, 0.0193594, 0.98926)
-bones/20/rotation = Quaternion(0.167016, 0.0290384, -0.0023452, 0.985524)
+bones/2/rotation = Quaternion(-0.00793496, 0.0450005, 0.0910283, 0.994799)
+bones/3/rotation = Quaternion(0.570634, -0.0351835, -0.0386707, 0.819539)
+bones/4/rotation = Quaternion(0.7208, 0.00704777, -0.000671241, 0.693107)
+bones/5/rotation = Quaternion(0.442539, -0.00657752, -0.0187906, 0.896528)
+bones/6/rotation = Quaternion(0.0689353, 0.476614, 0.365774, 0.796427)
+bones/7/rotation = Quaternion(0.375288, -0.042317, 0.118366, 0.918345)
+bones/8/rotation = Quaternion(0.44522, 0.0668751, 0.0301149, 0.892412)
+bones/9/rotation = Quaternion(-0.00871591, 0.0182923, -0.00473823, 0.999783)
+bones/10/rotation = Quaternion(0.53907, 0.0268239, 0.0461814, 0.840566)
+bones/11/rotation = Quaternion(0.683989, -0.0613352, -0.000531473, 0.726909)
+bones/12/rotation = Quaternion(0.649907, -0.0254803, -0.0115487, 0.759499)
+bones/13/rotation = Quaternion(0.0191657, -0.0820145, -0.0552746, 0.994913)
+bones/14/rotation = Quaternion(0.543106, 0.124704, -0.02197, 0.830061)
+bones/15/rotation = Quaternion(0.667151, 0.0037154, -0.00161219, 0.744911)
+bones/16/rotation = Quaternion(0.70055, -0.0806076, -0.0257109, 0.70857)
+bones/17/rotation = Quaternion(-0.012252, -0.175345, -0.163295, 0.970793)
+bones/18/rotation = Quaternion(0.56875, 0.218443, -0.0499548, 0.791398)
+bones/19/rotation = Quaternion(0.661377, 0.0366338, -0.0267155, 0.748682)
+bones/20/rotation = Quaternion(0.722297, -0.0266994, -0.0336792, 0.690246)
 
 [node name="left_hand" parent="PlayerCamera/FishingRod/RodMesh" index="5"]
 transform = Transform3D(-0.211648, -0.0377439, 0.254183, -0.17704, 0.278759, -0.0940853, -0.207091, -0.199734, -0.179344, -0.113471, -0.850528, 0.246808)
 
 [node name="Skeleton3D" parent="PlayerCamera/FishingRod/RodMesh/left_hand/Sketchfab_model/root/GLTF_SceneRootNode/Hand_21/GLTF_created_0" index="0"]
-bones/2/rotation = Quaternion(-0.00889867, 0.0410461, 0.0589842, 0.997375)
-bones/3/rotation = Quaternion(0.0345443, 0.00429494, -0.0143058, 0.999292)
-bones/4/rotation = Quaternion(0.0478138, 0.0058983, 0.00631819, 0.998819)
-bones/5/rotation = Quaternion(0.0364596, 0.0161463, 0.0143837, 0.999101)
-bones/6/rotation = Quaternion(-0.0564475, 0.324876, 0.302155, 0.894412)
-bones/7/rotation = Quaternion(0.10961, -0.0710333, -0.00151664, 0.991432)
-bones/8/rotation = Quaternion(0.0428093, -0.00833916, 0.0185949, 0.998875)
-bones/9/rotation = Quaternion(-0.0160953, 0.0177544, -0.00435325, 0.999703)
-bones/10/rotation = Quaternion(0.0543446, 0.00373826, 0.0233037, 0.998243)
-bones/11/rotation = Quaternion(0.00335905, 0.0151685, 0.010059, 0.999829)
-bones/12/rotation = Quaternion(0.0624741, 0.00470781, 0.00276982, 0.998032)
-bones/13/rotation = Quaternion(0.0137193, -0.0562276, -0.0569171, 0.9967)
-bones/14/rotation = Quaternion(0.0169119, 0.0899491, 0.037333, 0.995103)
-bones/15/rotation = Quaternion(-0.0171848, 0.0296436, 0.0318867, 0.998904)
-bones/16/rotation = Quaternion(0.203637, 0.0382302, 0.014745, 0.978189)
-bones/17/rotation = Quaternion(-0.0201351, -0.15587, -0.163001, 0.974028)
-bones/18/rotation = Quaternion(0.0147973, 0.0724878, 0.083617, 0.993748)
-bones/19/rotation = Quaternion(0.134957, 0.0526864, 0.0193594, 0.98926)
-bones/20/rotation = Quaternion(0.167016, 0.0290384, -0.0023452, 0.985524)
+bones/2/rotation = Quaternion(-0.00793495, 0.0450006, 0.0910283, 0.994799)
+bones/3/rotation = Quaternion(0.570665, -0.035185, -0.0386693, 0.819517)
+bones/4/rotation = Quaternion(0.72085, 0.00704516, -0.000671885, 0.693055)
+bones/5/rotation = Quaternion(0.442574, -0.00658008, -0.0187884, 0.896511)
+bones/6/rotation = Quaternion(0.0689388, 0.476615, 0.365773, 0.796427)
+bones/7/rotation = Quaternion(0.375288, -0.0423147, 0.118365, 0.918345)
+bones/8/rotation = Quaternion(0.44524, 0.0668875, 0.0300999, 0.892402)
+bones/9/rotation = Quaternion(-0.00871617, 0.0182923, -0.00473822, 0.999784)
+bones/10/rotation = Quaternion(0.539089, 0.0268213, 0.0461813, 0.840554)
+bones/11/rotation = Quaternion(0.683994, -0.0613356, -0.000530996, 0.726905)
+bones/12/rotation = Quaternion(0.649927, -0.0254841, -0.0115481, 0.759481)
+bones/13/rotation = Quaternion(0.0191635, -0.0820088, -0.0552749, 0.994913)
+bones/14/rotation = Quaternion(0.543121, 0.1247, -0.0219675, 0.830053)
+bones/15/rotation = Quaternion(0.667163, 0.00371159, -0.00161076, 0.7449)
+bones/16/rotation = Quaternion(0.700582, -0.0806101, -0.025705, 0.708538)
+bones/17/rotation = Quaternion(-0.0122524, -0.175349, -0.163295, 0.970792)
+bones/18/rotation = Quaternion(0.568759, 0.218446, -0.0499608, 0.79139)
+bones/19/rotation = Quaternion(0.661384, 0.0366367, -0.0267192, 0.748675)
+bones/20/rotation = Quaternion(0.722336, -0.0267036, -0.0336815, 0.690205)
 
 [node name="WaterPlane" type="MeshInstance3D" parent="."]
 transform = Transform3D(-1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0, 0, 1, 0, -10.13, 129.833)
@@ -2469,5 +2496,5 @@ fade_duration = 0.0
 [editable path="PlayerCamera/FishingRod/RodMesh/right_hand"]
 [editable path="PlayerCamera/FishingRod/RodMesh/left_hand"]
 [editable path="Shop"]
-[editable path="Shop/shop"]
 [editable path="Shop/cigs"]
+[editable path="Shop/shop2"]

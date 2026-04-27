@@ -163,7 +163,7 @@ script/source = "extends Node3D
 @export var catch_result_ui: Node
 @export var shop_scene_path: String = \"res://scenes/shop.tscn\"
 @export var rotation_speed: float = 2.0
-@export var camera: Camera3D
+@export var camera: PlayerCamera
 @export var fishing_location: String = \"lake\"
 @export var fishbook_ui: Control
 @export var options: Control
@@ -1865,7 +1865,10 @@ script = ExtResource("18_ell2e")
 transform = Transform3D(-1, 0, -1.50996e-07, 0, 1, 0, 1.50996e-07, 0, -1, 0, 2.007, 0.0447942)
 script = ExtResource("1_ibiss")
 flashlight = NodePath("../flashlight")
-fishing_rod = NodePath("../hands")
+fishing_rod = NodePath("FishingRod")
+rod_follow_speed = 6.0
+rod_position_sway = 1.14
+rod_rotation_sway = 0.83
 
 [node name="cigaratte" parent="PlayerCamera" instance=ExtResource("14_fto0a")]
 transform = Transform3D(0.789812, 0.0794083, 0.274757, -0.0560458, 0.8343, -0.0800153, -0.280456, 0.0569025, 0.789751, -0.156605, -0.13869, -0.260703)
@@ -2011,7 +2014,7 @@ script = ExtResource("28_e65ta")
 [node name="Shop" parent="." instance=ExtResource("15_0cxu4")]
 transform = Transform3D(-3.12536e-08, 0, 0.715, 0, 0.715, 0, -0.715, 0, -3.12536e-08, -2.74395, 0.673682, -0.208801)
 
-[node name="Hillybilly" parent="Shop" index="3"]
+[node name="Hillybilly" parent="Shop" index="2"]
 transform = Transform3D(1, 0, 4.11909e-15, 0, 1, 0, -4.11909e-15, 0, 1, -1.33514, 0, 0.892961)
 
 [node name="Audio" type="Node" parent="."]
@@ -2195,8 +2198,8 @@ fade_duration = 0.0
 [editable path="PlayerCamera/FishingRod/RodMesh/left_hand"]
 [editable path="tree"]
 [editable path="Shop"]
-[editable path="Shop/shop"]
 [editable path="Shop/cigs"]
+[editable path="Shop/shop2"]
 [editable path="Explosion"]
 [editable path="Explosion/Sketchfab_Scene"]
 [editable path="boat"]

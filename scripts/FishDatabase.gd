@@ -145,6 +145,39 @@ var FISH_LAKE = [
 		"weight_max": 0.8
 	},
 	{
+	"id": "BRASSE",
+	"name_key": "FISH_LAKE_BRASSE_NAME",
+	"description_key": "FISH_LAKE_BRASSE_DESC",
+	"science_key": "FISH_LAKE_BRASSE_SCIENCE",
+	"rarity": RARITY.NORMAL,
+	"base_value": 4,
+	"icon": "res://assets/fish/brasse.png",
+	"weight_min": 0.5,
+	"weight_max": 2.5
+},
+{
+	"id": "HOLZ",
+	"name_key": "FISH_LAKE_HOLZ_NAME",
+	"description_key": "FISH_LAKE_HOLZ_DESC",
+	"science_key": "FISH_LAKE_HOLZ_SCIENCE",
+	"rarity": RARITY.NORMAL,
+	"base_value": 1,
+	"icon": "res://assets/fish/holz.png",
+	"weight_min": 0.3,
+	"weight_max": 3.0
+},
+{
+	"id": "STIEFEL",
+	"name_key": "FISH_LAKE_STIEFEL_NAME",
+	"description_key": "FISH_LAKE_STIEFEL_DESC",
+	"science_key": "FISH_LAKE_STIEFEL_SCIENCE",
+	"rarity": RARITY.NORMAL,
+	"base_value": 2,
+	"icon": "res://assets/fish/stiefel.png",
+	"weight_min": 0.8,
+	"weight_max": 2.5
+},
+	{
 		"id": "ROTAUGE",
 		"name_key": "FISH_LAKE_ROTAUGE_NAME",
 		"description_key": "FISH_LAKE_ROTAUGE_DESC",
@@ -166,6 +199,28 @@ var FISH_LAKE = [
 		"weight_min": 0.5,
 		"weight_max": 1.5
 	},
+	{
+	"id": "AUGENFORELLE",
+	"name_key": "FISH_LAKE_AUGENFORELLE_NAME",
+	"description_key": "FISH_LAKE_AUGENFORELLE_DESC",
+	"science_key": "FISH_LAKE_AUGENFORELLE_SCIENCE",
+	"rarity": RARITY.UNGEWOEHNLICH,
+	"base_value": 9,
+	"icon": "res://assets/fish/augenforelle.png",
+	"weight_min": 0.4,
+	"weight_max": 1.8
+},
+{
+	"id": "DOEBEL",
+	"name_key": "FISH_LAKE_DOEBEL_NAME",
+	"description_key": "FISH_LAKE_DOEBEL_DESC",
+	"science_key": "FISH_LAKE_DOEBEL_SCIENCE",
+	"rarity": RARITY.UNGEWOEHNLICH,
+	"base_value": 8,
+	"icon": "res://assets/fish/doebel.png",
+	"weight_min": 0.8,
+	"weight_max": 3.0
+},
 	{
 		"id": "THUNFISCH",
 		"name_key": "FISH_LAKE_THUNFISCH_NAME",
@@ -392,6 +447,50 @@ var FISH_CITY = [
 		"weight_min": 0.050,
 		"weight_max": 0.200
 	},
+	{
+	"id": "ROEHRE",
+	"name_key": "FISH_CITY_ROEHRE_NAME",
+	"description_key": "FISH_CITY_ROEHRE_DESC",
+	"science_key": "FISH_CITY_ROEHRE_SCIENCE",
+	"rarity": RARITY.NORMAL,
+	"base_value": 6,
+	"icon": "res://assets/fish/roehre.png",
+	"weight_min": 0.8,
+	"weight_max": 4.0
+},
+{
+	"id": "RETTUNGSRING",
+	"name_key": "FISH_CITY_RETTUNGSRING_NAME",
+	"description_key": "FISH_CITY_RETTUNGSRING_DESC",
+	"science_key": "FISH_CITY_RETTUNGSRING_SCIENCE",
+	"rarity": RARITY.NORMAL,
+	"base_value": 7,
+	"icon": "res://assets/fish/rettungsring.png",
+	"weight_min": 1.0,
+	"weight_max": 3.5
+},
+{
+	"id": "HDMI",
+	"name_key": "FISH_CITY_HDMI_NAME",
+	"description_key": "FISH_CITY_HDMI_DESC",
+	"science_key": "FISH_CITY_HDMI_SCIENCE",
+	"rarity": RARITY.UNGEWOEHNLICH,
+	"base_value": 13,
+	"icon": "res://assets/fish/hdmi.png",
+	"weight_min": 0.05,
+	"weight_max": 0.25
+},
+{
+	"id": "DARKCRAB",
+	"name_key": "FISH_CITY_DARKCRAB_NAME",
+	"description_key": "FISH_CITY_DARKCRAB_DESC",
+	"science_key": "FISH_CITY_DARKCRAB_SCIENCE",
+	"rarity": RARITY.UNGEWOEHNLICH,
+	"base_value": 24,
+	"icon": "res://assets/fish/darkcrab.png",
+	"weight_min": 0.4,
+	"weight_max": 2.0
+},
 	{
 		"id": "TRUEMMERKABEL_FISCH",
 		"name_key": "FISH_CITY_TRUEMMERKABEL_FISCH_NAME",

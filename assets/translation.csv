@@ -248,6 +248,26 @@ FISH_LAKE_THUNFISCH_NAME,Thunfisch,Tuna
 FISH_LAKE_THUNFISCH_DESC,"Keine Ahnung wie der hier rein passt... Der ist viel zu fett.","No idea how this fits in here… it's way too fat."
 FISH_LAKE_THUNFISCH_SCIENCE,"Thunfische gehören zu den wenigen warmblütigen Fischen, was ihnen enorme Geschwindigkeit verschafft.","Tuna are among the few warm-blooded fish, giving them tremendous speed."
 
+FISH_LAKE_BRASSE_NAME,Brasse,Bream
+FISH_LAKE_BRASSE_DESC,"Ein friedlicher Silberklotz. Sieht aus, als würde er Steuererklärungen sortieren.","A peaceful silver chunk. Looks like it sorts tax forms."
+FISH_LAKE_BRASSE_SCIENCE,"Brassen leben oft in Schwärmen und suchen mit ihrem vorstülpbaren Maul den Gewässerboden nach Nahrung ab.","Bream often live in schools and use their protrusible mouth to search the bottom for food."
+
+FISH_LAKE_HOLZ_NAME,Holz,Wood
+FISH_LAKE_HOLZ_DESC,"Kein Fisch. Aber immerhin hat es Charakter.","Not a fish. But at least it has character."
+FISH_LAKE_HOLZ_SCIENCE,"Treibholz bietet kleinen Wasserorganismen Schutz und dient Algen sowie Mikroben als Lebensraum.","Driftwood provides shelter for small aquatic organisms and serves as habitat for algae and microbes."
+
+FISH_LAKE_STIEFEL_NAME,Alter Stiefel,Old Boot
+FISH_LAKE_STIEFEL_DESC,"Riecht nach Abenteuer. Und Fußpilz.","Smells like adventure. And athlete's foot."
+FISH_LAKE_STIEFEL_SCIENCE,"Langlebige Abfälle im Wasser können über Jahre bestehen bleiben und von Mikroorganismen besiedelt werden.","Durable waste in water can persist for years and become colonized by microorganisms."
+
+FISH_LAKE_AUGENFORELLE_NAME,Augenforelle,Eyetrout
+FISH_LAKE_AUGENFORELLE_DESC,"Sie sieht dich. Auch wenn du hinter ihr stehst.","It sees you. Even when you're standing behind it."
+FISH_LAKE_AUGENFORELLE_SCIENCE,"Große oder auffällige Augen können Fischen helfen, in trübem oder dunklem Wasser mehr Licht wahrzunehmen.","Large or prominent eyes can help fish detect more light in murky or dark water."
+
+FISH_LAKE_DOEBEL_NAME,Döbel,Chub
+FISH_LAKE_DOEBEL_DESC,"Sieht harmlos aus. Hat aber definitiv schon Dinge gesehen.","Looks harmless. Has definitely seen things."
+FISH_LAKE_DOEBEL_SCIENCE,"Döbel sind anpassungsfähige Süßwasserfische, die sowohl Insekten als auch Pflanzenmaterial und kleine Tiere fressen.","Chub are adaptable freshwater fish that eat insects, plant matter, and small animals."
+
 FISH_LAKE_HECHT_NAME,Hecht,Pike
 FISH_LAKE_HECHT_DESC,"Sieht aus wie ein Unterwasser-Torpedo mit Zahnarztphobie.","Looks like an underwater torpedo with a fear of dentists."
 FISH_LAKE_HECHT_SCIENCE,"Hechte beschleunigen in Millisekunden, da ihre Muskulatur auf explosive Schnellkraft ausgelegt ist.","Pike can accelerate in milliseconds because their muscles are built for explosive power."
@@ -324,6 +344,21 @@ FISH_CITY_SIGNALFAENGER_SCIENCE,Viele Fische besitzen Elektrorezeptoren mit dene
 FISH_CITY_TRUEMMERKABEL_FISCH_NAME,Trümmerkabel-Fisch,Debris Cable Fish
 FISH_CITY_TRUEMMERKABEL_FISCH_DESC,Ernährt sich von HDMI-Kabeln und zerbrochenen Träumen.,Feeds on HDMI cables and broken dreams.
 FISH_CITY_TRUEMMERKABEL_FISCH_SCIENCE,Metallverschlingende Organismen existieren wirklich – bestimmte Bakterien nutzen Metallionen wie Nährstoffe.,Metal-devouring organisms really exist - certain bacteria use metal ions as nutrients.
+FISH_CITY_ROEHRE_NAME,Röhre,Pipe
+FISH_CITY_ROEHRE_DESC,War mal Teil von etwas Größerem. Jetzt bist du es.,Used to be part of something bigger. Now you are.
+FISH_CITY_ROEHRE_SCIENCE,Rohre in urbanen Gewässern entstehen oft durch Infrastrukturreste und bieten unerwartete Lebensräume für Organismen.,Pipes in urban waters often originate from infrastructure remains and can become unexpected habitats for organisms.
+
+FISH_CITY_RETTUNGSRING_NAME,Rettungsring,Lifebuoy
+FISH_CITY_RETTUNGSRING_DESC,Rettet niemanden mehr. Aber dich hat er immerhin gefunden.,Doesn't save anyone anymore. But at least it found you.
+FISH_CITY_RETTUNGSRING_SCIENCE,Rettungsringe bestehen meist aus schwimmfähigen Kunststoffen die sich im Wasser nur sehr langsam zersetzen.,Lifebuoys are typically made of buoyant plastics that decompose very slowly in water.
+
+FISH_CITY_HDMI_NAME,HDMI-Kabel,HDMI Cable
+FISH_CITY_HDMI_DESC,Überträgt nichts mehr außer Enttäuschung.,Transmits nothing but disappointment now.
+FISH_CITY_HDMI_SCIENCE,Kabelisolierungen bestehen häufig aus Kunststoffmaterialien die sich in Gewässern nur schwer abbauen und Mikroplastik freisetzen können.,Cable insulation is often made of plastics that are difficult to degrade and can release microplastics into water.
+
+FISH_CITY_DARKCRAB_NAME,Darkcrab,Dark Crab
+FISH_CITY_DARKCRAB_DESC,Bewegt sich nur wenn du nicht hinsiehst. Klassisch.,Moves only when you're not looking. Classic.
+FISH_CITY_DARKCRAB_SCIENCE,Einige Krabbenarten sind nachtaktiv und verlassen sich auf Dunkelheit und Tarnung um Fressfeinden zu entgehen.,Some crab species are nocturnal and rely on darkness and camouflage to avoid predators.
 FISH_CITY_DORSCH_NAME,Dorsch,Cod
 FISH_CITY_DORSCH_DESC,Heißt auch Kabeljau. Hat eine Identitätskrise.,Also called Atlantic cod. Has an identity crisis.
 FISH_CITY_DORSCH_SCIENCE,Dorsche verändern ihr Wanderverhalten abhängig von Wassertemperaturen – ziemlich sensibel für so einen Brocken.,Cod change their migration behavior based on water temperatures - quite sensitive for such a chunk.

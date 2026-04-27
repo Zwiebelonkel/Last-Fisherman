@@ -1,0 +1,535 @@
+[gd_scene load_steps=24 format=3 uid="uid://c65603pesggni"]
+
+[ext_resource type="Script" uid="uid://2ilivy1i0ehi" path="res://scripts/MapScene.gd" id="1_y2hrc"]
+[ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="2_wikxs"]
+[ext_resource type="Texture2D" uid="uid://5olhq7vqrcxm" path="res://textures/map3.png" id="3_titcf"]
+[ext_resource type="AudioStream" uid="uid://wy4qclas0bhw" path="res://sounds/map.mp3" id="4_1ddn7"]
+[ext_resource type="AudioStream" uid="uid://cgv2wx0vgdw41" path="res://sounds/interact.mp3" id="5_bnqbi"]
+[ext_resource type="Shader" uid="uid://dvw1ws30n3pg3" path="res://shader/2dwater.gdshader" id="6_water"]
+[ext_resource type="Shader" uid="uid://bso2ewb2ieq7x" path="res://shader/warp.gdshader" id="7_warp"]
+[ext_resource type="Shader" uid="uid://cdivlr8xvrv5o" path="res://scenes/MapScene.gdshader" id="8_clouds"]
+[ext_resource type="Texture2D" uid="uid://vb3jqd3mfkt0" path="res://assets/clouds.png" id="9_clouds"]
+
+[sub_resource type="Theme" id="Theme_main"]
+default_font = ExtResource("2_wikxs")
+default_font_size = 11
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bg"]
+bg_color = Color(0.039, 0.051, 0.059, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_water"]
+shader = ExtResource("6_water")
+shader_parameter/edge_softness = 0.1
+shader_parameter/wave_strength = 0.652
+shader_parameter/wave_speed = 1.13
+shader_parameter/wave_scale = 2.19
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_clouds"]
+shader = ExtResource("8_clouds")
+shader_parameter/cloud_sheet = ExtResource("9_clouds")
+shader_parameter/frames = 3
+shader_parameter/speed = 0.235
+shader_parameter/frame_rate = 1.0
+shader_parameter/tiling = 4.525
+shader_parameter/gap = 0.445
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+bg_color = Color(0.055, 0.071, 0.082, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.165, 0.227, 0.165, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_progress_bg"]
+bg_color = Color(0.102, 0.165, 0.102, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_progress_fill"]
+bg_color = Color(0.29, 0.871, 0.502, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_go"]
+bg_color = Color(0.29, 0.871, 0.502, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_card_locked"]
+bg_color = Color(0.047, 0.055, 0.059, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.165, 0.165, 0.165, 0.302)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_buy"]
+bg_color = Color(0, 0, 0, 0)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.961, 0.62, 0.043, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_back"]
+bg_color = Color(0, 0, 0, 0)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.165, 0.227, 0.165, 0.502)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="Shader" id="Shader_crt"]
+code = "shader_type canvas_item;
+uniform sampler2D SCREEN_TEXTURE : hint_screen_texture, filter_nearest, repeat_disable;
+uniform float grain_intensity : hint_range(0.0, 1.0) = 0.08;
+uniform float scanline_intensity : hint_range(0.0, 1.0) = 0.25;
+uniform float vignette_darkness : hint_range(0.0, 1.0) = 0.55;
+uniform float barrel_distortion : hint_range(0.0, 0.5) = 0.08;
+uniform float warble_amount : hint_range(0.0, 0.01) = 0.001;
+uniform float warble_speed : hint_range(0.0, 10.0) = 1.2;
+
+float noise(vec2 p) {
+	return (fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453) - 0.5) * 2.0;
+}
+
+void fragment() {
+	vec2 uv = SCREEN_UV;
+	vec2 center_uv = uv - 0.5;
+	float r2 = dot(center_uv, center_uv);
+	vec2 distorted_uv = center_uv * (1.0 + barrel_distortion * r2) + 0.5;
+
+	if (distorted_uv.x < 0.0 || distorted_uv.x > 1.0 || distorted_uv.y < 0.0 || distorted_uv.y > 1.0) {
+		COLOR = vec4(0.0, 0.0, 0.0, 1.0);
+	} else {
+		vec2 warble = vec2(
+			sin(TIME * warble_speed + uv.x * 10.0) * cos(TIME * warble_speed * 0.7 + uv.y * 7.0),
+			cos(TIME * warble_speed * 0.8 + uv.y * 11.0) * sin(TIME * warble_speed * 0.9 + uv.x * 8.0)
+		) * warble_amount;
+		vec2 final_uv = clamp(distorted_uv + warble, vec2(0.0), vec2(1.0));
+		vec3 col = texture(SCREEN_TEXTURE, final_uv).rgb;
+
+		vec2 grain_uv = uv + vec2(sin(TIME * 0.5), cos(TIME * 0.5)) * 20.0;
+		float g = noise(grain_uv) * grain_intensity;
+		col = clamp(col + vec3(g), 0.0, 1.0);
+
+		vec2 screen_size = 1.0 / SCREEN_PIXEL_SIZE;
+		float scanline = sin(uv.y * screen_size.y * 3.0);
+		scanline = clamp(scanline * 0.5 + 0.5, 0.0, 1.0);
+		col *= 1.0 - (scanline * scanline_intensity);
+
+		float aspect = screen_size.x / screen_size.y;
+		vec2 adj = (uv - 0.5);
+		adj.x *= aspect;
+		float vdist = length(adj);
+		float vfactor = mix(1.0 - vignette_darkness, 1.0, smoothstep(0.7, 0.2, vdist));
+		col *= vfactor;
+
+		vec2 dc = distorted_uv - 0.5;
+		col *= pow(1.0 - clamp(dot(dc, dc), 0.0, 1.0), 0.5);
+
+		COLOR = vec4(col, 1.0);
+	}
+}"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_crt"]
+shader = SubResource("Shader_crt")
+shader_parameter/grain_intensity = 0.08
+shader_parameter/scanline_intensity = 0.25
+shader_parameter/vignette_darkness = 0.55
+shader_parameter/barrel_distortion = 0.08
+shader_parameter/warble_amount = 0.001
+shader_parameter/warble_speed = 1.2
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_warp"]
+shader = ExtResource("7_warp")
+shader_parameter/warp_intensity = 0.022
+shader_parameter/time_scale = 2.338
+
+[node name="MapScene" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_main")
+script = ExtResource("1_y2hrc")
+
+[node name="BG" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_bg")
+
+[node name="MapBG" type="TextureRect" parent="."]
+modulate = Color(1, 1, 1, 0.18)
+material = SubResource("ShaderMaterial_water")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_titcf")
+expand_mode = 1
+
+[node name="Clouds" type="TextureRect" parent="."]
+modulate = Color(1, 1, 1, 0.35)
+material = SubResource("ShaderMaterial_clouds")
+layout_mode = 0
+offset_left = -3.0
+offset_top = -64.0
+offset_right = 1204.0
+offset_bottom = 140.0
+texture = ExtResource("9_clouds")
+
+[node name="Clouds2" type="TextureRect" parent="."]
+modulate = Color(1, 1, 1, 0.25)
+material = SubResource("ShaderMaterial_clouds")
+layout_mode = 0
+offset_left = -54.0
+offset_top = -4.0
+offset_right = 1184.0
+offset_bottom = 143.0
+texture = ExtResource("9_clouds")
+flip_h = true
+
+[node name="Root" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 18
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 18
+
+[node name="VLayout" type="VBoxContainer" parent="Root"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Header" type="HBoxContainer" parent="Root/VLayout"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="HeaderTitle" type="Label" parent="Root/VLayout/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.29, 0.871, 0.502, 1)
+theme_override_font_sizes/font_size = 11
+text = "// WORLD MAP — SELECT LOCATION"
+
+[node name="MoneyDisplay" type="Label" parent="Root/VLayout/Header"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.961, 0.62, 0.043, 1)
+theme_override_font_sizes/font_size = 13
+text = "$ 0"
+
+[node name="HeaderSep" type="HSeparator" parent="Root/VLayout"]
+layout_mode = 2
+
+[node name="ContentRow" type="HBoxContainer" parent="Root/VLayout"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 16
+
+[node name="LeftCol" type="VBoxContainer" parent="Root/VLayout/ContentRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 10
+
+[node name="GridLabel" type="Label" parent="Root/VLayout/ContentRow/LeftCol"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.353, 0.471, 0.353, 1)
+theme_override_font_sizes/font_size = 9
+text = "LOCATIONS"
+
+[node name="LocationGrid" type="GridContainer" parent="Root/VLayout/ContentRow/LeftCol"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 8
+columns = 4
+
+[node name="Sidebar" type="VBoxContainer" parent="Root/VLayout/ContentRow"]
+custom_minimum_size = Vector2(210, 0)
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="DetailPanel" type="Panel" parent="Root/VLayout/ContentRow/Sidebar"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="DetailMargin" type="MarginContainer" parent="Root/VLayout/ContentRow/Sidebar/DetailPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 14
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 14
+
+[node name="DetailVBox" type="VBoxContainer" parent="Root/VLayout/ContentRow/Sidebar/DetailPanel/DetailMargin"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="DetailSectionLabel" type="Label" parent="Root/VLayout/ContentRow/Sidebar/DetailPanel/DetailMargin/DetailVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.353, 0.471, 0.353, 1)
+theme_override_font_sizes/font_size = 9
+text = "DETAIL"
+
+[node name="DetailIcon" type="Label" parent="Root/VLayout/ContentRow/Sidebar/DetailPanel/DetailMargin/DetailVBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+
+[node name="DetailName" type="Label" parent="Root/VLayout/ContentRow/Sidebar/DetailPanel/DetailMargin/DetailVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.29, 0.871, 0.502, 1)
+theme_override_font_sizes/font_size = 14
+autowrap_mode = 2
+
+[node name="DetailDesc" type="RichTextLabel" parent="Root/VLayout/ContentRow/Sidebar/DetailPanel/DetailMargin/DetailVBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/normal_font_size = 11
+bbcode_enabled = true
+text = "[color=#3a5a3a]Ort auswählen...[/color]"
+fit_content = true
+
+[node name="DetailPrice" type="Label" parent="Root/VLayout/ContentRow/Sidebar/DetailPanel/DetailMargin/DetailVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.961, 0.62, 0.043, 1)
+theme_override_font_sizes/font_size = 11
+
+[node name="VendorProgress" type="VBoxContainer" parent="Root/VLayout/ContentRow/Sidebar/DetailPanel/DetailMargin/DetailVBox"]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="VendorLabel" type="Label" parent="Root/VLayout/ContentRow/Sidebar/DetailPanel/DetailMargin/DetailVBox/VendorProgress"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.353, 0.471, 0.353, 1)
+theme_override_font_sizes/font_size = 9
+text = "PARTS: 0/4"
+
+[node name="ProgressBG" type="Panel" parent="Root/VLayout/ContentRow/Sidebar/DetailPanel/DetailMargin/DetailVBox/VendorProgress"]
+custom_minimum_size = Vector2(0, 4)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_progress_bg")
+
+[node name="ProgressFill" type="Panel" parent="Root/VLayout/ContentRow/Sidebar/DetailPanel/DetailMargin/DetailVBox/VendorProgress/ProgressBG"]
+layout_mode = 1
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_progress_fill")
+
+[node name="VendorItems" type="VBoxContainer" parent="Root/VLayout/ContentRow/Sidebar/DetailPanel/DetailMargin/DetailVBox/VendorProgress"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="ActionContainer" type="VBoxContainer" parent="Root/VLayout/ContentRow/Sidebar/DetailPanel/DetailMargin/DetailVBox"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="BtnGo" type="Button" parent="Root/VLayout/ContentRow/Sidebar/DetailPanel/DetailMargin/DetailVBox/ActionContainer"]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0.039, 0.11, 0.055, 1)
+theme_override_font_sizes/font_size = 11
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_go")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_go")
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_go")
+text = "▶  REISE AN"
+
+[node name="BtnBuy" type="Button" parent="Root/VLayout/ContentRow/Sidebar/DetailPanel/DetailMargin/DetailVBox/ActionContainer"]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0.961, 0.62, 0.043, 1)
+theme_override_font_sizes/font_size = 11
+theme_override_styles/disabled = SubResource("StyleBoxFlat_card_locked")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_buy")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_buy")
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_buy")
+text = "⬡  KAUFEN"
+
+[node name="StatusPanel" type="Panel" parent="Root/VLayout/ContentRow/Sidebar"]
+custom_minimum_size = Vector2(0, 90)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="StatusMargin" type="MarginContainer" parent="Root/VLayout/ContentRow/Sidebar/StatusPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 12
+
+[node name="StatusVBox" type="VBoxContainer" parent="Root/VLayout/ContentRow/Sidebar/StatusPanel/StatusMargin"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="StatusLabel" type="Label" parent="Root/VLayout/ContentRow/Sidebar/StatusPanel/StatusMargin/StatusVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.353, 0.471, 0.353, 1)
+theme_override_font_sizes/font_size = 9
+text = "STATUS"
+
+[node name="UnlockedCount" type="Label" parent="Root/VLayout/ContentRow/Sidebar/StatusPanel/StatusMargin/StatusVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.784, 0.847, 0.769, 1)
+theme_override_font_sizes/font_size = 11
+text = "0/8 freigeschaltet"
+
+[node name="GlobalProgressBG" type="Panel" parent="Root/VLayout/ContentRow/Sidebar/StatusPanel/StatusMargin/StatusVBox"]
+custom_minimum_size = Vector2(0, 4)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_progress_bg")
+
+[node name="GlobalProgressFill" type="Panel" parent="Root/VLayout/ContentRow/Sidebar/StatusPanel/StatusMargin/StatusVBox/GlobalProgressBG"]
+layout_mode = 1
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_progress_fill")
+
+[node name="BtnBack" type="Button" parent="Root/VLayout/ContentRow/Sidebar/StatusPanel/StatusMargin/StatusVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.353, 0.471, 0.353, 1)
+theme_override_font_sizes/font_size = 10
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_back")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_back")
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_back")
+text = "← BACK"
+
+[node name="FooterSep" type="HSeparator" parent="Root/VLayout"]
+layout_mode = 2
+
+[node name="Footer" type="HBoxContainer" parent="Root/VLayout"]
+layout_mode = 2
+
+[node name="FooterHint" type="Label" parent="Root/VLayout/Footer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.353, 0.471, 0.353, 0.502)
+theme_override_font_sizes/font_size = 9
+text = "CLICK — INSPECT  ·  DOUBLE CLICK — TRAVEL"
+
+[node name="Ticker" type="Label" parent="Root/VLayout/Footer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.353, 0.471, 0.353, 0.502)
+theme_override_font_sizes/font_size = 9
+text = "SYS:OK"
+
+[node name="CRT" type="ColorRect" parent="."]
+z_index = 4096
+material = SubResource("ShaderMaterial_crt")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="WarpOverlay" type="ColorRect" parent="."]
+visible = false
+z_index = 100
+material = SubResource("ShaderMaterial_warp")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Audio" type="Node" parent="."]
+
+[node name="Music" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("4_1ddn7")
+volume_db = -4.685
+autoplay = true
+bus = &"Music"
+
+[node name="Interact" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("5_bnqbi")
+bus = &"SFX"
+
+[node name="PasswordLayer" type="CanvasLayer" parent="."]
+layer = 128
+
+[node name="PasswordContainer" type="HBoxContainer" parent="PasswordLayer"]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -280.0
+offset_top = -44.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_constants/separation = 4
+
+[node name="PasswordField" type="LineEdit" parent="PasswordLayer/PasswordContainer"]
+custom_minimum_size = Vector2(180, 32)
+layout_mode = 2
+placeholder_text = "PASSWORD"
+secret = true
+
+[node name="SubmitButton" type="Button" parent="PasswordLayer/PasswordContainer"]
+custom_minimum_size = Vector2(80, 32)
+layout_mode = 2
+text = "SUBMIT"
+
+[node name="TickerTimer" type="Timer" parent="."]
+wait_time = 3.5
+autostart = true
+
+[connection signal="pressed" from="PasswordLayer/PasswordContainer/SubmitButton" to="." method="_on_submit_pressed"]
+[connection signal="timeout" from="TickerTimer" to="." method="_on_ticker_timeout"]
