@@ -441,6 +441,7 @@ func _on_continue_pressed() -> void:
 	visible = false
 	modulate = Color.WHITE
 	scale = Vector2.ONE
+	position = Vector2.ZERO
 	_is_exiting = false
 # ---------------------------------------------------------
 # Icon Click / Hover
@@ -469,6 +470,7 @@ func _play_exit_animation() -> void:
 	tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
 	tween.tween_property(self, "modulate:a", 0.0, 0.18)
 	tween.tween_property(self, "scale", Vector2(0.96, 0.96), 0.18)
+	tween.tween_property(self, "position:y", position.y + 10.0, 0.18)
 	await tween.finished
 
 # ---------------------------------------------------------
