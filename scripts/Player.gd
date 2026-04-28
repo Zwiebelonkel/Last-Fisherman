@@ -20,6 +20,7 @@ var options: String = "res://scenes/OptionsControl.tscn"
 var caught_fish_species: Dictionary = {}  # ✅ Speichert fish_id: bool
 var used_story_items: Array = []
 var tutorial_seen: bool = false  # 🆕 Tutorial wurde angesehen
+var fish_detail_hint_seen: bool = false
 var visited_biomes: Dictionary = {}
 
 # 🆕 Story Items für Vendor Unlock
@@ -463,6 +464,7 @@ func save_game() -> void:
 		"bait_inventory": bait_inventory,
 		"active_bait": active_bait,
 		"tutorial_seen": tutorial_seen,
+		"fish_detail_hint_seen": fish_detail_hint_seen,
 		"visited_biomes": visited_biomes,
 	}
 	
@@ -492,6 +494,7 @@ func load_game() -> void:
 		bait_inventory = save_data.get("bait_inventory", bait_inventory)
 		active_bait = save_data.get("active_bait", "")
 		tutorial_seen = save_data.get("tutorial_seen", false)  # 🆕 Tutorial-Status laden
+		fish_detail_hint_seen = save_data.get("fish_detail_hint_seen", false)
 		visited_biomes = save_data.get("visited_biomes", {})
 
 func reset() -> void:
@@ -522,6 +525,7 @@ func reset() -> void:
 	}
 	active_bait = ""
 	tutorial_seen = false
+	fish_detail_hint_seen = false
 	visited_biomes.clear()
 	
 	# 🆕 Reset Lore
