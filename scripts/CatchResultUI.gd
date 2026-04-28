@@ -24,6 +24,8 @@ var fish_detail_popup_scene
 var current_fish: Dictionary
 var _is_exiting: bool = false
 
+const CENTER_OFFSETS := Rect2(-120.0, -150.0, 240.0, 262.0)
+
 signal story_item_used(biome: String)
 
 const SPLASH_COMMON      := preload("res://assets/particles/dropletNormal.png")
@@ -46,6 +48,7 @@ var   _tilt_enabled  := false
 
 func _ready() -> void:
 	visible = false
+	_reset_center_layout()
 	continue_button.pressed.connect(_on_continue_pressed)
 	_create_lightning_node()
 	_create_sparkle_node()
@@ -255,6 +258,7 @@ func _unhandled_input(event: InputEvent) -> void:
 func show_fish(fish: Dictionary) -> void:
 	var rarity: int = FishDB.get_rarity_safe(fish)
 	current_fish = prepare_fish_data(fish)
+	_reset_center_layout()
 	visible = true
 	_tilt_enabled = true   # 🎴 Tilt aktivieren
 
@@ -375,6 +379,16 @@ func show_fish(fish: Dictionary) -> void:
 		shadow_mat.set_shader_parameter("pulse_amount",  0.15)
 		shadow_mat.set_shader_parameter("pulse_speed",   2.5)
 	fish_icon.material = shadow_mat
+
+func _reset_center_layout() -> void:
+	set_anchors_preset(Control.PRESET_CENTER, false)
+	grow_horizontal = Control.GROW_DIRECTION_BOTH
+	grow_vertical = Control.GROW_DIRECTION_BOTH
+	offset_left = CENTER_OFFSETS.position.x
+	offset_top = CENTER_OFFSETS.position.y
+	offset_right = CENTER_OFFSETS.position.x + CENTER_OFFSETS.size.x
+	offset_bottom = CENTER_OFFSETS.position.y + CENTER_OFFSETS.size.y
+	position = Vector2.ZERO
 
 # ⚡ Lightning Setup
 func _setup_lightning_for_rarity(rarity: int, color: Color) -> void:
