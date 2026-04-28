@@ -541,7 +541,7 @@ mouse_filter = 2
 [node name="music" type="AudioStreamPlayer" parent="Audio"]
 stream = ExtResource("4_1ddn7")
 volume_db = -4.685
-pitch_scale = 1.61
+pitch_scale = 1.18
 autoplay = true
 bus = &"Music"
 

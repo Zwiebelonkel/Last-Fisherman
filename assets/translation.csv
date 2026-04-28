@@ -334,7 +334,13 @@ FISH_LAKE_SEEPFERD_DESC,"Wurde als Schwimmabzeichen missbraucht. Grr","Used as a
 FISH_LAKE_SEEPFERD_SCIENCE,"Nach einer Tragezeit von 10 bis 45 Tagen presst der Vater hunderte bis tausende vollentwickelte Mini-Seepferdchen aus seiner Bauchtasche. Eklig..","After a gestation period of 10 to 45 days, the father releases hundreds to thousands of fully formed miniature seahorses from his brood pouch. Slightly disturbing."
 
 
+FISH_CITY_DOSE_NAME,Dose,Can
+FISH_CITY_DOSE_DESC,Leer. Genau wie dein Blick gerade.,Empty. Just like your stare right now.
+FISH_CITY_DOSE_SCIENCE,Aluminiumdosen können im Wasser Jahrzehnte überdauern bevor sie vollständig zersetzt werden.,Aluminum cans can persist in water for decades before fully degrading.
 
+FISH_CITY_FLASCHE_NAME,Flasche,Bottle
+FISH_CITY_FLASCHE_DESC,Nachricht drin? Nope. Nur Enttäuschung.,Message inside? Nope. Just disappointment.
+FISH_CITY_FLASCHE_SCIENCE,Glasflaschen können Jahrhunderte im Wasser überdauern ohne sich wesentlich zu verändern.,Glass bottles can remain in water for centuries without significant degradation.
 FISH_CITY_SAND_AAL_NAME,Sand-Aal,Sand Eel
 FISH_CITY_SAND_AAL_DESC,Schlüpfriger als ein Politiker im Wahlkampf.,More slippery than a politician during election campaign.
 FISH_CITY_SAND_AAL_SCIENCE,Aale können über ihre Haut Sauerstoff aufnehmen – praktisch wenn man in Schadensbegrenzung leben muss.,Eels can absorb oxygen through their skin - practical when living in damage control mode.
@@ -424,7 +430,13 @@ FISH_CITY_SEEIGEL_NAME,Seeigel,Sea Urchin
 FISH_CITY_SEEIGEL_DESC,"Eigentlich heißt er Ivan. Auf einem Surfcup ist ein Pinguin auf ihm gelandet. Der Arme...","His real name is Ivan. During a surfing contest, a penguin landed on him. Poor guy..."
 FISH_CITY_SEEIGEL_SCIENCE,"Seeigel sind weltweit in Meeren verbreitete, stachelige Stachelhäuter (Echinoidea) mit über 1.000 bekannten Arten, die bis zu 200 Jahre alt werden können.","Sea urchins are spiny echinoderms (class Echinoidea) found in oceans worldwide. With over 1,000 known species, some can live up to 200 years."
 
+FISH_SEWER_TOILETPAPER_NAME,Toilettenpapier,Toilet Paper
+FISH_SEWER_TOILETPAPER_DESC,Zu spät. Viel zu spät.,Too late. Way too late.
+FISH_SEWER_TOILETPAPER_SCIENCE,Toilettenpapier ist wasserlöslich konzipiert zerfällt aber je nach Qualität unterschiedlich schnell.,Toilet paper is designed to dissolve in water but degrades at different speeds depending on quality.
 
+FISH_SEWER_HERING_NAME,Hering,Herring
+FISH_SEWER_HERING_DESC,Hat sich verlaufen. Schwer verlaufen.,Took a wrong turn. A very wrong turn.
+FISH_SEWER_HERING_SCIENCE,Heringe sind Schwarmfische die normalerweise in sauberen Meeren leben und empfindlich auf Umweltveränderungen reagieren.,Herring are schooling fish that usually live in clean seas and are sensitive to environmental changes.
 FISH_SEWER_KACKWURST_NAME,Kackwurst,Poop Sausage
 FISH_SEWER_KACKWURST_DESC,Exakt das wonach es aussieht. Verkauf es schnell.,Exactly what it looks like. Sell it quickly.
 FISH_SEWER_KACKWURST_SCIENCE,Organische Abfälle werden im Wasser von Mikroorganismen zersetzt – nicht schön aber effizient.,Organic waste is decomposed by microorganisms in water - not pretty but efficient.
@@ -542,6 +554,17 @@ FISH_FOREST_KUGELFISCH_NAME,Wald-Kugelfisch,Forest Pufferfish
 FISH_FOREST_KUGELFISCH_DESC,"Er schwebt zwischen überwucherten Wurzeln im dunklen Wasser. Wenn er sich aufbläht, treiben Blätter an ihm vorbei, als hätten sie Angst, ihn zu berühren.","It drifts between overgrown roots in the dark water. When it inflates, leaves float past it as if afraid to touch it."
 FISH_FOREST_KUGELFISCH_SCIENCE,"Kugelfische kommen auch in Süßwasser vor und besiedeln Flüsse sowie überschwemmte Waldgebiete. Sie können sich aufblasen, um Fressfeinde abzuschrecken, und besitzen oft starke Toxine als zusätzlichen Schutzmechanismus.","Pufferfish can also inhabit freshwater environments, including rivers and flooded forest regions. They inflate to deter predators and often carry potent toxins as an additional defense mechanism."
 
+FISH_DESERT_SANDKORN_NAME,Sandkorn,Sand Grain
+FISH_DESERT_SANDKORN_DESC,Du hast ernsthaft das hier geangelt.,You seriously fished this.
+FISH_DESERT_SANDKORN_SCIENCE,Ein einzelnes Sandkorn besteht meist aus Quarz und ist das Ergebnis von Jahrtausenden geologischer Prozesse.,A grain of sand is usually made of quartz and forms over thousands of years through geological processes.
+
+FISH_DESERT_KOKOSNUSS_NAME,Kokosnuss,Coconut
+FISH_DESERT_KOKOSNUSS_DESC,Technisch gesehen ein Upgrade zu Wasser.,Technically an upgrade from water.
+FISH_DESERT_KOKOSNUSS_SCIENCE,Kokosnüsse können im Meer treiben und über große Distanzen verbreitet werden um neue Pflanzen zu bilden.,Coconuts can float across oceans and spread over long distances to grow new plants.
+
+FISH_DESERT_KOKOSNUSS2_NAME,Kokosnerd,Coconerd
+FISH_DESERT_KOKOSNUSS2_DESC,Diese kleine Kugel ist bereit unvorstellbares zu tun. Man sieht es ihr an.,This little sphere is ready to do unthinkable things. You can tell.
+FISH_DESERT_KOKOSNUSS2_SCIENCE,Kokosnüsse können im Meer treiben und über große Distanzen verbreitet werden um neue Pflanzen zu bilden.,Coconuts can float across oceans and spread over long distances to grow new plants.
 
 FISH_DESERT_SCHMUTZGRUNDEL_NAME,Schmutzgrundel,Dirt Goby
 FISH_DESERT_SCHMUTZGRUNDEL_DESC,Lebt im Dreck. Buchstäblich. Wie deine Ernährungsgewohnheiten.,Lives in dirt. Literally. Like your eating habits.

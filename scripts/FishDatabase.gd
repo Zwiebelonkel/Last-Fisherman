@@ -415,6 +415,28 @@ var FISH_LAKE = [
 
 var FISH_CITY = [
 	{
+	"id": "DOSE",
+	"name_key": "FISH_CITY_DOSE_NAME",
+	"description_key": "FISH_CITY_DOSE_DESC",
+	"science_key": "FISH_CITY_DOSE_SCIENCE",
+	"rarity": RARITY.NORMAL,
+	"base_value": 5,
+	"icon": "res://assets/fish/dose.png",
+	"weight_min": 0.2,
+	"weight_max": 0.6
+},
+{
+	"id": "FLASCHE",
+	"name_key": "FISH_CITY_FLASCHE_NAME",
+	"description_key": "FISH_CITY_FLASCHE_DESC",
+	"science_key": "FISH_CITY_FLASCHE_SCIENCE",
+	"rarity": RARITY.NORMAL,
+	"base_value": 6,
+	"icon": "res://assets/fish/flasche.png",
+	"weight_min": 0.3,
+	"weight_max": 1.2
+},
+	{
 		"id": "SAND_AAL",
 		"name_key": "FISH_CITY_SAND_AAL_NAME",
 		"description_key": "FISH_CITY_SAND_AAL_DESC",
@@ -706,6 +728,28 @@ var FISH_CITY = [
 ]
 
 var FISH_SEWER = [
+	{
+	"id": "TOILETPAPER",
+	"name_key": "FISH_SEWER_TOILETPAPER_NAME",
+	"description_key": "FISH_SEWER_TOILETPAPER_DESC",
+	"science_key": "FISH_SEWER_TOILETPAPER_SCIENCE",
+	"rarity": RARITY.NORMAL,
+	"base_value": 4,
+	"icon": "res://assets/fish/toilettenpapier.png",
+	"weight_min": 0.1,
+	"weight_max": 0.4
+},
+{
+	"id": "HERING",
+	"name_key": "FISH_SEWER_HERING_NAME",
+	"description_key": "FISH_SEWER_HERING_DESC",
+	"science_key": "FISH_SEWER_HERING_SCIENCE",
+	"rarity": RARITY.NORMAL,
+	"base_value": 9,
+	"icon": "res://assets/fish/hering.png",
+	"weight_min": 0.2,
+	"weight_max": 0.8
+},
 	{
 		"id": "KACKWURST",
 		"name_key": "FISH_SEWER_KACKWURST_NAME",
@@ -1104,6 +1148,28 @@ var FISH_FOREST = [
 
 var FISH_DESERT = [
 	{
+	"id": "SANDKORN",
+	"name_key": "FISH_DESERT_SANDKORN_NAME",
+	"description_key": "FISH_DESERT_SANDKORN_DESC",
+	"science_key": "FISH_DESERT_SANDKORN_SCIENCE",
+	"rarity": RARITY.NORMAL,
+	"base_value": 2,
+	"icon": "res://assets/fish/sandkorn.png",
+	"weight_min": 0.001,
+	"weight_max": 0.01
+},
+{
+	"id": "KOKOSNUSS",
+	"name_key": "FISH_DESERT_KOKOSNUSS_NAME",
+	"description_key": "FISH_DESERT_KOKOSNUSS_DESC",
+	"science_key": "FISH_DESERT_KOKOSNUSS_SCIENCE",
+	"rarity": RARITY.NORMAL,
+	"base_value": 6,
+	"icon": "res://assets/fish/kokosnuss.png",
+	"weight_min": 0.8,
+	"weight_max": 2.5
+},
+	{
 		"id": "SCHMUTZGRUNDEL",
 		"name_key": "FISH_DESERT_SCHMUTZGRUNDEL_NAME",
 		"description_key": "FISH_DESERT_SCHMUTZGRUNDEL_DESC",
@@ -1136,6 +1202,17 @@ var FISH_DESERT = [
 		"weight_min": 1.0,
 		"weight_max": 3.0
 	},
+	{
+	"id": "KOKOSNUSS2",
+	"name_key": "FISH_DESERT_KOKOSNUSS2_NAME",
+	"description_key": "FISH_DESERT_KOKOSNUSS2_DESC",
+	"science_key": "FISH_DESERT_KOKOSNUSS2_SCIENCE",
+	"rarity": RARITY.UNGEWOEHNLICH,
+	"base_value": 26,
+	"icon": "res://assets/fish/kokosnuss-gesicht.png",
+	"weight_min": 0.8,
+	"weight_max": 2.5
+},
 	{
 	"id": "FLIMMERAAL",
 	"name_key": "FISH_DESERT_FLIMMERAAL_NAME",
