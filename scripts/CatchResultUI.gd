@@ -10,6 +10,7 @@ extends Control
 @onready var continue_button: Button = $ContinueButton
 @onready var anim: AnimationPlayer = $VBoxContainer/AnimationPlayer
 @onready var splash: GPUParticles2D = $Splash
+@onready var detail_hint_label: Label = $DetailHintLabel if has_node("DetailHintLabel") else null
 
 # 🆕 Story-Text Label (in der Scene anlegen!)
 @onready var story_label: Label = $StoryLabel if has_node("StoryLabel") else null
@@ -17,6 +18,7 @@ extends Control
 var detail_popup: Control
 var fish_detail_popup_scene
 var current_fish: Dictionary
+var is_closing: bool = false
 
 # 🆕 Signal für Story-Events
 signal story_item_used(biome: String)
@@ -57,6 +59,7 @@ func _unhandled_input(event: InputEvent) -> void:
 # HAUPTFUNKTION – FISCH ANZEIGEN
 # ---------------------------------------------------------
 func show_fish(fish: Dictionary) -> void:
+	is_closing = false
 	current_fish = prepare_fish_data(fish)
 	visible = true
 	
@@ -99,6 +102,9 @@ func show_fish(fish: Dictionary) -> void:
 
 		if is_new_catch and ani_label and ani_label.has_animation("idle"):
 			ani_label.play("idle")
+
+	if detail_hint_label:
+		detail_hint_label.visible = not Player.fish_detail_hint_seen
 	
 	# -----------------------------------
 	# Icon & Texte (mit Typewriter)
@@ -185,6 +191,11 @@ func show_fish(fish: Dictionary) -> void:
 # Continue/Use Button Handler
 # ---------------------------------------------------------
 func _on_continue_pressed() -> void:
+	if is_closing:
+		return
+
+	is_closing = true
+
 	var is_story_item: bool = current_fish.get("is_story_item", false)
 	var rarity: int = current_fish.get("rarity", FishDB.RARITY.NORMAL)
 	
@@ -194,8 +205,10 @@ func _on_continue_pressed() -> void:
 		if biome != "":
 			emit_signal("story_item_used", biome)
 			print("🎭 Story-Item verwendet:", current_fish["name"], "→ Biom:", biome)
-	
+
+	await _play_exit_animation()
 	visible = false
+	is_closing = false
 
 
 # ---------------------------------------------------------
@@ -205,6 +218,11 @@ func _on_fish_icon_clicked(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 			if not current_fish.is_empty():
+				if not Player.fish_detail_hint_seen:
+					Player.fish_detail_hint_seen = true
+					Player.save_game()
+				if detail_hint_label:
+					detail_hint_label.visible = false
 				show_fish_detail_popup(current_fish)
 
 
@@ -324,3 +342,14 @@ func _set_splash_texture_for_rarity(rarity: int) -> void:
 	
 	if tex:
 		splash.texture = tex
+
+
+func _play_exit_animation() -> void:
+	var tween := create_tween()
+	tween.set_trans(Tween.TRANS_SINE)
+	tween.set_ease(Tween.EASE_IN)
+	tween.parallel().tween_property(self, "modulate:a", 0.0, 0.18)
+	tween.parallel().tween_property(self, "scale", Vector2(0.96, 0.96), 0.18)
+	await tween.finished
+	modulate.a = 1.0
+	scale = Vector2.ONE
