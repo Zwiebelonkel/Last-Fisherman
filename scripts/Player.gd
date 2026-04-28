@@ -20,6 +20,7 @@ var options: String = "res://scenes/OptionsCOntrol.tscn"
 var fish_inventory: Array = []
 var caught_fish_species: Dictionary = {}
 var used_story_items: Array = []
+var fish_detail_hint_seen: bool = false
 
 # --- SETTINGS ---
 var master_volume: float = 1.0
@@ -468,6 +469,7 @@ func save_game() -> void:
 		"fish_weight_records": fish_weight_records,
 		"fish_catch_count": fish_catch_count,
 		"used_story_items": used_story_items,
+		"fish_detail_hint_seen": fish_detail_hint_seen,
 		"bait_inventory": bait_inventory,
 		"active_bait": active_bait
 	}
@@ -495,6 +497,7 @@ func load_game() -> void:
 		fish_weight_records = save_data.get("fish_weight_records", {})
 		fish_catch_count = save_data.get("fish_catch_count", {})
 		used_story_items = save_data.get("used_story_items", [])
+		fish_detail_hint_seen = save_data.get("fish_detail_hint_seen", false)
 		bait_inventory = save_data.get("bait_inventory", bait_inventory)
 		active_bait = save_data.get("active_bait", "")
 		print("Spiel geladen!")
@@ -514,6 +517,7 @@ func reset():
 	fish_weight_records.clear()
 	fish_catch_count.clear()
 	used_story_items.clear()
+	fish_detail_hint_seen = false
 	completed_biomes = {
 		"lake": false,
 		"city": false,
