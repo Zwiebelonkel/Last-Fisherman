@@ -287,6 +287,21 @@ size_flags_vertical = 8
 theme_override_font_sizes/font_size = 26
 text = "Continue"
 
+[node name="DetailHintLabel" type="Label" parent="."]
+layout_mode = 2
+offset_left = 10.0
+offset_top = 332.0
+offset_right = 230.0
+offset_bottom = 358.0
+theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 0.85)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/font_size = 14
+text = "💡 Klicke das Fischbild für Details"
+horizontal_alignment = 1
+autowrap_mode = 2
+
 [node name="NewLabel" type="Label" parent="."]
 z_index = 1
 layout_mode = 2
