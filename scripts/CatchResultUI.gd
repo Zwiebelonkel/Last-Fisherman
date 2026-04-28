@@ -8,6 +8,7 @@ extends Control
 @onready var fish_weight: Label = $VBoxContainer/MarginContainer5/FishWeight
 @onready var new_label: Label = $NewLabel
 @onready var continue_button: Button = $ContinueButton
+@onready var detail_hint_label: Label = $DetailHintLabel if has_node("DetailHintLabel") else null
 @onready var anim: AnimationPlayer = $VBoxContainer/AnimationPlayer
 @onready var splash: GPUParticles2D = $Splash
 @onready var confetti: Control = $ConfettiBurst
@@ -21,6 +22,7 @@ var sparkle_node: ColorRect        # ✨ NEU
 var detail_popup: Control
 var fish_detail_popup_scene
 var current_fish: Dictionary
+var _is_exiting: bool = false
 
 signal story_item_used(biome: String)
 
@@ -242,6 +244,8 @@ func _create_lightning_node() -> void:
 	lightning_node.visible = false
 
 func _unhandled_input(event: InputEvent) -> void:
+	if not visible or _is_exiting:
+		return
 	if event.is_action_pressed("cast"):
 		_on_continue_pressed()
 
@@ -272,6 +276,10 @@ func show_fish(fish: Dictionary) -> void:
 		continue_button.text = "Continue"
 		if story_label:
 			story_label.visible = false
+
+	# Hint (einmalig bis angeklickt)
+	if detail_hint_label:
+		detail_hint_label.visible = not Player.fish_detail_hint_seen
 
 	# NEW Label
 	if new_label:
@@ -412,6 +420,9 @@ func _setup_lightning_for_rarity(rarity: int, color: Color) -> void:
 # Continue/Use Button Handler
 # ---------------------------------------------------------
 func _on_continue_pressed() -> void:
+	if _is_exiting:
+		return
+	_is_exiting = true
 	#click.play()
 	var is_story_item: bool = current_fish.get("is_story_item", false)
 	var rarity: int         = current_fish.get("rarity", FishDB.RARITY.NORMAL)
@@ -421,11 +432,17 @@ func _on_continue_pressed() -> void:
 		if biome != "":
 			story_item_used.emit(biome)
 
+	await _play_exit_animation()
+
 	if sparkle_node:
 		sparkle_node.visible = false
 
 	_reset_tilt()
 	visible = false
+	modulate = Color.WHITE
+	scale = Vector2.ONE
+	position = Vector2.ZERO
+	_is_exiting = false
 # ---------------------------------------------------------
 # Icon Click / Hover
 # ---------------------------------------------------------
@@ -447,6 +464,15 @@ func _on_fish_icon_hover(is_hovering: bool) -> void:
 		Input.set_default_cursor_shape(Input.CURSOR_ARROW)
 		tween.tween_property(fish_icon, "scale", Vector2(1.0, 1.0), 0.15)
 
+func _play_exit_animation() -> void:
+	var tween := create_tween()
+	tween.set_parallel(true)
+	tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+	tween.tween_property(self, "modulate:a", 0.0, 0.18)
+	tween.tween_property(self, "scale", Vector2(0.96, 0.96), 0.18)
+	tween.tween_property(self, "position:y", position.y + 10.0, 0.18)
+	await tween.finished
+
 # ---------------------------------------------------------
 # Datenaufbereitung
 # ---------------------------------------------------------
@@ -464,6 +490,11 @@ func prepare_fish_data(fish: Dictionary) -> Dictionary:
 
 func show_fish_detail_popup(fish_data: Dictionary) -> void:
 	click.play()
+	if not Player.fish_detail_hint_seen:
+		Player.fish_detail_hint_seen = true
+		Player.save_game()
+		if detail_hint_label:
+			detail_hint_label.visible = false
 	if detail_popup:
 		if detail_popup.has_method("show_fish_details"):
 			detail_popup.show_fish_details(fish_data)
