@@ -382,13 +382,23 @@ func show_fish(fish: Dictionary) -> void:
 
 func _reset_center_layout() -> void:
 	set_anchors_preset(Control.PRESET_CENTER, false)
+
+	anchor_left = 0.5
+	anchor_top = 0.5
+	anchor_right = 0.5
+	anchor_bottom = 0.5
+
+	offset_left = -120.0
+	offset_top = -150.0
+	offset_right = 120.0
+	offset_bottom = 180.0
+
 	grow_horizontal = Control.GROW_DIRECTION_BOTH
 	grow_vertical = Control.GROW_DIRECTION_BOTH
-	offset_left = CENTER_OFFSETS.position.x
-	offset_top = CENTER_OFFSETS.position.y
-	offset_right = CENTER_OFFSETS.position.x + CENTER_OFFSETS.size.x
-	offset_bottom = CENTER_OFFSETS.position.y + CENTER_OFFSETS.size.y
-	position = Vector2.ZERO
+
+	scale = Vector2.ONE
+	rotation = 0.0
+	pivot_offset = size * 0.5
 
 # ⚡ Lightning Setup
 func _setup_lightning_for_rarity(rarity: int, color: Color) -> void:
@@ -455,7 +465,6 @@ func _on_continue_pressed() -> void:
 	visible = false
 	modulate = Color.WHITE
 	scale = Vector2.ONE
-	position = Vector2.ZERO
 	_is_exiting = false
 # ---------------------------------------------------------
 # Icon Click / Hover
