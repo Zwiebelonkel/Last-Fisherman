@@ -1,4 +1,4 @@
-[gd_scene load_steps=82 format=3 uid="uid://bru2npwxw6p10"]
+[gd_scene load_steps=83 format=3 uid="uid://bru2npwxw6p10"]
 
 [ext_resource type="Shader" uid="uid://c140kjbm2bot5" path="res://shader/buckshot.gdshader" id="1_u01n2"]
 [ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="2_8wf4g"]
@@ -48,6 +48,7 @@
 [ext_resource type="AudioStream" uid="uid://c413rhml1623r" path="res://sounds/lake.mp3" id="36_eos0w"]
 [ext_resource type="PackedScene" uid="uid://i8dug7jmonh4" path="res://scenes/story4.tscn" id="37_7q4h0"]
 [ext_resource type="Script" path="res://scripts/Biomecinematic.gd" id="46_7jawt"]
+[ext_resource type="PackedScene" uid="uid://divlj6at6qnqf" path="res://assets/powerline/scene.gltf" id="49_dn1w7"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_lvx2t"]
 shader = ExtResource("1_u01n2")
@@ -2181,9 +2182,6 @@ settings_button = NodePath("../../UI/Touch/TopLeftPanel/MarginContainer/VBoxCont
 cast_power_ui_scene = ExtResource("8_u01n2")
 inventory_ui = NodePath("../../UI/InventoryUI")
 
-[node name="RodMesh" parent="PlayerCamera/FishingRod" index="0"]
-transform = Transform3D(1, 0, 0, 0, 0.966823, 0.255446, 0, -0.255446, 0.966823, 0, 0, -0.0166266)
-
 [node name="left_hand" parent="PlayerCamera/FishingRod/RodMesh" index="5"]
 transform = Transform3D(-0.211648, -0.0377439, 0.254183, -0.17704, 0.278759, -0.0940853, -0.207091, -0.199734, -0.179344, -0.113471, -0.850528, 0.246808)
 
@@ -2413,6 +2411,15 @@ script = ExtResource("46_7jawt")
 fishing_location = "forest"
 cinematic_path = NodePath("../CinematicPath")
 fade_duration = 0.0
+
+[node name="powerline" parent="." instance=ExtResource("49_dn1w7")]
+transform = Transform3D(0.965926, 0, 0.258819, 0, 1, 0, -0.258819, 0, 0.965926, 43, 7, -16)
+
+[node name="powerline2" parent="." instance=ExtResource("49_dn1w7")]
+transform = Transform3D(1.1046, 0, -1.11569, 0, 1.57, 0, 1.11569, 0, 1.1046, -15.1628, -0.102388, -12.5774)
+
+[node name="powerline3" parent="." instance=ExtResource("49_dn1w7")]
+transform = Transform3D(0.162447, 0, -1.56157, 0, 1.57, 0, 1.56157, 0, 0.162447, -41.8063, -0.10239, 13.8889)
 
 [editable path="UI/Touch"]
 [editable path="PlayerCamera/FishingRod"]

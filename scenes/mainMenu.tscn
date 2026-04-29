@@ -338,6 +338,7 @@ grow_vertical = 2
 [node name="TitleContainer" type="CenterContainer" parent="UI/MenuContainer"]
 layout_mode = 2
 size_flags_vertical = 3
+size_flags_stretch_ratio = 1.66
 
 [node name="Label" type="Label" parent="UI/MenuContainer/TitleContainer"]
 layout_mode = 2
@@ -485,6 +486,7 @@ libraries = {
 autoplay = "title_float"
 
 [node name="CRT" type="ColorRect" parent="UI"]
+visible = false
 z_index = 4096
 material = SubResource("ShaderMaterial_6c1hc")
 anchors_preset = 15
