@@ -1,10 +1,18 @@
-[gd_scene load_steps=9 format=4 uid="uid://cfptx2e41wve1"]
+[gd_scene load_steps=11 format=4 uid="uid://cfptx2e41wve1"]
 
 [ext_resource type="PackedScene" uid="uid://txuhvg248mds" path="res://assets/cigs.glb" id="3_1l46r"]
 [ext_resource type="PackedScene" uid="uid://82w5hgvqgb64" path="res://scenes/hillybilly.tscn" id="4_032fp"]
 [ext_resource type="Script" path="res://scripts/lightFlicker.gd" id="4_ajxib"]
 [ext_resource type="PackedScene" uid="uid://bw80sbvfcwe1p" path="res://scenes/cigarette.tscn" id="5_2fc2m"]
 [ext_resource type="PackedScene" uid="uid://ndm4dnmdvsdr" path="res://assets/shop/shop2.glb" id="6_8r1wq"]
+[ext_resource type="Texture2D" uid="uid://bupe0f3gc4orn" path="res://assets/ironNromal.png" id="6_ajxib"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_y6sft"]
+metallic = 1.0
+roughness = 0.25
+normal_enabled = true
+normal_scale = 3.03
+normal_texture = ExtResource("6_ajxib")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sq64x"]
 resource_name = "Material.002"
@@ -76,6 +84,9 @@ transform = Transform3D(-0.242458, -0.214508, -0.103925, -0.225291, 0.254645, -7
 
 [node name="shop2" parent="." instance=ExtResource("6_8r1wq")]
 transform = Transform3D(0.64, 0, 0, 0, 0.64, 0, 0, 0, 0.64, 0, 0.0415872, -0.67738)
+
+[node name="Cube_010" parent="shop2" index="2"]
+surface_material_override/2 = SubResource("StandardMaterial3D_y6sft")
 
 [node name="Text" type="MeshInstance3D" parent="shop2"]
 transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, -0.000978708, 0.632912, 3.74345)

@@ -167,7 +167,6 @@ horizontal_alignment = 2
 stream = ExtResource("7_u3rmv")
 pitch_scale = 0.84
 autoplay = true
-stream_paused = true
 bus = &"Music"
 parameters/looping = true
 

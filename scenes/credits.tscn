@@ -6,6 +6,7 @@
 
 [sub_resource type="Theme" id="Theme_0ctdu"]
 default_font = ExtResource("1_2ckv8")
+default_font_size = 14
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_0ctdu"]
 shader = ExtResource("3_0ctdu")
@@ -38,6 +39,7 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_bottom = -48.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -45,110 +47,251 @@ grow_vertical = 2
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
+theme_override_constants/margin_left = 60
+theme_override_constants/margin_top = 40
+theme_override_constants/margin_right = 60
+theme_override_constants/margin_bottom = 40
 
 [node name="VBoxContainer" type="VBoxContainer" parent="VScrollBar/MarginContainer"]
+custom_minimum_size = Vector2(600, 0)
 layout_mode = 2
-theme_override_constants/separation = 30
+theme_override_constants/separation = 6
 
-[node name="Label" type="Label" parent="VScrollBar/MarginContainer/VBoxContainer"]
+[node name="HeaderLabel" type="Label" parent="VScrollBar/MarginContainer/VBoxContainer"]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 1, 0.85, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-text = "Water shader 3D by Lesus
-https://godotshaders.com/shader/water-shader-3d-godot-4-3/"
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 22
+text = "── CREDITS ──"
+horizontal_alignment = 1
 
-[node name="Label2" type="Label" parent="VScrollBar/MarginContainer/VBoxContainer"]
+[node name="Spacer0" type="Control" parent="VScrollBar/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 24)
 layout_mode = 2
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-text = "Screen Warping by AivanWorld
-https://godotshaders.com/shader/screen-warping/"
 
-[node name="Label3" type="Label" parent="VScrollBar/MarginContainer/VBoxContainer"]
+[node name="SectionShaders" type="Label" parent="VScrollBar/MarginContainer/VBoxContainer"]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.9, 0.65, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-text = "The simplest outline shader (improved) by CountingClowns
-https://godotshaders.com/shader/the-simplest-outline-shader-improved/"
+theme_override_font_sizes/font_size = 11
+text = "[ SHADERS ]"
 
-[node name="Label4" type="Label" parent="VScrollBar/MarginContainer/VBoxContainer"]
+[node name="Sep0" type="HSeparator" parent="VScrollBar/MarginContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-text = "Redneck Character PSX Style by vinrax
-https://sketchfab.com/3d-models/redneck-character-psx-style-7b02de568d7c491b8be7bc50246789ad"
 
-[node name="Label5" type="Label" parent="VScrollBar/MarginContainer/VBoxContainer"]
+[node name="Spacer1" type="Control" parent="VScrollBar/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 4)
 layout_mode = 2
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-text = "Lowpoly Berlin U-bahn Station by n-malmberg
-https://sketchfab.com/3d-models/lowpoly-berlin-u-bahn-station-2a02d3f2eccf4cd29bbaa1348787395e"
 
-[node name="Label6" type="Label" parent="VScrollBar/MarginContainer/VBoxContainer"]
+[node name="Link_WaterShader" type="RichTextLabel" parent="VScrollBar/MarginContainer/VBoxContainer"]
 layout_mode = 2
+theme_override_colors/default_color = Color(0.9, 0.9, 0.85, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-text = "PSX Forest Asset Pack  by AkuVain
-https://skfb.ly/oJPOT"
+bbcode_enabled = true
+text = "Water shader 3D  [color=#7ab87a][url=https://godotshaders.com/shader/water-shader-3d-godot-4-3/]by Lesus ↗[/url][/color]"
+fit_content = true
+scroll_active = false
 
-[node name="Label7" type="Label" parent="VScrollBar/MarginContainer/VBoxContainer"]
+[node name="Link_ScreenWarp" type="RichTextLabel" parent="VScrollBar/MarginContainer/VBoxContainer"]
 layout_mode = 2
+theme_override_colors/default_color = Color(0.9, 0.9, 0.85, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-text = "SharkBite 2's Shortfin Mako Shark  by AllThingsSaurus
-https://sketchfab.com/3d-models/sharkbite-2s-shortfin-mako-shark-bc2234b39f7843c4acb2ed06d51184d4"
+bbcode_enabled = true
+text = "Screen Warping  [color=#7ab87a][url=https://godotshaders.com/shader/screen-warping/]by AivanWorld ↗[/url][/color]"
+fit_content = true
+scroll_active = false
 
-[node name="Label8" type="Label" parent="VScrollBar/MarginContainer/VBoxContainer"]
+[node name="Link_Outline" type="RichTextLabel" parent="VScrollBar/MarginContainer/VBoxContainer"]
 layout_mode = 2
+theme_override_colors/default_color = Color(0.9, 0.9, 0.85, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-text = "Mushroom cloud low poly by Jimmy Johansson
-https://sketchfab.com/3d-models/mushroom-cloud-low-poly-7d37e0570a164eaba038594bf3d664f6"
+bbcode_enabled = true
+text = "The simplest outline shader (improved)  [color=#7ab87a][url=https://godotshaders.com/shader/the-simplest-outline-shader-improved/]by CountingClowns ↗[/url][/color]"
+fit_content = true
+scroll_active = false
 
-[node name="Label11" type="Label" parent="VScrollBar/MarginContainer/VBoxContainer"]
+[node name="Spacer2" type="Control" parent="VScrollBar/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 16)
 layout_mode = 2
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-text = "PSX Tropical Pack V1 by PROJEKTSANSSTUDIOS
-https://sketchfab.com/3d-models/psx-tropical-pack-v1-831f5ce303354977a6acb695571ac01b"
 
-[node name="Label9" type="Label" parent="VScrollBar/MarginContainer/VBoxContainer"]
+[node name="Section3D" type="Label" parent="VScrollBar/MarginContainer/VBoxContainer"]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.9, 0.65, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-text = "1-bit Icons by Nikoichu
-https://nikoichu.itch.io/pixel-icons"
+theme_override_font_sizes/font_size = 11
+text = "[ 3D MODELS ]"
 
-[node name="Label12" type="Label" parent="VScrollBar/MarginContainer/VBoxContainer"]
+[node name="Sep1" type="HSeparator" parent="VScrollBar/MarginContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-text = "Cozy wooden cabin by Katydid
-https://sketchfab.com/3d-models/cozy-wooden-cabin-ea61e027c4d9475eadec8a2097336e9a"
 
-[node name="Label13" type="Label" parent="VScrollBar/MarginContainer/VBoxContainer"]
+[node name="Spacer3" type="Control" parent="VScrollBar/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 4)
 layout_mode = 2
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-text = "Food Truck Textured by Arrangemonk
-https://skfb.ly/psuUB"
 
-[node name="Label14" type="Label" parent="VScrollBar/MarginContainer/VBoxContainer"]
+[node name="Link_Redneck" type="RichTextLabel" parent="VScrollBar/MarginContainer/VBoxContainer"]
 layout_mode = 2
+theme_override_colors/default_color = Color(0.9, 0.9, 0.85, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-text = "Low poly - Deep Fryer, Basket, Skimmer Set by JJangdol
-https://skfb.ly/pAXsw"
+bbcode_enabled = true
+text = "Redneck Character PSX Style  [color=#7ab87a][url=https://sketchfab.com/3d-models/redneck-character-psx-style-7b02de568d7c491b8be7bc50246789ad]by vinrax ↗[/url][/color]"
+fit_content = true
+scroll_active = false
 
-[node name="Label10" type="Label" parent="VScrollBar/MarginContainer/VBoxContainer"]
+[node name="Link_UBahn" type="RichTextLabel" parent="VScrollBar/MarginContainer/VBoxContainer"]
 layout_mode = 2
+theme_override_colors/default_color = Color(0.9, 0.9, 0.85, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-text = "Octopus Cargo Ship by KurumA
-https://skfb.ly/psXDo"
+bbcode_enabled = true
+text = "Lowpoly Berlin U-bahn Station  [color=#7ab87a][url=https://sketchfab.com/3d-models/lowpoly-berlin-u-bahn-station-2a02d3f2eccf4cd29bbaa1348787395e]by n-malmberg ↗[/url][/color]"
+fit_content = true
+scroll_active = false
 
-[node name="Label16" type="Label" parent="VScrollBar/MarginContainer/VBoxContainer"]
+[node name="Link_PSXForest" type="RichTextLabel" parent="VScrollBar/MarginContainer/VBoxContainer"]
 layout_mode = 2
+theme_override_colors/default_color = Color(0.9, 0.9, 0.85, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-text = "Sea ​​container - Low Poly by Mozhet_Moroz
-https://skfb.ly/oRLDX"
+bbcode_enabled = true
+text = "PSX Forest Asset Pack  [color=#7ab87a][url=https://skfb.ly/oJPOT]by AkuVain ↗[/url][/color]"
+fit_content = true
+scroll_active = false
 
-[node name="Label15" type="Label" parent="VScrollBar/MarginContainer/VBoxContainer"]
+[node name="Link_Shark" type="RichTextLabel" parent="VScrollBar/MarginContainer/VBoxContainer"]
 layout_mode = 2
+theme_override_colors/default_color = Color(0.9, 0.9, 0.85, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-text = "Sprite helpers <3:
-Julia, Daniel, Luca"
+bbcode_enabled = true
+text = "SharkBite 2's Shortfin Mako Shark  [color=#7ab87a][url=https://sketchfab.com/3d-models/sharkbite-2s-shortfin-mako-shark-bc2234b39f7843c4acb2ed06d51184d4]by AllThingsSaurus ↗[/url][/color]"
+fit_content = true
+scroll_active = false
+
+[node name="Link_Mushroom" type="RichTextLabel" parent="VScrollBar/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/default_color = Color(0.9, 0.9, 0.85, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+bbcode_enabled = true
+text = "Mushroom cloud low poly  [color=#7ab87a][url=https://sketchfab.com/3d-models/mushroom-cloud-low-poly-7d37e0570a164eaba038594bf3d664f6]by Jimmy Johansson ↗[/url][/color]"
+fit_content = true
+scroll_active = false
+
+[node name="Link_Tropical" type="RichTextLabel" parent="VScrollBar/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/default_color = Color(0.9, 0.9, 0.85, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+bbcode_enabled = true
+text = "PSX Tropical Pack V1  [color=#7ab87a][url=https://sketchfab.com/3d-models/psx-tropical-pack-v1-831f5ce303354977a6acb695571ac01b]by PROJEKTSANSSTUDIOS ↗[/url][/color]"
+fit_content = true
+scroll_active = false
+
+[node name="Link_Cabin" type="RichTextLabel" parent="VScrollBar/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/default_color = Color(0.9, 0.9, 0.85, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+bbcode_enabled = true
+text = "Cozy wooden cabin  [color=#7ab87a][url=https://sketchfab.com/3d-models/cozy-wooden-cabin-ea61e027c4d9475eadec8a2097336e9a]by Katydid ↗[/url][/color]"
+fit_content = true
+scroll_active = false
+
+[node name="Link_FoodTruck" type="RichTextLabel" parent="VScrollBar/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/default_color = Color(0.9, 0.9, 0.85, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+bbcode_enabled = true
+text = "Food Truck Textured  [color=#7ab87a][url=https://skfb.ly/psuUB]by Arrangemonk ↗[/url][/color]"
+fit_content = true
+scroll_active = false
+
+[node name="Link_Fryer" type="RichTextLabel" parent="VScrollBar/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/default_color = Color(0.9, 0.9, 0.85, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+bbcode_enabled = true
+text = "Low poly - Deep Fryer, Basket, Skimmer Set  [color=#7ab87a][url=https://skfb.ly/pAXsw]by JJangdol ↗[/url][/color]"
+fit_content = true
+scroll_active = false
+
+[node name="Link_CargoShip" type="RichTextLabel" parent="VScrollBar/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/default_color = Color(0.9, 0.9, 0.85, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+bbcode_enabled = true
+text = "Octopus Cargo Ship  [color=#7ab87a][url=https://skfb.ly/psXDo]by KurumA ↗[/url][/color]"
+fit_content = true
+scroll_active = false
+
+[node name="Link_Container" type="RichTextLabel" parent="VScrollBar/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/default_color = Color(0.9, 0.9, 0.85, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+bbcode_enabled = true
+text = "Sea Container - Low Poly  [color=#7ab87a][url=https://skfb.ly/oRLDX]by Mozhet_Moroz ↗[/url][/color]"
+fit_content = true
+scroll_active = false
+
+[node name="Link_Powerline" type="RichTextLabel" parent="VScrollBar/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/default_color = Color(0.9, 0.9, 0.85, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+bbcode_enabled = true
+text = "Electrical Powerline Pole  [color=#7ab87a][url=https://skfb.ly/osQAF]by tiedtke ↗[/url][/color]"
+fit_content = true
+scroll_active = false
+
+[node name="Spacer4" type="Control" parent="VScrollBar/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+
+[node name="SectionIcons" type="Label" parent="VScrollBar/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.9, 0.65, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 11
+text = "[ ICONS & ASSETS ]"
+
+[node name="Sep2" type="HSeparator" parent="VScrollBar/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Spacer5" type="Control" parent="VScrollBar/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 4)
+layout_mode = 2
+
+[node name="Link_Icons" type="RichTextLabel" parent="VScrollBar/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/default_color = Color(0.9, 0.9, 0.85, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+bbcode_enabled = true
+text = "1-bit Icons  [color=#7ab87a][url=https://nikoichu.itch.io/pixel-icons]by Nikoichu ↗[/url][/color]"
+fit_content = true
+scroll_active = false
+
+[node name="Spacer6" type="Control" parent="VScrollBar/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+
+[node name="SectionThanks" type="Label" parent="VScrollBar/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.9, 0.65, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 11
+text = "[ SPECIAL THANKS ]"
+
+[node name="Sep3" type="HSeparator" parent="VScrollBar/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Spacer7" type="Control" parent="VScrollBar/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 4)
+layout_mode = 2
+
+[node name="SpriteHelpers" type="Label" parent="VScrollBar/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.9, 0.85, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "Sprite helpers ♥   Julia · Daniel · Luca"
+
+[node name="Spacer8" type="Control" parent="VScrollBar/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
 
 [node name="Button" type="Button" parent="."]
 layout_mode = 1
@@ -156,9 +299,10 @@ anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = -31.0
+offset_top = -40.0
 grow_horizontal = 2
 grow_vertical = 0
+theme_override_font_sizes/font_size = 14
 text = "Back"
 
 [node name="Filter" type="CanvasLayer" parent="."]

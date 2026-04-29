@@ -62,7 +62,7 @@ var location_icons := {
 var localized_texts := {
 	"unlocked":      { "de": "◉ Freigeschaltet",                      "en": "◉ Unlocked"                        },
 	"price":         { "de": "Preis: %d $",                           "en": "Price: %d $"                       },
-	"buy_button":    { "de": "⬡  KAUFEN (%d $)",                      "en": "⬡  BUY (%d $)"                    },
+	"buy_button":    { "de": "  KAUFEN (%d $)",                      "en": "  BUY (%d $)"                    },
 	"no_money":      { "de": "✗  KEIN GELD",                          "en": "✗  INSUFFICIENT FUNDS"             },
 	"vendor_locked": { "de": "Sammle alle Teile",                     "en": "Collect all parts"                 },
 	"vendor_parts":  { "de": "TEILE: %d/%d",                         "en": "PARTS: %d/%d"                      },

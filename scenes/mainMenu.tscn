@@ -499,7 +499,7 @@ mouse_filter = 2
 environment = SubResource("Environment_cfq0f")
 
 [node name="PlayerCamera" type="Camera3D" parent="."]
-transform = Transform3D(-0.805949, 0, 0.591985, 0, 1, 0, -0.591985, 0, -0.805949, 2.14169, 1.27432, 0.0851256)
+transform = Transform3D(-1, 7.04202e-16, -8.74228e-08, 1.06314e-08, 0.992578, -0.121609, 8.67739e-08, -0.121609, -0.992578, 0, 1.02148, 100.43)
 
 [node name="WaterPlane" type="MeshInstance3D" parent="."]
 transform = Transform3D(-1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0, 0, 1, 0, 0.633762, 91.1433)
@@ -509,22 +509,21 @@ mesh = SubResource("PlaneMesh_qg23i")
 transform = Transform3D(1, 0, 0, 0, 0.931818, 0.362926, 0, -0.362926, 0.931818, -1.07784, 37.4465, 160.116)
 light_color = Color(0.99552, 0.467887, 0.0444731, 1)
 light_energy = 16.0
+light_angular_distance = 2.21
 shadow_enabled = true
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="DirectionalLight3D"]
 libraries = {
 &"": SubResource("AnimationLibrary_amia2")
 }
+speed_scale = 0.7
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
-transform = Transform3D(26.165, 0, 0, 0, 26.165, 0, 0, 0, 26.165, 0, 2.72752, 228.721)
+transform = Transform3D(70.9, 0, 0, 0, 70.9, 0, 0, 0, 70.9, 0, 2.72752, 228.721)
 mesh = SubResource("SphereMesh_08o8g")
 
 [node name="FishingRod" parent="." instance=ExtResource("15_5p8yk")]
 transform = Transform3D(-0.925417, 0.163176, 0.34202, 0.173648, 0.984808, 0, -0.336824, 0.0593912, -0.939693, -0.4, 1.60667, 1.08245)
-
-[node name="RodMesh" parent="FishingRod" index="0"]
-transform = Transform3D(1, 0, 0, 0, 0.966823, 0.255446, 0, -0.255446, 0.966823, 0, 0, -0.0166266)
 
 [node name="left_hand" parent="FishingRod/RodMesh" index="5"]
 transform = Transform3D(-0.211648, -0.0377439, 0.254183, -0.17704, 0.278759, -0.0940853, -0.207091, -0.199734, -0.179344, -0.113471, -0.850528, 0.246808)
@@ -540,10 +539,7 @@ material_override = ExtResource("10_lam2r")
 mesh = SubResource("ArrayMesh_epn8x")
 
 [node name="skyscaper" parent="." instance=ExtResource("13_vt84v")]
-transform = Transform3D(0.452642, 0, -0.275709, 0, 0.53, 0, 0.275709, 0, 0.452642, -44.4202, 8.88522, 9.08675)
-
-[node name="skyscaper2" parent="." instance=ExtResource("13_vt84v")]
-transform = Transform3D(0.452642, 0, -0.275709, 0, 0.53, 0, 0.275709, 0, 0.452642, -61.6653, 8.88522, 23.5923)
+transform = Transform3D(0.222772, 0, 0.480909, 0, 0.53, 0, -0.480909, 0, 0.222772, 12.0097, 8.88522, 42.1433)
 
 [node name="Checker" type="Node" parent="."]
 script = ExtResource("14_lam2r")
@@ -567,8 +563,11 @@ bus = &"SFX"
 [node name="tree2" parent="." instance=ExtResource("18_5i7h7")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.15115, 0, 17.1215)
 
+[node name="tree3" parent="." instance=ExtResource("18_5i7h7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.22453, 0, 22.319)
+
 [node name="tree4" parent="." instance=ExtResource("18_5i7h7")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.53857, 0, 28.9885)
+transform = Transform3D(1.34, 0, 0, 0, 1.34, 0, 0, 0, 1.34, 0, -0.545, 122.512)
 
 [connection signal="pressed" from="UI/MenuContainer/ButtonsContainer/Start" to="." method="_on_button_pressed"]
 [connection signal="pressed" from="UI/MenuContainer/ButtonsContainer/Quit" to="." method="_on_quit_pressed"]

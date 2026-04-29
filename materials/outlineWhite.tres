@@ -1,6 +1,7 @@
-[gd_resource type="StandardMaterial3D" load_steps=3 format=3 uid="uid://cj86wv7c01tef"]
+[gd_resource type="StandardMaterial3D" load_steps=4 format=3 uid="uid://cj86wv7c01tef"]
 
 [ext_resource type="Shader" uid="uid://cfsuhiaq15sgu" path="res://shader/outline.gdshader" id="1_jch1l"]
+[ext_resource type="Texture2D" uid="uid://bivw7msnvabta" path="res://assets/woodNromal.png" id="2_46ir8"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_jch1l"]
 render_priority = 50
@@ -13,6 +14,8 @@ next_pass = SubResource("ShaderMaterial_jch1l")
 albedo_color = Color(0.326189, 0.158035, 4.81308e-08, 1)
 metallic_specular = 1.0
 roughness = 0.85
+normal_enabled = true
+normal_texture = ExtResource("2_46ir8")
 rim = 0.0
 heightmap_scale = -2.791
 grow = true

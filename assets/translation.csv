@@ -418,6 +418,10 @@ FISH_CITY_METALLAAL_NAME,Metallaal,Metal Eel
 FISH_CITY_METALLAAL_DESC,"Fühlt sich magnetisch an. Vielleicht bist du das Problem.","Feels magnetic. Maybe you're the problem."
 FISH_CITY_METALLAAL_SCIENCE,"Aale reagieren sensibel auf elektromagnetische Felder und orientieren sich daran.","Eels are sensitive to electromagnetic fields and use them for orientation."
 
+FISH_CITY_VEGAN_NAME,Veganer Lachs,Vegan Salmon
+FISH_CITY_VEGAN_DESC,"Dieser Lachs enthält keinen Lachs... Irgendwie merkwürdig. Trotzdem gleicher Preis?!","This salmon contains no salmon... Somehow strange. Still the same price?!"
+FISH_CITY_VEGAN_SCIENCE,"Besteht vermutlich aus pflanzlichen Proteinen, künstlichen Aromen und einer Prise Identitätskrise.","Likely made of plant proteins, artificial flavors, and a hint of identity crisis."
+
 FISH_CITY_SCHATTENKOI_NAME,Schattenkoi,Shadow Koi
 FISH_CITY_SCHATTENKOI_DESC,"War früher schön. Jetzt erinnert er sich.","Used to be beautiful. Now it remembers."
 FISH_CITY_SCHATTENKOI_SCIENCE,"Koi passen ihre Pigmentierung an Lichtverhältnisse und Umweltstress an.","Koi adjust their pigmentation based on lighting and environmental stress."
@@ -626,6 +630,30 @@ FISH_DESERT_PAN_SCIENCE,"Eine Pfanne ist ein Kochutensil aus Metall. Unter besti
 FISH_DESERT_BETTA_NAME,Siamesischer Kampffisch,Siamese Fighting Fish
 FISH_DESERT_BETTA_DESC,"Er kämpft gegen Spiegelbilder. Und verliert nie.","He fights reflections. And never loses."
 FISH_DESERT_BETTA_SCIENCE,"Betta splendens stammt aus Südostasien. Männchen sind territorial und zeigen ausgeprägtes Drohverhalten.","Betta splendens originates from Southeast Asia and males are highly territorial."
+
+FISH_ICELAND_SEESTERN_NAME,Seestern,Starfish
+FISH_ICELAND_SEESTERN_DESC,"Sieht harmlos aus… aber liegt irgendwie immer genau da, wo du hintrittst.","Looks harmless… but somehow always ends up exactly where you step."
+FISH_ICELAND_SEESTERN_SCIENCE,"Seesterne können verlorene Arme regenerieren und besitzen kein zentrales Gehirn.","Starfish can regenerate lost limbs and do not have a central brain."
+
+FISH_ICELAND_PATRICK_NAME,Hirnloser Seestern,Brainless Starfish
+FISH_ICELAND_PATRICK_DESC,"Er hat sich hierher verirrt. Niemand weiß warum. Er auch nicht.","He somehow ended up here. No one knows why. Not even him."
+FISH_ICELAND_PATRICK_SCIENCE,"Diese Art zeigt keine erkennbaren Überlebensstrategien, existiert aber dennoch stabil.","This species shows no clear survival strategies, yet continues to exist."
+
+FISH_ICELAND_BATHYANTHIAS_NAME,Bathyantias,Twilight Perch
+FISH_ICELAND_BATHYANTHIAS_DESC,"Ein Bewohner der Tiefe. Du siehst ihn selten… er dich öfter.","A deep-sea dweller. You rarely see it… it sees you more often."
+FISH_ICELAND_BATHYANTHIAS_SCIENCE,"Lebt in großen Tiefen und ist an extreme Lichtarmut angepasst.","Lives in deep waters and is adapted to extremely low light conditions."
+
+FISH_ICELAND_ICECUBE_NAME,Eiswürfel,Ice Cube
+FISH_ICELAND_ICECUBE_DESC,"Kein Fisch. Aber kalt genug, um dazuzugehören.","Not a fish. But cold enough to count."
+FISH_ICELAND_ICECUBE_SCIENCE,"Eis kann im Meer treiben und dabei kleine Partikel oder Luftblasen einschließen.","Ice can drift in the ocean and trap small particles or air bubbles."
+
+FISH_ICELAND_SNAILFISCH_NAME,Schneckenfisch,Snailfish
+FISH_ICELAND_SNAILFISCH_DESC,"Weich, blass und etwas zu entspannt für diese Tiefe.","Soft, pale, and a little too relaxed for this depth."
+FISH_ICELAND_SNAILFISCH_SCIENCE,"Schneckenfische leben oft in kalten Tiefseegebieten und besitzen einen weichen, gelartigen Körper.","Snailfish often live in cold deep-sea areas and have soft, gelatinous bodies."
+
+FISH_ICELAND_LODDE_NAME,Lodde,Capelin
+FISH_ICELAND_LODDE_DESC,"Klein, unscheinbar und plötzlich überall.","Small, unremarkable, and suddenly everywhere."
+FISH_ICELAND_LODDE_SCIENCE,"Lodden sind Schwarmfische, die in kalten Gewässern leben und eine wichtige Rolle im Ökosystem spielen.","Capelin are schooling fish living in cold waters and are key to the ecosystem."
 
 FISH_ICELAND_EISFISCH_NAME,Eisfisch,Ice Fish
 FISH_ICELAND_EISFISCH_DESC,Durchsichtiger Fisch ohne rote Blutkörperchen - fast wie aus Glas gemacht.,Transparent fish without red blood cells - almost made of glass.

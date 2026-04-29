@@ -1,9 +1,11 @@
-[gd_scene load_steps=26 format=3 uid="uid://b5ew1rfc8ow8g"]
+[gd_scene load_steps=28 format=3 uid="uid://b5ew1rfc8ow8g"]
 
 [ext_resource type="Material" uid="uid://cj86wv7c01tef" path="res://materials/outlineWhite.tres" id="2_wjujl"]
+[ext_resource type="Texture2D" uid="uid://bivw7msnvabta" path="res://assets/woodNromal.png" id="3_6deuo"]
 [ext_resource type="Shader" uid="uid://cfsuhiaq15sgu" path="res://shader/outline.gdshader" id="3_8r45t"]
 [ext_resource type="PackedScene" uid="uid://hdtv2nks26p4" path="res://assets/hand/scene.gltf" id="3_byvj7"]
 [ext_resource type="Texture2D" uid="uid://dblechu7phlme" path="res://assets/hand/textures/Hand_baseColor.png" id="4_6deuo"]
+[ext_resource type="Texture2D" uid="uid://bupe0f3gc4orn" path="res://assets/ironNromal.png" id="5_dtr8f"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_jch1l"]
 render_priority = 50
@@ -17,6 +19,9 @@ albedo_color = Color(0.326189, 0.158035, 4.81308e-08, 1)
 albedo_texture = ExtResource("4_6deuo")
 metallic_specular = 1.0
 roughness = 0.85
+normal_enabled = true
+normal_scale = -1.68
+normal_texture = ExtResource("3_6deuo")
 rim = 0.0
 heightmap_scale = -2.791
 grow = true
@@ -61,7 +66,12 @@ shader_parameter/thickness = 0.01
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_byvj7"]
 next_pass = SubResource("ShaderMaterial_8r45t")
 albedo_color = Color(0.707967, 0.707967, 0.707967, 1)
-metallic = 0.87
+metallic = 1.0
+roughness = 0.41
+roughness_texture_channel = 2
+normal_enabled = true
+normal_scale = -0.65
+normal_texture = ExtResource("5_dtr8f")
 
 [sub_resource type="BoxMesh" id="BoxMesh_6deuo"]
 material = SubResource("StandardMaterial3D_byvj7")

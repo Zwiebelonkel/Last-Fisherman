@@ -546,6 +546,17 @@ var FISH_CITY = [
 		"weight_min": 2.0,
 		"weight_max": 5.0
 	},
+{
+		"id": "VEGAN",
+		"name_key": "FISH_CITY_VEGAN_NAME",
+		"description_key": "FISH_CITY_VEGAN_DESC",
+		"science_key": "FISH_CITY_VEGAN_SCIENCE",
+		"rarity": RARITY.UNGEWOEHNLICH,
+		"base_value": 12,
+		"icon": "res://assets/fish/vegan.png",
+		"weight_min": 0.2,
+		"weight_max": 0.5
+	},
 	{
 		"id": "DISKUSFISCH",
 		"name_key": "FISH_CITY_DISKUSFISCH_NAME",
@@ -1374,6 +1385,71 @@ var FISH_DESERT = [
 
 # ✅ ICELAND - Originale Fische (bleibt wie im Original)
 var FISH_ICELAND = [
+		{
+	"id": "LODDE",
+	"name_key": "FISH_ICELAND_LODDE_NAME",
+	"description_key": "FISH_ICELAND_LODDE_DESC",
+	"science_key": "FISH_ICELAND_LODDE_SCIENCE",
+	"rarity": RARITY.NORMAL,
+	"base_value": 10,
+	"icon": "res://assets/fish/lodde.png",
+	"weight_min": 0.1,
+	"weight_max": 0.6
+},{
+	"id": "ICECUBE",
+	"name_key": "FISH_ICELAND_ICECUBE_NAME",
+	"description_key": "FISH_ICELAND_ICECUBE_DESC",
+	"science_key": "FISH_ICELAND_ICECUBE_SCIENCE",
+	"rarity": RARITY.NORMAL,
+	"base_value": 6,
+	"icon": "res://assets/fish/icecube.png",
+	"weight_min": 0.05,
+	"weight_max": 0.3
+},
+{
+	"id": "SNAILFISCH",
+	"name_key": "FISH_ICELAND_SNAILFISCH_NAME",
+	"description_key": "FISH_ICELAND_SNAILFISCH_DESC",
+	"science_key": "FISH_ICELAND_SNAILFISCH_SCIENCE",
+	"rarity": RARITY.NORMAL,
+	"base_value": 12,
+	"icon": "res://assets/fish/snailfisch.png",
+	"weight_min": 0.15,
+	"weight_max": 0.8
+},
+{
+	"id": "SEESTERN",
+	"name_key": "FISH_ICELAND_SEESTERN_NAME",
+	"description_key": "FISH_ICELAND_SEESTERN_DESC",
+	"science_key": "FISH_ICELAND_SEESTERN_SCIENCE",
+	"rarity": RARITY.NORMAL,
+	"base_value": 14,
+	"icon": "res://assets/fish/starfish.png",
+	"weight_min": 0.1,
+	"weight_max": 0.6
+},
+{
+	"id": "PATRICK",
+	"name_key": "FISH_ICELAND_PATRICK_NAME",
+	"description_key": "FISH_ICELAND_PATRICK_DESC",
+	"science_key": "FISH_ICELAND_PATRICK_SCIENCE",
+	"rarity": RARITY.UNGEWOEHNLICH,
+	"base_value": 24,
+	"icon": "res://assets/fish/patrick.png",
+	"weight_min": 0.4,
+	"weight_max": 1.5
+},
+{
+	"id": "BATHYANTHIAS",
+	"name_key": "FISH_ICELAND_BATHYANTHIAS_NAME",
+	"description_key": "FISH_ICELAND_BATHYANTHIAS_DESC",
+	"science_key": "FISH_ICELAND_BATHYANTHIAS_SCIENCE",
+	"rarity": RARITY.UNGEWOEHNLICH,
+	"base_value": 28,
+	"icon": "res://assets/fish/bathyanthias.png",
+	"weight_min": 0.5,
+	"weight_max": 2.0
+},
 	{
 		"id": "EISFISCH",
 		"name_key": "FISH_ICELAND_EISFISCH_NAME",

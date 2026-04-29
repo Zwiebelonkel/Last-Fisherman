@@ -1,7 +1,14 @@
-[gd_scene load_steps=3 format=3 uid="uid://dnc7mjyuic21u"]
+[gd_scene load_steps=5 format=3 uid="uid://dnc7mjyuic21u"]
 
 [ext_resource type="PackedScene" uid="uid://ckje0fw3pep83" path="res://assets/skyscaper.glb" id="1_i727j"]
 [ext_resource type="Script" uid="uid://b1yvcoi0vtbe1" path="res://scripts/skyscraper.gd" id="2_j46gg"]
+[ext_resource type="Texture2D" uid="uid://bupe0f3gc4orn" path="res://assets/ironNromal.png" id="3_j46gg"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sj2mt"]
+albedo_color = Color(0.321728, 0.321728, 0.321728, 1)
+normal_enabled = true
+normal_scale = -1.09
+normal_texture = ExtResource("3_j46gg")
 
 [node name="skyscaper" instance=ExtResource("1_i727j")]
 script = ExtResource("2_j46gg")
@@ -9,3 +16,6 @@ warble_strength = 3.005
 warble_speed = 4.715
 wind_strength = 5.77
 wind_speed = 2.96
+
+[node name="Cube" parent="." index="0"]
+surface_material_override/0 = SubResource("StandardMaterial3D_sj2mt")

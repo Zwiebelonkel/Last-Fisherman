@@ -47,8 +47,25 @@ tooltip_text = "FISHBOOK"
 focus_mode = 0
 theme_override_fonts/font = ExtResource("1_iac43")
 icon = ExtResource("2_ja7e8")
+flat = true
 icon_alignment = 1
 expand_icon = true
+
+[node name="Label" type="Label" parent="TopLeftPanel/MarginContainer/VBoxContainer/JournalButton"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -16.0
+offset_top = -60.0
+offset_right = 13.0
+offset_bottom = -45.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_fonts/font = ExtResource("1_iac43")
+text = "[J]"
 
 [node name="InventoryButton" type="Button" parent="TopLeftPanel/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(50, 50)
@@ -57,8 +74,25 @@ tooltip_text = "INVENTORY"
 focus_mode = 0
 theme_override_fonts/font = ExtResource("1_iac43")
 icon = ExtResource("3_dyx1v")
+flat = true
 icon_alignment = 1
 expand_icon = true
+
+[node name="Label" type="Label" parent="TopLeftPanel/MarginContainer/VBoxContainer/InventoryButton"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -15.0
+offset_top = -60.0
+offset_right = 14.0
+offset_bottom = -45.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_fonts/font = ExtResource("1_iac43")
+text = "[I]"
 
 [node name="MapButton" type="Button" parent="TopLeftPanel/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(50, 50)
@@ -67,8 +101,25 @@ tooltip_text = "MAP"
 focus_mode = 0
 theme_override_fonts/font = ExtResource("1_iac43")
 icon = ExtResource("4_vydqa")
+flat = true
 icon_alignment = 1
 expand_icon = true
+
+[node name="Label" type="Label" parent="TopLeftPanel/MarginContainer/VBoxContainer/MapButton"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -15.0
+offset_top = -60.0
+offset_right = 14.0
+offset_bottom = -45.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_fonts/font = ExtResource("1_iac43")
+text = "[M]"
 
 [node name="SettingsButton" type="Button" parent="TopLeftPanel/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(50, 50)
@@ -77,8 +128,25 @@ tooltip_text = "SETTINGS"
 focus_mode = 0
 theme_override_fonts/font = ExtResource("1_iac43")
 icon = ExtResource("5_3dfsu")
+flat = true
 icon_alignment = 1
 expand_icon = true
+
+[node name="Label" type="Label" parent="TopLeftPanel/MarginContainer/VBoxContainer/SettingsButton"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -23.0
+offset_top = -60.0
+offset_right = 24.0
+offset_bottom = -45.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_fonts/font = ExtResource("1_iac43")
+text = "[ESC]"
 
 [node name="InteractButton" type="Button" parent="."]
 visible = false
