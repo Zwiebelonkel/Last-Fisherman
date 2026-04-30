@@ -249,7 +249,9 @@ func _create_lightning_node() -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if not visible or _is_exiting:
 		return
+
 	if event.is_action_pressed("cast"):
+		get_viewport().set_input_as_handled()
 		_on_continue_pressed()
 
 # ---------------------------------------------------------
@@ -446,15 +448,15 @@ func _setup_lightning_for_rarity(rarity: int, color: Color) -> void:
 func _on_continue_pressed() -> void:
 	if _is_exiting:
 		return
-	_is_exiting = true
-	#click.play()
-	var is_story_item: bool = current_fish.get("is_story_item", false)
-	var rarity: int         = current_fish.get("rarity", FishDB.RARITY.NORMAL)
 
-	if is_story_item and rarity == FishDB.RARITY.ANTIK:
-		var biome: String = current_fish.get("biome", "")
-		if biome != "":
-			story_item_used.emit(biome)
+	_is_exiting = true
+
+	var is_story_item: bool = current_fish.get("is_story_item", false)
+	var biome: String = current_fish.get("biome", "")
+
+	if is_story_item and biome != "":
+		print("✅ Story Item benutzt für Biome: ", biome)
+		story_item_used.emit(biome)
 
 	await _play_exit_animation()
 

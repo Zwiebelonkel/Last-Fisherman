@@ -89,14 +89,14 @@ func _ready():
 	if has_node("VBoxContainer/HBoxContainer/LocationSelector"):
 		location_selector = get_node("VBoxContainer/HBoxContainer/LocationSelector")
 
-	if has_node("VBoxContainer/HBoxContainer"):
-		var hbox := get_node("VBoxContainer/HBoxContainer") as HBoxContainer
-		water_tag_selector = OptionButton.new()
-		water_tag_selector.custom_minimum_size = Vector2(170, 0)
-		hbox.add_child(water_tag_selector)
-		hbox.move_child(water_tag_selector, 1)
-		water_tag_selector.item_selected.connect(_on_water_tag_changed)
-		_setup_water_tag_selector()
+	#if has_node("VBoxContainer/HBoxContainer"):
+		#var hbox := get_node("VBoxContainer/HBoxContainer") as HBoxContainer
+		#water_tag_selector = OptionButton.new()
+		#water_tag_selector.custom_minimum_size = Vector2(170, 0)
+		#hbox.add_child(water_tag_selector)
+		#hbox.move_child(water_tag_selector, 1)
+		#water_tag_selector.item_selected.connect(_on_water_tag_changed)
+		##_setup_water_tag_selector()
 	
 	if has_node("VBoxContainer/HBoxContainer/StatsLabel"):
 		stats_label = get_node("VBoxContainer/HBoxContainer/StatsLabel")

@@ -105,13 +105,17 @@ func get_text(key: String) -> String:
 	return key
 
 func localize_water_tag(raw_tag: String) -> String:
-	var current_lang := Player.current_language
+	var current_lang: String = Player.current_language
+
 	if water_tag_localization.has(raw_tag):
-		var localized := water_tag_localization[raw_tag]
+		var localized: Dictionary = water_tag_localization[raw_tag]
+
 		if localized.has(current_lang):
-			return String(localized[current_lang])
+			return str(localized[current_lang])
+
 		if localized.has("de"):
-			return String(localized["de"])
+			return str(localized["de"])
+
 	return raw_tag
 
 

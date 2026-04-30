@@ -655,6 +655,14 @@ FISH_ICELAND_LODDE_NAME,Lodde,Capelin
 FISH_ICELAND_LODDE_DESC,"Klein, unscheinbar und plötzlich überall.","Small, unremarkable, and suddenly everywhere."
 FISH_ICELAND_LODDE_SCIENCE,"Lodden sind Schwarmfische, die in kalten Gewässern leben und eine wichtige Rolle im Ökosystem spielen.","Capelin are schooling fish living in cold waters and are key to the ecosystem."
 
+FISH_ICELAND_GOBLIN_HAI_NAME,Goblinhai,Goblin Shark
+FISH_ICELAND_GOBLIN_HAI_DESC,"Sieht aus wie ein Fehler der Natur… und bewegt sich auch so.","Looks like a glitch of nature… and moves like one."
+FISH_ICELAND_GOBLIN_HAI_SCIENCE,"Der Goblinhai ist ein Tiefseehai mit ausfahrbarem Kiefer, der blitzschnell nach vorne schnellt.","The goblin shark is a deep-sea shark with a protrusible jaw that snaps forward rapidly."
+
+FISH_ICELAND_KALMAR_NAME,Kalmar,Squid
+FISH_ICELAND_KALMAR_DESC,"Verschwindet schneller, als du schauen kannst.","Disappears faster than you can react."
+FISH_ICELAND_KALMAR_SCIENCE,"Kalmare bewegen sich durch Rückstoßantrieb und setzen Tinte zur Verteidigung ein.","Squid move using jet propulsion and release ink for defense."
+
 FISH_ICELAND_EISFISCH_NAME,Eisfisch,Ice Fish
 FISH_ICELAND_EISFISCH_DESC,Durchsichtiger Fisch ohne rote Blutkörperchen - fast wie aus Glas gemacht.,Transparent fish without red blood cells - almost made of glass.
 FISH_ICELAND_EISFISCH_SCIENCE,Antarktische Eisfische haben kein Hämoglobin im Blut und erscheinen daher fast transparent.,Antarctic ice fish have no hemoglobin in their blood and therefore appear almost transparent.
@@ -704,14 +712,13 @@ FISH_ICELAND_GLETSCHERZUNGE_SCIENCE,"Große Tiefseefische wachsen langsam und er
 FISH_VALUE_PRICELESS,Unbezahlbar,Priceless
 FISH_WEIGHT,Gewicht,Weight
 
-EVENT_LAKE,Das Wasser war bis jetzt immer ruhig.\nIch weiß nicht was mit dieser Welle nicht stimmt.\n\nEs gibt keine zweite.,The water has always been calm until now.\nI don't know what's wrong with this wave.\n\nThere won't be a second one.
-EVENT_CITY,Hier habe ich damals Thunfischbrötchen geklaut.\nDaraus wird wohl nie wieder etwas.\n\nDas Wasser steigt seit drei Tagen.\nDie "Leute" nennen es noch immer Regen.,I used to steal tuna sandwiches here.\nI guess that'll never happen again.\n\nThe water has been rising for three days.\n"People" still call it rain.
-EVENT_SEWER,Die Ratten werden immer größer.\nIch glaube da unten lebt etwas das nicht da sein sollte.\n\nOder ich bin das.\nIch bin mir nicht mehr sicher.,The rats are getting bigger.\nI think something lives down there that shouldn't be there.\n\nOr maybe it's me.\nI'm not sure anymore.
-EVENT_FOREST,Der Wald ist zu still geworden.\nSelbst die Vögel haben aufgehört zu singen.\n\nSie wissen was kommt.\nSie haben mich nicht gewarnt.,The forest has become too quiet.\nEven the birds have stopped singing.\n\nThey know what's coming.\nThey didn't warn me.
-EVENT_DESERT,Die Hitze spielt mir Streiche.\nOder war das gerade wirklich eine Flosse im Sand?\n\nDie Sonne ist heute größer als gestern.\nIch habe sie gemessen.,The heat is playing tricks on me.\nOr was that really a fin in the sand?\n\nThe sun is larger today than yesterday.\nI measured it.
-EVENT_ICELAND,Das Eis knackt anders als sonst.\nEs fühlt sich an als würde etwas darunter warten.\n\nVielleicht bin ich es selbst.\nDer der wartet.\nDer der schon immer gewartet hat.,The ice is cracking differently than usual.\nIt feels like something is waiting beneath.\n\nMaybe it's me.\nThe one who waits.\nThe one who has always been waiting.
-EVENT_OCEAN,Der Code ist korrekt.\nDie Tür öffnet sich langsam.\n\nDu trittst hindurch –\nund siehst dich selbst.\n\nDu hast hier die ganze Zeit geangelt.\nDu erinnerst dich nicht daran.\nDu wirst dich nicht daran erinnern.,The code is correct.\nThe door slowly opens.\n\nYou step through –\nand see yourself.\n\nYou have been fishing here the whole time.\nYou don't remember it.\nYou won't remember it.
-
+EVENT_LAKE,Das Wasser war immer ruhig.\nZu ruhig.\n\nDann kam die Welle.\n\nKeine zweite.\n\nWeil es nichts mehr gibt,\ndas eine zweite erzeugen könnte.,The water was always calm.\nToo calm.\n\nThen the wave came.\n\nThere won't be a second one.\n\nBecause nothing is left\nthat could create another.
+EVENT_CITY,Hier habe ich früher gelebt.\nZwischen Lichtern und Stimmen.\n\nJetzt ist alles still.\n\nDas Wasser steht nicht mehr.\nEs steigt.\nUnd es wird nicht aufhören.,I used to live here.\nBetween lights and voices.\n\nNow everything is quiet.\n\nThe water isn't standing.\nIt's rising.\nAnd it won't stop.
+EVENT_SEWER,Ich wollte nur nach unten sehen.\n\nEin Geräusch.\nEin Licht.\n\nZu spät.\n\nDer Boden war nie das Problem.\nEs war das, was sich bewegt hat.,I just wanted to look down.\n\nA sound.\nA light.\n\nToo late.\n\nThe ground was never the problem.\nIt was what moved.
+EVENT_FOREST,Der Wald war nie für Wasser gedacht.\n\nAber es ist da.\nZwischen den Bäumen.\n\nIch habe etwas gesehen.\nEine Flosse.\n\nHier gibt es keine Flossen.,The forest was never meant for water.\n\nBut it's here.\nBetween the trees.\n\nI saw something.\nA fin.\n\nThere are no fins here.
+EVENT_DESERT,Die Sonne ist gewachsen.\nIch habe es gemessen.\n\nHeute passt sie nicht mehr in den Himmel.\n\nDer Schatten verschwindet.\n\nUnd ich bald auch.,The sun has grown.\nI measured it.\n\nToday it no longer fits in the sky.\n\nThe shadow is disappearing.\n\nAnd soon, so will I.
+EVENT_ICELAND,Das Eis ist nicht mehr fest.\n\nDarunter ist kein Wasser.\n\nNur Tiefe.\n\nUnd etwas,\ndas zurückblickt.,The ice is no longer solid.\n\nThere is no water beneath.\n\nOnly depth.\n\nAnd something\nthat looks back.
+EVENT_OCEAN,Du bist nicht allein hier.\n\nDas warst du nie.\n\nEtwas hat immer mit dir gefischt.\n\nUnd jetzt hat es dich gesehen.,You are not alone here.\n\nYou never were.\n\nSomething has always been fishing with you.\n\nAnd now it has seen you.
 
 FISH_OCEAN_STEAM_PLAYER_NAME,Du selbst!
 FISH_OCEAN_STEAM_PLAYER_DESC,Ein wahrlich einzigartiger Fang - du hast dich selbst gefangen! Vielleicht solltest du öfter aus dem Haus gehen...
