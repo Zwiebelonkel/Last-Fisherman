@@ -445,6 +445,12 @@ func _setup_lightning_for_rarity(rarity: int, color: Color) -> void:
 # ---------------------------------------------------------
 # Continue/Use Button Handler
 # ---------------------------------------------------------
+
+func close_result() -> void:
+	if _is_exiting:
+		return
+	_on_continue_pressed()
+
 func _on_continue_pressed() -> void:
 	if _is_exiting:
 		return
@@ -452,7 +458,7 @@ func _on_continue_pressed() -> void:
 	_is_exiting = true
 
 	var is_story_item: bool = current_fish.get("is_story_item", false)
-	var biome: String = current_fish.get("biome", "")
+	var biome: String = current_fish.get("biome", current_fish.get("location", ""))
 
 	if is_story_item and biome != "":
 		print("✅ Story Item benutzt für Biome: ", biome)
