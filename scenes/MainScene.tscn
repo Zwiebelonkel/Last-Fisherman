@@ -448,7 +448,10 @@ func _unhandled_input(event: InputEvent) -> void:
 	if catch_result_ui and catch_result_ui.visible:
 		if event.is_action_pressed(\"cast\"):
 			# NUR schließen, sonst nichts
-			catch_result_ui.visible = false
+			if catch_result_ui.has_method(\"close_result\"):
+				catch_result_ui.close_result()
+			else:
+				catch_result_ui.visible = false
 		return
 	
 	# Während Pause keine anderen Inputs verarbeiten
