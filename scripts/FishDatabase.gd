@@ -118,6 +118,27 @@ static var RARITY_DATA = {
 	#}
 #}
 
+
+
+const WATER_TAGS := {
+	"PACIFIC": "Pazifik",
+	"ATLANTIC": "Atlantik",
+	"INDIAN": "Indischer Ozean",
+	"ARCTIC": "Arktischer Ozean",
+	"SOUTHERN": "Südlicher Ozean",
+	"MEDITERRANEAN": "Mittelmeer",
+	"SPECIAL": "Special"
+}
+
+const BIOME_TO_WATER_TAG := {
+	"lake": WATER_TAGS.SPECIAL,
+	"city": WATER_TAGS.ATLANTIC,
+	"sewer": WATER_TAGS.SPECIAL,
+	"forest": WATER_TAGS.SPECIAL,
+	"desert": WATER_TAGS.INDIAN,
+	"iceland": WATER_TAGS.ARCTIC,
+	"ocean": WATER_TAGS.PACIFIC
+}
 # ===========================
 #  FISH LISTS BY LOCATION
 # ===========================
@@ -1985,6 +2006,35 @@ func get_fish_science(fish: Dictionary) -> String:
 func get_fish_story(fish: Dictionary) -> String:
 	var key: String = fish.get("story_key", "")
 	return tr(key) if key != "" else ""
+
+
+func get_fish_water_tag(fish: Dictionary) -> String:
+	if fish.has("water_tag"):
+		return String(fish.get("water_tag", WATER_TAGS.SPECIAL))
+
+	var fish_id := String(fish.get("id", ""))
+	if fish_id == "":
+		return WATER_TAGS.SPECIAL
+
+	var biome := get_biome_for_fish_id(fish_id)
+	return String(BIOME_TO_WATER_TAG.get(biome, WATER_TAGS.SPECIAL))
+
+func get_biome_for_fish_id(fish_id: String) -> String:
+	var biome_map := {
+		"lake": FISH_LAKE,
+		"city": FISH_CITY,
+		"sewer": FISH_SEWER,
+		"forest": FISH_FOREST,
+		"desert": FISH_DESERT,
+		"iceland": FISH_ICELAND,
+		"ocean": FISH_OCEAN
+	}
+
+	for biome in biome_map.keys():
+		for fish in biome_map[biome]:
+			if fish.get("id", "") == fish_id:
+				return biome
+	return ""
 
 func get_fish_by_id(id: String) -> Dictionary:
 	for list in [FISH_LAKE, FISH_CITY, FISH_SEWER, FISH_FOREST, FISH_DESERT, FISH_ICELAND, FISH_OCEAN]:

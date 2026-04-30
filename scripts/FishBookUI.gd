@@ -8,8 +8,10 @@ var grid_container: GridContainer
 var location_selector: OptionButton
 var stats_label: Label
 var title_label: Label
+var water_tag_selector: OptionButton
 
 var current_location = "lake"
+var current_water_tag = "Alle"
 var fish_entry_scene = preload("res://scenes/FishBookEntry.tscn")
 var fish_detail_popup_scene
 var fish_book
@@ -64,7 +66,9 @@ var localized_texts := {
 	"location_all": {
 		"de": "🌍 Alle",
 		"en": "🌍 All"
-	}
+	},
+	"tag_all": {"de": "Tag: Alle", "en": "Tag: All"},
+	"tag_special": {"de": "Tag: Special", "en": "Tag: Special"}
 }
 
 func _ready():
@@ -84,6 +88,15 @@ func _ready():
 	
 	if has_node("VBoxContainer/HBoxContainer/LocationSelector"):
 		location_selector = get_node("VBoxContainer/HBoxContainer/LocationSelector")
+
+	if has_node("VBoxContainer/HBoxContainer"):
+		var hbox := get_node("VBoxContainer/HBoxContainer") as HBoxContainer
+		water_tag_selector = OptionButton.new()
+		water_tag_selector.custom_minimum_size = Vector2(170, 0)
+		hbox.add_child(water_tag_selector)
+		hbox.move_child(water_tag_selector, 1)
+		water_tag_selector.item_selected.connect(_on_water_tag_changed)
+		_setup_water_tag_selector()
 	
 	if has_node("VBoxContainer/HBoxContainer/StatsLabel"):
 		stats_label = get_node("VBoxContainer/HBoxContainer/StatsLabel")
@@ -255,6 +268,28 @@ func get_location_index(location: String) -> int:
 		_:
 			return 0
 
+func _setup_water_tag_selector() -> void:
+	if not water_tag_selector:
+		return
+	water_tag_selector.clear()
+	var tags = ["Alle", "Pazifik", "Atlantik", "Indischer Ozean", "Arktischer Ozean", "Südlicher Ozean", "Mittelmeer", "Special"]
+	for t in tags:
+		if t == "Alle":
+			water_tag_selector.add_item(get_text("tag_all"))
+		elif t == "Special":
+			water_tag_selector.add_item(get_text("tag_special"))
+		else:
+			water_tag_selector.add_item("Tag: " + t)
+
+func _entry_matches_water_tag(entry: Dictionary) -> bool:
+	if current_water_tag == "Alle":
+		return true
+	var full_fish := FishDB.get_fish_by_id(entry.get("id", ""))
+	if full_fish.is_empty():
+		return false
+	return FishDB.get_fish_water_tag(full_fish) == current_water_tag
+
+
 # ===========================
 #  LOAD BESTIARY
 # ===========================
@@ -270,6 +305,8 @@ func load_bestiary():
 	
 	# Neue Einträge laden
 	var entries = fish_book.get_bestiary_entries(current_location)
+	if current_location != "???":
+		entries = entries.filter(func(entry): return _entry_matches_water_tag(entry))
 	print("  Entries zu laden: ", entries.size())
 	
 	for i in range(entries.size()):
@@ -352,6 +389,11 @@ func update_stats():
 # ===========================
 #  LOCATION CHANGED
 # ===========================
+
+func _on_water_tag_changed(index: int):
+	var tags = ["Alle", "Pazifik", "Atlantik", "Indischer Ozean", "Arktischer Ozean", "Südlicher Ozean", "Mittelmeer", "Special"]
+	current_water_tag = tags[index] if index >= 0 and index < tags.size() else "Alle"
+	load_bestiary()
 
 func _on_location_changed(index: int):
 	match index:
