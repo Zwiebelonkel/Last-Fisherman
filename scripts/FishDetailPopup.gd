@@ -48,6 +48,10 @@ var localized_texts := {
 	"lore_digit": {
 		"de": "🔢 Ziffer: %d",
 		"en": "🔢 Digit: %d"
+	},
+	"water_tag": {
+		"de": "🌊 Herkunft: %s",
+		"en": "🌊 Origin: %s"
 	}
 }
 
@@ -182,7 +186,8 @@ func show_fish_details(fish: Dictionary):
 	if description == "":
 		description = get_text("no_description")
 
-	var full_description = "[color=#CCCCCC]%s[/color]" % description
+	var water_tag: String = FishDB.get_fish_water_tag(full_fish_data)
+	var full_description = "[color=#88CCFF]%s[/color]\n\n[color=#CCCCCC]%s[/color]" % [get_text("water_tag") % water_tag, description]
 	if science_fact != "":
 		full_description += "\n\n[color=#AACCEE]%s[/color]" % science_fact
 
