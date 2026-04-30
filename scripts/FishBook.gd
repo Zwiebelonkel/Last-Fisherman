@@ -82,7 +82,8 @@ func get_bestiary_entries(location: String) -> Array:
 			"base_value": fish["base_value"] if caught else 0,
 			"icon": fish["icon"] if caught else "res://assets/fish/unknown.png",
 			"caught": caught,
-			"original_name": fish["name"]
+			"original_name": fish["name"],
+			"origin_tag": fish.get("origin_tag", "Special")
 		}
 		
 		entries.append(entry)
