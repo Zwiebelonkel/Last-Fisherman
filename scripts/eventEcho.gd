@@ -70,14 +70,15 @@ func _ready() -> void:
 # Öffentliche API
 # -------------------------
 func set_event(event_type: EventType, text: String) -> void:
-	print("📌 set_event() aufgerufen - Type:", event_type, " Text:", text)
+	var resolved_text := _resolve_event_text(text)
+	print("📌 set_event() aufgerufen - Type:", event_type, " Text:", resolved_text)
 	
 	# Warte einen Frame für Sicherheit
 	await get_tree().process_frame
 	
-	print("📌 Starte Typewriter mit Text:", text)
+	print("📌 Starte Typewriter mit Text:", resolved_text)
 	if label and label.has_method("start_typewriter"):
-		label.start_typewriter(text)
+		label.start_typewriter(resolved_text)
 		print("📌 Typewriter gestartet")
 	else:
 		print("⚠️ FEHLER: Label oder start_typewriter nicht verfügbar!")
@@ -92,6 +93,14 @@ func set_event(event_type: EventType, text: String) -> void:
 			print("📌 Erkannt: Standard Bild Event")
 			_apply_image_event(event_type)
 
+
+func _resolve_event_text(raw_text: String) -> String:
+	var translated_text := raw_text
+
+	if raw_text.begins_with("EVENT_"):
+		translated_text = TranslationServer.translate(raw_text)
+
+	return translated_text.replace("\\n", "\n")
 # -------------------------
 # Ending
 # -------------------------
