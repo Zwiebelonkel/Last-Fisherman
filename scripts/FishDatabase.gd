@@ -1,5 +1,80 @@
 extends Node
 
+enum TAG {
+	PACIFIC,
+	ATLANTIC,
+	SPECIAL,
+	INDIA
+}
+
+const TAG_NAMES := {
+	TAG.PACIFIC: "Pacifik",
+	TAG.ATLANTIC: "Atlantik",
+	TAG.SPECIAL: "Special",
+	TAG.INDIA: "India"
+}
+
+func _ready() -> void:
+	_assign_origin_tags()
+
+func _assign_origin_tags() -> void:
+	_assign_tags_to_location(FISH_LAKE, "LAKE", {
+		"SEETANG": TAG.PACIFIC, "MAKRELE": TAG.PACIFIC, "ROTAUGE": TAG.PACIFIC, "BARSCH": TAG.PACIFIC,
+		"THUNFISCH": TAG.PACIFIC, "HECHT": TAG.PACIFIC, "EINSIEDLER": TAG.PACIFIC, "MANTA": TAG.PACIFIC,
+		"ZANDER": TAG.PACIFIC, "KAUGUMIKARPFEN": TAG.PACIFIC, "GLUBSCHI": TAG.PACIFIC, "KARPFENKOENIGIN": TAG.PACIFIC,
+		"GEISTERFORELLE": TAG.SPECIAL, "PLUTONIUM": TAG.SPECIAL, "ROTER_KNOPF": TAG.SPECIAL
+	})
+	_assign_tags_to_location(FISH_CITY, "CITY", {
+		"SAND_AAL": TAG.ATLANTIC, "SIGNALFAENGER": TAG.ATLANTIC, "TRUEMMERKABEL_FISCH": TAG.ATLANTIC, "DORSCH": TAG.ATLANTIC,
+		"DISKUSFISCH": TAG.ATLANTIC, "BARRAKUDA": TAG.ATLANTIC, "LOAF_FISH": TAG.ATLANTIC, "NEONFLOSSER": TAG.ATLANTIC,
+		"ZIGARETTEN": TAG.SPECIAL, "ALTSTADTGEIST": TAG.SPECIAL, "BULLENHAI": TAG.ATLANTIC, "PLATZHALTER": TAG.SPECIAL,
+		"LEICHE": TAG.SPECIAL, "DATENKRAKE": TAG.SPECIAL, "STOEPSEL": TAG.SPECIAL
+	})
+	_assign_tags_to_location(FISH_SEWER, "SEWER", {
+		"KACKWURST": TAG.SPECIAL, "SARDINE": TAG.SPECIAL, "FORELLE": TAG.SPECIAL, "WELS": TAG.SPECIAL,
+		"TEERFISCH": TAG.SPECIAL, "KARTOFFEL": TAG.SPECIAL, "MONDFISCH": TAG.SPECIAL, "KATZENHAI": TAG.SPECIAL,
+		"FUEHRERSCHEIN": TAG.SPECIAL, "GIFT_MANTA": TAG.SPECIAL, "BILDERBUCHFISCH": TAG.SPECIAL, "WUETENDE_SCHOLLE": TAG.SPECIAL,
+		"KONDOM": TAG.SPECIAL, "BAHNKARTE": TAG.SPECIAL
+	})
+	_assign_tags_to_location(FISH_FOREST, "FOREST", {
+		"KARPFEN": TAG.INDIA, "WELS": TAG.INDIA, "KOI": TAG.INDIA, "ROHRSCHATTEN": TAG.INDIA,
+		"ANGEL": TAG.INDIA, "WALDAAL": TAG.INDIA, "WALDFRESSER": TAG.INDIA, "BAMBUSHAI": TAG.INDIA,
+		"ANGEPISSTE_MAKRELE": TAG.INDIA, "WURZELFISCH": TAG.INDIA, "MARKUS": TAG.SPECIAL, "HAIZAHN": TAG.SPECIAL
+	})
+	_assign_tags_to_location(FISH_DESERT, "DESERT", {
+		"SCHMUTZGRUNDEL": TAG.INDIA, "SOLARFAENGER": TAG.INDIA, "ROSTFLOSSER": TAG.INDIA, "SANDSTREIFER": TAG.INDIA,
+		"AGGRESIVE_GARNELE": TAG.INDIA, "STAUBHAI": TAG.INDIA, "WASSERFISCH": TAG.INDIA, "FEUER_MANTA": TAG.SPECIAL,
+		"SONNENFRAGMENT": TAG.SPECIAL, "GOLDHAI": TAG.SPECIAL, "BENZIN": TAG.SPECIAL
+	})
+	_assign_tags_to_location(FISH_ICELAND, "ICELAND", {
+		"POLARDORSCH": TAG.ATLANTIC, "SCHNEEKRABBE": TAG.ATLANTIC, "ZAPFENQUALLE": TAG.ATLANTIC, "FROSTBARSCH": TAG.ATLANTIC,
+		"GLETSCHER_LACHS": TAG.ATLANTIC, "ARKTIS_TINTENFISCH": TAG.ATLANTIC, "EISFISCH": TAG.ATLANTIC, "PINGUIN": TAG.ATLANTIC,
+		"SCHNEEFLOCKEN_ROCHEN": TAG.ATLANTIC, "KRISTALLHECHT": TAG.ATLANTIC, "ANGLERFISCH": TAG.ATLANTIC, "BLOBFISCH": TAG.ATLANTIC,
+		"BLAUER_MARLIN": TAG.ATLANTIC, "SCHWARZER_MARLIN": TAG.ATLANTIC, "MEGALODON": TAG.SPECIAL, "UNKNOWN": TAG.SPECIAL
+	})
+
+func _assign_tags_to_location(fish_list: Array, location_id: String, tags_by_local_id: Dictionary) -> void:
+	for fish in fish_list:
+		var local_id = _to_local_id(str(fish.get("name", "UNKNOWN")))
+		var full_id = "FISH_%s_%s" % [location_id, local_id]
+		fish["id"] = full_id
+		var tag_enum = tags_by_local_id.get(local_id, TAG.SPECIAL)
+		fish["tag"] = tag_enum
+		fish["origin_tag"] = get_tag_name(tag_enum)
+
+func _to_local_id(value: String) -> String:
+	var text := value.to_upper()
+	var repl := {
+		"Ä":"AE","Ö":"OE","Ü":"UE","ß":"SS","-":" ","/":" ",".":" ",",":" ","?":" ","!":" "
+	}
+	for key in repl.keys():
+		text = text.replace(key, repl[key])
+	var parts = text.split(" ", false)
+	return "_".join(parts)
+
+static func get_tag_name(tag_enum: int) -> String:
+	return TAG_NAMES.get(tag_enum, "Special")
+
 # ===========================
 #  RARITIES
 # ===========================

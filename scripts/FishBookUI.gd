@@ -8,12 +8,15 @@ var grid_container: GridContainer
 var location_selector: OptionButton
 var stats_label: Label
 var title_label: Label
+var tag_selector: OptionButton
 
 var current_location = "lake"
+var current_tag_filter = "all"
 var fish_entry_scene = preload("res://scenes/FishBookEntry.tscn")
 var fish_detail_popup_scene  # Wird in _ready() geladen
 var fish_book
 var detail_popup: Control
+var displayed_entries: Array = []
 
 # 🌍 Localized Texts
 var localized_texts := {
@@ -119,6 +122,8 @@ func _ready():
 	
 	# Signal verbinden
 	visibility_changed.connect(_on_visibility_changed)
+	_ensure_tag_selector()
+	_setup_tag_selector()
 	
 	print("✅ FishBook UI erfolgreich geladen!")
 
@@ -229,6 +234,8 @@ func load_bestiary():
 	
 	# Neue Einträge laden
 	var entries = fish_book.get_bestiary_entries(current_location)
+	entries = _filter_entries_by_tag(entries)
+	displayed_entries = entries
 	print("  Entries zu laden: ", entries.size())
 	
 	for i in range(entries.size()):
@@ -254,8 +261,30 @@ func load_bestiary():
 	# Stats aktualisieren
 	update_stats()
 
+func _filter_entries_by_tag(entries: Array) -> Array:
+	if current_tag_filter == "all":
+		return entries
+	
+	var filtered: Array = []
+	for entry in entries:
+		if entry.get("origin_tag", "Special") == current_tag_filter:
+			filtered.append(entry)
+	return filtered
+
 func update_stats():
 	var stats = fish_book.get_bestiary_stats(current_location)
+	if current_tag_filter != "all":
+		var caught_count := 0
+		for entry in displayed_entries:
+			if entry.get("caught", false):
+				caught_count += 1
+		var total_count := displayed_entries.size()
+		var completion := int((float(caught_count) / float(total_count)) * 100) if total_count > 0 else 0
+		stats = {
+			"caught": caught_count,
+			"total": total_count,
+			"completion": completion
+		}
 	
 	# 🎨 Farbiger Progress-Text
 	var color = Color.WHITE
@@ -298,6 +327,9 @@ func update_stats():
 	
 	title_label.text = get_text("fishbook_title") % location_text
 
+	if current_tag_filter != "all":
+		title_label.text += " • %s" % current_tag_filter
+
 func _on_location_changed(index: int):
 	match index:
 		0:
@@ -317,6 +349,23 @@ func _on_location_changed(index: int):
 	
 	load_bestiary()
 
+func _on_tag_filter_changed(index: int) -> void:
+	match index:
+		0:
+			current_tag_filter = "all"
+		1:
+			current_tag_filter = "Pacifik"
+		2:
+			current_tag_filter = "Atlantik"
+		3:
+			current_tag_filter = "Special"
+		4:
+			current_tag_filter = "India"
+		_:
+			current_tag_filter = "all"
+	
+	load_bestiary()
+
 func _input(event):
 	if event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE:
 		if get_parent().has_method("toggle_bestiary"):
@@ -326,3 +375,28 @@ func _input(event):
 
 func _on_close_pressed() -> void:
 	hide()
+func _ensure_tag_selector() -> void:
+	if has_node("VBoxContainer/HBoxContainer/TagSelector"):
+		tag_selector = get_node("VBoxContainer/HBoxContainer/TagSelector")
+		return
+	
+	tag_selector = OptionButton.new()
+	tag_selector.name = "TagSelector"
+	tag_selector.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	
+	if has_node("VBoxContainer/HBoxContainer"):
+		var hbox = get_node("VBoxContainer/HBoxContainer")
+		hbox.add_child(tag_selector)
+		hbox.move_child(tag_selector, 1)
+
+func _setup_tag_selector() -> void:
+	if not tag_selector:
+		return
+	
+	tag_selector.item_selected.connect(_on_tag_filter_changed)
+	tag_selector.clear()
+	tag_selector.add_item("🏷️ All Tags")
+	tag_selector.add_item("Pacifik")
+	tag_selector.add_item("Atlantik")
+	tag_selector.add_item("Special")
+	tag_selector.add_item("India")

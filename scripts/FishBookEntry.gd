@@ -149,7 +149,8 @@ func update_display():
 		rarity_label.add_theme_font_size_override("font_size", 12)
 		
 		# 💰 VALUE
-		value_label.text = "💰 %d" % fish_data["base_value"]
+		var origin_tag = fish_data.get("origin_tag", "Special")
+		value_label.text = "💰 %d  •  🏷️ %s" % [fish_data["base_value"], origin_tag]
 		value_label.add_theme_font_size_override("font_size", 12)
 		value_label.show()
 		

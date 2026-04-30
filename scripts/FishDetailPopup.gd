@@ -128,8 +128,9 @@ func show_fish_details(fish: Dictionary):
 	# 📖 Beschreibung + Wissenschaftlicher Fakt
 	var description = full_fish_data.get("description", get_text("no_description"))
 	var science_fact = full_fish_data.get("science_fact", "")
-	
-	var full_description = "[color=#CCCCCC]%s[/color]" % description
+	var origin_tag = full_fish_data.get("origin_tag", "Special")
+
+	var full_description = "[color=#F1D57A]🏷️ Origin: %s[/color]\n[color=#CCCCCC]%s[/color]" % [origin_tag, description]
 	
 	if science_fact != "":
 		full_description += "\n\n[color=#88DDFF][/color]\n[color=#AACCEE]%s[/color]" % science_fact
