@@ -124,12 +124,12 @@ static var RARITY_DATA = {
 
 
 const WATER_TAGS := {
-	"PACIFIC": "Pazifik",
-	"ATLANTIC": "Atlantik",
-	"INDIAN": "Indischer Ozean",
-	"ARCTIC": "Arktischer Ozean",
-	"SOUTHERN": "Südlicher Ozean",
-	"MEDITERRANEAN": "Mittelmeer",
+	"PACIFIC": "Pacific Ocean",
+	"ATLANTIC": "Atlantic Ocean",
+	"INDIAN": "Indian Ocean",
+	"ARCTIC": "Arctic Ocean",
+	"SOUTHERN": "Southern Ocean",
+	"MEDITERRANEAN": "Mediterranean Sea",
 	"SPECIAL": "Special"
 }
 

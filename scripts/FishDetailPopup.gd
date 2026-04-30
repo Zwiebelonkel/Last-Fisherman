@@ -14,6 +14,22 @@ extends Control
 @onready var click: AudioStreamPlayer = $Audio/click
 
 var fish_data: Dictionary = {}
+var water_tag_localization := {
+	"Pacific Ocean": {"de": "Pazifik", "en": "Pacific Ocean"},
+	"Atlantic Ocean": {"de": "Atlantik", "en": "Atlantic Ocean"},
+	"Indian Ocean": {"de": "Indischer Ozean", "en": "Indian Ocean"},
+	"Arctic Ocean": {"de": "Arktischer Ozean", "en": "Arctic Ocean"},
+	"Southern Ocean": {"de": "Südlicher Ozean", "en": "Southern Ocean"},
+	"Mediterranean Sea": {"de": "Mittelmeer", "en": "Mediterranean Sea"},
+	"Special": {"de": "Special", "en": "Special"},
+	# Rückwärtskompatibilität für alte gespeicherte/harte Werte:
+	"Pazifik": {"de": "Pazifik", "en": "Pacific Ocean"},
+	"Atlantik": {"de": "Atlantik", "en": "Atlantic Ocean"},
+	"Indischer Ozean": {"de": "Indischer Ozean", "en": "Indian Ocean"},
+	"Arktischer Ozean": {"de": "Arktischer Ozean", "en": "Arctic Ocean"},
+	"Südlicher Ozean": {"de": "Südlicher Ozean", "en": "Southern Ocean"},
+	"Mittelmeer": {"de": "Mittelmeer", "en": "Mediterranean Sea"}
+}
 
 # 🌍 Localized Texts
 var localized_texts := {
@@ -87,6 +103,16 @@ func get_text(key: String) -> String:
 	elif localized_texts.has(key) and localized_texts[key].has("de"):
 		return localized_texts[key]["de"]
 	return key
+
+func localize_water_tag(raw_tag: String) -> String:
+	var current_lang := Player.current_language
+	if water_tag_localization.has(raw_tag):
+		var localized := water_tag_localization[raw_tag]
+		if localized.has(current_lang):
+			return String(localized[current_lang])
+		if localized.has("de"):
+			return String(localized["de"])
+	return raw_tag
 
 
 # ============================================
@@ -187,7 +213,8 @@ func show_fish_details(fish: Dictionary):
 		description = get_text("no_description")
 
 	var water_tag: String = FishDB.get_fish_water_tag(full_fish_data)
-	var full_description = "[color=#88CCFF]%s[/color]\n\n[color=#CCCCCC]%s[/color]" % [get_text("water_tag") % water_tag, description]
+	var localized_water_tag := localize_water_tag(water_tag)
+	var full_description = "[color=#88CCFF]%s[/color]\n\n[color=#CCCCCC]%s[/color]" % [get_text("water_tag") % localized_water_tag, description]
 	if science_fact != "":
 		full_description += "\n\n[color=#AACCEE]%s[/color]" % science_fact
 
