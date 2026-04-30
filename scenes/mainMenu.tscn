@@ -527,6 +527,9 @@ mesh = SubResource("SphereMesh_08o8g")
 [node name="FishingRod" parent="." instance=ExtResource("15_5p8yk")]
 transform = Transform3D(-0.925417, 0.163176, 0.34202, 0.173648, 0.984808, 0, -0.336824, 0.0593912, -0.939693, -0.4, 1.60667, 1.08245)
 
+[node name="RodMesh" parent="FishingRod" index="0"]
+transform = Transform3D(1, 0, 0, 0, 0.966823, 0.255446, 0, -0.255446, 0.966823, 0, 0, -0.0166266)
+
 [node name="left_hand" parent="FishingRod/RodMesh" index="5"]
 transform = Transform3D(-0.211648, -0.0377439, 0.254183, -0.17704, 0.278759, -0.0940853, -0.207091, -0.199734, -0.179344, -0.113471, -0.850528, 0.246808)
 
