@@ -1,4 +1,4 @@
-[gd_scene load_steps=44 format=3 uid="uid://cor735uf1n5si"]
+[gd_scene load_steps=46 format=3 uid="uid://cor735uf1n5si"]
 
 [ext_resource type="Script" uid="uid://cjxfvb4fkjrhh" path="res://scripts/note_manager.gd" id="1_8hrlh"]
 [ext_resource type="Shader" uid="uid://c140kjbm2bot5" path="res://shader/buckshot.gdshader" id="1_d1od2"]
@@ -19,9 +19,11 @@
 [ext_resource type="PackedScene" uid="uid://cbxqcwmep1mf8" path="res://scenes/note.tscn" id="14_phvbg"]
 [ext_resource type="PackedScene" uid="uid://sxspmj8y0jsf" path="res://scenes/note_ui.tscn" id="15_3q32m"]
 [ext_resource type="Texture2D" uid="uid://5olhq7vqrcxm" path="res://textures/map3.png" id="17_5ox4q"]
-[ext_resource type="Script" path="res://scripts/leaderboard.gd" id="19_7t3s2"]
+[ext_resource type="Script" uid="uid://fqcrjuca5d75" path="res://scripts/leaderboard.gd" id="19_7t3s2"]
 [ext_resource type="PackedScene" uid="uid://b5ew1rfc8ow8g" path="res://scenes/fishingRod.tscn" id="20_7n2o6"]
 [ext_resource type="PackedScene" uid="uid://cyys33sgvu4h4" path="res://scenes/keypad.tscn" id="21_rtbv5"]
+[ext_resource type="PackedScene" uid="uid://dqiuq2ey7luad" path="res://assets/youtuber/youtuberfish2.glb" id="23_fm13a"]
+[ext_resource type="PackedScene" uid="uid://bmtc7y0apv50e" path="res://assets/youtuber/youtuberfish1.glb" id="24_fm13a"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_w6xti"]
 shader = ExtResource("1_d1od2")
@@ -200,7 +202,7 @@ background_mode = 2
 background_energy_multiplier = 0.14
 sky = SubResource("Sky_x537r")
 glow_enabled = true
-glow_intensity = 0.05
+glow_intensity = 0.0
 glow_strength = 0.29
 glow_hdr_scale = 1.17
 glow_hdr_luminance_cap = 4.75
@@ -245,13 +247,7 @@ grow_vertical = 2
 [node name="UI" type="CanvasLayer" parent="."]
 
 [node name="NodeUI" parent="UI" groups=["note_ui"] instance=ExtResource("15_3q32m")]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-grow_horizontal = 2
-grow_vertical = 2
+z_index = 565
 
 [node name="MoneyHUD" parent="UI" instance=ExtResource("6_3q32m")]
 offset_right = 60.0
@@ -508,6 +504,38 @@ transform = Transform3D(0.00275756, 0.673487, 0.739194, 7.36642e-09, 0.739196, -
 
 [node name="Keypad" parent="." instance=ExtResource("21_rtbv5")]
 transform = Transform3D(-0.575, 0, -8.68226e-08, 0, 0.575, 0, 8.68226e-08, 0, -0.575, 3.03949, 0.80469, 3.69842)
+
+[node name="dman" parent="." instance=ExtResource("23_fm13a")]
+transform = Transform3D(-1.57361e-08, -1.1, 1.57361e-08, 0, -4.80825e-08, -0.36, 0.36, -4.80825e-08, 6.87847e-16, 4.41154, 1.49516, 2.64647)
+
+[node name="OmniLight3D5" type="SpotLight3D" parent="dman"]
+transform = Transform3D(2.68648, 0.16276, 0.687321, -0.231016, 0.171011, 0.862458, 0.0251171, -2.72333, 0.54672, 1.05438, 0.885771, 0.423903)
+light_color = Color(0.858824, 0.878431, 0.403922, 1)
+light_energy = 0.491
+light_indirect_energy = 0.709
+light_volumetric_fog_energy = 2.018
+light_specular = 1.427
+light_cull_mask = 4294963199
+shadow_enabled = true
+spot_range = 1.764
+spot_angle = 39.37
+script = ExtResource("10_4oyfp")
+
+[node name="sev" parent="." instance=ExtResource("24_fm13a")]
+transform = Transform3D(-1.57361e-08, 1.1, -1.57361e-08, 0, -4.80825e-08, -0.36, -0.36, -4.80825e-08, 6.87847e-16, -3.52517, 1.27444, 1.84968)
+
+[node name="OmniLight3D6" type="SpotLight3D" parent="sev"]
+transform = Transform3D(2.77755, 0.0204157, -0.0290432, 0.0079554, 0.184091, 0.890221, 0.0258732, -2.72015, 0.562276, -0.104812, 0.931926, 0.267013)
+light_color = Color(0.858824, 0.878431, 0.403922, 1)
+light_energy = 2.16
+light_indirect_energy = 0.709
+light_volumetric_fog_energy = 2.018
+light_specular = 1.427
+light_cull_mask = 4294963199
+shadow_enabled = true
+spot_range = 1.764
+spot_angle = 39.37
+script = ExtResource("10_4oyfp")
 
 [editable path="UI/NodeUI"]
 [editable path="UI/FishBook"]

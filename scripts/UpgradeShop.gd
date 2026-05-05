@@ -163,27 +163,27 @@ func calculate_cost(base_cost: int, level: int) -> int:
 
 func update_ui():
 	# Geld
-	money_label.text = "💰 %d €" % Player.money
+	money_label.text = "💰 %d $" % Player.money
 	
 	# Grip
 	var grip_cost = calculate_cost(base_grip_cost, Player.upgrade_grip)
 	grip_level_label.text = "Level %d" % Player.upgrade_grip
 	grip_desc_label.text = ("+%d%% " + tr("GRIP_DESC")) % (Player.upgrade_grip * 15)
-	grip_price_label.text = "%d €" % grip_cost
+	grip_price_label.text = "%d $" % grip_cost
 	grip_button.disabled = (Player.money < grip_cost)
 	
 	# Bait
 	var bait_cost = calculate_cost(base_bait_cost, Player.upgrade_bait)
 	bait_level_label.text = "Level %d" % Player.upgrade_bait
 	bait_desc_label.text = ("+%d%% " + tr("BAIT_DESC")) % (Player.upgrade_bait * 10)
-	bait_price_label.text = "%d €" % bait_cost
+	bait_price_label.text = "%d $" % bait_cost
 	bait_button.disabled = (Player.money < bait_cost)
 	
 	# Line
 	var line_cost = calculate_cost(base_line_cost, Player.upgrade_line)
 	line_level_label.text = "Level %d" % Player.upgrade_line
 	line_desc_label.text = ("-%d%% " + tr("LINE_DESC")) % (Player.upgrade_line * 8)
-	line_price_label.text = "%d €" % line_cost
+	line_price_label.text = "%d $" % line_cost
 	line_button.disabled = (Player.money < line_cost)
 	
 	update_bait_ui()
@@ -222,7 +222,7 @@ func update_bait_card(card: PanelContainer, rarity: String, color: Color):
 	desc_label.text = get_text("guarantees") % rarity_translated
 	
 	var price = Player.BAIT_PRICES[rarity]
-	price_label.text = "%d €" % price
+	price_label.text = "%d $" % price
 	
 	buy_button.disabled = (Player.money < price)
 

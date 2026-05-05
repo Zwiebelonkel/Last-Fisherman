@@ -306,7 +306,7 @@ func show_fish(fish: Dictionary) -> void:
 		display_value_text = tr("FISH_VALUE_PRICELESS")
 		fish_value.modulate = rarity_color
 	else:
-		display_value_text = str(FishDB.get_fish_value(fish)) + " €"
+		display_value_text = str(FishDB.get_fish_value(fish)) + " $"
 	fish_value.text = display_value_text
 
 	if fish_weight and fish.has("weight"):

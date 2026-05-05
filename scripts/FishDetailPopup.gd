@@ -177,7 +177,7 @@ func show_fish_details(fish: Dictionary):
 	# VALUE
 	var base_value: int = int(full_fish_data.get("base_value", 0))
 	var total_value: int = int(base_value * float(rarity_data.get("value", 1.0)))
-	value_label.text = "💰 %d €  (x%.1f)" % [total_value, float(rarity_data.get("value", 1.0))]
+	value_label.text = "💰 %d $  (x%.1f)" % [total_value, float(rarity_data.get("value", 1.0))]
 
 	# WEIGHT / CAUGHT COUNT
 	var fish_id: String = str(fish.get("id", ""))

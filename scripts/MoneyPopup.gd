@@ -5,7 +5,7 @@ class_name MoneyPopup
 
 func show_amount(amount: int) -> void:
 	label.show()
-	label.text = "+%d €" % amount
+	label.text = "+%d $" % amount
 	modulate.a = 1.0
 	scale = Vector2.ONE
 

@@ -205,7 +205,7 @@ func _sell_single_fish(index: int) -> void:
 	Inventory.remove_fish(index)
 	Player.add_money(value)
 
-	print("🐟 Verkauft: %s für %d €" % [fish_name, value])
+	print("🐟 Verkauft: %s für %d $" % [fish_name, value])
 	click.play()
 	refresh()
 
@@ -321,7 +321,7 @@ func refresh() -> void:
 
 		# Wert
 		var value := FishDB.get_fish_value(f)
-		item.get_node("VBoxContainer/InfoContainer/StatsContainer/MarginContainer4/Value").text = "💰 %d €" % value
+		item.get_node("VBoxContainer/InfoContainer/StatsContainer/MarginContainer4/Value").text = "💰 %d $" % value
 		total_value += value
 
 		# Rechtsklick verkaufen
@@ -437,10 +437,10 @@ func refresh() -> void:
 	# 📊 UI UPDATE
 	# ----------------------------
 	title_label.text = tr("INVENTORY_TITLE") + " (%d)" % fish_count
-	total_value_label.text = tr("INVENTORY_TOTAL_VALUE") + ": %d €" % total_value
+	total_value_label.text = tr("INVENTORY_TOTAL_VALUE") + ": %d $" % total_value
 
 	if fish_count > 0:
-		sell_button.text = tr("INVENTORY_SELL_ALL") + " (%d €)" % total_value
+		sell_button.text = tr("INVENTORY_SELL_ALL") + " (%d $)" % total_value
 		sell_button.disabled = false
 	else:
 		sell_button.text = tr("INVENTORY_NO_FISH")
@@ -468,7 +468,7 @@ func _on_sell_all_pressed() -> void:
 	Inventory.clear_inventory()
 	Player.add_money(money)
 
-	print("💰 Alle %d Fische verkauft für: %d €" % [fish_count, money])
+	print("💰 Alle %d Fische verkauft für: %d $" % [fish_count, money])
 	refresh()
 
 func _on_activate_bait_pressed(rarity: String) -> void:

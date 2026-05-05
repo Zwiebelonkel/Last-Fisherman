@@ -1,7 +1,7 @@
 [gd_scene load_steps=11 format=4 uid="uid://cnjcmcbmutuo0"]
 
 [ext_resource type="Texture2D" uid="uid://vnkl81cd5ns2" path="res://assets/echos/beach.png" id="1_6mggl"]
-[ext_resource type="Script" path="res://scripts/eventEcho.gd" id="1_mhljt"]
+[ext_resource type="Script" uid="uid://ch70okxe7anjk" path="res://scripts/eventEcho.gd" id="1_mhljt"]
 [ext_resource type="Shader" uid="uid://c140kjbm2bot5" path="res://shader/buckshot.gdshader" id="2_52p3h"]
 [ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="3_mhljt"]
 [ext_resource type="Script" path="res://scripts/typewriter.gd" id="5_606dw"]

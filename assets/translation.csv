@@ -712,13 +712,13 @@ FISH_ICELAND_GLETSCHERZUNGE_SCIENCE,"Große Tiefseefische wachsen langsam und er
 FISH_VALUE_PRICELESS,Unbezahlbar,Priceless
 FISH_WEIGHT,Gewicht,Weight
 
-EVENT_LAKE,Das Wasser war immer ruhig.\nZu ruhig.\n\nDann kam die Welle.\n\nKeine zweite.\n\nWeil es nichts mehr gibt,\ndas eine zweite erzeugen könnte.,The water was always calm.\nToo calm.\n\nThen the wave came.\n\nThere won't be a second one.\n\nBecause nothing is left\nthat could create another.
-EVENT_CITY,Hier habe ich früher gelebt.\nZwischen Lichtern und Stimmen.\n\nJetzt ist alles still.\n\nDas Wasser steht nicht mehr.\nEs steigt.\nUnd es wird nicht aufhören.,I used to live here.\nBetween lights and voices.\n\nNow everything is quiet.\n\nThe water isn't standing.\nIt's rising.\nAnd it won't stop.
-EVENT_SEWER,Ich wollte nur nach unten sehen.\n\nEin Geräusch.\nEin Licht.\n\nZu spät.\n\nDer Boden war nie das Problem.\nEs war das, was sich bewegt hat.,I just wanted to look down.\n\nA sound.\nA light.\n\nToo late.\n\nThe ground was never the problem.\nIt was what moved.
-EVENT_FOREST,Der Wald war nie für Wasser gedacht.\n\nAber es ist da.\nZwischen den Bäumen.\n\nIch habe etwas gesehen.\nEine Flosse.\n\nHier gibt es keine Flossen.,The forest was never meant for water.\n\nBut it's here.\nBetween the trees.\n\nI saw something.\nA fin.\n\nThere are no fins here.
-EVENT_DESERT,Die Sonne ist gewachsen.\nIch habe es gemessen.\n\nHeute passt sie nicht mehr in den Himmel.\n\nDer Schatten verschwindet.\n\nUnd ich bald auch.,The sun has grown.\nI measured it.\n\nToday it no longer fits in the sky.\n\nThe shadow is disappearing.\n\nAnd soon, so will I.
-EVENT_ICELAND,Das Eis ist nicht mehr fest.\n\nDarunter ist kein Wasser.\n\nNur Tiefe.\n\nUnd etwas,\ndas zurückblickt.,The ice is no longer solid.\n\nThere is no water beneath.\n\nOnly depth.\n\nAnd something\nthat looks back.
-EVENT_OCEAN,Du bist nicht allein hier.\n\nDas warst du nie.\n\nEtwas hat immer mit dir gefischt.\n\nUnd jetzt hat es dich gesehen.,You are not alone here.\n\nYou never were.\n\nSomething has always been fishing with you.\n\nAnd now it has seen you.
+EVENT_LAKE,"Das Wasser war immer ruhig.\nZu ruhig.\n\nDann kam die Welle.\n\nKeine zweite.\n\nWeil es nichts mehr gibt,\ndas eine zweite erzeugen könnte.","The water was always calm.\nToo calm.\n\nThen the wave came.\n\nThere won't be a second one.\n\nBecause nothing is left\nthat could create another."
+EVENT_CITY,"Hier habe ich früher gelebt.\nZwischen Lichtern und Stimmen.\n\nJetzt ist alles still.\n\nDas Wasser steht nicht mehr.\nEs steigt.\nUnd es wird nicht aufhören.","I used to live here.\nBetween lights and voices.\n\nNow everything is quiet.\n\nThe water isn't standing.\nIt's rising.\nAnd it won't stop."
+EVENT_SEWER,"Ich wollte nur nach unten sehen.\n\nEin Geräusch.\nEin Licht.\n\nZu spät.\n\nDer Boden war nie das Problem.\nEs war das, was sich bewegt hat.","I just wanted to look down.\n\nA sound.\nA light.\n\nToo late.\n\nThe ground was never the problem.\nIt was what moved."
+EVENT_FOREST,"Der Wald war nie für Wasser gedacht.\n\nAber es ist da.\nZwischen den Bäumen.\n\nIch habe etwas gesehen.\nEine Flosse.\n\nHier gibt es keine Flossen.","The forest was never meant for water.\n\nBut it's here.\nBetween the trees.\n\nI saw something.\nA fin.\n\nThere are no fins here."
+EVENT_DESERT,"Die Sonne ist gewachsen.\nIch habe es gemessen.\n\nHeute passt sie nicht mehr in den Himmel.\n\nDer Schatten verschwindet.\n\nUnd ich bald auch.","The sun has grown.\nI measured it.\n\nToday it no longer fits in the sky.\n\nThe shadow is disappearing.\n\nAnd soon, so will I."
+EVENT_ICELAND,"Das Eis ist nicht mehr fest.\n\nDarunter ist kein Wasser.\n\nNur Tiefe.\n\nUnd etwas,\ndas zurückblickt.","The ice is no longer solid.\n\nThere is no water beneath.\n\nOnly depth.\n\nAnd something\nthat looks back."
+EVENT_OCEAN,"Du bist nicht allein hier.\n\nDas warst du nie.\n\nEtwas hat immer mit dir gefischt.\n\nUnd jetzt hat es dich gesehen.","You are not alone here.\n\nYou never were.\n\nSomething has always been fishing with you.\n\nAnd now it has seen you."
 
 FISH_OCEAN_STEAM_PLAYER_NAME,Du selbst!
 FISH_OCEAN_STEAM_PLAYER_DESC,Ein wahrlich einzigartiger Fang - du hast dich selbst gefangen! Vielleicht solltest du öfter aus dem Haus gehen...
@@ -726,6 +726,8 @@ FISH_OCEAN_STEAM_PLAYER_SCIENCE,Homo Sapiens Digitalis - Eine seltene Spezies, d
 FISH_OCEAN_STEAM_PLAYER_STORY,Du starrst auf den gefangenen Fisch und erkennst dein eigenes Gesicht im eisigen Wasser. Ein Moment der Selbsterkenntnis - oder der Wahnsinn des langen Angelns? Die Reise endet hier, wo sie begann: Bei dir selbst.
 
 ANY_KEY,[Beliebige Taste],[Any Key]
+CLICK,[Klicken],[Click]
+
 
 FISH_ACTION_SELL, Fisch verkaufen, Sell fish
 FISH_ACTION_USE_AS_BAIT, Als Köder nutzen, Use as bait
@@ -739,3 +741,5 @@ BIOME_FOREST,Wald,Forest
 BIOME_DESERT,Wüste,Desert
 BIOME_ICELAND,Island,Iceland
 BIOME_OCEAN,Ozean,Ocean
+
+CLICK_FOR_DETAILS,Klicke für Details,Click for details
