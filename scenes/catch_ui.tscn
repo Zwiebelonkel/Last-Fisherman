@@ -29,7 +29,7 @@ offset_right = 300.0
 offset_bottom = 276.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.458405, 0.458405, 0.458405, 1)
+color = Color(0.45098, 0.45098, 0.45098, 0.462745)
 
 [node name="SweetSpot" type="ColorRect" parent="BarBackground"]
 layout_mode = 1

@@ -1,4 +1,4 @@
-[gd_scene load_steps=82 format=4 uid="uid://yrer5qgxgwvb"]
+[gd_scene load_steps=86 format=4 uid="uid://yrer5qgxgwvb"]
 
 [ext_resource type="Shader" uid="uid://c140kjbm2bot5" path="res://shader/buckshot.gdshader" id="1_mxpyu"]
 [ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="3_ttydn"]
@@ -45,6 +45,7 @@
 [ext_resource type="AudioStream" uid="uid://6a3ro0nq1u4" path="res://sounds/rarity/antique.mp3" id="34_5ki3x"]
 [ext_resource type="AudioStream" uid="uid://nvrc6arpsx6n" path="res://sounds/ocean.mp3" id="37_fv5f2"]
 [ext_resource type="Script" path="res://scripts/Biomecinematic.gd" id="43_fv5f2"]
+[ext_resource type="PackedScene" uid="uid://secfgl26k8jb" path="res://assets/icefloe/scene.gltf" id="46_5ki3x"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1wiy7"]
 shader = ExtResource("1_mxpyu")
@@ -446,6 +447,8 @@ script/source = "extends Node3D
 
 @onready var anim: AnimationPlayer = $AnimationPlayer
 @onready var animCircle: AnimationPlayer = $\"../../DirectionalLight3D/AnimationPlayer\"
+@onready var scholle: AnimationPlayer = $\"../../scholle/AnimationPlayer\"
+
 
 @onready var ripple_anim: AnimationPlayer = hook.get_node(\"AnimationPlayer\")
 
@@ -528,6 +531,7 @@ var hook_end_position: Vector3
 
 func _ready() -> void:
 	Player.biome_progress.connect(_on_biome_progress)
+	scholle.play(\"idle\")
 	anim.play(\"idle\")
 	animCircle.play(\"circle\")
 	hook.visible = false
@@ -1868,6 +1872,68 @@ _data = {
 }
 point_count = 4
 
+[sub_resource type="Animation" id="Animation_scv08"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(-11.285, -6.33822, 22.1938)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_11guq"]
+resource_name = "idle"
+length = 5.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.0666667, 2.16375, 5),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(-11.285, -6.33822, 22.1938), Vector3(-11.285, -5.908, 22.194), Vector3(-11.285, -6.33822, 22.1938)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 2.09819, 5),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0.0523599, 0, 0), Vector3(0, 0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_5v42w"]
+_data = {
+&"RESET": SubResource("Animation_scv08"),
+&"idle": SubResource("Animation_11guq")
+}
+
 [node name="MainScene" type="Node3D"]
 
 [node name="Filter" type="CanvasLayer" parent="."]
@@ -2047,9 +2113,6 @@ interact_button = NodePath("../../UI/Touch/InteractButton")
 settings_button = NodePath("../../UI/Touch/TopLeftPanel/MarginContainer/VBoxContainer/SettingsButton")
 cast_power_ui_scene = ExtResource("9_loenh")
 inventory_ui = NodePath("../../UI/InventoryUI")
-
-[node name="RodMesh" parent="PlayerCamera/FishingRod" index="0"]
-transform = Transform3D(1, 0, 0, 0, 0.966823, 0.255446, 0, -0.255446, 0.966823, 0, 0, -0.0166266)
 
 [node name="left_hand" parent="PlayerCamera/FishingRod/RodMesh" index="5"]
 transform = Transform3D(-0.211648, -0.0377439, 0.254183, -0.17704, 0.278759, -0.0940853, -0.207091, -0.199734, -0.179344, -0.113471, -0.850528, 0.246808)
@@ -2238,6 +2301,20 @@ script = ExtResource("43_fv5f2")
 fishing_location = "iceland"
 cinematic_path = NodePath("../CinematicPath")
 fade_duration = 0.0
+
+[node name="scholle" parent="." instance=ExtResource("46_5ki3x")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.285, -6.33822, 22.1938)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="scholle"]
+libraries = {
+&"": SubResource("AnimationLibrary_5v42w")
+}
+
+[node name="Sketchfab_Scene2" parent="." instance=ExtResource("46_5ki3x")]
+transform = Transform3D(1.32119, 0, -1.0698, 0, 1.7, 0, 1.0698, 0, 1.32119, -17.5563, -7.44481, 53.5554)
+
+[node name="Sketchfab_Scene3" parent="." instance=ExtResource("46_5ki3x")]
+transform = Transform3D(-0.992683, 0, -1.9801, 0, 2.215, 0, 1.9801, 0, -0.992683, -29.2908, -6.58896, -1.79362)
 
 [editable path="UI/Touch"]
 [editable path="PlayerCamera/FishingRod"]

@@ -395,7 +395,7 @@ var FISH_LAKE = [
 		"science_key": "FISH_LAKE_ANLEITUNG_SCIENCE",
 		"rarity": RARITY.LEGENDAER,
 		"base_value": 50,
-		"icon": "res://assets/fish/Anleitung.png",
+		"icon": "res://assets/fish/anleitung.png",
 		"weight_min": 0.05,
 		"weight_max": 0.5
 	},

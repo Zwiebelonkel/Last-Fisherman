@@ -140,6 +140,8 @@ FRYER, Fritteuse, Fryer
 PREP_TYPE_FRIED_FISH,Backfisch,Fried Fish
 PREP_TYPE_SUSHI,Sushi,Sushi
 
+
+
 # ====================
 # STATION FRYER
 # ====================
@@ -157,6 +159,34 @@ FRYER_ITEM_ADDED_TO_TRAY,Backfisch auf Tablett gelegt!,Fried fish placed on tray
 FRYER_PROMPT_IDLE,Fisch waehlen,Select fish
 FRYER_PROMPT_COOKING,Kocht...,Cooking...
 FRYER_PROMPT_READY,Aufnehmen,Collect
+
+FRYER_PROMPT_MINIGAME,Treffe den Moment!,Hit the moment!
+SUSHI_STILL_COOKING,Noch am Zubereiten!,Still preparing!
+SUSHI_NO_FISH_INVENTORY,Keine Fische im Inventar!,No fish in inventory!
+SUSHI_CUSTOMER_NO_WANT,Kunde will kein Sushi!,Customer doesn't want sushi!
+SUSHI_FISH_NOT_IN_INVENTORY,Fisch nicht im Inventar!,Fish not in inventory!
+SUSHI_PROMPT_IDLE,Fisch waehlen,Select fish
+SUSHI_PROMPT_MINIGAME,Schnell schneiden!,Cut quickly!
+SUSHI_PROMPT_COOKING,Zubereitung...,Preparing...
+SUSHI_PROMPT_READY,Aufnehmen,Collect
+SUSHI_MINI_HINT,Klicke so schnell wie moeglich!,Click as fast as you can!
+SUSHI_MINI_BUTTON,✂️ SCHNEIDEN,✂️ CUT
+FRYER_MINI_HINT,Stoppe den Marker in der gruenen Zone!,Stop the marker in the green zone!
+FRYER_MINI_BUTTON,⏱️ JETZT!,⏱️ NOW!
+FRYER_MINI_PERFECT,✅ PERFEKT!,✅ PERFECT!
+FRYER_MINI_GOOD,👍 GUT!,👍 GOOD!
+FRYER_MINI_BURNED,🔥 VERBRANNT!,🔥 BURNED!
+DRINKS_NO_CUSTOMER,Kein Kunde vorhanden!,No customer present!
+DRINKS_NOT_ORDERED,Kunde hat kein Getraenk bestellt!,Customer didn't order a drink!
+DRINKS_ALREADY_ON_TRAY,Getraenk schon auf Tablett!,Drink already on tray!
+DRINKS_PROMPT_HOVER,Getraenk zapfen,Dispense drink
+DRINKS_MINI_HINT,Finde das richtige Getraenk!,Find the correct drink!
+DRINKS_MINI_TARGET,Finde: %s,Find: %s
+DRINKS_MINI_FAILED,Falsches Getraenk! Kunde verliert Geduld.,Wrong drink! Customer loses patience.
+UI_ORDER_FISH,Fisch: %s,Fish: %s
+UI_ORDER_PREP,Art: %s,Type: %s
+UI_ORDER_DRINK_YES,Getraenk: Ja,Drink: Yes
+UI_ORDER_DRINK_NO,Getraenk: Nein,Drink: No
 
 # ====================
 # STATION SUSHI

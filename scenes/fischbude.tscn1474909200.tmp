@@ -1,0 +1,1470 @@
+[gd_scene load_steps=77 format=3 uid="uid://bqhxfk3g8vxn7"]
+
+[ext_resource type="Script" uid="uid://cqgu3f2n1rg1p" path="res://scripts/Fishbudecontroller.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/tray.gd" id="2"]
+[ext_resource type="Shader" uid="uid://c140kjbm2bot5" path="res://shader/buckshot.gdshader" id="2_wpubn"]
+[ext_resource type="Script" uid="uid://d3sami34i2b7c" path="res://scripts/fryer.gd" id="3"]
+[ext_resource type="Shader" uid="uid://dmg556n5nwodi" path="res://shader/pixelate.gdshader" id="3_4hlsc"]
+[ext_resource type="Shader" uid="uid://imf547kyj0bj" path="res://shader/CRT.gdshader" id="3_qwiaf"]
+[ext_resource type="Script" uid="uid://nif1hbs6jred" path="res://scripts/sushi.gd" id="4"]
+[ext_resource type="PackedScene" uid="uid://cfnh7vm4vbwi8" path="res://scenes/fryer.tscn" id="4_4cgah"]
+[ext_resource type="Script" path="res://scripts/StationSecurity.gd" id="4_ewdra"]
+[ext_resource type="Script" uid="uid://qoarxse5jwpj" path="res://scripts/drinks.gd" id="5"]
+[ext_resource type="Script" uid="uid://bl1xotduehieu" path="res://scripts/camera_sway.gd" id="6_3wc6y"]
+[ext_resource type="PackedScene" uid="uid://bw80sbvfcwe1p" path="res://scenes/cigarette.tscn" id="7_gpyn8"]
+[ext_resource type="PackedScene" uid="uid://b5ew1rfc8ow8g" path="res://scenes/fishingRod.tscn" id="8_wpubn"]
+[ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="9_jcqa2"]
+[ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="10_36inu"]
+[ext_resource type="PackedScene" uid="uid://dxxrhs12x2m2c" path="res://scenes/InventoryUI.tscn" id="12_4hlsc"]
+[ext_resource type="PackedScene" uid="uid://cdb3sodlv6np7" path="res://scenes/MoneyHUD.tscn" id="13_bl06e"]
+[ext_resource type="PackedScene" uid="uid://be7bs5po2ukhi" path="res://scenes/FishBook.tscn" id="14_85lqq"]
+[ext_resource type="PackedScene" uid="uid://b08obrprd472u" path="res://scenes/OptionsControl.tscn" id="16_te6ua"]
+[ext_resource type="PackedScene" uid="uid://xt7f7m4i2iwi" path="res://scenes/touch.tscn" id="18_yh6ru"]
+[ext_resource type="PackedScene" uid="uid://dqoq3miv3jfjd" path="res://scenes/FishSelectionUI.tscn" id="19_36inu"]
+[ext_resource type="PackedScene" uid="uid://fhdcihlq4hwo" path="res://scenes/MoneyPopup.tscn" id="20_ewdra"]
+[ext_resource type="PackedScene" uid="uid://ws4ms8iq4gg4" path="res://scenes/clock.tscn" id="20_snqa0"]
+[ext_resource type="PackedScene" uid="uid://cgx4m5clsd3v7" path="res://scenes/foodtruck.tscn" id="21_jcqa2"]
+[ext_resource type="PackedScene" uid="uid://det3pf80ieoex" path="res://scenes/FryerMinigame.tscn" id="23_dv6yl"]
+[ext_resource type="Script" path="res://scenes/security_ui.gd" id="24_4hlsc"]
+[ext_resource type="PackedScene" uid="uid://bptayscrcb2gf" path="res://scenes/SushiMinigame.tscn" id="24_tttq7"]
+[ext_resource type="PackedScene" path="res://scenes/DrinksMinigame.tscn" id="25_evyhm"]
+[ext_resource type="Script" path="res://scenes/rec.gd" id="26_85lqq"]
+[ext_resource type="AudioStream" uid="uid://esyv0p374c5j" path="res://sounds/bite.mp3" id="27_4cgah"]
+[ext_resource type="PackedScene" uid="uid://ckje0fw3pep83" path="res://assets/skyscaper.glb" id="27_qwiaf"]
+[ext_resource type="AudioStream" uid="uid://cldy38iwm8ovi" path="res://sounds/cast.mp3" id="28_qwiaf"]
+[ext_resource type="AudioStream" uid="uid://26m0pjkxve85" path="res://sounds/rarity/normal.mp3" id="29_44cek"]
+[ext_resource type="AudioStream" uid="uid://bm2wkiirbpowg" path="res://sounds/rarity/uncommon.mp3" id="30_uyjbj"]
+[ext_resource type="AudioStream" uid="uid://bpy3o38b3nar3" path="res://sounds/rarity/rare.mp3" id="31_dv6yl"]
+[ext_resource type="AudioStream" uid="uid://rcuhs2eom22x" path="res://sounds/rarity/epic.mp3" id="32_tttq7"]
+[ext_resource type="AudioStream" uid="uid://c0e0t3u3yvvhg" path="res://sounds/rarity/legendary.mp3" id="33_evyhm"]
+[ext_resource type="AudioStream" uid="uid://qeh48myqvc8p" path="res://sounds/rarity/exotic.mp3" id="34_vu6nq"]
+[ext_resource type="AudioStream" uid="uid://6a3ro0nq1u4" path="res://sounds/rarity/antique.mp3" id="35_a7fsk"]
+[ext_resource type="AudioStream" uid="uid://cmr6cded4l11v" path="res://sounds/whoosh.mp3" id="36_kh0h8"]
+[ext_resource type="AudioStream" uid="uid://dnaarmpt3ge3b" path="res://sounds/lastFisherman.mp3" id="37_5bpro"]
+[ext_resource type="AudioStream" uid="uid://b7ifxd818oete" path="res://sounds/line.mp3" id="38_5r7ds"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_4hlsc"]
+shader = ExtResource("2_wpubn")
+shader_parameter/exposure = 1.0
+shader_parameter/contrast = 1.1
+shader_parameter/saturation = 1.12
+shader_parameter/enable_pixelate = true
+shader_parameter/pixel_factor = 3.0
+shader_parameter/enable_posterize = true
+shader_parameter/color_levels = 16.0
+shader_parameter/dither_strength = 0.35
+shader_parameter/chrom_aberration = 0.01
+shader_parameter/vignette_strength = 1.0
+shader_parameter/grain_strength = 0.2
+shader_parameter/tint_color = Vector3(0.95, 1.03, 0.9)
+shader_parameter/tint_strength = 0.15
+shader_parameter/viewport_size_override = Vector2(0, 0)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_44cek"]
+shader = ExtResource("3_qwiaf")
+shader_parameter/grain_intensity = 0.1
+shader_parameter/min_lum = 0.0
+shader_parameter/max_lum = 0.654
+shader_parameter/time_scale = 0.5
+shader_parameter/vignette_darkness = 0.0
+shader_parameter/vignette_outer_radius = 0.7
+shader_parameter/vignette_inner_radius = 0.2
+shader_parameter/scanline_intensity = 0.488
+shader_parameter/barrel_distortion = 0.137
+shader_parameter/chromatic_aberration = 0.0
+shader_parameter/crt_vignette_power = 0.562
+shader_parameter/pixel_resolution_x = 1080
+shader_parameter/pixel_resolution_y = 900
+shader_parameter/enable_color_quantization = true
+shader_parameter/color_quant_steps = 23.895
+shader_parameter/warble_amount = 0.0
+shader_parameter/warble_speed = 3.104
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ysmne"]
+albedo_color = Color(0.233925, 0.233925, 0.233925, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_floor"]
+material = SubResource("StandardMaterial3D_ysmne")
+size = Vector3(10, 0.1, 10)
+
+[sub_resource type="BoxMesh" id="BoxMesh_36inu"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ewdra"]
+cull_mode = 1
+shading_mode = 0
+albedo_color = Color(1, 1, 0, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_4cgah"]
+material = SubResource("StandardMaterial3D_ewdra")
+size = Vector3(1.125, 1.615, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_85lqq"]
+size = Vector3(1.05901, 1.49868, 1.27131)
+
+[sub_resource type="BoxMesh" id="BoxMesh_qwiaf"]
+material = SubResource("StandardMaterial3D_ewdra")
+size = Vector3(0.5, 1.02, 1.17)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_a3cxi"]
+size = Vector3(0.335899, 0.788711, 0.728777)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_te6ua"]
+size = Vector3(2.29282, 0.058898, 0.728777)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_te6ua"]
+albedo_color = Color(0.379292, 0.296544, 0.220121, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_bl06e"]
+material = SubResource("StandardMaterial3D_te6ua")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_85lqq"]
+cull_mode = 1
+shading_mode = 0
+albedo_color = Color(1, 1, 0, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wpubn"]
+material = SubResource("StandardMaterial3D_85lqq")
+
+[sub_resource type="BoxMesh" id="BoxMesh_jcqa2"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a3cxi"]
+cull_mode = 1
+shading_mode = 0
+albedo_color = Color(1, 1, 0, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_te6ua"]
+material = SubResource("StandardMaterial3D_a3cxi")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ysmne"]
+size = Vector3(0.986778, 1.02107, 0.848275)
+
+[sub_resource type="GDScript" id="GDScript_vx235"]
+script/source = "extends Node3D
+
+# NODE-REFERENCES
+@export var rotation_speed: float = 2.0
+@export var camera: Camera3D
+@export var fishbook_ui: Control
+@export var options: Control
+
+# UI Buttons
+@export var journal_button: Button
+@export var inventory_button: Button
+@export var map_button: Button
+@export var left_button: Button
+@export var right_button: Button
+@export var interact_button: Button
+@export var settings_button: Button
+
+#@onready var whoosh_sound: AudioStreamPlayer = get_node(\"../../Audio/whoosh\")
+
+@export var inventory_ui: Node
+
+# STATE MACHINE
+enum {
+	STATE_IDLE,
+	STATE_ROTATING
+}
+
+var state: int = STATE_IDLE
+var paused: bool = false
+
+# Rotation Variables (4 Richtungen)
+var current_rotation: float = 180.0
+var target_rotation: float = 180.0
+var is_rotating: bool = false
+
+# Definierte Rotationspositionen
+const ROTATION_PLAYER_START: float = 180.0  # Spieler schaut nach vorne
+const ROTATION_DRINKS: float = 90.0         # Rechts = Getränke (90°)
+const ROTATION_SUSHI: float = 0.0           # Hinten = Sushi (0°)
+const ROTATION_FRYER: float = 270.0         # Links = Fritteuse (270°)
+
+func _ready() -> void:
+	setup_buttons()
+	Player.biome_completed.connect(_on_biome_completed)
+
+func _on_biome_completed(biome_name: String, reward: int) -> void:
+	print(\"Biom abgeschlossen: \", biome_name, \" | Belohnung: \", reward, \" Gold\")
+
+func setup_buttons() -> void:
+	if journal_button:
+		journal_button.pressed.connect(toggle_fishbook)
+	
+	if inventory_button:
+		inventory_button.pressed.connect(toggle_inventory)
+	
+	if map_button:
+		map_button.pressed.connect(open_map)
+	
+	if left_button:
+		left_button.pressed.connect(rotate_camera_left)
+	
+	if right_button:
+		right_button.pressed.connect(rotate_camera_right)
+	
+	if interact_button:
+		interact_button.pressed.connect(_on_interact_pressed)
+		
+	if settings_button:
+		settings_button.pressed.connect(handle_pause_input)
+
+func _on_interact_pressed() -> void:
+	# Getränke-Station bei 90° (rechts)
+	if abs(current_rotation - ROTATION_DRINKS) < 1.0:
+		print(\"Interact mit Getränke-Station\")
+		# Hier könnte Interaktion mit Drinks-Station kommen
+		return
+	
+	# Sushi-Station bei 0° (hinten)
+	if abs(current_rotation - ROTATION_SUSHI) < 1.0:
+		print(\"Interact mit Sushi-Station\")
+		# Hier könnte Interaktion mit Sushi-Station kommen
+		return
+	
+	# Fritteuse bei 270° (links)
+	if abs(current_rotation - ROTATION_FRYER) < 1.0:
+		print(\"Interact mit Fritteuse\")
+		# Hier könnte Interaktion mit Fryer-Station kommen
+		return
+
+func _unhandled_input(event: InputEvent) -> void:
+	# ESC/Pause behandeln
+	if event.is_action_released(\"pause\"):
+		handle_pause_input()
+		return
+	
+	# Während Pause keine anderen Inputs
+	if paused:
+		return
+	
+	# Rotation
+	if event.is_action_pressed(\"left\"):
+		rotate_camera_left()
+		return
+	
+	if event.is_action_pressed(\"right\"):
+		rotate_camera_right()
+		return
+	
+	if event.is_action_pressed(\"map_open\"):
+		open_map()
+		return
+	
+	if event.is_action_pressed(\"journal\"):
+		toggle_fishbook()
+		return
+	
+	if event.is_action_pressed(\"inventory_toggle\"):
+		toggle_inventory()
+		return
+
+	# Interact bei verschiedenen Positionen
+	if event.is_action_pressed(\"cast\"):
+		if abs(current_rotation - ROTATION_DRINKS) < 1.0:
+			print(\"Interact mit Getränke-Station\")
+		elif abs(current_rotation - ROTATION_SUSHI) < 1.0:
+			print(\"Interact mit Sushi-Station\")
+		elif abs(current_rotation - ROTATION_FRYER) < 1.0:
+			print(\"Interact mit Fritteuse\")
+
+# ---------------------------------------------------------
+# MENÜ-MANAGEMENT
+# ---------------------------------------------------------
+func handle_pause_input() -> void:
+	# Fishbook hat Priorität
+	if fishbook_ui and fishbook_ui.visible:
+		close_fishbook()
+		return
+	
+	# Dann Inventory
+	if inventory_ui and inventory_ui.visible:
+		close_inventory()
+		return
+	
+	# Dann Options
+	if options and options.visible:
+		close_options()
+		return
+	
+	# Alle zu -> Options öffnen
+	open_options()
+
+func toggle_fishbook() -> void:
+	if fishbook_ui.visible:
+		close_fishbook()
+	else:
+		open_fishbook()
+
+func toggle_inventory() -> void:
+	if inventory_ui.visible:
+		close_inventory()
+	else:
+		open_inventory()
+
+func open_fishbook() -> void:
+	close_inventory()
+	close_options()
+	fishbook_ui.visible = true
+	paused = false
+	Engine.time_scale = 1
+
+func close_fishbook() -> void:
+	fishbook_ui.visible = false
+	paused = false
+	Engine.time_scale = 1
+
+func open_inventory() -> void:
+	close_fishbook()
+	close_options()
+	inventory_ui.show()
+	paused = false
+	Engine.time_scale = 1
+
+func close_inventory() -> void:
+	inventory_ui.hide()
+	paused = false
+	Engine.time_scale = 1
+
+func open_options() -> void:
+	close_fishbook()
+	close_inventory()
+	options.show()
+	paused = true
+	Engine.time_scale = 0
+
+func close_options() -> void:
+	options.hide()
+	paused = false
+	Engine.time_scale = 1
+
+# ---------------------------------------------------------
+# 4-RICHTUNGS ROTATION
+# ---------------------------------------------------------
+func rotate_camera_left() -> void:
+	if is_rotating:
+		return
+	
+	#if whoosh_sound:
+		#whoosh_sound.play()
+	
+	# Im Uhrzeigersinn: 180 → 270 (Fryer) → 0 (Sushi) → 90 (Drinks) → 180
+	if current_rotation == ROTATION_PLAYER_START:
+		target_rotation = ROTATION_FRYER
+	elif current_rotation == ROTATION_FRYER:
+		target_rotation = ROTATION_SUSHI
+	elif current_rotation == ROTATION_SUSHI:
+		target_rotation = ROTATION_DRINKS
+	elif current_rotation == ROTATION_DRINKS:
+		target_rotation = ROTATION_PLAYER_START
+	
+	start_rotation()
+
+func rotate_camera_right() -> void:
+	if is_rotating:
+		return
+	
+	#if whoosh_sound:
+		#whoosh_sound.play()
+	
+	# Gegen Uhrzeigersinn: 180 → 90 (Drinks) → 0 (Sushi) → 270 (Fryer) → 180
+	if current_rotation == ROTATION_PLAYER_START:
+		target_rotation = ROTATION_DRINKS
+	elif current_rotation == ROTATION_DRINKS:
+		target_rotation = ROTATION_SUSHI
+	elif current_rotation == ROTATION_SUSHI:
+		target_rotation = ROTATION_FRYER
+	elif current_rotation == ROTATION_FRYER:
+		target_rotation = ROTATION_PLAYER_START
+	
+	start_rotation()
+
+func start_rotation() -> void:
+	state = STATE_ROTATING
+	is_rotating = true
+
+func _process(delta: float) -> void:
+	if state == STATE_ROTATING:
+		update_rotation(delta)
+
+func update_rotation(delta: float) -> void:
+	var rotation_step = rotation_speed * delta
+	
+	var diff = target_rotation - current_rotation
+	
+	if diff > 180.0:
+		diff -= 360.0
+	elif diff < -180.0:
+		diff += 360.0
+	
+	if abs(diff) < rotation_step:
+		current_rotation = target_rotation
+	elif diff > 0:
+		current_rotation += rotation_step
+	else:
+		current_rotation -= rotation_step
+	
+	if current_rotation >= 360.0:
+		current_rotation -= 360.0
+	elif current_rotation < 0.0:
+		current_rotation += 360.0
+
+	if camera:
+		camera.target_rotation_y = deg_to_rad(current_rotation)  # 🆕
+
+	if abs(current_rotation - target_rotation) < 0.5:
+		current_rotation = target_rotation
+		is_rotating = false
+		state = STATE_IDLE
+# ---------------------------------------------------------
+# SZENEN-WECHSEL
+# ---------------------------------------------------------
+func open_map() -> void:
+	Player.update_last_scene(\"res://scenes/fischbude.tscn\")
+	Transition.change_scene(\"res://scenes/MapScene.tscn\")
+"
+
+[sub_resource type="Theme" id="Theme_u47el"]
+default_font = ExtResource("10_36inu")
+
+[sub_resource type="Theme" id="Theme_kylbc"]
+default_font = ExtResource("10_36inu")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_bl06e"]
+shader = ExtResource("3_4hlsc")
+shader_parameter/pixel_size = 200.0
+
+[sub_resource type="Shader" id="Shader_4cgah"]
+code = "shader_type sky;
+
+// Wird vom AnimationPlayer gesteuert (0.0 = Mitternacht, 0.5 = Mittag, 1.0 = Mitternacht)
+uniform float time_of_day : hint_range(0.0, 1.0) = 0.35;
+
+// Tag-Farben
+uniform vec4 day_zenith   : source_color = vec4(0.18, 0.48, 0.90, 1.0);
+uniform vec4 day_horizon  : source_color = vec4(0.72, 0.90, 1.00, 1.0);
+
+// Sonnenaufgang/Untergang
+uniform vec4 sunset_zenith  : source_color = vec4(0.25, 0.12, 0.28, 1.0);
+uniform vec4 sunset_horizon : source_color = vec4(1.00, 0.45, 0.10, 1.0);
+uniform vec4 sunset_glow    : source_color = vec4(1.00, 0.70, 0.20, 1.0);
+
+// Nacht-Farben
+uniform vec4 night_zenith  : source_color = vec4(0.01, 0.01, 0.06, 1.0);
+uniform vec4 night_horizon : source_color = vec4(0.03, 0.04, 0.12, 1.0);
+
+// Sonne & Mond
+uniform float sun_size       : hint_range(0.001, 0.15) = 0.025;
+uniform float sun_glow_power : hint_range(1.0, 16.0)   = 4.5;
+uniform float moon_size      : hint_range(0.001, 0.1)  = 0.018;
+
+// Wolken
+uniform float cloud_speed   : hint_range(0.0, 1.0) = 0.015;
+uniform float cloud_scale   : hint_range(0.1, 4.0) = 1.1;
+uniform float cloud_density : hint_range(0.0, 1.0) = 0.50;
+
+// ─────────────────────────────────────────────
+// Noise
+// ─────────────────────────────────────────────
+float hash(vec2 p) {
+    p = fract(p * vec2(127.1, 311.7));
+    p += dot(p, p + 19.19);
+    return fract(p.x * p.y);
+}
+
+float vnoise(vec2 p) {
+    vec2 i = floor(p);
+    vec2 f = fract(p);
+    vec2 u = f * f * (3.0 - 2.0 * f);
+    return mix(
+        mix(hash(i),             hash(i + vec2(1,0)), u.x),
+        mix(hash(i+vec2(0,1)),   hash(i + vec2(1,1)), u.x), u.y);
+}
+
+float fbm(vec2 p) {
+    float v = 0.0; float a = 0.5;
+    mat2 rot = mat2(vec2(0.8, 0.6), vec2(-0.6, 0.8));
+    for (int i = 0; i < 5; i++) { v += a * vnoise(p); p = rot * p * 2.1; a *= 0.48; }
+    return v;
+}
+
+float cloud_shape(vec2 uv, float t, float offset) {
+    vec2 p = uv * cloud_scale + vec2(t + offset, offset * 0.3);
+    vec2 q = vec2(fbm(p), fbm(p + vec2(5.2, 1.3)));
+    float raw = fbm(p + q);
+    return step(cloud_density + offset * 0.04, raw);
+}
+
+// ─────────────────────────────────────────────
+// SKY
+// ─────────────────────────────────────────────
+void sky() {
+    vec3 dir = normalize(EYEDIR);
+
+    // time_of_day: 0=Nacht, 0.25=Sonnenaufgang, 0.5=Mittag, 0.75=Sonnenuntergang, 1=Nacht
+    float tod = time_of_day;
+
+    // Sonne dreht sich über den Himmel (Y-Kurve)
+    float sun_angle = tod * TAU;
+    vec3 sun_dir = normalize(vec3(sin(sun_angle), cos(sun_angle) * 0.8, -0.6));
+
+    // Mond ist gegenüber der Sonne
+    vec3 moon_dir = -sun_dir;
+
+    // Wie hoch steht die Sonne? 0=Horizont/unter, 1=Zenit
+    float sun_height = clamp(sun_dir.y, 0.0, 1.0);
+    float sun_below  = clamp(-sun_dir.y, 0.0, 1.0); // Sonne unter Horizont = Nacht
+
+    // Tageszeit-Phasen
+    float is_day     = smoothstep(0.0, 0.15, sun_height);
+    float is_night   = smoothstep(0.0, 0.15, sun_below);
+    float is_sunset  = 1.0 - smoothstep(0.0, 0.22, abs(sun_dir.y)); // nahe Horizont
+
+    // ── Himmels-Gradient ──────────────────────────────────────────
+    float up = clamp(dir.y, 0.0, 1.0);
+
+    vec3 c_zenith  = mix(mix(night_zenith.rgb,  sunset_zenith.rgb,  is_sunset), day_zenith.rgb,  is_day);
+    vec3 c_horizon = mix(mix(night_horizon.rgb, sunset_horizon.rgb, is_sunset), day_horizon.rgb, is_day);
+
+    vec3 sky_col = mix(c_horizon, c_zenith, smoothstep(0.0, 0.6, up));
+
+    // Sonnenuntergangs-Glow am Horizont (Richtung Sonne)
+    float sun_horiz_dot = dot(dir, sun_dir) * 0.5 + 0.5;
+    sky_col += sunset_glow.rgb * pow(sun_horiz_dot, 8.0) * is_sunset * 0.8 * (1.0 - up * 2.0);
+
+    // ── Sterne (nur nachts) ───────────────────────────────────────
+    float star_brightness = is_night * (1.0 - is_sunset * 2.0);
+    if (dir.y > 0.0) {
+        vec2 star_uv = dir.xz / max(dir.y, 0.001) * 0.5;
+        float s1 = pow(clamp(hash(floor(star_uv * 60.0)), 0.0, 1.0), 120.0);
+        float s2 = pow(clamp(hash(floor(star_uv * 120.0) + vec2(13.7)), 0.0, 1.0), 200.0);
+        float twinkle = sin(TIME * 2.0 + hash(floor(star_uv * 60.0)) * 10.0) * 0.3 + 0.7;
+        sky_col += vec3(0.9, 0.92, 1.0) * (s1 + s2 * 0.5) * star_brightness * twinkle * 3.0;
+    }
+
+    // ── Milchstraße-Andeutung (nachts) ───────────────────────────
+    if (dir.y > 0.05) {
+        vec2 mw_uv = dir.xz / dir.y * 0.3;
+        float mw = fbm(mw_uv * 0.4 + vec2(1.3, 2.7)) * 0.06 * star_brightness;
+        sky_col += vec3(0.5, 0.55, 0.8) * mw;
+    }
+
+    // ── Sonne ─────────────────────────────────────────────────────
+    float sun_dot  = dot(dir, sun_dir);
+    float sun_disc = step(1.0 - sun_size, sun_dot);
+
+    // Glow-Ringe (harte Stufen für leichten Stylize-Look)
+    float g1 = step(1.0 - sun_size * 3.0,  sun_dot) * 0.25;
+    float g2 = step(1.0 - sun_size * 8.0,  sun_dot) * 0.12;
+    float g3 = step(1.0 - sun_size * 18.0, sun_dot) * 0.06;
+    float g4 = pow(clamp(sun_dot, 0.0, 1.0), sun_glow_power) * 0.5;
+
+    // Sonnenfarbe: weiß-gelb bei Tag, orange-rot bei Untergang
+    vec3 sun_col = mix(vec3(1.0, 0.55, 0.1), vec3(1.0, 0.97, 0.85), sun_height);
+    sky_col += sun_col * (sun_disc + g1 + g2 + g3 + g4) * (1.0 - is_night);
+
+    // ── Mond ──────────────────────────────────────────────────────
+    float moon_dot  = dot(dir, moon_dir);
+    float moon_disc = step(1.0 - moon_size, moon_dot);
+    float moon_glow = step(1.0 - moon_size * 5.0, moon_dot) * 0.08;
+    float moon_atm  = pow(clamp(moon_dot, 0.0, 1.0), 12.0) * 0.15;
+    // Mondsichel via zweiter Kreis-Subtraktion
+    vec3 moon_offset_dir = normalize(moon_dir + vec3(moon_size * 3.5, moon_size * 1.0, 0.0));
+    float moon_cut = step(1.0 - moon_size * 1.1, dot(dir, moon_offset_dir));
+    float moon_shape = clamp(moon_disc - moon_cut, 0.0, 1.0);
+
+    sky_col += vec3(0.92, 0.94, 1.0) * (moon_shape * 1.8 + moon_glow + moon_atm) * is_night;
+
+    // ── Wolken ────────────────────────────────────────────────────
+    float cloud_mask = smoothstep(-0.02, 0.15, dir.y);
+    float y_s = max(abs(dir.y), 0.015);
+    vec2 c_uv = dir.xz / y_s * 0.4;
+    float t   = TIME * cloud_speed;
+
+    float clouds = 0.0;
+    float shads  = 0.0;
+    for (int i = 0; i < 3; i++) {
+        float fi  = float(i);
+        float sf  = 1.0 - fi * 0.2;
+        float af  = 1.0 - fi * 0.28;
+        float c   = cloud_shape(c_uv * sf, t * (1.0 - fi * 0.22), fi * 2.3);
+        float sh  = cloud_shape(c_uv * sf + vec2(0.0, 0.018), t * (1.0 - fi * 0.22), fi * 2.3 + 0.1);
+        clouds   += c  * af;
+        shads    += max(sh - c, 0.0) * af * 0.5;
+    }
+    clouds = clamp(clouds, 0.0, 1.0) * cloud_mask;
+    shads  = clamp(shads,  0.0, 1.0) * cloud_mask;
+
+    // Wolkenfarbe abhängig von Tageszeit
+    vec3 cloud_day    = vec3(1.0, 0.98, 0.96);
+    vec3 cloud_sunset = vec3(1.0, 0.60, 0.25);
+    vec3 cloud_night  = vec3(0.12, 0.14, 0.22);
+    vec3 cloud_bot_d  = vec3(0.72, 0.76, 0.82);
+    vec3 cloud_bot_n  = vec3(0.05, 0.06, 0.10);
+
+    vec3 cloud_top = mix(mix(cloud_night, cloud_sunset, is_sunset), cloud_day, is_day);
+    vec3 cloud_bot = mix(cloud_bot_n, cloud_bot_d, is_day);
+
+    vec3 cloud_col = mix(cloud_bot, cloud_top, clamp(dir.y * 3.0, 0.0, 1.0));
+    sky_col = mix(sky_col, cloud_col,      clouds);
+    sky_col = mix(sky_col, cloud_bot * 0.6, shads * (1.0 - clouds));
+
+    // ── Posterize (leicht, für stilisierten Look) ─────────────────
+    float ps = 18.0; // mehr Stufen als Pixel-Shader → weicher
+    float r = floor(sky_col.r * ps) / ps;
+    float g = floor(sky_col.g * ps) / ps;
+    float b = floor(sky_col.b * ps) / ps;
+
+    COLOR = vec3(r, g, b);
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_qwiaf"]
+shader = SubResource("Shader_4cgah")
+shader_parameter/time_of_day = 0.31
+shader_parameter/day_zenith = Color(0.18, 0.48, 0.9, 1)
+shader_parameter/day_horizon = Color(0.72, 0.9, 1, 1)
+shader_parameter/sunset_zenith = Color(0.25, 0.12, 0.28, 1)
+shader_parameter/sunset_horizon = Color(1, 0.45, 0.1, 1)
+shader_parameter/sunset_glow = Color(1, 0.7, 0.2, 1)
+shader_parameter/night_zenith = Color(0.01, 0.01, 0.06, 1)
+shader_parameter/night_horizon = Color(0.03, 0.04, 0.12, 1)
+shader_parameter/sun_size = 0.025
+shader_parameter/sun_glow_power = 4.5
+shader_parameter/moon_size = 0.011
+shader_parameter/cloud_speed = 0.112
+shader_parameter/cloud_scale = 1.915
+shader_parameter/cloud_density = 0.455
+
+[sub_resource type="Sky" id="Sky_44cek"]
+sky_material = SubResource("ShaderMaterial_qwiaf")
+
+[sub_resource type="Environment" id="Environment_4cgah"]
+background_mode = 2
+background_energy_multiplier = 0.89
+sky = SubResource("Sky_44cek")
+glow_enabled = true
+glow_intensity = 1.06
+glow_strength = 0.61
+glow_hdr_scale = 1.17
+glow_hdr_luminance_cap = 4.75
+glow_map_strength = 0.0
+fog_light_color = Color(0.562858, 0.545887, 0.541806, 1)
+fog_light_energy = 0.0
+fog_sun_scatter = 0.08
+fog_density = 0.6887
+fog_aerial_perspective = 0.085
+fog_height = -1024.0
+fog_height_density = 16.0
+volumetric_fog_enabled = true
+volumetric_fog_density = 0.0248
+volumetric_fog_length = 42.44
+volumetric_fog_ambient_inject = 0.2
+
+[sub_resource type="Animation" id="Animation_lam2r"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:light_color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(0.99552, 0.467887, 0.0444731, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:light_angular_distance")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [13.64]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("../MeshInstance3D2:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(2.48185, 2.72752, 228.721)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath(".:rotation")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(-0.371406, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_vt84v"]
+resource_name = "circle"
+length = 60.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:light_color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 21.1, 30, 39.1, 60),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [Color(0.340913, 0.811787, 0.932253, 1), Color(0.449403, 0.214344, 0.132041, 1), Color(0.010603, 0.164782, 0.197878, 1), Color(0.449403, 0.214344, 0.132041, 1), Color(0, 0.723271, 0.805163, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:light_angular_distance")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 30, 60),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [13.64, 0.0, 13.64]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("../MeshInstance3D2:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 30, 60),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(-23.483, 2.728, 228.721), Vector3(-23.483, -20.603, 228.721), Vector3(2.48185, 2.72752, 228.721)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath(".:rotation")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 29.9607, 60),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(-0.371406, 0, 0), Vector3(-1.94081, 0, 0), Vector3(-0.371406, 0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_amia2"]
+_data = {
+&"RESET": SubResource("Animation_lam2r"),
+&"circle": SubResource("Animation_vt84v")
+}
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kp0ql"]
+emission_enabled = true
+emission = Color(1, 1, 1, 1)
+emission_energy_multiplier = 16.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_te6ua"]
+material = SubResource("StandardMaterial3D_kp0ql")
+
+[sub_resource type="BoxMesh" id="BoxMesh_44cek"]
+size = Vector3(28.525, 8.575, 0.175)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qwiaf"]
+albedo_color = Color(0, 0, 0, 1)
+
+[node name="FishBude" type="Node3D" node_paths=PackedStringArray("sushi_minigame", "fryer_minigame", "drinks_minigame")]
+script = ExtResource("1")
+queue_spacing = -0.795
+sushi_minigame = NodePath("UI2/SushiMinigame")
+fryer_minigame = NodePath("UI2/FryerMinigame")
+drinks_minigame = NodePath("UI2/DrinksMinigame")
+
+[node name="Filter" type="CanvasLayer" parent="."]
+layer = 0
+
+[node name="PixelateOverlay" type="ColorRect" parent="Filter"]
+material = SubResource("ShaderMaterial_4hlsc")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 28.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PixelateOverlay2" type="ColorRect" parent="Filter"]
+material = SubResource("ShaderMaterial_4hlsc")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 28.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CRT" type="ColorRect" parent="Filter"]
+z_index = 4096
+material = SubResource("ShaderMaterial_44cek")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 28.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Floor" type="MeshInstance3D" parent="."]
+transform = Transform3D(5.39, 0, 0, 0, 5.39, 0, 0, 0, 5.39, 0, -0.267353, 0)
+mesh = SubResource("BoxMesh_floor")
+
+[node name="CustomerSpawnPoint" type="Node3D" parent="."]
+transform = Transform3D(-0.958278, 0, -0.285839, 0, 1, 0, 0.285839, 0, -0.958278, 0, -0.349403, 1.67473)
+
+[node name="CustomerEntry" type="Node3D" parent="."]
+transform = Transform3D(-0.958278, 0, -0.285839, 0, 1, 0, 0.285839, 0, -0.958278, 4.00527, -0.349403, 1.67473)
+
+[node name="CustomerExit" type="Node3D" parent="."]
+transform = Transform3D(-0.958278, 0, -0.285839, 0, 1, 0, 0.285839, 0, -0.958278, -5.09966, -0.349403, 0.577135)
+
+[node name="StationFryer" type="StaticBody3D" parent="."]
+transform = Transform3D(-2.18557e-08, 0, -0.5, 0, 0.5, 0, 0.5, 0, -2.18557e-08, 1.37979, 0.557862, 0)
+script = ExtResource("3")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StationFryer"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+visible = false
+mesh = SubResource("BoxMesh_36inu")
+
+[node name="OutlineMesh" type="MeshInstance3D" parent="StationFryer"]
+transform = Transform3D(1.05, 0, 0, 0, 1.05, 0, 0, 0, 1.05, 0.0606674, 0.776311, -0.20139)
+visible = false
+mesh = SubResource("BoxMesh_4cgah")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StationFryer"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.107843, 0.728228, -0.0661149)
+shape = SubResource("BoxShape3D_85lqq")
+
+[node name="TimerLabel3D" type="Label3D" parent="StationFryer"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.88291, 0)
+pixel_size = 0.01
+billboard = 1
+alpha_cut = 2
+text = "0.0s"
+font_size = 48
+
+[node name="InteractionPrompt" type="Label3D" parent="StationFryer"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.105572, 2.25535, 0.10065)
+billboard = 1
+alpha_cut = 1
+text = "FRYER"
+
+[node name="Fryer" parent="StationFryer" instance=ExtResource("4_4cgah")]
+transform = Transform3D(1.365, 0, 0, 0, 1.365, 0, 0, 0, 1.365, -0.0827243, 0, 0)
+
+[node name="StationSecurity" type="StaticBody3D" parent="."]
+transform = Transform3D(-2.18557e-08, 0, -0.5, 0, 0.5, 0, 0.5, 0, -2.18557e-08, -1.0128, 1.56798, 1.00104)
+script = ExtResource("4_ewdra")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StationSecurity"]
+transform = Transform3D(0.095, 0, 0, 0, 0.785, 0, 0, 0, 0.405, 0, 0.5, 0)
+mesh = SubResource("BoxMesh_36inu")
+
+[node name="OutlineMesh" type="MeshInstance3D" parent="StationSecurity"]
+transform = Transform3D(0.1, 0, 0, 0, 0.826, 0, 0, 0, 0.426, 0, 0.5, 0)
+visible = false
+mesh = SubResource("BoxMesh_qwiaf")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StationSecurity"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.145527, 0.475884, -0.00628662)
+shape = SubResource("BoxShape3D_a3cxi")
+
+[node name="StationSushi" type="StaticBody3D" parent="."]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0.182382, 1.05962, -0.840849)
+script = ExtResource("4")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StationSushi"]
+transform = Transform3D(1, 0, 0, 0, 0.999908, -0.0135782, 0, 0.0135782, 0.999908, 0.264938, 0.705397, 0.0285161)
+shape = SubResource("BoxShape3D_te6ua")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StationSushi"]
+transform = Transform3D(1.73931, 0, 0.0205229, 0, 0.89, 0, -0.0489176, 0, 0.729711, 0, 0.283065, 0)
+mesh = SubResource("BoxMesh_bl06e")
+
+[node name="OutlineMesh" type="MeshInstance3D" parent="StationSushi"]
+transform = Transform3D(1.7743, 0, 0.0209446, 0, 0.908, 0, -0.0499015, 0, 0.744706, 0, 0.283065, 0)
+visible = false
+mesh = SubResource("BoxMesh_wpubn")
+
+[node name="TimerLabel3D" type="Label3D" parent="StationSushi"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+pixel_size = 0.01
+billboard = 1
+alpha_cut = 2
+text = "0.0s"
+font_size = 48
+
+[node name="InteractionPrompt" type="Label3D" parent="StationSushi"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.34449, 0)
+billboard = 1
+alpha_cut = 2
+text = "SUSHI"
+
+[node name="StationDrinks" type="StaticBody3D" parent="."]
+transform = Transform3D(-3.2565e-08, 0, 1, 0, 1.37, 0, -0.745, 0, -4.37114e-08, -2.20982, 1.23941, -0.0969869)
+script = ExtResource("5")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StationDrinks"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0565211, 0)
+mesh = SubResource("BoxMesh_jcqa2")
+
+[node name="OutlineMesh" type="MeshInstance3D" parent="StationDrinks"]
+transform = Transform3D(1.05, 0, 0, 0, 1.05, 0, 0, 0, 1.05, 0, 0.0565211, 0)
+visible = false
+mesh = SubResource("BoxMesh_te6ua")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StationDrinks"]
+transform = Transform3D(1, 0, -1.06581e-12, 0, 0.999931, 0, 0, 0, 1, 0.00215542, 0.0657921, 0.0597491)
+shape = SubResource("BoxShape3D_ysmne")
+
+[node name="InteractionPrompt" type="Label3D" parent="StationDrinks"]
+transform = Transform3D(0.785, 0, -7.10543e-15, 0, 0.59, 0, 0, 0, 0.59, -4.47035e-08, 0.646483, 0.628482)
+billboard = 1
+alpha_cut = 1
+text = "DRINKS"
+
+[node name="Tray" type="Node" parent="."]
+script = ExtResource("2")
+
+[node name="UI" type="Control" parent="."]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="MoneyLabel" type="Label" parent="UI"]
+layout_mode = 0
+offset_left = 30.0
+offset_top = 30.0
+offset_right = 250.0
+offset_bottom = 80.0
+theme_override_colors/font_color = Color(1, 0.9, 0.3, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 32
+text = "Geld: $0"
+
+[node name="OrderPanel" type="PanelContainer" parent="UI"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -250.0
+offset_top = 30.0
+offset_right = 250.0
+offset_bottom = 230.0
+grow_horizontal = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/OrderPanel"]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="UI/OrderPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.8, 0.2, 1)
+theme_override_font_sizes/font_size = 28
+text = "BESTELLUNG"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="UI/OrderPanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="FishLabel" type="Label" parent="UI/OrderPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Fisch: -"
+
+[node name="PrepLabel" type="Label" parent="UI/OrderPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Art: -"
+
+[node name="DrinkLabel" type="Label" parent="UI/OrderPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Getränk: -"
+
+[node name="HSeparator2" type="HSeparator" parent="UI/OrderPanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="PatienceLabel" type="Label" parent="UI/OrderPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
+theme_override_font_sizes/font_size = 18
+text = "Geduld: 100%"
+horizontal_alignment = 1
+
+[node name="TrayPanel" type="PanelContainer" parent="UI"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -250.0
+offset_top = -180.0
+offset_right = 250.0
+offset_bottom = -137.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/TrayPanel"]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="UI/TrayPanel/VBoxContainer"]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.9, 1, 1)
+theme_override_font_sizes/font_size = 24
+text = "TABLETT"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="UI/TrayPanel/VBoxContainer"]
+visible = false
+layout_mode = 2
+
+[node name="TrayContent" type="Label" parent="UI/TrayPanel/VBoxContainer"]
+visible = false
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Leer (0/4)"
+horizontal_alignment = 1
+
+[node name="ServeButton" type="Button" parent="UI/TrayPanel/VBoxContainer"]
+visible = false
+layout_mode = 2
+theme_override_colors/font_hover_color = Color(1, 0.9, 0.3, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 24
+text = "SERVIEREN"
+
+[node name="HelpLabel" type="Label" parent="UI"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 30.0
+offset_top = -150.0
+offset_right = 450.0
+offset_bottom = -30.0
+grow_vertical = 0
+theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/font_size = 18
+text = "Linksklick - Station nutzen
+Space - Tablett leeren
+ESC - Zurück zum Spiel"
+
+[node name="DebugLabel" type="Label" parent="UI"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -350.0
+offset_top = 30.0
+offset_right = -30.0
+offset_bottom = 150.0
+grow_horizontal = 0
+theme_override_colors/font_color = Color(0.5, 0.5, 0.5, 1)
+theme_override_font_sizes/font_size = 16
+text = "DEBUG:
+Inventar: 0 Fische
+Kunde: Nein"
+
+[node name="PlayerCamera" type="Camera3D" parent="."]
+transform = Transform3D(-1, 0, -1.50996e-07, 0, 1, 0, 1.50996e-07, 0, -1, 0, 1.78351, 0.0447942)
+script = ExtResource("6_3wc6y")
+
+[node name="cigaratte" parent="PlayerCamera" instance=ExtResource("7_gpyn8")]
+transform = Transform3D(0.789812, 0.0794083, 0.274757, -0.0560458, 0.8343, -0.0800153, -0.280456, 0.0569025, 0.789751, -0.156605, -0.13869, -0.260703)
+
+[node name="FishingRod" parent="PlayerCamera" node_paths=PackedStringArray("camera", "fishbook_ui", "options", "journal_button", "inventory_button", "map_button", "left_button", "right_button", "interact_button", "settings_button", "inventory_ui") instance=ExtResource("8_wpubn")]
+transform = Transform3D(0.925417, -0.163176, -0.34202, 0.173648, 0.984808, 0, 0.336824, -0.0593912, 0.939693, 0.4, -0.40033, -1.03766)
+visible = false
+script = SubResource("GDScript_vx235")
+rotation_speed = 300.0
+camera = NodePath("..")
+fishbook_ui = NodePath("../../UI2/FishBook")
+options = NodePath("../../UI2/OptionsControl")
+journal_button = NodePath("../../UI2/Touch/TopLeftPanel/MarginContainer/VBoxContainer/JournalButton")
+inventory_button = NodePath("../../UI2/Touch/TopLeftPanel/MarginContainer/VBoxContainer/InventoryButton")
+map_button = NodePath("../../UI2/Touch/TopLeftPanel/MarginContainer/VBoxContainer/MapButton")
+left_button = NodePath("../../UI2/Touch/BottomCenterPanel/HBoxContainer/LeftButton")
+right_button = NodePath("../../UI2/Touch/BottomCenterPanel/HBoxContainer/RightButton")
+interact_button = NodePath("../../UI2/Touch/InteractButton")
+settings_button = NodePath("../../UI2/Touch/TopLeftPanel/MarginContainer/VBoxContainer/SettingsButton")
+inventory_ui = NodePath("../../UI2/InventoryUI")
+
+[node name="left_hand" parent="PlayerCamera/FishingRod/RodMesh" index="5"]
+transform = Transform3D(-0.211648, -0.0377439, 0.254183, -0.17704, 0.278759, -0.0940854, -0.207091, -0.199734, -0.179344, -0.113471, -0.850528, 0.246808)
+
+[node name="UI2" type="CanvasLayer" parent="."]
+
+[node name="BiteIndicator" type="TextureRect" parent="UI2"]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -185.0
+offset_top = -185.0
+offset_right = 185.0
+offset_bottom = 185.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("9_jcqa2")
+
+[node name="OrderPanel" type="PanelContainer" parent="UI2"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -250.0
+offset_top = 73.0
+offset_right = 250.0
+offset_bottom = 199.0
+grow_horizontal = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI2/OrderPanel"]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="UI2/OrderPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.8, 0.2, 1)
+theme_override_fonts/font = ExtResource("10_36inu")
+theme_override_font_sizes/font_size = 28
+text = "BESTELLUNG"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="UI2/OrderPanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="Fish" type="MarginContainer" parent="UI2/OrderPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 15
+
+[node name="FishLabel" type="Label" parent="UI2/OrderPanel/VBoxContainer/Fish"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("10_36inu")
+theme_override_font_sizes/font_size = 22
+text = "Fisch: -"
+
+[node name="Prep" type="MarginContainer" parent="UI2/OrderPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 15
+
+[node name="PrepLabel" type="Label" parent="UI2/OrderPanel/VBoxContainer/Prep"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("10_36inu")
+theme_override_font_sizes/font_size = 22
+text = "Art: -"
+
+[node name="Drink" type="MarginContainer" parent="UI2/OrderPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 15
+
+[node name="DrinkLabel" type="Label" parent="UI2/OrderPanel/VBoxContainer/Drink"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("10_36inu")
+theme_override_font_sizes/font_size = 22
+text = "Getränk: -"
+
+[node name="TrayPanel" type="PanelContainer" parent="UI2"]
+visible = false
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -250.0
+offset_top = -63.695
+offset_right = 250.0
+offset_bottom = -20.695
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI2/TrayPanel"]
+visible = false
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="UI2/TrayPanel/VBoxContainer"]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.9, 1, 1)
+theme_override_font_sizes/font_size = 24
+text = "TABLETT"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="UI2/TrayPanel/VBoxContainer"]
+visible = false
+layout_mode = 2
+
+[node name="TrayContent" type="Label" parent="UI2/TrayPanel/VBoxContainer"]
+visible = false
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Leer (0/4)"
+horizontal_alignment = 1
+
+[node name="ServeButton" type="Button" parent="UI2/TrayPanel/VBoxContainer"]
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_hover_color = Color(1, 0.9, 0.3, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("10_36inu")
+theme_override_font_sizes/font_size = 24
+text = "SERVIEREN"
+
+[node name="FishSelectionUI" parent="UI2" instance=ExtResource("19_36inu")]
+visible = false
+
+[node name="MoneyPopup" parent="UI2" instance=ExtResource("20_ewdra")]
+visible = false
+
+[node name="InventoryUI" parent="UI2" instance=ExtResource("12_4hlsc")]
+visible = false
+theme = SubResource("Theme_u47el")
+
+[node name="MoneyHUD" parent="UI2" instance=ExtResource("13_bl06e")]
+offset_right = 60.0
+offset_bottom = 43.0
+theme = SubResource("Theme_kylbc")
+
+[node name="FishBook" parent="UI2" instance=ExtResource("14_85lqq")]
+visible = false
+
+[node name="OptionsControl" parent="UI2" instance=ExtResource("16_te6ua")]
+visible = false
+
+[node name="Touch" parent="UI2" instance=ExtResource("18_yh6ru")]
+
+[node name="Clock" parent="UI2" node_paths=PackedStringArray("animation_player") instance=ExtResource("20_snqa0")]
+animation_player = NodePath("../../DirectionalLight3D2/AnimationPlayer")
+animation_name = "circle"
+day_time_offset_seconds = 30.0
+
+[node name="FryerMinigame" parent="UI2" instance=ExtResource("23_dv6yl")]
+visible = false
+script = null
+
+[node name="SushiMinigame" parent="UI2" instance=ExtResource("24_tttq7")]
+visible = false
+script = null
+
+[node name="DrinksMinigame" parent="UI2" instance=ExtResource("25_evyhm")]
+visible = false
+layout_mode = 3
+script = null
+
+[node name="Foodtruck" parent="." instance=ExtResource("21_jcqa2")]
+transform = Transform3D(-0.0383005, 0, 0.999266, 0, 1, 0, -0.999266, 0, -0.0383005, 0.727879, 0, 0.000216007)
+
+[node name="SecurityCamera" type="Camera3D" parent="."]
+transform = Transform3D(0.193807, 0.471557, -0.860275, 0.0743065, 0.867326, 0.492162, 0.978222, -0.159308, 0.133054, -2.1056, 2.6721, 1.96067)
+fov = 83.9
+
+[node name="SecurityUI" type="CanvasLayer" parent="."]
+layer = 10
+visible = false
+script = ExtResource("24_4hlsc")
+
+[node name="PixelateOverlay" type="ColorRect" parent="SecurityUI"]
+material = SubResource("ShaderMaterial_bl06e")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 28.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="BackButton" type="Button" parent="SecurityUI"]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -25.0
+offset_top = -62.0
+offset_right = 25.0
+offset_bottom = -31.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "BACK"
+
+[node name="RECLabel" type="Label" parent="SecurityUI"]
+offset_left = 48.0
+offset_right = 94.56
+offset_bottom = 25.04
+scale = Vector2(4.065, 4.065)
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "● REC"
+script = ExtResource("26_85lqq")
+
+[node name="Customers" type="Node3D" parent="."]
+
+[node name="WorldEnvironment2" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_4cgah")
+
+[node name="DirectionalLight3D2" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.931818, 0.362926, 0, -0.362926, 0.931818, -1.07784, 37.4465, 0.29068)
+light_color = Color(0.99552, 0.467887, 0.0444731, 1)
+light_energy = 2.552
+light_volumetric_fog_energy = 0.485
+light_angular_distance = 13.64
+light_specular = 0.676
+shadow_enabled = true
+shadow_blur = 10.0
+directional_shadow_split_1 = 0.079
+directional_shadow_split_2 = 0.352
+directional_shadow_split_3 = 0.268
+directional_shadow_fade_start = 0.507
+directional_shadow_max_distance = 83.4
+sky_mode = 1
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="DirectionalLight3D2"]
+libraries = {
+&"": SubResource("AnimationLibrary_amia2")
+}
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(26.165, 0, 0, 0, 26.165, 0, 0, 0, 26.165, 2.48185, 2.72752, 228.721)
+mesh = SubResource("SphereMesh_te6ua")
+
+[node name="environemt" type="Node" parent="."]
+
+[node name="skyscaper" parent="environemt" instance=ExtResource("27_qwiaf")]
+transform = Transform3D(0.42, 0, 0, 0, 0.42, 0, 0, 0, 0.42, 13.9799, -7.52018, 14.5887)
+
+[node name="skyscaper11" parent="environemt" instance=ExtResource("27_qwiaf")]
+transform = Transform3D(0.0724768, 0, 0.0444086, 0, 0.085, 0, -0.0444086, 0, 0.0724768, 14.6757, -0.769065, -2.12555)
+
+[node name="skyscaper2" parent="environemt" instance=ExtResource("27_qwiaf")]
+transform = Transform3D(0.42, 0, 0, 0, 0.42, 0, 0, 0, 0.42, 0.422775, -7.52018, 14.5887)
+
+[node name="skyscaper3" parent="environemt" instance=ExtResource("27_qwiaf")]
+transform = Transform3D(0.42, 0, 0, 0, 0.42, 0, 0, 0, 0.42, -7.3907, -7.52018, 14.5887)
+
+[node name="skyscaper4" parent="environemt" instance=ExtResource("27_qwiaf")]
+transform = Transform3D(0.42, 0, 0, 0, 0.42, 0, 0, 0, 0.42, -14.6163, -7.52018, 14.5887)
+
+[node name="skyscaper5" parent="environemt" instance=ExtResource("27_qwiaf")]
+transform = Transform3D(0.42, 0, 0, 0, 0.42, 0, 0, 0, 0.42, 6.69477, -7.52018, 14.5887)
+
+[node name="skyscaper6" parent="environemt" instance=ExtResource("27_qwiaf")]
+transform = Transform3D(0.42, 0, 0, 0, 0.42, 0, 0, 0, 0.42, 12.5052, -2.46686, 20.4247)
+
+[node name="skyscaper7" parent="environemt" instance=ExtResource("27_qwiaf")]
+transform = Transform3D(0.42, 0, 0, 0, 0.42, 0, 0, 0, 0.42, -1.05194, -2.46686, 20.4247)
+
+[node name="skyscaper8" parent="environemt" instance=ExtResource("27_qwiaf")]
+transform = Transform3D(0.42, 0, 0, 0, 0.42, 0, 0, 0, 0.42, -8.86542, -2.46686, 20.4247)
+
+[node name="skyscaper9" parent="environemt" instance=ExtResource("27_qwiaf")]
+transform = Transform3D(0.42, 0, 0, 0, 0.42, 0, 0, 0, 0.42, -16.0911, -2.46686, 20.4247)
+
+[node name="skyscaper10" parent="environemt" instance=ExtResource("27_qwiaf")]
+transform = Transform3D(0.42, 0, 0, 0, 0.42, 0, 0, 0, 0.42, 5.22005, -2.46686, 20.4247)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="environemt"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.203063, 2.75712, 22.7485)
+mesh = SubResource("BoxMesh_44cek")
+surface_material_override/0 = SubResource("StandardMaterial3D_qwiaf")
+
+[node name="Audio" type="Node" parent="."]
+
+[node name="bite" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("27_4cgah")
+volume_db = -2.811
+bus = &"SFX"
+
+[node name="cast" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("28_qwiaf")
+bus = &"SFX"
+
+[node name="normal" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("29_44cek")
+bus = &"SFX"
+
+[node name="uncommon" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("30_uyjbj")
+bus = &"SFX"
+
+[node name="rare" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("31_dv6yl")
+bus = &"SFX"
+
+[node name="epic" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("32_tttq7")
+bus = &"SFX"
+
+[node name="legendary" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("33_evyhm")
+pitch_scale = 0.93
+bus = &"SFX"
+
+[node name="exotic" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("34_vu6nq")
+pitch_scale = 0.8
+bus = &"SFX"
+
+[node name="antique" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("35_a7fsk")
+volume_db = -6.82
+pitch_scale = 0.67
+bus = &"SFX"
+
+[node name="whoosh" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("36_kh0h8")
+bus = &"SFX"
+
+[node name="music" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("37_5bpro")
+volume_db = -0.178
+pitch_scale = 1.49
+autoplay = true
+bus = &"Music"
+
+[node name="line" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("38_5r7ds")
+volume_db = -2.735
+pitch_scale = 1.1
+autoplay = true
+bus = &"SFX"
+
+[node name="CustomerDialogLayer" type="CanvasLayer" parent="."]
+layer = 0
+
+[editable path="StationFryer/Fryer"]
+[editable path="StationFryer/Fryer/Sketchfab_Scene"]
+[editable path="PlayerCamera/FishingRod"]
+[editable path="PlayerCamera/FishingRod/RodMesh/right_hand"]
+[editable path="PlayerCamera/FishingRod/RodMesh/left_hand"]
+[editable path="UI2/Touch"]

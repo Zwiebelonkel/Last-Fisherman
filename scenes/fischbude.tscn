@@ -1,15 +1,15 @@
-[gd_scene load_steps=74 format=3 uid="uid://bqhxfk3g8vxn7"]
+[gd_scene load_steps=77 format=3 uid="uid://bqhxfk3g8vxn7"]
 
-[ext_resource type="Script" path="res://scripts/Fishbudecontroller.gd" id="1"]
+[ext_resource type="Script" uid="uid://cqgu3f2n1rg1p" path="res://scripts/Fishbudecontroller.gd" id="1"]
 [ext_resource type="Script" path="res://scripts/tray.gd" id="2"]
 [ext_resource type="Shader" uid="uid://c140kjbm2bot5" path="res://shader/buckshot.gdshader" id="2_wpubn"]
-[ext_resource type="Script" path="res://scripts/fryer.gd" id="3"]
+[ext_resource type="Script" uid="uid://d3sami34i2b7c" path="res://scripts/fryer.gd" id="3"]
 [ext_resource type="Shader" uid="uid://dmg556n5nwodi" path="res://shader/pixelate.gdshader" id="3_4hlsc"]
 [ext_resource type="Shader" uid="uid://imf547kyj0bj" path="res://shader/CRT.gdshader" id="3_qwiaf"]
-[ext_resource type="Script" path="res://scripts/sushi.gd" id="4"]
+[ext_resource type="Script" uid="uid://nif1hbs6jred" path="res://scripts/sushi.gd" id="4"]
 [ext_resource type="PackedScene" uid="uid://cfnh7vm4vbwi8" path="res://scenes/fryer.tscn" id="4_4cgah"]
 [ext_resource type="Script" path="res://scripts/StationSecurity.gd" id="4_ewdra"]
-[ext_resource type="Script" path="res://scripts/drinks.gd" id="5"]
+[ext_resource type="Script" uid="uid://qoarxse5jwpj" path="res://scripts/drinks.gd" id="5"]
 [ext_resource type="Script" uid="uid://bl1xotduehieu" path="res://scripts/camera_sway.gd" id="6_3wc6y"]
 [ext_resource type="PackedScene" uid="uid://bw80sbvfcwe1p" path="res://scenes/cigarette.tscn" id="7_gpyn8"]
 [ext_resource type="PackedScene" uid="uid://b5ew1rfc8ow8g" path="res://scenes/fishingRod.tscn" id="8_wpubn"]
@@ -24,7 +24,10 @@
 [ext_resource type="PackedScene" uid="uid://fhdcihlq4hwo" path="res://scenes/MoneyPopup.tscn" id="20_ewdra"]
 [ext_resource type="PackedScene" uid="uid://ws4ms8iq4gg4" path="res://scenes/clock.tscn" id="20_snqa0"]
 [ext_resource type="PackedScene" uid="uid://cgx4m5clsd3v7" path="res://scenes/foodtruck.tscn" id="21_jcqa2"]
+[ext_resource type="PackedScene" uid="uid://det3pf80ieoex" path="res://scenes/FryerMinigame.tscn" id="23_dv6yl"]
 [ext_resource type="Script" path="res://scenes/security_ui.gd" id="24_4hlsc"]
+[ext_resource type="PackedScene" uid="uid://cl68acg0ewhma" path="res://scenes/SushiMinigame.tscn" id="24_tttq7"]
+[ext_resource type="PackedScene" uid="uid://bofvejvxqxchw" path="res://scenes/DrinksMinigame.tscn" id="25_evyhm"]
 [ext_resource type="Script" path="res://scenes/rec.gd" id="26_85lqq"]
 [ext_resource type="AudioStream" uid="uid://esyv0p374c5j" path="res://sounds/bite.mp3" id="27_4cgah"]
 [ext_resource type="PackedScene" uid="uid://ckje0fw3pep83" path="res://assets/skyscaper.glb" id="27_qwiaf"]
@@ -782,9 +785,12 @@ size = Vector3(28.525, 8.575, 0.175)
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qwiaf"]
 albedo_color = Color(0, 0, 0, 1)
 
-[node name="FishBude" type="Node3D"]
+[node name="FishBude" type="Node3D" node_paths=PackedStringArray("sushi_minigame", "fryer_minigame", "drinks_minigame")]
 script = ExtResource("1")
 queue_spacing = -0.795
+sushi_minigame = NodePath("UI2/SushiMinigame")
+fryer_minigame = NodePath("UI2/FryerMinigame")
+drinks_minigame = NodePath("UI2/DrinksMinigame")
 
 [node name="Filter" type="CanvasLayer" parent="."]
 layer = 0
@@ -1266,6 +1272,15 @@ visible = false
 animation_player = NodePath("../../DirectionalLight3D2/AnimationPlayer")
 animation_name = "circle"
 day_time_offset_seconds = 30.0
+
+[node name="FryerMinigame" parent="UI2" instance=ExtResource("23_dv6yl")]
+visible = false
+
+[node name="SushiMinigame" parent="UI2" instance=ExtResource("24_tttq7")]
+visible = false
+
+[node name="DrinksMinigame" parent="UI2" instance=ExtResource("25_evyhm")]
+visible = false
 
 [node name="Foodtruck" parent="." instance=ExtResource("21_jcqa2")]
 transform = Transform3D(-0.0383005, 0, 0.999266, 0, 1, 0, -0.999266, 0, -0.0383005, 0.727879, 0, 0.000216007)

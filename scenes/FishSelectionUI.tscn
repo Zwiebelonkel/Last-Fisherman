@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://dqoq3miv3jfjd"]
 
-[ext_resource type="Script" uid="uid://dwj87rlggvls5" path="res://scripts/FishSelectionUI.gd" id="1_6ablg"]
+[ext_resource type="Script" path="res://scripts/FishSelectionUI.gd" id="1_6ablg"]
 [ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="2_7uxpq"]
 
 [node name="FishSelectionUI" type="Control"]

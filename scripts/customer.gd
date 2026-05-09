@@ -13,7 +13,7 @@ var dialog_scene: PackedScene = preload("res://scenes/customer_dialog.tscn")
 
 var order: Order = null
 var patience: float = 100.0
-var patience_drain_rate: float = 5.0
+var patience_drain_rate: float = 4.0
 var is_active: bool = false
 var move_speed: float = 2.0
 

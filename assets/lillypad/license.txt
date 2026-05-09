@@ -1,0 +1,11 @@
+Model Information:
+* title:	Low Poly Lily Pad
+* source:	https://sketchfab.com/3d-models/low-poly-lily-pad-85432122196d41a38f21288fac1f761e
+* author:	Logan S. (https://sketchfab.com/Logan_S)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Low Poly Lily Pad" (https://sketchfab.com/3d-models/low-poly-lily-pad-85432122196d41a38f21288fac1f761e) by Logan S. (https://sketchfab.com/Logan_S) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

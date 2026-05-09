@@ -11,19 +11,22 @@ signal item_collected()
 @onready var timer_label: Label3D = $TimerLabel3D
 @onready var interaction_prompt: Label3D = $InteractionPrompt
 
-var cooking_time := 3.0
+var cooking_time := 5.0          # Basiszeit ohne Bonus
 var current_cooking_time := 0.0
 var current_fish_type := ""
 
-enum State { IDLE, WAITING_FOR_FISH, COOKING, READY }
+enum State { IDLE, WAITING_FOR_FISH, MINIGAME, COOKING, READY }
 var current_state := State.IDLE
 
 var tray: Tray
 var controller: Node
 var fish_selection_ui: Control
+var minigame: Node      # Referenz auf das Minigame-Node
 
 var original_material: StandardMaterial3D
 var cooking_material: StandardMaterial3D
+
+var _cooking_time_override: float = -1.0  # Gesetzt nach Minigame
 
 # ===============================
 #  READY / PROCESS
@@ -38,11 +41,12 @@ func _process(delta: float) -> void:
 	if current_state == State.COOKING:
 		current_cooking_time += delta
 
+		var effective_time = _cooking_time_override if _cooking_time_override > 0 else cooking_time
 		if timer_label:
-			var remaining := cooking_time - current_cooking_time
+			var remaining : float = effective_time - current_cooking_time
 			timer_label.text = "%.1fs" % max(0.0, remaining)
 
-		if current_cooking_time >= cooking_time:
+		if current_cooking_time >= effective_time:
 			finish_cooking()
 
 # ===============================
@@ -80,7 +84,13 @@ func set_fish_selection_ui(ui: Control) -> void:
 	if fish_selection_ui:
 		fish_selection_ui.fish_selected.connect(_on_fish_selected)
 		fish_selection_ui.cancelled.connect(_on_selection_cancelled)
-		
+
+func set_minigame(mg: Node) -> void:
+	minigame = mg
+	if minigame and minigame.has_signal("minigame_finished"):
+		minigame.minigame_finished.connect(_on_minigame_finished)
+		minigame.minigame_cancelled.connect(_on_minigame_cancelled)
+
 func _on_selection_cancelled() -> void:
 	if current_state == State.WAITING_FOR_FISH:
 		current_state = State.IDLE
@@ -94,7 +104,6 @@ func set_hover(hovering: bool) -> void:
 #  INTERACTION
 # ===============================
 func interact() -> void:
-	print("interact")
 	match current_state:
 		State.IDLE:
 			open_fish_selection()
@@ -119,7 +128,7 @@ func open_fish_selection() -> void:
 	current_state = State.WAITING_FOR_FISH
 
 # ===============================
-#  FLOW
+#  FISH SELECTED → MINIGAME
 # ===============================
 func _on_fish_selected(fish_name: String) -> void:
 	if current_state != State.WAITING_FOR_FISH:
@@ -132,23 +141,41 @@ func _on_fish_selected(fish_name: String) -> void:
 
 	var order = controller.current_customer.order
 
-	# ✅ FIXED: Prüfe gegen "Sushi" statt tr("PREP_TYPE_SUSHI")
 	if order.preparation_type != "Sushi":
 		print(tr("SUSHI_CUSTOMER_NO_WANT"))
 		current_state = State.IDLE
 		update_prompt()
 		return
 
-	# Inventory check remains
 	if not controller.has_fish_in_inventory(fish_name):
 		print(tr("SUSHI_FISH_NOT_IN_INVENTORY"))
 		current_state = State.IDLE
 		update_prompt()
 		return
 
-	# ALWAYS cook - even wrong fish
-	start_cooking(fish_name)
+	current_fish_type = fish_name
 
+	# Minigame starten falls vorhanden
+	if minigame:
+		current_state = State.MINIGAME
+		update_prompt()
+		minigame.call("set_fish", fish_name)
+		minigame.call("start")
+	else:
+		start_cooking(fish_name)
+
+func _on_minigame_finished(time_bonus: float) -> void:
+	# Kochzeit = Basis - Bonus (mindestens 1s)
+	_cooking_time_override = max(1.0, cooking_time - time_bonus)
+	start_cooking(current_fish_type)
+
+func _on_minigame_cancelled() -> void:
+	current_state = State.IDLE
+	update_prompt()
+
+# ===============================
+#  COOKING FLOW
+# ===============================
 func start_cooking(fish_type: String) -> void:
 	current_fish_type = fish_type
 	current_cooking_time = 0.0
@@ -166,6 +193,7 @@ func start_cooking(fish_type: String) -> void:
 
 func finish_cooking() -> void:
 	current_state = State.READY
+	_cooking_time_override = -1.0
 
 	if mesh:
 		mesh.set_surface_override_material(0, original_material)
@@ -179,7 +207,6 @@ func collect_item() -> void:
 	if not tray:
 		return
 
-	# ✅ FIXED: Nutze "Sushi" statt tr("PREP_TYPE_SUSHI")
 	if tray.add_item(current_fish_type, "Sushi"):
 		current_state = State.IDLE
 		current_fish_type = ""
@@ -196,6 +223,9 @@ func update_prompt() -> void:
 	match current_state:
 		State.IDLE:
 			interaction_prompt.text = tr("SUSHI_PROMPT_IDLE")
+			interaction_prompt.visible = true
+		State.MINIGAME:
+			interaction_prompt.text = tr("SUSHI_PROMPT_MINIGAME")
 			interaction_prompt.visible = true
 		State.COOKING:
 			interaction_prompt.text = tr("SUSHI_PROMPT_COOKING")

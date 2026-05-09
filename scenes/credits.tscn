@@ -238,6 +238,33 @@ text = "Electrical Powerline Pole  [color=#7ab87a][url=https://skfb.ly/osQAF]by 
 fit_content = true
 scroll_active = false
 
+[node name="Link_Lillypad" type="RichTextLabel" parent="VScrollBar/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/default_color = Color(0.9, 0.9, 0.85, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+bbcode_enabled = true
+text = "Low Poly Lily Pad  [color=#7ab87a][url=https://skfb.ly/pxsQZ] by Logan S. ↗[/url][/color]"
+fit_content = true
+scroll_active = false
+
+[node name="Link_Swamphut" type="RichTextLabel" parent="VScrollBar/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/default_color = Color(0.9, 0.9, 0.85, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+bbcode_enabled = true
+text = "Creepy swamp House  [color=#7ab87a][url=https://skfb.ly/ownLR] by Dicky Hewage ↗[/url][/color]"
+fit_content = true
+scroll_active = false
+
+[node name="Link_icefloea" type="RichTextLabel" parent="VScrollBar/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/default_color = Color(0.9, 0.9, 0.85, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+bbcode_enabled = true
+text = "ice floes  [color=#7ab87a][url=https://skfb.ly/oPTtV] by James Dadema ↗[/url][/color]"
+fit_content = true
+scroll_active = false
+
 [node name="Spacer4" type="Control" parent="VScrollBar/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 16)
 layout_mode = 2

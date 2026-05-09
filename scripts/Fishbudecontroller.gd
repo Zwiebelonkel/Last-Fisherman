@@ -2,9 +2,9 @@ extends Node3D
 class_name FishBudeController
 
 # Referenzen
-@onready var station_fryer: StationFryer = $StationFryer
-@onready var station_sushi: StationSushi = $StationSushi
-@onready var station_drinks: StationDrinks = $StationDrinks
+@onready var station_fryer: Node = $StationFryer
+@onready var station_sushi: Node = $StationSushi
+@onready var station_drinks: Node = $StationDrinks
 @onready var tray: Tray = $Tray
 @onready var ui: CanvasLayer = $UI2
 @onready var customers_root: Node3D = $Customers
@@ -22,6 +22,10 @@ class_name FishBudeController
 @onready var main_camera: Camera3D = $PlayerCamera
 @onready var security_camera: Camera3D = $SecurityCamera
 @onready var security_ui: SecurityUI = $SecurityUI
+
+@export var sushi_minigame: Node
+@export var fryer_minigame: Node
+@export var drinks_minigame: Node
 
 var security_view_active := false
 var hovered_object: Node = null
@@ -138,6 +142,16 @@ func connect_stations() -> void:
 	station_drinks.set_tray(tray)
 	station_drinks.set_controller(self)
 	station_security.set_controller(self)
+	
+	if station_sushi and sushi_minigame:
+		station_sushi.set_minigame(sushi_minigame)
+ 
+	if station_fryer and fryer_minigame:
+		station_fryer.set_minigame(fryer_minigame)
+ 
+	if station_drinks and drinks_minigame:
+		station_drinks.set_minigame(drinks_minigame)
+
 
 func connect_ui_signals() -> void:
 	# Servieren-Button wird nicht mehr verbunden (deprecated)
@@ -446,6 +460,18 @@ func _input(event: InputEvent) -> void:
 		print_camera_debug()
 
 func handle_spacebar_interaction() -> void:
+	
+	if sushi_minigame and sushi_minigame.has_method("is_active") and sushi_minigame.call("is_active"):
+		sushi_minigame.call("external_click")
+		return
+	
+	if fryer_minigame and fryer_minigame.has_method("is_active") and fryer_minigame.call("is_active"):
+		fryer_minigame.call("external_confirm")
+		return
+	
+	if drinks_minigame and drinks_minigame.has_method("is_active") and drinks_minigame.call("is_active"):
+		# Drinks hat kein sinnvolles Leertaste-Input
+		return
 	# Behandelt Leertaste-Interaktionen basierend auf Kamera-Richtung
 	
 	# 1. Prüfe ob wir den Kunden anschauen (180°)

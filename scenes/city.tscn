@@ -2423,6 +2423,111 @@ light_color = Color(1, 1, 0, 1)
 light_energy = 30.135
 light_volumetric_fog_energy = 0.97
 
+[node name="skyscaper4" parent="." instance=ExtResource("18_ibljb")]
+transform = Transform3D(0.40152, 0, 0.91585, 0, 1, 0, -0.91585, 0, 0.40152, 1.78701, 0.983576, 90.0494)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="skyscaper4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.52985, 27.183, -4.93816)
+light_color = Color(1, 1, 0, 1)
+light_energy = 30.135
+light_volumetric_fog_energy = 0.97
+
+[node name="OmniLight3D2" type="OmniLight3D" parent="skyscaper4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.89862, 32.7751, 5.35517)
+light_color = Color(1, 1, 0, 1)
+light_energy = 30.135
+light_volumetric_fog_energy = 0.97
+
+[node name="skyscaper5" parent="." instance=ExtResource("18_ibljb")]
+transform = Transform3D(0.40152, 0, 0.91585, 0, 1, 0, -0.91585, 0, 0.40152, 1.78701, 0.983576, 112.261)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="skyscaper5"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.52985, 27.183, -4.93816)
+light_color = Color(1, 1, 0, 1)
+light_energy = 30.135
+light_volumetric_fog_energy = 0.97
+
+[node name="OmniLight3D2" type="OmniLight3D" parent="skyscaper5"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.89862, 32.7751, 5.35517)
+light_color = Color(1, 1, 0, 1)
+light_energy = 30.135
+light_volumetric_fog_energy = 0.97
+
+[node name="skyscaper6" parent="." instance=ExtResource("18_ibljb")]
+transform = Transform3D(0.40152, 0, 0.91585, 0, 1, 0, -0.91585, 0, 0.40152, 41.4478, 12.5742, 59.7288)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="skyscaper6"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.52985, 27.183, -4.93816)
+light_color = Color(1, 1, 0, 1)
+light_energy = 30.135
+light_volumetric_fog_energy = 0.97
+
+[node name="OmniLight3D2" type="OmniLight3D" parent="skyscaper6"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.89862, 32.7751, 5.35517)
+light_color = Color(1, 1, 0, 1)
+light_energy = 30.135
+light_volumetric_fog_energy = 0.97
+
+[node name="skyscaper7" parent="." instance=ExtResource("18_ibljb")]
+transform = Transform3D(0.40152, 0, 0.91585, 0, 1, 0, -0.91585, 0, 0.40152, 27.7812, 12.5742, 79.0468)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="skyscaper7"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.52985, 27.183, -4.93816)
+light_color = Color(1, 1, 0, 1)
+light_energy = 30.135
+light_volumetric_fog_energy = 0.97
+
+[node name="OmniLight3D2" type="OmniLight3D" parent="skyscaper7"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.89862, 32.7751, 5.35517)
+light_color = Color(1, 1, 0, 1)
+light_energy = 30.135
+light_volumetric_fog_energy = 0.97
+
+[node name="skyscaper8" parent="." instance=ExtResource("18_ibljb")]
+transform = Transform3D(0.40152, 0, 0.91585, 0, 1, 0, -0.91585, 0, 0.40152, -64.5844, 12.5742, 145.244)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="skyscaper8"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.52985, 27.183, -4.93816)
+light_color = Color(1, 1, 0, 1)
+light_energy = 30.135
+light_volumetric_fog_energy = 0.97
+
+[node name="OmniLight3D2" type="OmniLight3D" parent="skyscaper8"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.89862, 32.7751, 5.35517)
+light_color = Color(1, 1, 0, 1)
+light_energy = 30.135
+light_volumetric_fog_energy = 0.97
+
+[node name="skyscaper9" parent="." instance=ExtResource("18_ibljb")]
+transform = Transform3D(0.40152, 0, 0.91585, 0, 1, 0, -0.91585, 0, 0.40152, -60.8742, 12.5742, 78.0837)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="skyscaper9"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.52985, 27.183, -4.93816)
+light_color = Color(1, 1, 0, 1)
+light_energy = 30.135
+light_volumetric_fog_energy = 0.97
+
+[node name="OmniLight3D2" type="OmniLight3D" parent="skyscaper9"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.89862, 32.7751, 5.35517)
+light_color = Color(1, 1, 0, 1)
+light_energy = 30.135
+light_volumetric_fog_energy = 0.97
+
+[node name="skyscaper10" parent="." instance=ExtResource("18_ibljb")]
+transform = Transform3D(0.137673, 0, 0.990478, 0, 4.305, 0, -0.990478, 0, 0.137673, 58.4668, 77.9919, 85.5424)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="skyscaper10"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.52985, 27.183, -4.93816)
+light_color = Color(1, 1, 0, 1)
+light_energy = 30.135
+light_volumetric_fog_energy = 0.97
+
+[node name="OmniLight3D2" type="OmniLight3D" parent="skyscaper10"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.89862, 32.7751, 5.35517)
+light_color = Color(1, 1, 0, 1)
+light_energy = 30.135
+light_volumetric_fog_energy = 0.97
+
 [node name="skyscaper2" parent="." instance=ExtResource("18_ibljb")]
 transform = Transform3D(0.392706, -0.208338, 0.895755, 0.0836513, 0.978057, 0.190807, -0.915852, 0, 0.401516, 33.9606, -9.53673, 28.9489)
 
