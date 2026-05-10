@@ -35,6 +35,9 @@ var frame_limit: int = 0
 var fullscreen: bool = false
 var current_language: String = "de"
 var crt_enabled: bool = true
+var godray_enabled: bool = true
+var glow_enabled: bool = true
+var fog_quality: int = 3
 
 # Gewichtsrekorde pro Fischart (✅ fish_id als Key)
 var fish_weight_records: Dictionary = {}
@@ -149,6 +152,8 @@ func _ready():
 	load_game()
 	load_settings()
 	TranslationServer.set_locale(current_language)
+	if not get_tree().node_added.is_connected(_on_node_added):
+		get_tree().node_added.connect(_on_node_added)
 	
 	# 🔧 OPTIMIERT: Warte auf Signal statt fixer Zeit
 	if not GodotSteam.leaderboards_loaded.is_connected(_sync_steam_scores):
@@ -224,7 +229,10 @@ func save_settings() -> void:
 		"frame_limit": frame_limit,
 		"fullscreen": fullscreen,
 		"language": current_language,
-		"crt_enabled": crt_enabled
+		"crt_enabled": crt_enabled,
+		"godray_enabled": godray_enabled,
+		"glow_enabled": glow_enabled,
+		"fog_quality": fog_quality
 	}
 	var file = FileAccess.open("user://settings.dat", FileAccess.WRITE)
 	file.store_var(settings_data)
@@ -241,6 +249,9 @@ func load_settings() -> void:
 		fullscreen = settings_data.get("fullscreen", false)
 		current_language = settings_data.get("language", "de")
 		crt_enabled = settings_data.get("crt_enabled", true)
+		godray_enabled = settings_data.get("godray_enabled", true)
+		glow_enabled = settings_data.get("glow_enabled", true)
+		fog_quality = settings_data.get("fog_quality", 3)
 		
 		apply_settings()
 		TranslationServer.set_locale(current_language)
@@ -269,6 +280,43 @@ func apply_settings() -> void:
 	
 	Engine.max_fps = frame_limit
 	_set_crt_visible(get_tree().root, crt_enabled)
+	apply_graphics_settings()
+
+func apply_graphics_settings() -> void:
+	_apply_graphics_settings_to_node(get_tree().root)
+
+func _on_node_added(node: Node) -> void:
+	_apply_graphics_settings_to_node(node)
+
+func _apply_graphics_settings_to_node(node: Node) -> void:
+	if str(node.name).to_lower().contains("godray") and (node is CanvasItem or node is Node3D):
+		node.visible = godray_enabled
+
+	if node is WorldEnvironment and node.environment:
+		_apply_environment_graphics_settings(node.environment)
+
+	for child in node.get_children():
+		_apply_graphics_settings_to_node(child)
+
+func _apply_environment_graphics_settings(environment: Environment) -> void:
+	if not environment.has_meta("default_glow_enabled"):
+		environment.set_meta("default_glow_enabled", environment.glow_enabled)
+		environment.set_meta("default_fog_enabled", environment.fog_enabled)
+		environment.set_meta("default_volumetric_fog_enabled", environment.volumetric_fog_enabled)
+		environment.set_meta("default_volumetric_fog_density", environment.volumetric_fog_density)
+
+	environment.glow_enabled = bool(environment.get_meta("default_glow_enabled")) and glow_enabled
+
+	if fog_quality <= 0:
+		environment.fog_enabled = false
+		environment.volumetric_fog_enabled = false
+		return
+
+	environment.fog_enabled = bool(environment.get_meta("default_fog_enabled"))
+	environment.volumetric_fog_enabled = bool(environment.get_meta("default_volumetric_fog_enabled"))
+	var quality_index: int = min(max(fog_quality, 0), 3)
+	var density_multiplier := [0.0, 0.45, 0.75, 1.0][quality_index]
+	environment.volumetric_fog_density = float(environment.get_meta("default_volumetric_fog_density")) * density_multiplier
 
 func _set_crt_visible(node: Node, enabled: bool) -> void:
 	for child in node.get_children():
