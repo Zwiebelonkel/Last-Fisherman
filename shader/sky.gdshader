@@ -12,6 +12,10 @@ uniform vec4 sunset_zenith  : source_color = vec4(0.25, 0.12, 0.28, 1.0);
 uniform vec4 sunset_horizon : source_color = vec4(1.00, 0.45, 0.10, 1.0);
 uniform vec4 sunset_glow    : source_color = vec4(1.00, 0.70, 0.20, 1.0);
 
+// Sonnenrichtung einstellen
+uniform float sun_azimuth_deg : hint_range(0.0, 360.0) = 270.0;
+uniform float sun_path_tilt_deg : hint_range(-80.0, 80.0) = 0.0;
+
 // Nacht-Farben
 uniform vec4 night_zenith  : source_color = vec4(0.01, 0.02, 0.08, 1.0);
 uniform vec4 night_horizon : source_color = vec4(0.04, 0.06, 0.18, 1.0);
@@ -97,8 +101,34 @@ void sky() {
     float tod = time_of_day;
 
     float sun_angle = tod * TAU;
-    vec3 sun_dir = normalize(vec3(sin(sun_angle), cos(sun_angle) * 0.8, -0.6));
-    vec3 moon_dir = -sun_dir;
+
+// Höhe der Sonne
+	float sun_y = cos(sun_angle) * 0.8;
+
+// Bewegung über den Himmel
+	float sun_x = sin(sun_angle);
+	float sun_z = -0.6;
+
+// Horizont-Richtung drehen
+	float azimuth = radians(sun_azimuth_deg);
+	mat2 rot = mat2(
+		vec2(cos(azimuth), -sin(azimuth)),
+		vec2(sin(azimuth),  cos(azimuth))
+	);
+
+	vec2 rotated_xz = rot * vec2(sun_x, sun_z);
+
+// Sonnenbahn neigen
+	float tilt = radians(sun_path_tilt_deg);
+	rotated_xz.y += sin(tilt) * sun_x;
+
+	vec3 sun_dir = normalize(vec3(
+		rotated_xz.x,
+		sun_y,
+		rotated_xz.y
+	));
+
+	vec3 moon_dir = -sun_dir;
 
     float sun_height = clamp(sun_dir.y, 0.0, 1.0);
     float sun_below  = clamp(-sun_dir.y, 0.0, 1.0);

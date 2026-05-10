@@ -1,4 +1,4 @@
-[gd_scene load_steps=68 format=3 uid="uid://b6exh44q6u50p"]
+[gd_scene load_steps=70 format=3 uid="uid://b6exh44q6u50p"]
 
 [ext_resource type="Shader" path="res://shader/screen_rain.gdshader" id="1_edxmc"]
 [ext_resource type="Shader" uid="uid://c140kjbm2bot5" path="res://shader/buckshot.gdshader" id="1_mbbil"]
@@ -41,6 +41,7 @@
 [ext_resource type="AudioStream" uid="uid://c0e0t3u3yvvhg" path="res://sounds/rarity/legendary.mp3" id="31_djqsd"]
 [ext_resource type="AudioStream" uid="uid://qeh48myqvc8p" path="res://sounds/rarity/exotic.mp3" id="32_wwpln"]
 [ext_resource type="AudioStream" uid="uid://6a3ro0nq1u4" path="res://sounds/rarity/antique.mp3" id="33_ao3ch"]
+[ext_resource type="Script" path="res://scripts/Biomecinematic.gd" id="42_ao3ch"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ytxmq"]
 shader = ExtResource("1_edxmc")
@@ -1382,6 +1383,13 @@ emission_energy_multiplier = 16.0
 [sub_resource type="SphereMesh" id="SphereMesh_7r1ho"]
 material = SubResource("StandardMaterial3D_7xda3")
 
+[sub_resource type="Curve3D" id="Curve3D_t1cyt"]
+_data = {
+"points": PackedVector3Array(0, 0, 0, 11.575, 0, 0, -29.16, -0.19, -48.05, 0, 0, 0, 0, 0, 0, 0, 0, -11.42),
+"tilts": PackedFloat32Array(0, 0)
+}
+point_count = 2
+
 [node name="MainScene" type="Node3D"]
 
 [node name="rain" type="CanvasLayer" parent="."]
@@ -1514,9 +1522,6 @@ interact_button = NodePath("../../UI/Touch/InteractButton")
 settings_button = NodePath("../../UI/Touch/TopLeftPanel/MarginContainer/VBoxContainer/SettingsButton")
 cast_power_ui_scene = ExtResource("8_djqsd")
 inventory_ui = NodePath("../../UI/InventoryUI")
-
-[node name="RodMesh" parent="PlayerCamera/FishingRod" index="0"]
-transform = Transform3D(1, 0, 0, 0, 0.966823, 0.255446, 0, -0.255446, 0.966823, 0, 0, -0.0166266)
 
 [node name="left_hand" parent="PlayerCamera/FishingRod/RodMesh" index="5"]
 transform = Transform3D(-0.211648, -0.0377439, 0.254183, -0.17704, 0.278759, -0.0940854, -0.207091, -0.199734, -0.179344, -0.113471, -0.850528, 0.246808)
@@ -1660,6 +1665,20 @@ transform = Transform3D(-0.185706, -1.18963, -0.632375, -0.000701904, 0.638439, 
 
 [node name="Node3D5" parent="." instance=ExtResource("29_ccyyx")]
 transform = Transform3D(0.669928, 0, -3.16998, 0, 3.24, 0, 3.16998, 0, 0.669928, -22.8293, 1.14626, 0)
+
+[node name="Biomecinematic" type="Node" parent="." node_paths=PackedStringArray("cinematic_path")]
+script = ExtResource("42_ao3ch")
+fishing_location = "ocean"
+cinematic_path = NodePath("../CinematicPath")
+fade_duration = 0.0
+
+[node name="CinematicPath" type="Path3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0698357, 1, 1.6984)
+curve = SubResource("Curve3D_t1cyt")
+
+[node name="PathFollow" type="PathFollow3D" parent="CinematicPath"]
+transform = Transform3D(-4.37095e-08, 0, -0.999947, 0, 0.999914, 0, 0.999958, 0, -4.37091e-08, -29.16, -0.19, -48.05)
+loop = false
 
 [editable path="UI/CatchResultUI"]
 [editable path="UI/Touch"]
