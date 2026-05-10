@@ -85,6 +85,10 @@ theme_override_constants/separation = 18
 layout_mode = 2
 text = "Statistics"
 
+[node name="GraphicsButton" type="Button" parent="Panel/VBoxContainer"]
+layout_mode = 2
+text = "GRAPHICS"
+
 [node name="HBoxContainer" type="HBoxContainer" parent="Panel/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 15
@@ -120,50 +124,6 @@ step = 0.05
 value = 1.0
 script = ExtResource("2_yf2q3")
 audio_bus_name = "SFX"
-
-[node name="HBoxContainer3" type="HBoxContainer" parent="Panel/VBoxContainer"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="Panel/VBoxContainer/HBoxContainer3"]
-layout_mode = 2
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-text = "3DSCALE"
-
-[node name="ScaleControl" type="OptionButton" parent="Panel/VBoxContainer/HBoxContainer3"]
-layout_mode = 2
-size_flags_horizontal = 10
-item_count = 4
-popup/item_0/text = "100"
-popup/item_0/id = 0
-popup/item_1/text = "75"
-popup/item_1/id = 1
-popup/item_2/text = "50"
-popup/item_2/id = 2
-popup/item_3/text = "25"
-popup/item_3/id = 3
-script = ExtResource("3_5683i")
-
-[node name="HBoxContainer4" type="HBoxContainer" parent="Panel/VBoxContainer"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="Panel/VBoxContainer/HBoxContainer4"]
-layout_mode = 2
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-text = "FRAMELIMIT"
-
-[node name="FrameControl" type="OptionButton" parent="Panel/VBoxContainer/HBoxContainer4"]
-layout_mode = 2
-size_flags_horizontal = 10
-item_count = 4
-popup/item_0/text = "unlimited"
-popup/item_0/id = 0
-popup/item_1/text = "120"
-popup/item_1/id = 1
-popup/item_2/text = "60"
-popup/item_2/id = 2
-popup/item_3/text = "30"
-popup/item_3/id = 3
-script = ExtResource("5_rjqyh")
 
 [node name="HBoxContainer6" type="HBoxContainer" parent="Panel/VBoxContainer"]
 layout_mode = 2
@@ -318,6 +278,128 @@ size_flags_horizontal = 10
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "MAP"
 
+[node name="GraphicsWindow" type="Panel" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -155.0
+offset_top = -152.0
+offset_right = 155.0
+offset_bottom = 204.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_tkc0w")
+theme_override_styles/panel = SubResource("StyleBoxFlat_5683i")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="GraphicsWindow"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 19.0
+offset_top = 16.0
+offset_right = -19.0
+offset_bottom = -31.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 18
+
+[node name="Title" type="Label" parent="GraphicsWindow/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "GRAPHICS"
+horizontal_alignment = 1
+
+[node name="ScaleRow" type="HBoxContainer" parent="GraphicsWindow/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="GraphicsWindow/VBoxContainer/ScaleRow"]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "3DSCALE"
+
+[node name="ScaleControl" type="OptionButton" parent="GraphicsWindow/VBoxContainer/ScaleRow"]
+layout_mode = 2
+size_flags_horizontal = 10
+item_count = 4
+popup/item_0/text = "100"
+popup/item_0/id = 0
+popup/item_1/text = "75"
+popup/item_1/id = 1
+popup/item_2/text = "50"
+popup/item_2/id = 2
+popup/item_3/text = "25"
+popup/item_3/id = 3
+script = ExtResource("3_5683i")
+
+[node name="FrameRow" type="HBoxContainer" parent="GraphicsWindow/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="GraphicsWindow/VBoxContainer/FrameRow"]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "FRAMELIMIT"
+
+[node name="FrameControl" type="OptionButton" parent="GraphicsWindow/VBoxContainer/FrameRow"]
+layout_mode = 2
+size_flags_horizontal = 10
+item_count = 4
+popup/item_0/text = "unlimited"
+popup/item_0/id = 0
+popup/item_1/text = "120"
+popup/item_1/id = 1
+popup/item_2/text = "60"
+popup/item_2/id = 2
+popup/item_3/text = "30"
+popup/item_3/id = 3
+script = ExtResource("5_rjqyh")
+
+[node name="GodrayControl" type="CheckButton" parent="GraphicsWindow/VBoxContainer"]
+layout_mode = 2
+button_pressed = true
+text = "GODRAY ENABLED"
+
+[node name="GlowControl" type="CheckButton" parent="GraphicsWindow/VBoxContainer"]
+layout_mode = 2
+button_pressed = true
+text = "GLOW ENABLED"
+
+[node name="FogRow" type="HBoxContainer" parent="GraphicsWindow/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="GraphicsWindow/VBoxContainer/FogRow"]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "FOG QUALITY"
+
+[node name="FogQualityControl" type="OptionButton" parent="GraphicsWindow/VBoxContainer/FogRow"]
+layout_mode = 2
+size_flags_horizontal = 10
+item_count = 4
+popup/item_0/text = "off"
+popup/item_0/id = 0
+popup/item_1/text = "low"
+popup/item_1/id = 1
+popup/item_2/text = "medium"
+popup/item_2/id = 2
+popup/item_3/text = "high"
+popup/item_3/id = 3
+
+[node name="Back" type="Button" parent="GraphicsWindow"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -31.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "BACK"
+
 [node name="StatsUI" parent="." instance=ExtResource("8_0cpcg")]
 visible = false
 layout_mode = 1
@@ -330,11 +412,16 @@ bus = &"SFX"
 
 [connection signal="pressed" from="Panel/Back" to="." method="_on_menu_pressed"]
 [connection signal="pressed" from="Panel/VBoxContainer/Button" to="." method="_on_stats_pressed"]
+[connection signal="pressed" from="Panel/VBoxContainer/GraphicsButton" to="." method="_on_graphics_pressed"]
 [connection signal="value_changed" from="Panel/VBoxContainer/HBoxContainer/MusicControl" to="Panel/VBoxContainer/HBoxContainer/MusicControl" method="_on_value_changed"]
 [connection signal="value_changed" from="Panel/VBoxContainer/HBoxContainer2/SFXControl" to="Panel/VBoxContainer/HBoxContainer2/SFXControl" method="_on_value_changed"]
-[connection signal="item_selected" from="Panel/VBoxContainer/HBoxContainer3/ScaleControl" to="Panel/VBoxContainer/HBoxContainer3/ScaleControl" method="_on_item_selected"]
-[connection signal="item_selected" from="Panel/VBoxContainer/HBoxContainer4/FrameControl" to="Panel/VBoxContainer/HBoxContainer4/FrameControl" method="_on_item_selected"]
 [connection signal="item_selected" from="Panel/VBoxContainer/HBoxContainer6/LanguageControl" to="Panel/VBoxContainer/HBoxContainer6/LanguageControl" method="_on_item_selected"]
 [connection signal="toggled" from="Panel/VBoxContainer/FullscreenControl" to="Panel/VBoxContainer/FullscreenControl" method="_on_toggled"]
 [connection signal="toggled" from="Panel/VBoxContainer/CRTControl" to="." method="_on_crt_toggled"]
 [connection signal="toggled" from="Panel/VBoxContainer/GUIControl" to="Panel/VBoxContainer/GUIControl" method="_on_toggled"]
+[connection signal="item_selected" from="GraphicsWindow/VBoxContainer/ScaleRow/ScaleControl" to="GraphicsWindow/VBoxContainer/ScaleRow/ScaleControl" method="_on_item_selected"]
+[connection signal="item_selected" from="GraphicsWindow/VBoxContainer/FrameRow/FrameControl" to="GraphicsWindow/VBoxContainer/FrameRow/FrameControl" method="_on_item_selected"]
+[connection signal="toggled" from="GraphicsWindow/VBoxContainer/GodrayControl" to="." method="_on_godray_toggled"]
+[connection signal="toggled" from="GraphicsWindow/VBoxContainer/GlowControl" to="." method="_on_glow_toggled"]
+[connection signal="item_selected" from="GraphicsWindow/VBoxContainer/FogRow/FogQualityControl" to="." method="_on_fog_quality_selected"]
+[connection signal="pressed" from="GraphicsWindow/Back" to="." method="_on_graphics_back_pressed"]
