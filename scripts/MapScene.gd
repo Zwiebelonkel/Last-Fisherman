@@ -31,6 +31,10 @@ extends Control
 
 var selected_spot := ""
 
+const DEMO_UNLOCKED_SPOTS = ["lake"]
+const DEMO_LOCKED_COLOR = Color(0.24, 0.24, 0.24, 0.85)
+
+
 # ─── Location display names ───────────────────────────────────────────────────
 var location_names := {
 	"lake":    { "de": "Strand",  "en": "Beach"   },
@@ -68,6 +72,9 @@ var localized_texts := {
 	"vendor_parts":  { "de": "TEILE: %d/%d",                         "en": "PARTS: %d/%d"                      },
 	"unlocked_n":    { "de": "%d/8 freigeschaltet",                   "en": "%d/8 unlocked"                     },
 	"vendor_items":  { "de": "Fehlende Teile:\n%s",                   "en": "Missing parts:\n%s"                },
+	"end_demo":     { "de": "END OF DEMO",                         "en": "END OF DEMO"                       },
+	"end_demo_desc": { "de": "Diese Karte ist in der Demo noch nicht verfügbar. Danke fürs Spielen!", "en": "This map is not available in the demo yet. Thanks for playing!" },
+	"demo_unlocked_n": { "de": "1/1 Demo-Karte verfügbar",           "en": "1/1 demo map available"             },
 }
 
 var item_names := {
@@ -132,10 +139,16 @@ func get_item_name(item_id: String) -> String:
 		return item_names[item_id].get(lang, item_names[item_id].get("de", item_id))
 	return item_id.capitalize()
 
+func is_demo_locked_spot(spot_name: String) -> bool:
+	return not DEMO_UNLOCKED_SPOTS.has(spot_name)
+
 # ─── Button assignment (unverändert, nur Popup → Sidebar) ────────────────────
 func assign_button(btn: Button, spot_name: String) -> void:
 	btn.pressed.connect(func(): show_spot_sidebar(spot_name))
-	if Player.unlocked_spots.get(spot_name, false):
+	btn.disabled = false
+	if is_demo_locked_spot(spot_name):
+		btn.modulate = DEMO_LOCKED_COLOR
+	elif Player.unlocked_spots.get(spot_name, false):
 		btn.modulate = Color.WHITE
 	else:
 		btn.modulate = Color(0.4, 0.4, 0.4)
@@ -159,6 +172,19 @@ func show_spot_sidebar(spot_name: String) -> void:
 	detail_name.text = get_location_name(spot_name)
 	detail_desc.bbcode_enabled = true
 	detail_desc.text = "[color=#7aaa7a]" + get_location_desc(spot_name) + "[/color]"
+
+	if is_demo_locked_spot(spot_name):
+		detail_desc.text += "\n\n[color=#f59e0b]" + get_text("end_demo_desc") + "[/color]"
+		detail_price.text = get_text("end_demo")
+		detail_price.add_theme_color_override("font_color", Color(0.961, 0.620, 0.043, 1))
+		vendor_progress.visible = false
+		btn_go.visible = false
+		btn_buy.visible = true
+		btn_buy.text = get_text("end_demo")
+		btn_buy.disabled = true
+		_reconnect_buttons(spot_name, false)
+		_refresh_status()
+		return
 
 	# ── Van special case ──
 	if spot_name == "van":
@@ -228,6 +254,8 @@ func show_spot_sidebar(spot_name: String) -> void:
 func _reconnect_buttons(spot_name: String, unlocked: bool) -> void:
 	_disconnect_all(btn_go)
 	_disconnect_all(btn_buy)
+	if is_demo_locked_spot(spot_name):
+		return
 	if unlocked:
 		btn_go.pressed.connect(func(): go_to_spot(spot_name))
 	else:
@@ -236,16 +264,19 @@ func _reconnect_buttons(spot_name: String, unlocked: bool) -> void:
 # ─── Status panel ─────────────────────────────────────────────────────────────
 func _refresh_status() -> void:
 	var n := 0
-	for spot in Player.unlocked_spots:
-		if Player.unlocked_spots[spot]:
+	for spot in DEMO_UNLOCKED_SPOTS:
+		if Player.unlocked_spots.get(spot, false):
 			n += 1
-	unlocked_count.text = get_text("unlocked_n") % n
-	var pct : float = float(n) / 8.0
+	unlocked_count.text = get_text("demo_unlocked_n")
+	var pct : float = 1.0 if n > 0 else 0.0
 	global_fill.anchor_right = pct
 	global_fill.offset_right = 0
 
 # ─── Buy / travel (original logic) ───────────────────────────────────────────
 func buy_spot(spot_name: String) -> void:
+	if is_demo_locked_spot(spot_name):
+		show_spot_sidebar(spot_name)
+		return
 	var cost : int = Player.spot_prices[spot_name]
 	if Player.money < cost:
 		return
@@ -265,6 +296,9 @@ func buy_spot(spot_name: String) -> void:
 	assign_button(van_btn,     "van")
 
 func go_to_spot(spot_name: String) -> void:
+	if is_demo_locked_spot(spot_name):
+		show_spot_sidebar(spot_name)
+		return
 	interact.play()
 	match spot_name:
 		"lake":
