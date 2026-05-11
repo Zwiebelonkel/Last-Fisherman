@@ -61,3 +61,11 @@ func _set_crt_visible(node: Node, enabled: bool) -> void:
 		if child.name == "CRT":
 			child.visible = enabled
 		_set_crt_visible(child, enabled)
+		
+func close_graphics_window() -> bool:
+	if graphics_window.visible:
+		graphics_window.hide()
+		click.play()
+		return true
+	
+	return false

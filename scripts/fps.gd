@@ -263,6 +263,9 @@ func open_options() -> void:
 func close_options() -> void:
 	if not options:
 		return
+	if options.has_method("close_graphics_window"):
+		if options.close_graphics_window():
+			return
 		
 	options.hide()
 	paused = false

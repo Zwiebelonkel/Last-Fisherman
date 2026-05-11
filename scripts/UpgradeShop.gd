@@ -1,7 +1,7 @@
 extends Node3D
 
 # Node-Referenzen
-@onready var money_label: Label = $UI/ShopContainer/MainPanel/VBoxContainer/TopBar/MoneyLabel
+@onready var money_label: Label = $UI/ShopContainer/MainPanel/VBoxContainer/TopBar/TopBarInner/MoneyPanel/MoneyLabel
 
 @onready var grip_level_label: Label = $UI/ShopContainer/MainPanel/VBoxContainer/UpgradeCards/GripCard/CardContent/LevelLabel
 @onready var grip_desc_label: Label = $UI/ShopContainer/MainPanel/VBoxContainer/UpgradeCards/GripCard/CardContent/DescLabel

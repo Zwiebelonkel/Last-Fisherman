@@ -156,13 +156,18 @@ func showSettings() -> void:
 	optionsActive = true
 
 func hideSettings() -> void:
+	if options.graphics_window.visible:
+		options.graphics_window.hide()
+		click.play()
+		return
 	click.play()
 	var tween = create_tween()
 	tween.set_ease(Tween.EASE_IN)
 	tween.set_trans(Tween.TRANS_CUBIC)
 	tween.tween_property(options, "modulate", Color(1, 1, 1, 0), 0.2)
+
 	await tween.finished
-	
+
 	options.hide()
 	optionsActive = false
 

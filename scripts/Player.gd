@@ -289,7 +289,7 @@ func _on_node_added(node: Node) -> void:
 	_apply_graphics_settings_to_node(node)
 
 func _apply_graphics_settings_to_node(node: Node) -> void:
-	if str(node.name).to_lower().contains("godray") and (node is CanvasItem or node is Node3D):
+	if str(node.name).to_lower().contains("godray") and ( node is Node3D):
 		node.visible = godray_enabled
 
 	if node is WorldEnvironment and node.environment:
@@ -315,7 +315,7 @@ func _apply_environment_graphics_settings(environment: Environment) -> void:
 	environment.fog_enabled = bool(environment.get_meta("default_fog_enabled"))
 	environment.volumetric_fog_enabled = bool(environment.get_meta("default_volumetric_fog_enabled"))
 	var quality_index: int = min(max(fog_quality, 0), 3)
-	var density_multiplier := [0.0, 0.45, 0.75, 1.0][quality_index]
+	var density_multiplier : float = [0.0, 0.45, 0.75, 1.0][quality_index]
 	environment.volumetric_fog_density = float(environment.get_meta("default_volumetric_fog_density")) * density_multiplier
 
 func _set_crt_visible(node: Node, enabled: bool) -> void:

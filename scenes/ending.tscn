@@ -600,6 +600,10 @@ func open_options() -> void:
 
 
 func close_options() -> void:
+	if options.has_method(\"close_graphics_window\"):
+		if options.close_graphics_window():
+			return
+
 	options.hide()
 	paused = false
 	Engine.time_scale = 1
@@ -1523,6 +1527,9 @@ settings_button = NodePath("../../UI/Touch/TopLeftPanel/MarginContainer/VBoxCont
 cast_power_ui_scene = ExtResource("8_djqsd")
 inventory_ui = NodePath("../../UI/InventoryUI")
 
+[node name="RodMesh" parent="PlayerCamera/FishingRod" index="0"]
+transform = Transform3D(1, 0, 0, 0, 0.966823, 0.255446, 0, -0.255446, 0.966823, 0, 0, -0.0166266)
+
 [node name="left_hand" parent="PlayerCamera/FishingRod/RodMesh" index="5"]
 transform = Transform3D(-0.211648, -0.0377439, 0.254183, -0.17704, 0.278759, -0.0940854, -0.207091, -0.199734, -0.179344, -0.113471, -0.850528, 0.246808)
 
@@ -1677,7 +1684,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0698357, 1, 1.6984)
 curve = SubResource("Curve3D_t1cyt")
 
 [node name="PathFollow" type="PathFollow3D" parent="CinematicPath"]
-transform = Transform3D(-4.37095e-08, 0, -0.999947, 0, 0.999914, 0, 0.999958, 0, -4.37091e-08, -29.16, -0.19, -48.05)
+transform = Transform3D(-4.37096e-08, 0, -0.999947, 0, 0.999914, 0, 0.999958, 0, -4.37091e-08, -29.16, -0.19, -48.05)
 loop = false
 
 [editable path="UI/CatchResultUI"]
