@@ -8,6 +8,7 @@ class_name Note
 var player_in_range: bool = false
 var player: Node3D = null
 var note_is_open: bool = false
+var last_interaction_frame: int = -1
 
 signal note_opened(title: String, text: String)
 signal note_closed()
@@ -41,13 +42,8 @@ func _process(_delta: float) -> void:
 		return
 	
 	# E-Taste Toggle
-	if Input.is_action_just_pressed("interact"):
-		if note_is_open:
-			print("🔥 E gedrückt - SCHLIESSE Note")
-			close_note()
-		else:
-			print("🔥 E gedrückt - ÖFFNE Note")
-			open_note()
+	if Input.is_action_just_pressed("interact") and last_interaction_frame != Engine.get_process_frames():
+		interact()
 
 func _on_body_entered(body: Node3D) -> void:
 	if body.is_in_group("player"):
@@ -64,6 +60,15 @@ func _on_body_exited(body: Node3D) -> void:
 		if note_is_open:
 			print("📏 Auto-Close: Note schließen")
 			close_note()
+
+func interact() -> void:
+	last_interaction_frame = Engine.get_process_frames()
+	if note_is_open:
+		print("🔥 E gedrückt - SCHLIESSE Note")
+		close_note()
+	else:
+		print("🔥 E gedrückt - ÖFFNE Note")
+		open_note()
 
 func open_note() -> void:
 	print("📖 ÖFFNE NOTE: ", note_title)
