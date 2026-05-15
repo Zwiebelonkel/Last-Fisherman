@@ -2033,6 +2033,9 @@ settings_button = NodePath("../../UI/Touch/TopLeftPanel/MarginContainer/VBoxCont
 cast_power_ui_scene = ExtResource("11_7wwop")
 inventory_ui = NodePath("../../UI/InventoryUI")
 
+[node name="RodMesh" parent="PlayerCamera/FishingRod" index="0"]
+transform = Transform3D(1, 0, 0, 0, 0.966823, 0.255446, 0, -0.255446, 0.966823, 0, 0, -0.0166266)
+
 [node name="Skeleton3D" parent="PlayerCamera/FishingRod/RodMesh/right_hand/Sketchfab_model/root/GLTF_SceneRootNode/Hand_21/GLTF_created_0" index="0"]
 bones/2/rotation = Quaternion(-0.00793414, 0.045019, 0.0910274, 0.994799)
 bones/3/rotation = Quaternion(0.57535, -0.0354025, -0.0384665, 0.816235)

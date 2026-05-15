@@ -24,7 +24,7 @@
 [ext_resource type="PackedScene" uid="uid://cyys33sgvu4h4" path="res://scenes/keypad.tscn" id="21_rtbv5"]
 [ext_resource type="PackedScene" uid="uid://dqiuq2ey7luad" path="res://assets/youtuber/youtuberfish2.glb" id="23_fm13a"]
 [ext_resource type="PackedScene" uid="uid://bmtc7y0apv50e" path="res://assets/youtuber/youtuberfish1.glb" id="24_fm13a"]
-[ext_resource type="Script" path="res://scripts/hub_visit_interaction.gd" id="25_visit"]
+[ext_resource type="Script" uid="uid://ecqswnl82vka" path="res://scripts/hub_visit_interaction.gd" id="25_visit"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_w6xti"]
 shader = ExtResource("1_d1od2")
@@ -236,7 +236,7 @@ size = Vector3(1.4, 2.4, 1.4)
 [sub_resource type="BoxShape3D" id="BoxShape3D_sev_visit"]
 size = Vector3(1.4, 2.4, 1.4)
 
-[node name="Node3D" type="Node3D"]
+[node name="Node3D2" type="Node3D"]
 script = ExtResource("1_8hrlh")
 
 [node name="Filter" type="CanvasLayer" parent="."]
@@ -287,7 +287,6 @@ mouse_filter = 2
 
 [node name="VisitPrompt" type="Label" parent="UI"]
 visible = false
-z_index = 5000
 anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
@@ -536,10 +535,6 @@ camera = NodePath("../FPSPlayer/Head/Camera3D")
 prompt_label = NodePath("../UI/VisitPrompt")
 dman_area = NodePath("../DmanVisitArea")
 sev_area = NodePath("../SevVisitArea")
-dman_url = "https://www.youtube.com/"
-sev_url = "https://www.youtube.com/"
-visit_prompt_text = "E to visit"
-note_prompt_text = "E to read"
 
 [node name="DmanVisitArea" type="Area3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.41154, 1.49516, 2.64647)
