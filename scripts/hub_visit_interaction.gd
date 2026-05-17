@@ -9,11 +9,11 @@ extends Node
 @export var sev_url := "https://www.youtube.com/@SevHorror"
 @export var samo_url := "https://www.twitch.tv/slaixgg"
 @export var interaction_distance := 6.0
-@export var visit_prompt_text := "E to visit"
-@export var note_prompt_text := "E to read"
+@export var visit_prompt_key := "HUB_VISIT_PROMPT"
+@export var note_prompt_key := "HUB_NOTE_PROMPT"
 
 @export var leaderboard_area: Area3D
-@export var leaderboard_prompt_text := "E to view leaderboard"
+@export var leaderboard_prompt_key := "HUB_LEADERBOARD_PROMPT"
 var current_leaderboard_node = null
 
 var current_url := ""
@@ -58,26 +58,26 @@ func _update_target() -> void:
 	var collider := hit.get("collider") as Node
 	if collider == dman_area:
 		current_url = dman_url
-		_set_prompt(true, visit_prompt_text)
+		_set_prompt(true, tr(visit_prompt_key))
 		return
 	if collider == sev_area:
 		current_url = sev_url
-		_set_prompt(true, visit_prompt_text)
+		_set_prompt(true, tr(visit_prompt_key))
 		return
 	if collider == samo_area:
 		current_url = samo_url
-		_set_prompt(true, visit_prompt_text)
+		_set_prompt(true, tr(visit_prompt_key))
 		return
 	if collider == leaderboard_area:
 		current_leaderboard_node = get_node_or_null("../Leaderboard")
-		_set_prompt(true, leaderboard_prompt_text)
+		_set_prompt(true, tr(leaderboard_prompt_key))
 		return
 	
 	current_leaderboard_node = null
 
 	current_note = _find_note_from_collider(collider)
 	if current_note and current_note.has_method("open_note"):
-		_set_prompt(true, note_prompt_text)
+		_set_prompt(true, tr(note_prompt_key))
 		return
 
 	_set_prompt(false)
