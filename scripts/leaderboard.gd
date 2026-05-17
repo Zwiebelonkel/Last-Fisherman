@@ -319,13 +319,15 @@ func _update_entries(container: VBoxContainer, entries: Array):
 			print("✏️ Entry %d: %s - %s - %d" % [i, labels[0].text, labels[1].text, score])
 
 			# Eigenen Eintrag highlighten
-			if steam_id == GodotSteam.steam_id:
-				for label in labels:
-					label.add_theme_color_override("font_color", Color(1.0, 0.8, 0.2))
+			var row_color = Color(1.0, 0.8, 0.2) if steam_id == GodotSteam.steam_id else Color(0.8, 0.75, 0.6)
+			for label in labels:
+				label.add_theme_color_override("font_color", row_color)
 		else:
 			labels[0].text = str(i + 1)
 			labels[1].text = "---"
 			labels[2].text = "---"
+			for label in labels:
+				label.add_theme_color_override("font_color", Color(0.8, 0.75, 0.6))
 
 	print("✅ Leaderboard aktualisiert mit", entries.size(), "Einträgen")
 
