@@ -12,6 +12,10 @@ extends Node
 @export var visit_prompt_text := "E to visit"
 @export var note_prompt_text := "E to read"
 
+@export var leaderboard_area: Area3D
+@export var leaderboard_prompt_text := "E to view leaderboard"
+var current_leaderboard_node = null
+
 var current_url := ""
 var current_note: Node = null
 
@@ -33,6 +37,7 @@ func _unhandled_input(event: InputEvent) -> void:
 func _update_target() -> void:
 	current_url = ""
 	current_note = null
+	current_leaderboard_node = null
 
 	if not camera:
 		_set_prompt(false)
@@ -63,6 +68,12 @@ func _update_target() -> void:
 		current_url = samo_url
 		_set_prompt(true, visit_prompt_text)
 		return
+	if collider == leaderboard_area:
+		current_leaderboard_node = get_node_or_null("../Leaderboard")
+		_set_prompt(true, leaderboard_prompt_text)
+		return
+	
+	current_leaderboard_node = null
 
 	current_note = _find_note_from_collider(collider)
 	if current_note and current_note.has_method("open_note"):
@@ -75,14 +86,16 @@ func _interact_with_current_target() -> void:
 	if current_url != "":
 		OS.shell_open(current_url)
 		return
-
+	if current_leaderboard_node != null:
+		current_leaderboard_node.open_full_ui()
+		return
 	if current_note and current_note.has_method("interact"):
 		current_note.interact()
 	elif current_note and current_note.has_method("open_note"):
 		current_note.open_note()
 
 func _has_current_target() -> bool:
-	return current_url != "" or current_note != null
+		return current_url != "" or current_note != null or current_leaderboard_node != null
 
 func _is_e_interact_event(event: InputEvent) -> bool:
 	var key_event := event as InputEventKey

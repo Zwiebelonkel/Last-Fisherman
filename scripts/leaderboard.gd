@@ -6,6 +6,12 @@ extends Node3D
 @export var board_size := Vector2(2.0, 1.5)  # Größe der Tafel
 @export var max_entries := 10  # Anzahl der angezeigten Einträge
 
+@export var interaction_distance_open: float = 2.5
+@export var full_ui: NodePath  # zeigt auf den LeaderboardFullUI-CanvasLayer
+
+var _player: Node3D = null
+var _full_ui_node = null
+
 var leaderboard_ui: SubViewport
 var leaderboard_panel: Control
 var entries_container: VBoxContainer
@@ -23,6 +29,8 @@ func _ready():
 	_create_leaderboard_display()
 	_wait_for_steam_and_load()
 	_start_tab_rotation()
+	
+	_full_ui_node = get_node_or_null(full_ui)
 
 # 🔧 NEU: Warte auf Steam Initialisierung
 func _wait_for_steam_and_load() -> void:
@@ -327,3 +335,7 @@ func refresh_leaderboards():
 		_load_leaderboards()
 	else:
 		print("⚠️ Steam noch nicht bereit für Refresh")
+		
+func open_full_ui() -> void:
+	if _full_ui_node and not _full_ui_node.visible:
+		_full_ui_node.open()
