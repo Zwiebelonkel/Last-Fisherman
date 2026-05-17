@@ -7,16 +7,29 @@ signal closed
 enum FilterMode { GLOBAL, FRIENDS }
 
 var current_filter := FilterMode.GLOBAL
-var cached_data := {}  # leaderboard_name -> Array of entries
+var cached_data := {}  # "leaderboard_name:mode" -> Array of entries
 var current_leaderboard := "fish_total"
+var current_request_mode := -1
 var tab_container: TabContainer
 var entries_boxes := {}  # leaderboard_name -> VBoxContainer
+var global_btn: Button
+var friends_btn: Button
+var around_btn: Button
 
 func _ready() -> void:
+	# Die Szene hatte den Leaderboard-Root nur als 40x40-Control in der Mitte
+	# gespeichert. Dadurch wurden Overlay und Layout geclippt/falsch platziert.
+	# Das Fullscreen-Popup erzwingt seine Größe daher beim Start selbst.
+	set_anchors_preset(Control.PRESET_FULL_RECT)
+	offset_left = 0
+	offset_top = 0
+	offset_right = 0
+	offset_bottom = 0
+	mouse_filter = Control.MOUSE_FILTER_STOP
 	visible = false
 	_build_ui()
 	
-	if not Steam.leaderboard_scores_downloaded.is_connected(_on_downloaded):
+	if Engine.has_singleton("Steam") and not Steam.leaderboard_scores_downloaded.is_connected(_on_downloaded):
 		Steam.leaderboard_scores_downloaded.connect(_on_downloaded)
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -42,6 +55,7 @@ func _build_ui() -> void:
 	var panel = PanelContainer.new()
 	panel.set_anchors_preset(Control.PRESET_CENTER)
 	panel.custom_minimum_size = Vector2(900, 620)
+	panel.mouse_filter = Control.MOUSE_FILTER_STOP
 	panel.set_anchor(SIDE_LEFT, 0.5)
 	panel.set_anchor(SIDE_TOP, 0.5)
 	panel.set_anchor(SIDE_RIGHT, 0.5)
@@ -54,6 +68,8 @@ func _build_ui() -> void:
 
 	var vbox = VBoxContainer.new()
 	vbox.add_theme_constant_override("separation", 8)
+	vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	vbox.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	panel.add_child(vbox)
 
 	# --- Titel + Close ---
@@ -76,34 +92,35 @@ func _build_ui() -> void:
 	filter_row.add_theme_constant_override("separation", 6)
 	vbox.add_child(filter_row)
 
-	var global_btn = Button.new()
+	global_btn = Button.new()
 	global_btn.text = "🌍 Global"
 	global_btn.toggle_mode = true
 	global_btn.button_pressed = true
 	global_btn.name = "GlobalBtn"
 	global_btn.pressed.connect(func():
+		_select_filter(global_btn)
 		current_filter = FilterMode.GLOBAL
-		_refresh_current_tab()
 		_request_current(Steam.LEADERBOARD_DATA_REQUEST_GLOBAL)
 	)
 	filter_row.add_child(global_btn)
 
-	var friends_btn = Button.new()
+	friends_btn = Button.new()
 	friends_btn.text = "👥 Friends"
 	friends_btn.toggle_mode = true
 	friends_btn.name = "FriendsBtn"
 	friends_btn.pressed.connect(func():
+		_select_filter(friends_btn)
 		current_filter = FilterMode.FRIENDS
-		_refresh_current_tab()
 		_request_current(Steam.LEADERBOARD_DATA_REQUEST_FRIENDS)
 	)
 	filter_row.add_child(friends_btn)
 
-	var around_btn = Button.new()
+	around_btn = Button.new()
 	around_btn.text = "📍 Around Me"
 	around_btn.toggle_mode = true
 	around_btn.name = "AroundBtn"
 	around_btn.pressed.connect(func():
+		_select_filter(around_btn)
 		current_filter = FilterMode.GLOBAL
 		_request_current(Steam.LEADERBOARD_DATA_REQUEST_GLOBAL_AROUND_USER)
 	)
@@ -111,7 +128,12 @@ func _build_ui() -> void:
 
 	var refresh_btn = Button.new()
 	refresh_btn.text = "🔄 Refresh"
-	refresh_btn.pressed.connect(func(): _request_current(Steam.LEADERBOARD_DATA_REQUEST_GLOBAL))
+	refresh_btn.pressed.connect(func():
+		var mode := current_request_mode
+		if mode == -1:
+			mode = Steam.LEADERBOARD_DATA_REQUEST_GLOBAL
+		_request_current(mode)
+	)
 	filter_row.add_child(refresh_btn)
 
 	# --- Tabs ---
@@ -177,6 +199,8 @@ func _make_row(rank: String, name: String, score: String, header := false) -> HB
 func open() -> void:
 	visible = true
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	_select_filter(global_btn)
+	current_filter = FilterMode.GLOBAL
 	_request_current(Steam.LEADERBOARD_DATA_REQUEST_GLOBAL)
 
 func close() -> void:
@@ -193,16 +217,42 @@ func _request_current(mode: int) -> void:
 		return
 	var lb_name: String = tab.get_meta("lb_name")
 	current_leaderboard = lb_name
+	current_request_mode = mode
+
+	var cache_key := _cache_key(lb_name, mode)
+	if cached_data.has(cache_key):
+		_populate(lb_name, cached_data[cache_key])
+
 	_request(lb_name, mode)
 
 func _request(lb_name: String, mode: int) -> void:
+	if not Engine.has_singleton("Steam"):
+		_show_message(lb_name, "Steam unavailable")
+		return
+	if not GodotSteam.initialization_complete or not GodotSteam.steam_ready:
+		_show_message(lb_name, "Waiting for Steam...")
+		if not GodotSteam.leaderboards_loaded.is_connected(_on_steam_ready):
+			GodotSteam.leaderboards_loaded.connect(_on_steam_ready)
+		return
 	if not GodotSteam.leaderboards.has(lb_name):
+		_show_message(lb_name, "Leaderboard unavailable")
 		return
 	var handle = GodotSteam.leaderboards[lb_name]
+	_show_message(lb_name, "Loading...")
 	Steam.downloadLeaderboardEntries(0, 9, mode, handle)
 
 func _on_tab_changed(_idx: int) -> void:
-	_request_current(Steam.LEADERBOARD_DATA_REQUEST_GLOBAL)
+	var mode := current_request_mode
+	if mode == -1:
+		mode = Steam.LEADERBOARD_DATA_REQUEST_GLOBAL
+	_request_current(mode)
+
+func _on_steam_ready() -> void:
+	if visible:
+		var mode := current_request_mode
+		if mode == -1:
+			mode = Steam.LEADERBOARD_DATA_REQUEST_GLOBAL
+		_request_current(mode)
 
 # -------------------------
 # Steam callback
@@ -223,17 +273,39 @@ func _on_downloaded(a, b = null, c = null) -> void:
 			if v.has("leaderboard"): handle = int(v["leaderboard"])
 			if v.has("results"):    results = v["results"]
 
-	if handle <= 0 or results.is_empty():
+	if handle <= 0:
 		return
 
 	var lb_name := Steam.getLeaderboardName(handle)
-	cached_data[lb_name] = results
+	cached_data[_cache_key(lb_name, current_request_mode)] = results
+	if results.is_empty():
+		_show_message(lb_name, "No entries yet")
+		return
 	_populate(lb_name, results)
 
-func _refresh_current_tab() -> void:
-	var lb_name = current_leaderboard
-	if cached_data.has(lb_name):
-		_populate(lb_name, cached_data[lb_name])
+func _cache_key(lb_name: String, mode: int) -> String:
+	return "%s:%d" % [lb_name, mode]
+
+func _select_filter(active_button: Button) -> void:
+	for button in [global_btn, friends_btn, around_btn]:
+		if button:
+			button.button_pressed = button == active_button
+
+func _show_message(lb_name: String, message: String) -> void:
+	if not entries_boxes.has(lb_name):
+		return
+
+	var vbox: VBoxContainer = entries_boxes[lb_name]
+	var rows = vbox.get_children().slice(2)
+	for i in range(rows.size()):
+		var labels = rows[i].get_children()
+		if labels.size() < 3:
+			continue
+		labels[0].text = str(i + 1) if i == 0 else ""
+		labels[1].text = message if i == 0 else ""
+		labels[2].text = ""
+		for lbl in labels:
+			lbl.add_theme_color_override("font_color", Color(0.85, 0.82, 0.75))
 
 func _populate(lb_name: String, entries: Array) -> void:
 	if not entries_boxes.has(lb_name):
@@ -263,3 +335,5 @@ func _populate(lb_name: String, entries: Array) -> void:
 			labels[0].text = str(i + 1)
 			labels[1].text = "—"
 			labels[2].text = "—"
+			for lbl in labels:
+				lbl.add_theme_color_override("font_color", Color(0.85, 0.82, 0.75))
