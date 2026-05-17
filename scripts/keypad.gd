@@ -11,9 +11,12 @@ signal code_incorrect()
 # Configuration
 # -------------------------
 @export var correct_code: String = "1906"  # Ändere den Code hier
+@export var secret_code: String = "1234"  # Ändere den Code hier
 @export var interaction_distance: float = 3.0
 @export var event_echo_scene: PackedScene = preload("res://scenes/event_echo.tscn")
 @export var ending_scene: PackedScene = preload("res://scenes/ending.tscn")
+@export var secret_scene: PackedScene = preload("res://scenes/rave.tscn")
+
 # -------------------------
 # State
 # -------------------------
@@ -103,10 +106,30 @@ func check_code() -> void:
 	if is_processing:
 		return
 	
-	if current_input == correct_code:
+	if current_input == secret_code:
+		on_secret_code()
+	elif current_input == correct_code:
 		on_correct_code()
 	else:
 		on_incorrect_code()
+
+func on_secret_code() -> void:
+	if is_processing:
+		return
+	
+	is_processing = true
+	
+	print("🎉 SECRET CODE!")
+	
+	play_success()
+	display_label.modulate = Color.MAGENTA
+	
+	is_active = false
+	
+	await get_tree().create_timer(1.0).timeout
+	
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	Transition.change_scene("res://scenes/rave.tscn", 1.0)
 
 func on_correct_code() -> void:
 	if is_processing:

@@ -4,8 +4,10 @@ extends Node
 @export var prompt_label: Label
 @export var dman_area: Area3D
 @export var sev_area: Area3D
-@export var dman_url := "https://www.youtube.com/"
-@export var sev_url := "https://www.youtube.com/"
+@export var samo_area: Area3D
+@export var dman_url := "https://www.twitch.tv/dmanisbadatthings"
+@export var sev_url := "https://www.youtube.com/@SevHorror"
+@export var samo_url := "https://www.twitch.tv/slaixgg"
 @export var interaction_distance := 6.0
 @export var visit_prompt_text := "E to visit"
 @export var note_prompt_text := "E to read"
@@ -55,6 +57,10 @@ func _update_target() -> void:
 		return
 	if collider == sev_area:
 		current_url = sev_url
+		_set_prompt(true, visit_prompt_text)
+		return
+	if collider == samo_area:
+		current_url = samo_url
 		_set_prompt(true, visit_prompt_text)
 		return
 

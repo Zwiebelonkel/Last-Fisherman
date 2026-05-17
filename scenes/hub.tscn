@@ -1,4 +1,4 @@
-[gd_scene load_steps=49 format=3 uid="uid://cor735uf1n5si"]
+[gd_scene load_steps=50 format=3 uid="uid://cor735uf1n5si"]
 
 [ext_resource type="Script" uid="uid://cjxfvb4fkjrhh" path="res://scripts/note_manager.gd" id="1_8hrlh"]
 [ext_resource type="Shader" uid="uid://c140kjbm2bot5" path="res://shader/buckshot.gdshader" id="1_d1od2"]
@@ -25,6 +25,7 @@
 [ext_resource type="PackedScene" uid="uid://dqiuq2ey7luad" path="res://assets/youtuber/youtuberfish2.glb" id="23_fm13a"]
 [ext_resource type="PackedScene" uid="uid://bmtc7y0apv50e" path="res://assets/youtuber/youtuberfish1.glb" id="24_fm13a"]
 [ext_resource type="Script" uid="uid://ecqswnl82vka" path="res://scripts/hub_visit_interaction.gd" id="25_visit"]
+[ext_resource type="PackedScene" uid="uid://dootyrm8qmffh" path="res://assets/youtuber/youtuberfish3.glb" id="26_bb8k7"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_w6xti"]
 shader = ExtResource("1_d1od2")
@@ -298,6 +299,7 @@ offset_right = 160.0
 offset_bottom = -90.0
 grow_horizontal = 2
 grow_vertical = 0
+theme_override_fonts/font = ExtResource("3_s6eg2")
 text = "E to visit"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -529,12 +531,13 @@ transform = Transform3D(0.00275756, 0.673487, 0.739194, 7.36642e-09, 0.739196, -
 [node name="Keypad" parent="." instance=ExtResource("21_rtbv5")]
 transform = Transform3D(-0.575, 0, -8.68226e-08, 0, 0.575, 0, 8.68226e-08, 0, -0.575, 3.03949, 0.80469, 3.69842)
 
-[node name="HubVisitInteraction" type="Node" parent="." node_paths=PackedStringArray("camera", "prompt_label", "dman_area", "sev_area")]
+[node name="HubVisitInteraction" type="Node" parent="." node_paths=PackedStringArray("camera", "prompt_label", "dman_area", "sev_area", "samo_area")]
 script = ExtResource("25_visit")
 camera = NodePath("../FPSPlayer/Head/Camera3D")
 prompt_label = NodePath("../UI/VisitPrompt")
 dman_area = NodePath("../DmanVisitArea")
 sev_area = NodePath("../SevVisitArea")
+samo_area = NodePath("../SamoVisitArea")
 
 [node name="DmanVisitArea" type="Area3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.41154, 1.49516, 2.64647)
@@ -546,6 +549,12 @@ shape = SubResource("BoxShape3D_dman_visit")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.52517, 1.27444, 1.84968)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="SevVisitArea"]
+shape = SubResource("BoxShape3D_sev_visit")
+
+[node name="SamoVisitArea" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.52517, 1.27444, -1.10865)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SamoVisitArea"]
 shape = SubResource("BoxShape3D_sev_visit")
 
 [node name="dman" parent="." instance=ExtResource("23_fm13a")]
@@ -569,6 +578,22 @@ transform = Transform3D(-1.57361e-08, 1.1, -1.57361e-08, 0, -4.80825e-08, -0.36,
 
 [node name="OmniLight3D6" type="SpotLight3D" parent="sev"]
 transform = Transform3D(2.77755, 0.0204157, -0.0290432, 0.0079554, 0.184091, 0.890221, 0.0258732, -2.72015, 0.562276, -0.104812, 0.931926, 0.267013)
+light_color = Color(0.858824, 0.878431, 0.403922, 1)
+light_energy = 2.16
+light_indirect_energy = 0.709
+light_volumetric_fog_energy = 2.018
+light_specular = 1.427
+light_cull_mask = 4294963199
+shadow_enabled = true
+spot_range = 1.764
+spot_angle = 39.37
+script = ExtResource("10_4oyfp")
+
+[node name="samo" parent="." instance=ExtResource("26_bb8k7")]
+transform = Transform3D(-1.57361e-08, 1.1, 1.57361e-08, -1.37569e-15, 4.80825e-08, -0.36, -0.36, -4.80825e-08, 6.87847e-16, -3.55418, 1.19967, -1.02362)
+
+[node name="OmniLight3D7" type="SpotLight3D" parent="samo"]
+transform = Transform3D(2.77755, 0.0204157, -0.0290432, 0.0079554, 0.184091, 0.890221, 0.0258732, -2.72015, 0.562276, -0.26509, 0.958303, 0.0593057)
 light_color = Color(0.858824, 0.878431, 0.403922, 1)
 light_energy = 2.16
 light_indirect_energy = 0.709
