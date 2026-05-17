@@ -139,7 +139,7 @@ func _build_ui() -> void:
 	filter_row.add_child(around_btn)
 
 	var refresh_btn = Button.new()
-	refresh_btn.text = "🔄 " + tr("LEADERBOARD_REFRESH")
+	refresh_btn.text = tr("LEADERBOARD_REFRESH")
 	refresh_btn.pressed.connect(func():
 		var mode := current_request_mode
 		if mode == -1:

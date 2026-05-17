@@ -549,6 +549,9 @@ shape = SubResource("BoxShape3D_trb2f")
 [node name="FishingRod" parent="." instance=ExtResource("20_7n2o6")]
 transform = Transform3D(0.00275756, 0.673487, 0.739194, 7.36642e-09, 0.739196, -0.67349, -0.999996, 0.00185719, 0.00203838, 0.737115, 0.438908, -1.81165)
 
+[node name="right_hand" parent="FishingRod/RodMesh" index="4"]
+visible = false
+
 [node name="Keypad" parent="." instance=ExtResource("21_rtbv5")]
 transform = Transform3D(-0.575, 0, -8.68226e-08, 0, 0.575, 0, 8.68226e-08, 0, -0.575, 3.03949, 0.80469, 3.69842)
 
@@ -632,3 +635,6 @@ script = ExtResource("10_4oyfp")
 [editable path="UI/Touch"]
 [editable path="UI/InventoryUI"]
 [editable path="Cabin"]
+[editable path="FishingRod"]
+[editable path="FishingRod/RodMesh/right_hand"]
+[editable path="FishingRod/RodMesh/left_hand"]
