@@ -32,13 +32,25 @@ func _ready() -> void:
 	if Engine.has_singleton("Steam") and not Steam.leaderboard_scores_downloaded.is_connected(_on_downloaded):
 		Steam.leaderboard_scores_downloaded.connect(_on_downloaded)
 
-func _unhandled_input(event: InputEvent) -> void:
+func _input(event: InputEvent) -> void:
 	if not visible:
 		return
-	if event is InputEventKey and event.pressed and not event.echo:
-		if event.keycode == KEY_ESCAPE or event.keycode == KEY_TAB:
-			close()
-			get_viewport().set_input_as_handled()
+	if not _is_close_shortcut(event):
+		return
+
+	close()
+	get_viewport().set_input_as_handled()
+
+func _is_close_shortcut(event: InputEvent) -> bool:
+	var key_event := event as InputEventKey
+	if not key_event or not key_event.pressed or key_event.echo:
+		return false
+
+	return (
+		key_event.keycode == KEY_ESCAPE
+		or key_event.keycode == KEY_TAB
+		or event.is_action_pressed("ui_cancel")
+	)
 
 # -------------------------
 # UI aufbauen
@@ -77,13 +89,13 @@ func _build_ui() -> void:
 	vbox.add_child(title_row)
 
 	var title = Label.new()
-	title.text = "LEADERBOARDS"
+	title.text = tr("LEADERBOARD_TITLE")
 	title.add_theme_font_size_override("font_size", 32)
 	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	title_row.add_child(title)
 
 	var close_btn = Button.new()
-	close_btn.text = "✕  Close"
+	close_btn.text = "✕  " + tr("LEADERBOARD_CLOSE")
 	close_btn.pressed.connect(close)
 	title_row.add_child(close_btn)
 
@@ -93,7 +105,7 @@ func _build_ui() -> void:
 	vbox.add_child(filter_row)
 
 	global_btn = Button.new()
-	global_btn.text = "🌍 Global"
+	global_btn.text = "🌍 " + tr("LEADERBOARD_GLOBAL")
 	global_btn.toggle_mode = true
 	global_btn.button_pressed = true
 	global_btn.name = "GlobalBtn"
@@ -105,7 +117,7 @@ func _build_ui() -> void:
 	filter_row.add_child(global_btn)
 
 	friends_btn = Button.new()
-	friends_btn.text = "👥 Friends"
+	friends_btn.text = "👥 " + tr("LEADERBOARD_FRIENDS")
 	friends_btn.toggle_mode = true
 	friends_btn.name = "FriendsBtn"
 	friends_btn.pressed.connect(func():
@@ -116,7 +128,7 @@ func _build_ui() -> void:
 	filter_row.add_child(friends_btn)
 
 	around_btn = Button.new()
-	around_btn.text = "📍 Around Me"
+	around_btn.text = "📍 " + tr("LEADERBOARD_AROUND_ME")
 	around_btn.toggle_mode = true
 	around_btn.name = "AroundBtn"
 	around_btn.pressed.connect(func():
@@ -127,7 +139,7 @@ func _build_ui() -> void:
 	filter_row.add_child(around_btn)
 
 	var refresh_btn = Button.new()
-	refresh_btn.text = "🔄 Refresh"
+	refresh_btn.text = "🔄 " + tr("LEADERBOARD_REFRESH")
 	refresh_btn.pressed.connect(func():
 		var mode := current_request_mode
 		if mode == -1:
@@ -142,7 +154,7 @@ func _build_ui() -> void:
 	tab_container.tab_changed.connect(_on_tab_changed)
 	vbox.add_child(tab_container)
 
-	for lb in [["Most Fish Caught", "fish_total"], ["Most Money Earned", "money_total"]]:
+	for lb in [[tr("LEADERBOARD_TAB_FISH"), "fish_total"], [tr("LEADERBOARD_TAB_MONEY"), "money_total"]]:
 		var scroll = _build_tab(lb[0], lb[1])
 		tab_container.add_child(scroll)
 
@@ -157,7 +169,7 @@ func _build_tab(tab_name: String, lb_name: String) -> ScrollContainer:
 	scroll.add_child(vbox)
 
 	# Header
-	vbox.add_child(_make_row("#", "Player", "Score", true))
+	vbox.add_child(_make_row("#", tr("LEADERBOARD_HEADER_PLAYER"), tr("LEADERBOARD_HEADER_SCORE"), true))
 
 	var sep = ColorRect.new()
 	sep.custom_minimum_size = Vector2(0, 1)
@@ -227,18 +239,18 @@ func _request_current(mode: int) -> void:
 
 func _request(lb_name: String, mode: int) -> void:
 	if not Engine.has_singleton("Steam"):
-		_show_message(lb_name, "Steam unavailable")
+		_show_message(lb_name, tr("LEADERBOARD_STEAM_UNAVAILABLE"))
 		return
 	if not GodotSteam.initialization_complete or not GodotSteam.steam_ready:
-		_show_message(lb_name, "Waiting for Steam...")
+		_show_message(lb_name, tr("LEADERBOARD_WAITING_STEAM"))
 		if not GodotSteam.leaderboards_loaded.is_connected(_on_steam_ready):
 			GodotSteam.leaderboards_loaded.connect(_on_steam_ready)
 		return
 	if not GodotSteam.leaderboards.has(lb_name):
-		_show_message(lb_name, "Leaderboard unavailable")
+		_show_message(lb_name, tr("LEADERBOARD_UNAVAILABLE"))
 		return
 	var handle = GodotSteam.leaderboards[lb_name]
-	_show_message(lb_name, "Loading...")
+	_show_message(lb_name, tr("LEADERBOARD_LOADING"))
 	Steam.downloadLeaderboardEntries(0, 9, mode, handle)
 
 func _on_tab_changed(_idx: int) -> void:
@@ -279,7 +291,7 @@ func _on_downloaded(a, b = null, c = null) -> void:
 	var lb_name := Steam.getLeaderboardName(handle)
 	cached_data[_cache_key(lb_name, current_request_mode)] = results
 	if results.is_empty():
-		_show_message(lb_name, "No entries yet")
+		_show_message(lb_name, tr("LEADERBOARD_NO_ENTRIES"))
 		return
 	_populate(lb_name, results)
 
@@ -322,7 +334,7 @@ func _populate(lb_name: String, entries: Array) -> void:
 		if i < entries.size():
 			var d = entries[i]
 			var sid = d.get("steam_id", 0)
-			var pname = Steam.getFriendPersonaName(sid) if sid != 0 else "Unknown"
+			var pname = Steam.getFriendPersonaName(sid) if sid != 0 else tr("LEADERBOARD_UNKNOWN_PLAYER")
 			labels[0].text = str(d.get("global_rank", i + 1))
 			labels[1].text = pname
 			labels[2].text = str(d.get("score", 0))

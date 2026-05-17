@@ -304,7 +304,7 @@ offset_bottom = -90.0
 grow_horizontal = 2
 grow_vertical = 0
 theme_override_fonts/font = ExtResource("3_s6eg2")
-text = "E to visit"
+text = "HUB_VISIT_PROMPT"
 horizontal_alignment = 1
 vertical_alignment = 1
 

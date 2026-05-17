@@ -773,3 +773,23 @@ BIOME_ICELAND,Island,Iceland
 BIOME_OCEAN,Ozean,Ocean
 
 CLICK_FOR_DETAILS,Klicke für Details,Click for details
+LEADERBOARD_TITLE,BESTENLISTEN,LEADERBOARDS
+LEADERBOARD_TAB_FISH,Meiste Fische gefangen,Most Fish Caught
+LEADERBOARD_TAB_MONEY,Meistes Geld verdient,Most Money Earned
+LEADERBOARD_HEADER_NAME,Name,Name
+LEADERBOARD_HEADER_PLAYER,Spieler,Player
+LEADERBOARD_HEADER_SCORE,Punkte,Score
+LEADERBOARD_WAITING_STEAM,Warte auf Steam...,Waiting for Steam...
+LEADERBOARD_STEAM_UNAVAILABLE,Steam nicht verfügbar,Steam unavailable
+LEADERBOARD_UNAVAILABLE,Bestenliste nicht verfügbar,Leaderboard unavailable
+LEADERBOARD_LOADING,Lädt...,Loading...
+LEADERBOARD_NO_ENTRIES,Noch keine Einträge,No entries yet
+LEADERBOARD_UNKNOWN_PLAYER,Unbekannt,Unknown
+LEADERBOARD_CLOSE,Schließen,Close
+LEADERBOARD_GLOBAL,Global,Global
+LEADERBOARD_FRIENDS,Freunde,Friends
+LEADERBOARD_AROUND_ME,Um mich herum,Around Me
+LEADERBOARD_REFRESH,Aktualisieren,Refresh
+HUB_VISIT_PROMPT,E zum Besuchen,E to visit
+HUB_NOTE_PROMPT,E zum Lesen,E to read
+HUB_LEADERBOARD_PROMPT,E Bestenliste ansehen,E to view leaderboard

@@ -93,7 +93,7 @@ func _create_leaderboard_display():
 	
 	# Titel
 	var title = Label.new()
-	title.text = "LEADERBOARDS"
+	title.text = tr("LEADERBOARD_TITLE")
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title.add_theme_font_size_override("font_size", 48)
 	title.add_theme_color_override("font_color", Color(0.9, 0.85, 0.7))
@@ -108,11 +108,11 @@ func _create_leaderboard_display():
 	leaderboard_panel.add_child(tab_container)
 	
 	# Fish Caught Tab
-	var fish_tab = _create_leaderboard_tab("Most Fish Caught", "fish_total")
+	var fish_tab = _create_leaderboard_tab(tr("LEADERBOARD_TAB_FISH"), "fish_total")
 	tab_container.add_child(fish_tab)
 	
 	# Money Earned Tab
-	var money_tab = _create_leaderboard_tab("Most Money Earned", "money_total")
+	var money_tab = _create_leaderboard_tab(tr("LEADERBOARD_TAB_MONEY"), "money_total")
 	tab_container.add_child(money_tab)
 	
 	# 3. Erstelle 3D Mesh für die Tafel
@@ -144,7 +144,7 @@ func _create_leaderboard_tab(tab_name: String, leaderboard_name: String) -> Scro
 	scroll.add_child(vbox)
 	
 	# Header
-	var header = _create_entry_row("#", "Name", "Score", true)
+	var header = _create_entry_row("#", tr("LEADERBOARD_HEADER_NAME"), tr("LEADERBOARD_HEADER_SCORE"), true)
 	vbox.add_child(header)
 	
 	# Separator
@@ -157,7 +157,7 @@ func _create_leaderboard_tab(tab_name: String, leaderboard_name: String) -> Scro
 	for i in range(max_entries):
 		var entry = _create_entry_row(
 			str(i + 1),
-			"Waiting for Steam...",
+			tr("LEADERBOARD_WAITING_STEAM"),
 			"---"
 		)
 		entry.name = "Entry_" + str(i)
@@ -310,7 +310,7 @@ func _update_entries(container: VBoxContainer, entries: Array):
 			var rank = data.get("global_rank", i + 1)
 			var score = data.get("score", 0)
 			var steam_id = data.get("steam_id", 0)
-			var player_name = Steam.getFriendPersonaName(steam_id) if steam_id != 0 else "Unknown"
+			var player_name = Steam.getFriendPersonaName(steam_id) if steam_id != 0 else tr("LEADERBOARD_UNKNOWN_PLAYER")
 
 			labels[0].text = str(rank)
 			labels[1].text = player_name
