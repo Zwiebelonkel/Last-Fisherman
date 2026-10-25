@@ -1,6 +1,9 @@
 extends Node3D
 class_name Keypad
 
+const KEYPAD_UI_SCENE := preload("res://scenes/KeypadUI.tscn")
+const KeypadUIController := preload("res://scripts/KeypadUI.gd")
+
 # -------------------------
 # Signals
 # -------------------------
@@ -25,6 +28,9 @@ var is_active: bool = false
 var player: CharacterBody3D = null
 var event_echo: EventEcho = null
 var is_processing: bool = false
+var keypad_ui: KeypadUIController
+var _session: int = 0
+var _accepted := false
 
 # -------------------------
 # Node References
@@ -34,13 +40,23 @@ var is_processing: bool = false
 @onready var audio_success: AudioStreamPlayer3D = $AudioSuccess
 @onready var audio_error: AudioStreamPlayer3D = $AudioError
 @onready var interaction_area: Area3D = $InteractionArea
+@onready var prompt_label: Label3D = $Prompt
 
 
 # -------------------------
 # Ready
 # -------------------------
 func _ready() -> void:
-	print("🔢 Keypad initialisiert - Code: ", correct_code)
+	keypad_ui = KEYPAD_UI_SCENE.instantiate() as KeypadUIController
+	add_child(keypad_ui)
+	keypad_ui.digit_pressed.connect(add_digit)
+	keypad_ui.erase_pressed.connect(remove_last_digit)
+	keypad_ui.clear_pressed.connect(clear_input)
+	keypad_ui.submitted.connect(check_code)
+	keypad_ui.close_requested.connect(deactivate)
+	player = get_tree().get_first_node_in_group("player") as CharacterBody3D
+	prompt_label.text = KeypadUIController.text_for("prompt")
+	prompt_label.hide()
 	
 	# Verbinde Area3D Signale
 	if interaction_area:
@@ -54,56 +70,56 @@ func _ready() -> void:
 # Process
 # -------------------------
 func _process(_delta: float) -> void:
-	if not is_active or not player:
-		return
-	
-	# Prüfe Distanz
-	var distance = global_position.distance_to(player.global_position)
-	if distance > interaction_distance:
+	if is_active and not can_interact():
 		deactivate()
-		return
-	
-	# Tasteneingabe
-	if Input.is_action_just_pressed("ui_text_backspace"):
-		remove_last_digit()
-	elif Input.is_action_just_pressed("ui_accept"):
-		check_code()
-	else:
-		# Zahlen 0-9
-		for i in range(10):
-			if Input.is_action_just_pressed("keypad_" + str(i)):
-				add_digit(str(i))
-				break
+
+func can_interact() -> bool:
+	if not is_instance_valid(player):
+		player = get_tree().get_first_node_in_group("player") as CharacterBody3D
+	return is_instance_valid(player) and not _accepted and global_position.distance_to(player.global_position) <= interaction_distance
+
+func get_interaction_prompt() -> String:
+	return KeypadUIController.text_for("prompt")
 
 # -------------------------
 # Digit Management
 # -------------------------
 func add_digit(digit: String) -> void:
+	if not is_active or is_processing or digit.length() != 1 or not digit.is_valid_int():
+		return
 	if current_input.length() >= correct_code.length():
 		return
 	
 	current_input += digit
 	update_display()
+	keypad_ui.set_feedback("ready")
 	play_beep()
 	
-	# Auto-Check wenn Code-Länge erreicht
-	if current_input.length() == correct_code.length():
-		await get_tree().create_timer(0.3).timeout
-		check_code()
+func clear_input() -> void:
+	if not is_active or is_processing:
+		return
+	current_input = ""
+	update_display()
+	keypad_ui.set_feedback("ready")
+	play_beep()
 
 func remove_last_digit() -> void:
-	if current_input.is_empty():
+	if not is_active or is_processing or current_input.is_empty():
 		return
 	
 	current_input = current_input.substr(0, current_input.length() - 1)
 	update_display()
+	keypad_ui.set_feedback("ready")
 	play_beep()
 
 # -------------------------
 # Code Validation
 # -------------------------
 func check_code() -> void:
-	if is_processing:
+	if not is_active or is_processing:
+		return
+	if current_input.length() != correct_code.length():
+		keypad_ui.set_feedback("incomplete")
 		return
 	
 	if current_input == secret_code:
@@ -118,7 +134,9 @@ func on_secret_code() -> void:
 		return
 	
 	is_processing = true
-	
+	_accepted = true
+	keypad_ui.set_busy(true)
+	keypad_ui.set_feedback("secret")
 	print("🎉 SECRET CODE!")
 	
 	play_success()
@@ -128,6 +146,7 @@ func on_secret_code() -> void:
 	
 	await get_tree().create_timer(1.0).timeout
 	
+	keypad_ui.close_ui()
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	Transition.change_scene("res://scenes/rave.tscn", 1.0)
 
@@ -135,7 +154,10 @@ func on_correct_code() -> void:
 	if is_processing:
 		return
 	
-	is_processing = true  # 🔒 LOCK
+	is_processing = true
+	_accepted = true
+	keypad_ui.set_busy(true)
+	keypad_ui.set_feedback("correct")
 	
 	print("✅ CORRECT CODE!")
 	
@@ -147,23 +169,25 @@ func on_correct_code() -> void:
 	is_active = false
 	
 	await get_tree().create_timer(1.0).timeout
+	keypad_ui.close_ui()
 	show_event_echo()
 
 func on_incorrect_code() -> void:
-	print("❌ FALSCHER CODE!")
-	
+	is_processing = true
+	var session := _session
 	play_error()
-	
-	# Rote Anzeige kurz blinken
 	display_label.modulate = Color.RED
-	await get_tree().create_timer(0.5).timeout
-	display_label.modulate = Color.WHITE
-	
-	# Reset Input
-	current_input = ""
-	update_display()
-	
+	keypad_ui.set_feedback("incorrect")
+	keypad_ui.set_busy(true)
 	emit_signal("code_incorrect")
+	await get_tree().create_timer(0.8).timeout
+	if session != _session or not is_active:
+		return
+	display_label.modulate = Color.WHITE
+	current_input = ""
+	is_processing = false
+	update_display()
+	keypad_ui.set_busy(false)
 
 # -------------------------
 # Event Echo & Scene Transition
@@ -222,6 +246,8 @@ func go_to_ending() -> void:
 # Display
 # -------------------------
 func update_display() -> void:
+	if is_instance_valid(keypad_ui):
+		keypad_ui.set_code(current_input)
 	if not display_label:
 		return
 	
@@ -259,31 +285,33 @@ func play_error() -> void:
 # -------------------------
 func _on_body_entered(body: Node3D) -> void:
 	if body.is_in_group("player"):
-		player = body
-		activate()
+		player = body as CharacterBody3D
 
 func _on_body_exited(body: Node3D) -> void:
-	if body.is_in_group("player"):
+	if body == player and is_active and not can_interact():
 		deactivate()
-		player = null
+
+func interact() -> void:
+	activate()
 
 func activate() -> void:
+	if is_active or is_processing or not can_interact() or Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
+		return
+	if Transition.is_transitioning:
+		return
+	_session += 1
 	is_active = true
-	print("🔢 Keypad aktiviert - Gib Code ein")
-	
-	# Optional: Zeige Hinweis-UI
-	if display_label:
-		display_label.modulate = Color(0.5, 1.0, 0.5)  # Grünlicher Schimmer
+	current_input = ""
+	keypad_ui.open_ui(correct_code.length())
+	update_display()
+	display_label.modulate = Color(0.5, 1.0, 0.5)
 
 func deactivate() -> void:
-	if not is_active:
-		return
-	
+	_session += 1
 	is_active = false
-	current_input = ""
-	update_display()
-	
-	if display_label:
+	if not _accepted:
+		is_processing = false
+		current_input = ""
+		update_display()
 		display_label.modulate = Color.WHITE
-	
-	print("🔢 Keypad deaktiviert")
+	keypad_ui.close_ui()

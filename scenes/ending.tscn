@@ -385,7 +385,7 @@ func play_ocean_jumpscare() -> void:
 		AudioServer.set_bus_mute(i, false)
 	
 	# Wechsel zur Ending Scene
-	get_tree().change_scene_to_file(\"res://scenes/decision.tscn\")
+	Transition.change_scene(\"res://scenes/decision.tscn\", 0.0)
 
 
 func _on_catch_result_closed() -> void:

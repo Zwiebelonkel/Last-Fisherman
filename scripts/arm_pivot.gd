@@ -286,7 +286,7 @@ func _start_bad_ending() -> void:
 
 	await get_tree().create_timer(SCENE_DELAY).timeout
 	SteamAchievements.unlock("ACH_COMPLETE_GAME2")
-	get_tree().change_scene_to_file(NEXT_SCENE)
+	Transition.change_scene(NEXT_SCENE, 0.0)
 # ---------------------------------------------------------------------------
 # Good Ending
 # ---------------------------------------------------------------------------
@@ -318,7 +318,7 @@ func _start_good_ending() -> void:
 
 	await get_tree().create_timer(SCENE_DELAY).timeout
 	SteamAchievements.unlock("ACH_COMPLETE_GAME")
-	get_tree().change_scene_to_file(NEXT_SCENE)
+	Transition.change_scene(NEXT_SCENE, 0.0)
 
 # ---------------------------------------------------------------------------
 # Visuals

@@ -207,4 +207,4 @@ func _input(event: InputEvent) -> void:
 		await tween.finished
 		
 		# Szene wechseln
-		get_tree().change_scene_to_file("res://scenes/mainMenu.tscn")
+		Transition.change_scene("res://scenes/mainMenu.tscn", 0.0)

@@ -17,20 +17,50 @@ var cached_scores: Dictionary = {
 var initialization_complete: bool = false
 signal leaderboards_loaded
 
+const LEADERBOARD_NAMES := ["fish_total", "money_total"]
+const FIND_TIMEOUT_MSEC := 8000
+const MAX_FIND_ATTEMPTS := 3
+var steam_api: Object
+var _steam_initialized := false
+var _find_queue: Array[String] = []
+var _finding := ""
+var _find_attempts: Dictionary = {}
+var _find_started_at: int = 0
+var _next_connection_check: int = 0
+var _find_next_scheduled := false
+
 const MAX_LEADERBOARD_SCORE = 2147483647
 
 func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_ALWAYS
+	steam_api = Engine.get_singleton("Steam") if Engine.has_singleton("Steam") else null
 	await get_tree().create_timer(0.5).timeout
 	_init_steam()
 
 func _process(_delta: float) -> void:
-	if steam_ready:
-		Steam.run_callbacks()
+	if not _steam_initialized:
+		return
+	steam_api.run_callbacks()
+	var now := Time.get_ticks_msec()
+	if now >= _next_connection_check:
+		_next_connection_check = now + 1000
+		var connected: bool = steam_api.loggedOn()
+		if connected != steam_ready:
+			steam_ready = connected
+			if connected:
+				ensure_leaderboards()
+			else:
+				_finding = ""
+				_find_queue.clear()
+				initialization_complete = true
+				leaderboards_loaded.emit()
+	if steam_ready and not _finding.is_empty() and now - _find_started_at >= FIND_TIMEOUT_MSEC:
+		_finish_find(false)
 
 func _init_steam() -> void:
 	print("🔧 Starte Steam Initialisierung...")
 	
-	if not Engine.has_singleton("Steam"):
+	if steam_api == null:
 		print("⚠️ Steam nicht verfügbar")
 		initialization_complete = true
 		leaderboards_loaded.emit()
@@ -39,55 +69,85 @@ func _init_steam() -> void:
 	OS.set_environment("SteamAppId", str(STEAM_APP_ID))
 	OS.set_environment("SteamGameId", str(STEAM_APP_ID))
 	
-	var ok: bool = Steam.steamInit()
+	var ok: bool = steam_api.steamInit()
 	if not ok:
 		print("⚠️ Steam Init fehlgeschlagen")
 		initialization_complete = true
 		leaderboards_loaded.emit()
 		return
 	
-	steam_id = int(Steam.getSteamID())
-	steam_ready = bool(Steam.loggedOn())
+	_steam_initialized = true
+	steam_id = int(steam_api.getSteamID())
+	steam_ready = bool(steam_api.loggedOn())
+	if not steam_api.leaderboard_find_result.is_connected(_on_leaderboard_find):
+		steam_api.leaderboard_find_result.connect(_on_leaderboard_find)
+	if not steam_api.leaderboard_score_uploaded.is_connected(_on_score_uploaded):
+		steam_api.leaderboard_score_uploaded.connect(_on_score_uploaded)
 	
 	if not steam_ready:
 		print("⚠️ Steam nicht eingeloggt")
+		initialization_complete = true
+		leaderboards_loaded.emit()
 		return
 	
 	print("✅ Steam bereit | ID:", steam_id)
 	
-	if not Steam.leaderboard_find_result.is_connected(_on_leaderboard_find):
-		Steam.leaderboard_find_result.connect(_on_leaderboard_find)
-	
-	if not Steam.leaderboard_score_uploaded.is_connected(_on_score_uploaded):
-		Steam.leaderboard_score_uploaded.connect(_on_score_uploaded)
-	
-	await get_tree().create_timer(1.0).timeout
-	
-	print("🔍 Suche Leaderboards...")
-	Steam.findOrCreateLeaderboard("fish_total", Steam.LEADERBOARD_SORT_METHOD_DESCENDING, Steam.LEADERBOARD_DISPLAY_TYPE_NUMERIC)
-	await get_tree().create_timer(0.5).timeout
-	Steam.findOrCreateLeaderboard("money_total", Steam.LEADERBOARD_SORT_METHOD_DESCENDING, Steam.LEADERBOARD_DISPLAY_TYPE_NUMERIC)
+	ensure_leaderboards()
+
+func ensure_leaderboards() -> void:
+	if not steam_ready or not _finding.is_empty() or not _find_queue.is_empty() or _find_next_scheduled:
+		return
+	for name: String in LEADERBOARD_NAMES:
+		if int(leaderboards.get(name, 0)) <= 0:
+			_find_queue.append(name)
+			_find_attempts[name] = 0
+	initialization_complete = false
+	_start_next_find()
+
+func _start_next_find() -> void:
+	_find_next_scheduled = false
+	if not steam_ready or not _finding.is_empty():
+		return
+	if _find_queue.is_empty():
+		leaderboards_ready = leaderboards.size()
+		initialization_complete = true
+		leaderboards_loaded.emit()
+		return
+	_finding = _find_queue.pop_front()
+	_find_attempts[_finding] = int(_find_attempts.get(_finding, 0)) + 1
+	_find_started_at = Time.get_ticks_msec()
+	steam_api.findOrCreateLeaderboard(_finding, Steam.LEADERBOARD_SORT_METHOD_DESCENDING, Steam.LEADERBOARD_DISPLAY_TYPE_NUMERIC)
+
+func _finish_find(success: bool) -> void:
+	var name := _finding
+	_finding = ""
+	if not success and int(_find_attempts.get(name, 0)) < MAX_FIND_ATTEMPTS:
+		_find_queue.append(name)
+	# Start the next call after the current Steam callback has returned.
+	_find_next_scheduled = true
+	_start_next_find.call_deferred()
 
 func _on_leaderboard_find(handle: int, found: int) -> void:
-	if handle <= 0:
+	if _finding.is_empty():
 		return
-	
-	var name := Steam.getLeaderboardName(handle)
+	if found != 1 or handle <= 0:
+		_finish_find(false)
+		return
+	var name: String = steam_api.getLeaderboardName(handle)
+	if name != _finding:
+		return
 	leaderboards[name] = handle
-	leaderboards_ready += 1
+	leaderboards_ready = leaderboards.size()
 	
 	print("✅ Leaderboard:", name, "| Handle:", handle)
 	
-	if leaderboards_ready >= expected_leaderboards:
-		initialization_complete = true
-		print("✅ Alle Leaderboards bereit")
-		leaderboards_loaded.emit()
+	_finish_find(true)
 
 func _on_score_uploaded(success: int, steam_leaderboard: int, score_details: Dictionary) -> void:
 	if steam_leaderboard <= 0:
 		return
 	
-	var leaderboard_name := Steam.getLeaderboardName(steam_leaderboard)
+	var leaderboard_name: String = steam_api.getLeaderboardName(steam_leaderboard)
 	var score = score_details.get("score", 0)
 	var score_changed = score_details.get("score_changed", 0)
 	var global_rank = score_details.get("global_rank_new", 0)
@@ -127,7 +187,7 @@ func _upload_score(name: String, score: int) -> void:
 	var handle: int = leaderboards[name]
 	print("📤 Upload:", name, "→", score)
 	
-	Steam.uploadLeaderboardScore(
+	steam_api.uploadLeaderboardScore(
 		score,                     # 1️⃣ SCORE
 		true,                      # 2️⃣ keep_best
 		PackedInt32Array(),        # 3️⃣ Details (leer)

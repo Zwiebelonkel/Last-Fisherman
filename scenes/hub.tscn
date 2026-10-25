@@ -549,13 +549,16 @@ shape = SubResource("BoxShape3D_trb2f")
 [node name="FishingRod" parent="." instance=ExtResource("20_7n2o6")]
 transform = Transform3D(0.00275756, 0.673487, 0.739194, 7.36642e-09, 0.739196, -0.67349, -0.999996, 0.00185719, 0.00203838, 0.737115, 0.438908, -1.81165)
 
+[node name="RodMesh" parent="FishingRod" index="0"]
+transform = Transform3D(1, 0, 0, 0, 0.966823, 0.255446, 0, -0.255446, 0.966823, 0, 0, -0.0166266)
+
 [node name="right_hand" parent="FishingRod/RodMesh" index="4"]
 visible = false
 
 [node name="Keypad" parent="." instance=ExtResource("21_rtbv5")]
 transform = Transform3D(-0.575, 0, -8.68226e-08, 0, 0.575, 0, 8.68226e-08, 0, -0.575, 3.03949, 0.80469, 3.69842)
 
-[node name="HubVisitInteraction" type="Node" parent="." node_paths=PackedStringArray("camera", "prompt_label", "dman_area", "sev_area", "samo_area", "leaderboard_area")]
+[node name="HubVisitInteraction" type="Node" parent="." node_paths=PackedStringArray("camera", "prompt_label", "dman_area", "sev_area", "samo_area", "leaderboard_area", "keypad_area")]
 script = ExtResource("25_visit")
 camera = NodePath("../FPSPlayer/Head/Camera3D")
 prompt_label = NodePath("../UI/VisitPrompt")
@@ -563,6 +566,7 @@ dman_area = NodePath("../DmanVisitArea")
 sev_area = NodePath("../SevVisitArea")
 samo_area = NodePath("../SamoVisitArea")
 leaderboard_area = NodePath("../Leaderboard/Area3D")
+keypad_area = NodePath("../Keypad/InteractionTarget")
 
 [node name="DmanVisitArea" type="Area3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.41154, 1.49516, 2.64647)

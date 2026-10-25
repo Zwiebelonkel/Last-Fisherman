@@ -23,6 +23,7 @@ var biome_colors = {
 }
 
 func _ready():
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	print("🎬 Transition wird initialisiert...")
 	
 	# ColorRect erstellen falls nicht vorhanden
@@ -97,6 +98,7 @@ func change_scene(target_scene: String, duration: float = 0.5) -> void:
 	
 	print("🎬 START Swipe-Transition zu:", target_scene)
 	is_transitioning = true
+	ScenePreloader.request_scene(target_scene)
 	color_rect.mouse_filter = Control.MOUSE_FILTER_STOP
 	color_rect.color = Color.BLACK
 	color_rect.show()
@@ -122,9 +124,10 @@ func change_scene(target_scene: String, duration: float = 0.5) -> void:
 	
 	# 🆕 Szene asynchron laden
 	print("🔄 Lade Szene asynchron...")
-	await load_scene_async(target_scene)
+	var changed := await load_scene_async(target_scene)
 	await get_tree().process_frame
-	print("✅ Szene gewechselt!")
+	if changed:
+		print("✅ Szene gewechselt!")
 	
 	# Swipe Out (nach oben raus)
 	tween = create_tween()
@@ -148,6 +151,7 @@ func change_to_biome(target_scene: String, biome_name: String, duration: float =
 		return
 	
 	is_transitioning = true
+	ScenePreloader.request_scene(target_scene)
 	color_rect.mouse_filter = Control.MOUSE_FILTER_STOP
 	
 	# Setze Biom-Farbe
@@ -165,7 +169,7 @@ func change_to_biome(target_scene: String, biome_name: String, duration: float =
 	await get_tree().create_timer(0.1).timeout
 	
 	# Szene wechseln
-	get_tree().change_scene_to_file(target_scene)
+	await load_scene_async(target_scene)
 	await get_tree().process_frame
 	
 	# Fade In
@@ -191,6 +195,7 @@ func change_scene_reverse(target_scene: String, duration: float = 0.5) -> void:
 	
 	print("🎬 START Reverse Swipe-Transition zu:", target_scene)
 	is_transitioning = true
+	ScenePreloader.request_scene(target_scene)
 	color_rect.mouse_filter = Control.MOUSE_FILTER_STOP
 	color_rect.color = Color.BLACK
 	color_rect.show()
@@ -216,9 +221,10 @@ func change_scene_reverse(target_scene: String, duration: float = 0.5) -> void:
 	
 	# 🆕 Szene asynchron laden
 	print("🔄 Lade Szene asynchron...")
-	await load_scene_async(target_scene)
+	var changed := await load_scene_async(target_scene)
 	await get_tree().process_frame
-	print("✅ Szene gewechselt!")
+	if changed:
+		print("✅ Szene gewechselt!")
 	
 	# Swipe Out (nach unten raus)
 	tween = create_tween()
@@ -243,6 +249,7 @@ func water_transition(target_scene: String, duration: float = 1.2) -> void:
 	
 	print("🌊 Starte Wasser-Transition zu:", target_scene)
 	is_transitioning = true
+	ScenePreloader.request_scene(target_scene)
 	color_rect.mouse_filter = Control.MOUSE_FILTER_STOP
 	color_rect.color = Color(0.1, 0.4, 0.7, 1.0)  # Dunkleres, sichtbareres Blau
 	color_rect.modulate.a = 0.0  # Start bei unsichtbar
@@ -267,7 +274,7 @@ func water_transition(target_scene: String, duration: float = 1.2) -> void:
 	
 	print("🌊 Wechsle Szene...")
 	# Szene wechseln
-	get_tree().change_scene_to_file(target_scene)
+	await load_scene_async(target_scene)
 	await get_tree().process_frame
 	
 	print("🌊 Fade In...")
@@ -284,44 +291,50 @@ func water_transition(target_scene: String, duration: float = 1.2) -> void:
 # ---------------------------------------------------------
 # 🆕 ASYNC LOADING: Szene asynchron laden
 # ---------------------------------------------------------
-func load_scene_async(path: String) -> void:
+func load_scene_async(path: String) -> bool:
 	if loading_active:
-		return
+		return false
 	
-	print("⏳ Starte asynchrones Laden:", path)
 	loading_active = true
-	loading_label.visible = true
+	loading_label.visible = false
 	loading_label.text = "Loading..."
-	
-	# Anfrage starten
-	var error = ResourceLoader.load_threaded_request(path)
+	var error := ScenePreloader.request_scene(path)
 	if error != OK:
-		print("❌ Fehler beim Laden-Request:", error)
+		push_error("Could not request scene: %s (%s)" % [path, error_string(error)])
+		ScenePreloader.finish_request(path)
 		loading_active = false
-		loading_label.visible = false
-		return
-	
-	var load_status = ResourceLoader.THREAD_LOAD_IN_PROGRESS
-	var progress = []
-	
-	# Polling Loop
-	while load_status == ResourceLoader.THREAD_LOAD_IN_PROGRESS:
-		load_status = ResourceLoader.load_threaded_get_status(path, progress)
-		
-		if progress.size() > 0:
-			loading_label.text = "Loading... %d%%" % int(progress[0] * 100)
-		
+		return false
+
+	var progress: Array = []
+	var started_at := Time.get_ticks_msec()
+	var status := ScenePreloader.get_scene_status(path, progress)
+	while status == ResourceLoader.THREAD_LOAD_IN_PROGRESS:
+		# Cached scenes need no loading flash; show progress only for a real wait.
+		loading_label.visible = Time.get_ticks_msec() - started_at >= 150
+		if not progress.is_empty():
+			loading_label.text = "Loading... %d%%" % int(float(progress[0]) * 100.0)
 		await get_tree().process_frame
-	
-	if load_status == ResourceLoader.THREAD_LOAD_LOADED:
-		print("✅ Szene geladen!")
-		var resource = ResourceLoader.load_threaded_get(path)
-		get_tree().change_scene_to_packed(resource)
+		status = ScenePreloader.get_scene_status(path, progress)
+
+	var changed := false
+	var packed := ScenePreloader.get_scene(path)
+	if status == ResourceLoader.THREAD_LOAD_LOADED and packed != null:
+		var previous_id := get_tree().current_scene.get_instance_id() if get_tree().current_scene != null else 0
+		error = get_tree().change_scene_to_packed(packed)
+		if error == OK:
+			# Keep the cover until the new scene has entered the tree and is ready.
+			while get_tree().current_scene == null or get_tree().current_scene.get_instance_id() == previous_id:
+				await get_tree().process_frame
+			changed = true
+		else:
+			push_error("Could not switch scene: %s (%s)" % [path, error_string(error)])
 	else:
-		print("❌ Fehler beim Laden! Status:", load_status)
-	
+		push_error("Could not load scene: " + path)
+
+	ScenePreloader.finish_request(path)
 	loading_label.visible = false
 	loading_active = false
+	return changed
 
 # HAUPT-FUNKTION: Automatische Transition-Auswahl
 func go_to_scene(target_scene: String) -> void:
@@ -366,6 +379,7 @@ func freeze_transition(target_scene: String, duration: float = 1.0) -> void:
 		return
 	
 	is_transitioning = true
+	ScenePreloader.request_scene(target_scene)
 	color_rect.mouse_filter = Control.MOUSE_FILTER_STOP
 	color_rect.color = Color(0.7, 0.9, 1.0, 1.0)  # Eisblau
 	
@@ -377,7 +391,7 @@ func freeze_transition(target_scene: String, duration: float = 1.0) -> void:
 	await tween.finished
 	
 	# Szene wechseln
-	get_tree().change_scene_to_file(target_scene)
+	await load_scene_async(target_scene)
 	await get_tree().process_frame
 	
 	# Schnelles "Auftauen"

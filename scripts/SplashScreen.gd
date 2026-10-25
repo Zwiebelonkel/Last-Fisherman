@@ -116,6 +116,12 @@ var loading_messages := {
 
 func _ready():
 	print("🎮 Splash Screen gestartet")
+	# Start disk loading immediately, including while shader warmup finishes.
+	var error := ScenePreloader.request_scene(target_scene)
+	if error != OK:
+		loading_label.text = "Error loading game!"
+		ScenePreloader.finish_request(target_scene)
+		return
 	
 	if has_node("/root/ShaderWarmup"):
 		while not ShaderWarmup.shaders_ready:
@@ -123,9 +129,6 @@ func _ready():
 		
 	# 🆕 Lade zufälligen Fisch
 	load_random_fish()
-	
-	# Kurze Verzögerung für visuellen Effekt
-	await get_tree().create_timer(0.5).timeout
 	
 	# Starte das Laden
 	start_loading()
@@ -174,24 +177,24 @@ func start_loading():
 	if animation_player and animation_player.has_animation("logo_fade"):
 		animation_player.play("logo_fade")
 	
-	# Starte asynchrones Laden
-	ResourceLoader.load_threaded_request(target_scene)
-	
 	# Warte bis fertig
-	await poll_loading_progress()
-	
-	# Kurze Pause bevor gewechselt wird
-	await get_tree().create_timer(0.3).timeout
+	if not await poll_loading_progress():
+		ScenePreloader.finish_request(target_scene)
+		return
 	
 	print("✅ Laden abgeschlossen! Wechsle zu Hauptszene...")
-	get_tree().change_scene_to_file(target_scene)
+	var packed := ScenePreloader.get_scene(target_scene)
+	var error := get_tree().change_scene_to_packed(packed)
+	if error != OK:
+		loading_label.text = "Error loading game!"
+		ScenePreloader.finish_request(target_scene)
 
-func poll_loading_progress():
-	var status = ResourceLoader.THREAD_LOAD_IN_PROGRESS
-	var progress = []
+func poll_loading_progress() -> bool:
+	var progress: Array = []
+	var status := ScenePreloader.get_scene_status(target_scene, progress)
 	
 	while status == ResourceLoader.THREAD_LOAD_IN_PROGRESS:
-		status = ResourceLoader.load_threaded_get_status(target_scene, progress)
+		status = ScenePreloader.get_scene_status(target_scene, progress)
 		
 		if progress.size() > 0:
 			loading_progress = progress[0]
@@ -199,13 +202,14 @@ func poll_loading_progress():
 		
 		await get_tree().process_frame
 	
-	# Finale Updates
-	loading_progress = 1.0
-	update_ui()
-	
 	if status != ResourceLoader.THREAD_LOAD_LOADED:
 		print("❌ Fehler beim Laden!")
 		loading_label.text = "Error loading game!"
+		return false
+
+	loading_progress = 1.0
+	update_ui()
+	return true
 
 # 🌍 Helper für übersetzten Text
 func get_loading_text(key: String, percent: int) -> String:

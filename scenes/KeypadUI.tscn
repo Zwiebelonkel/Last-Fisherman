@@ -1,0 +1,315 @@
+[gd_scene load_steps=10 format=3 uid="uid://cnrwsw0ufdrjc"]
+
+[ext_resource type="Script" path="res://scripts/KeypadUI.gd" id="1_script"]
+[ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="2_font"]
+
+[sub_resource type="StyleBoxFlat" id="PanelStyle"]
+bg_color = Color(0.064, 0.081, 0.076, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.35, 0.46, 0.38, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_left = 12
+corner_radius_bottom_right = 12
+shadow_color = Color(0, 0, 0, 0.5)
+shadow_size = 18
+
+[sub_resource type="StyleBoxFlat" id="ButtonNormal"]
+bg_color = Color(0.14, 0.18, 0.16, 1)
+border_width_bottom = 3
+border_color = Color(0.08, 0.1, 0.09, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_left = 5
+corner_radius_bottom_right = 5
+
+[sub_resource type="StyleBoxFlat" id="ButtonHover"]
+bg_color = Color(0.23, 0.32, 0.25, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 3
+border_color = Color(0.48, 0.66, 0.49, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_left = 5
+corner_radius_bottom_right = 5
+
+[sub_resource type="StyleBoxFlat" id="ButtonPressed"]
+bg_color = Color(0.31, 0.43, 0.31, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_left = 5
+corner_radius_bottom_right = 5
+
+[sub_resource type="StyleBoxFlat" id="DisplayStyle"]
+bg_color = Color(0.022, 0.039, 0.029, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.29, 0.39, 0.29, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_left = 5
+corner_radius_bottom_right = 5
+
+[sub_resource type="StyleBoxFlat" id="ConfirmStyle"]
+bg_color = Color(0.29, 0.4, 0.29, 1)
+border_width_bottom = 3
+border_color = Color(0.13, 0.19, 0.13, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_left = 5
+corner_radius_bottom_right = 5
+
+[sub_resource type="Theme" id="KeypadTheme"]
+default_font = ExtResource("2_font")
+default_font_size = 20
+Button/colors/font_color = Color(0.91, 0.94, 0.85, 1)
+Button/colors/font_hover_color = Color(1, 1, 0.94, 1)
+Button/colors/font_pressed_color = Color(0.91, 1, 0.85, 1)
+Button/colors/font_disabled_color = Color(0.38, 0.45, 0.39, 1)
+Button/styles/normal = SubResource("ButtonNormal")
+Button/styles/hover = SubResource("ButtonHover")
+Button/styles/pressed = SubResource("ButtonPressed")
+Button/styles/disabled = SubResource("ButtonNormal")
+Label/colors/font_color = Color(0.84, 0.89, 0.81, 1)
+
+[node name="KeypadUI" type="CanvasLayer"]
+process_mode = 3
+layer = 20
+script = ExtResource("1_script")
+
+[node name="Root" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("KeypadTheme")
+
+[node name="Backdrop" type="ColorRect" parent="Root"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.008, 0.014, 0.011, 0.88)
+
+[node name="Margin" type="Control" parent="Root"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Center" type="Control" parent="Root/Margin"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Panel" type="PanelContainer" parent="Root/Margin/Center"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(480, 0)
+layout_mode = 0
+theme_override_styles/panel = SubResource("PanelStyle")
+
+[node name="Padding" type="MarginContainer" parent="Root/Margin/Center/Panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 28
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 28
+theme_override_constants/margin_bottom = 20
+
+[node name="Content" type="VBoxContainer" parent="Root/Margin/Center/Panel/Padding"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Title" type="Label" parent="Root/Margin/Center/Panel/Padding/Content"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.72, 0.88, 0.68, 1)
+theme_override_font_sizes/font_size = 32
+text = "ZUGANGSCODE"
+horizontal_alignment = 1
+
+[node name="Subtitle" type="Label" parent="Root/Margin/Center/Panel/Padding/Content"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Gib den Code am Tastenfeld ein."
+horizontal_alignment = 1
+
+[node name="DisplayPanel" type="PanelContainer" parent="Root/Margin/Center/Panel/Padding/Content"]
+custom_minimum_size = Vector2(0, 72)
+layout_mode = 2
+theme_override_styles/panel = SubResource("DisplayStyle")
+
+[node name="CodeDisplay" type="Label" parent="Root/Margin/Center/Panel/Padding/Content/DisplayPanel"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.75, 0.97, 0.66, 1)
+theme_override_font_sizes/font_size = 44
+text = "_  _  _  _"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Status" type="Label" parent="Root/Margin/Center/Panel/Padding/Content"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Bereit zur Eingabe"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Keys" type="GridContainer" parent="Root/Margin/Center/Panel/Padding/Content"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/h_separation = 10
+theme_override_constants/v_separation = 10
+columns = 3
+
+[node name="Digit1" type="Button" parent="Root/Margin/Center/Panel/Padding/Content/Keys"]
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+theme_override_font_sizes/font_size = 28
+text = "1"
+metadata/digit = "1"
+
+[node name="Digit2" type="Button" parent="Root/Margin/Center/Panel/Padding/Content/Keys"]
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+theme_override_font_sizes/font_size = 28
+text = "2"
+metadata/digit = "2"
+
+[node name="Digit3" type="Button" parent="Root/Margin/Center/Panel/Padding/Content/Keys"]
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+theme_override_font_sizes/font_size = 28
+text = "3"
+metadata/digit = "3"
+
+[node name="Digit4" type="Button" parent="Root/Margin/Center/Panel/Padding/Content/Keys"]
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+theme_override_font_sizes/font_size = 28
+text = "4"
+metadata/digit = "4"
+
+[node name="Digit5" type="Button" parent="Root/Margin/Center/Panel/Padding/Content/Keys"]
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+theme_override_font_sizes/font_size = 28
+text = "5"
+metadata/digit = "5"
+
+[node name="Digit6" type="Button" parent="Root/Margin/Center/Panel/Padding/Content/Keys"]
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+theme_override_font_sizes/font_size = 28
+text = "6"
+metadata/digit = "6"
+
+[node name="Digit7" type="Button" parent="Root/Margin/Center/Panel/Padding/Content/Keys"]
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+theme_override_font_sizes/font_size = 28
+text = "7"
+metadata/digit = "7"
+
+[node name="Digit8" type="Button" parent="Root/Margin/Center/Panel/Padding/Content/Keys"]
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+theme_override_font_sizes/font_size = 28
+text = "8"
+metadata/digit = "8"
+
+[node name="Digit9" type="Button" parent="Root/Margin/Center/Panel/Padding/Content/Keys"]
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+theme_override_font_sizes/font_size = 28
+text = "9"
+metadata/digit = "9"
+
+[node name="ClearButton" type="Button" parent="Root/Margin/Center/Panel/Padding/Content/Keys"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+theme_override_font_sizes/font_size = 16
+text = "LEEREN"
+
+[node name="Digit0" type="Button" parent="Root/Margin/Center/Panel/Padding/Content/Keys"]
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+theme_override_font_sizes/font_size = 28
+text = "0"
+metadata/digit = "0"
+
+[node name="EraseButton" type="Button" parent="Root/Margin/Center/Panel/Padding/Content/Keys"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+theme_override_font_sizes/font_size = 16
+text = "LÖSCHEN"
+
+[node name="ConfirmButton" type="Button" parent="Root/Margin/Center/Panel/Padding/Content"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+focus_mode = 0
+theme_override_styles/normal = SubResource("ConfirmStyle")
+text = "BESTÄTIGEN  [ENTER]"
+
+[node name="Hint" type="Label" parent="Root/Margin/Center/Panel/Padding/Content"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.55, 0.63, 0.56, 1)
+theme_override_font_sizes/font_size = 14
+text = "0–9  Eingabe   /   Rücktaste  Löschen"
+horizontal_alignment = 1
+
+[node name="CloseButton" type="Button" parent="Root/Margin/Center/Panel/Padding/Content"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+focus_mode = 0
+theme_override_font_sizes/font_size = 16
+text = "SCHLIESSEN  [ESC]"

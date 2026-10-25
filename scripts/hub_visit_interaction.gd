@@ -14,7 +14,9 @@ extends Node
 
 @export var leaderboard_area: Area3D
 @export var leaderboard_prompt_key := "HUB_LEADERBOARD_PROMPT"
+@export var keypad_area: Area3D
 var current_leaderboard_node = null
+var current_keypad_node: Keypad = null
 
 var current_url := ""
 var current_note: Node = null
@@ -38,8 +40,9 @@ func _update_target() -> void:
 	current_url = ""
 	current_note = null
 	current_leaderboard_node = null
+	current_keypad_node = null
 
-	if not camera:
+	if not camera or Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
 		_set_prompt(false)
 		return
 
@@ -49,6 +52,7 @@ func _update_target() -> void:
 	var query := PhysicsRayQueryParameters3D.create(ray_origin, ray_end)
 	query.collide_with_areas = true
 	query.collide_with_bodies = false
+	query.collision_mask = 1 | 16
 
 	var hit := space_state.intersect_ray(query)
 	if hit.is_empty():
@@ -56,6 +60,14 @@ func _update_target() -> void:
 		return
 
 	var collider := hit.get("collider") as Node
+	if collider == keypad_area and keypad_area != null:
+		var keypad := keypad_area.get_parent() as Keypad
+		if keypad != null and keypad.can_interact():
+			current_keypad_node = keypad
+			_set_prompt(true, keypad.get_interaction_prompt())
+		else:
+			_set_prompt(false)
+		return
 	if collider == dman_area:
 		current_url = dman_url
 		_set_prompt(true, tr(visit_prompt_key))
@@ -83,6 +95,9 @@ func _update_target() -> void:
 	_set_prompt(false)
 
 func _interact_with_current_target() -> void:
+	if is_instance_valid(current_keypad_node):
+		current_keypad_node.interact()
+		return
 	if current_url != "":
 		OS.shell_open(current_url)
 		return
@@ -95,7 +110,7 @@ func _interact_with_current_target() -> void:
 		current_note.open_note()
 
 func _has_current_target() -> bool:
-		return current_url != "" or current_note != null or current_leaderboard_node != null
+	return current_url != "" or current_note != null or current_leaderboard_node != null or current_keypad_node != null
 
 func _is_e_interact_event(event: InputEvent) -> bool:
 	var key_event := event as InputEventKey

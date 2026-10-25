@@ -153,4 +153,4 @@ func _exit() -> void:
 	var t := create_tween()
 	t.tween_property(self, "modulate:a", 0.0, 1.5)
 	await t.finished
-	get_tree().change_scene_to_file("res://scenes/mainMenu.tscn")
+	Transition.change_scene("res://scenes/mainMenu.tscn", 0.0)

@@ -1,6 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://cyys33sgvu4h4"]
+[gd_scene load_steps=8 format=3 uid="uid://cyys33sgvu4h4"]
 
 [ext_resource type="Script" uid="uid://bphaa2n535w3j" path="res://scripts/keypad.gd" id="1"]
+[ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="2_font"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_keypad"]
 size = Vector3(0.5, 0.7, 0.1)
@@ -16,6 +17,9 @@ radius = 3.0
 [sub_resource type="AudioStreamGenerator" id="AudioStream_beep"]
 buffer_length = 0.1
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_target"]
+size = Vector3(0.7, 0.9, 0.3)
+
 [node name="Keypad" type="Node3D"]
 script = ExtResource("1")
 
@@ -29,6 +33,7 @@ pixel_size = 0.001
 billboard = 1
 alpha_cut = 2
 text = "----"
+font = ExtResource("2_font")
 font_size = 48
 outline_size = 4
 
@@ -37,14 +42,24 @@ transform = Transform3D(2.76, 0, 0, 0, 2.76, 0, 0, 0, 2.76, 0, -0.2, 0.126274)
 pixel_size = 0.001
 billboard = 1
 alpha_cut = 2
-text = "Type number"
+text = "E  Tastenfeld benutzen"
+font = ExtResource("2_font")
 font_size = 24
 outline_size = 2
 
 [node name="InteractionArea" type="Area3D" parent="."]
+collision_layer = 0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="InteractionArea"]
 shape = SubResource("SphereShape3D_interaction")
+
+[node name="InteractionTarget" type="Area3D" parent="."]
+collision_layer = 16
+collision_mask = 0
+monitoring = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="InteractionTarget"]
+shape = SubResource("BoxShape3D_target")
 
 [node name="AudioBeep" type="AudioStreamPlayer3D" parent="."]
 stream = SubResource("AudioStream_beep")

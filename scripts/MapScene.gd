@@ -150,6 +150,7 @@ func go_back() -> void:
 func show_spot_sidebar(spot_name: String) -> void:
 	interact.play()
 	selected_spot = spot_name
+	ScenePreloader.prefetch_destination(ScenePreloader.LOCATION_SCENES[spot_name])
 	var price    : int  = Player.spot_prices[spot_name]
 	var unlocked : bool = Player.unlocked_spots.get(spot_name, false)
 
@@ -266,31 +267,11 @@ func buy_spot(spot_name: String) -> void:
 
 func go_to_spot(spot_name: String) -> void:
 	interact.play()
-	match spot_name:
-		"lake":
-			Player.update_last_scene("res://scenes/MainScene.tscn")
-			Transition.change_scene("res://scenes/MainScene.tscn", 0.8)
-		"city":
-			Player.update_last_scene("res://scenes/city.tscn")
-			Transition.change_scene("res://scenes/city.tscn", 0.8)
-		"sewer":
-			Player.update_last_scene("res://scenes/sewer.tscn")
-			Transition.change_scene("res://scenes/sewer.tscn", 0.8)
-		"forest":
-			Player.update_last_scene("res://scenes/forest.tscn")
-			Transition.change_scene("res://scenes/forest.tscn", 0.8)
-		"desert":
-			Player.update_last_scene("res://scenes/ödland.tscn")
-			Transition.change_scene("res://scenes/ödland.tscn", 0.8)
-		"iceland":
-			Player.update_last_scene("res://scenes/iceland.tscn")
-			Transition.change_scene("res://scenes/iceland.tscn", 0.8)
-		"home":
-			Player.update_last_scene("res://scenes/hub.tscn")
-			Transition.change_scene("res://scenes/hub.tscn", 0.8)
-		"van":
-			Player.update_last_scene("res://scenes/fischbude.tscn")
-			Transition.change_scene("res://scenes/fischbude.tscn", 0.8)
+	var target: String = ScenePreloader.LOCATION_SCENES.get(spot_name, "")
+	if target.is_empty():
+		return
+	Player.update_last_scene(target)
+	Transition.change_scene(target, 0.8)
 
 # ─── Cheat console (unverändert) ─────────────────────────────────────────────
 func _on_submit_pressed() -> void:

@@ -21,37 +21,14 @@ var tab_timer: Timer
 func _ready():
 	print("📊 LeaderboardDisplay startet...")
 	
-	# ✅ SIGNAL VOR ALLEM ANDEREN
-	if not Steam.leaderboard_scores_downloaded.is_connected(_on_leaderboard_downloaded):
-		Steam.leaderboard_scores_downloaded.connect(_on_leaderboard_downloaded)
-
-	await get_tree().process_frame
 	_create_leaderboard_display()
-	_wait_for_steam_and_load()
+	Leaderboards.entries_updated.connect(_on_entries_updated)
+	Leaderboards.state_changed.connect(_on_state_changed)
+	Leaderboards.player_names_updated.connect(_refresh_names)
+	_load_leaderboards()
 	_start_tab_rotation()
 	
 	_full_ui_node = get_node_or_null(full_ui)
-
-# 🔧 NEU: Warte auf Steam Initialisierung
-func _wait_for_steam_and_load() -> void:
-	print("⏳ Warte auf GodotSteam Initialisierung...")
-	
-	# Prüfe ob Steam bereits bereit ist
-	if GodotSteam.initialization_complete and GodotSteam.leaderboards.size() >= GodotSteam.expected_leaderboards:
-		print("✅ Steam bereits bereit!")
-		_load_leaderboards()
-		return
-	
-	# Wenn nicht, warte auf das Signal
-	if not GodotSteam.leaderboards_loaded.is_connected(_on_steam_ready):
-		GodotSteam.leaderboards_loaded.connect(_on_steam_ready)
-	
-	print("⏳ Warte auf leaderboards_loaded Signal...")
-
-func _on_steam_ready() -> void:
-	print("✅ Steam Signal empfangen - lade Leaderboards...")
-	await get_tree().create_timer(0.2).timeout  # Kurze Pause für Stabilität
-	_load_leaderboards()
 
 func _start_tab_rotation():
 	tab_timer = Timer.new()
@@ -203,86 +180,38 @@ func _create_entry_row(rank: String, name: String, score: String, is_header: boo
 	
 	return row
 
-func _load_leaderboards():
-	print("🔍 _load_leaderboards() gestartet")
-	
-	if not GodotSteam.steam_ready:
-		print("⚠️ Steam nicht bereit - kann Leaderboards nicht laden")
-		return
-	
-	if GodotSteam.leaderboards.is_empty():
-		print("⚠️ Keine Leaderboards verfügbar")
-		return
-	
-	print("📋 Verfügbare Leaderboards:", GodotSteam.leaderboards.keys())
-	
-	# Lade beide Leaderboards
-	_request_leaderboard_data("fish_total")
-	await get_tree().create_timer(0.5).timeout
-	_request_leaderboard_data("money_total")
+func _load_leaderboards(force := false) -> void:
+	for board: String in GodotSteam.LEADERBOARD_NAMES:
+		_render_board(board)
+		Leaderboards.request_board(board, Steam.LEADERBOARD_DATA_REQUEST_GLOBAL, force, max_entries)
 
-func _request_leaderboard_data(leaderboard_name: String):
-	if not GodotSteam.leaderboards.has(leaderboard_name):
-		print("⚠️ Leaderboard nicht verfügbar:", leaderboard_name)
-		return
-	
-	var handle = GodotSteam.leaderboards[leaderboard_name]
-	
-	print("📥 Requesting leaderboard data:", leaderboard_name, "| Handle:", handle)
-	
-	Steam.downloadLeaderboardEntries(
-		0,                          # start_index
-		max_entries - 1,            # end_index
-		Steam.LEADERBOARD_DATA_REQUEST_GLOBAL,
-		handle                       # leaderboard_handle
-	)
+func _on_entries_updated(board: String, mode: int, _entries: Array) -> void:
+	if mode == Steam.LEADERBOARD_DATA_REQUEST_GLOBAL:
+		_render_board(board)
 
+func _on_state_changed(board: String, mode: int, _message_key: String) -> void:
+	if mode == Steam.LEADERBOARD_DATA_REQUEST_GLOBAL:
+		_render_board(board)
 
-func _on_leaderboard_downloaded(a, b = null, c = null) -> void:
-	var leaderboard_handle := -1
-	var results: Array = []
+func _refresh_names() -> void:
+	for board: String in GodotSteam.LEADERBOARD_NAMES:
+		_render_board(board)
 
-	# 🔍 Parameter analysieren
-	for v in [a, b, c]:
-		if v is int and leaderboard_handle == -1:
-			leaderboard_handle = v
-		elif v is Array:
-			results = v
-		elif v is Dictionary:
-			# manche Versionen packen alles in ein Dict
-			if v.has("leaderboard"):
-				leaderboard_handle = int(v["leaderboard"])
-			if v.has("results"):
-				results = v["results"]
-
-	if leaderboard_handle <= 0:
-		print("❌ Kein gültiger Leaderboard-Handle:", a, b, c)
-		return
-
-	if results.is_empty():
-		print("ℹ️ Keine Leaderboard-Daten")
-		return
-
-	var leaderboard_name := Steam.getLeaderboardName(leaderboard_handle)
-	print("🏆 Leaderboard geladen:", leaderboard_name, "| Einträge:", results.size())
-
-	# Debug-Ausgabe
-	for i in range(results.size()):
-		var r = results[i]
-		print("%02d | #%d | %s | %d" % [
-			i + 1,
-			r.get("global_rank", i + 1),
-			Steam.getFriendPersonaName(r["steam_id"]),
-			r.get("score", 0)
-		])
-
-	# 🔧 FIX: UI aktualisieren - direkt hier statt _apply_rows_to_tabs
+func _render_board(board: String) -> void:
 	for tab in tab_container.get_children():
-		if tab.get_meta("leaderboard_name") == leaderboard_name:
-			var container = tab.get_meta("entries_container")
-			print("🎯 Update Tab:", tab.name, "| Container gefunden:", container != null)
-			_update_entries(container, results)
-			break
+		if tab.get_meta("leaderboard_name") != board:
+			continue
+		var container: VBoxContainer = tab.get_meta("entries_container")
+		var mode := Steam.LEADERBOARD_DATA_REQUEST_GLOBAL
+		if Leaderboards.has_cached(board, mode):
+			var entries := Leaderboards.get_entries(board, mode)
+			_update_entries(container, entries)
+			if entries.is_empty():
+				container.get_child(2).get_child(1).text = tr("LEADERBOARD_NO_ENTRIES")
+		else:
+			_update_entries(container, [])
+			container.get_child(2).get_child(1).text = tr(Leaderboards.get_state(board, mode))
+		return
 
 func _update_entries(container: VBoxContainer, entries: Array):
 	if not container:
@@ -291,11 +220,9 @@ func _update_entries(container: VBoxContainer, entries: Array):
 	
 	# Hole alle Entry-Nodes (überspringe Header + Separator)
 	var all_children = container.get_children()
-	print("📦 Container Children:", all_children.size())
 	
 	# Die ersten 2 sind Header + Separator
 	var entry_nodes = all_children.slice(2)
-	print("📝 Entry Nodes:", entry_nodes.size())
 
 	for i in range(entry_nodes.size()):
 		var entry_node = entry_nodes[i]
@@ -310,14 +237,12 @@ func _update_entries(container: VBoxContainer, entries: Array):
 			var rank = data.get("global_rank", i + 1)
 			var score = data.get("score", 0)
 			var steam_id = data.get("steam_id", 0)
-			var player_name = Steam.getFriendPersonaName(steam_id) if steam_id != 0 else tr("LEADERBOARD_UNKNOWN_PLAYER")
+			var player_name = Leaderboards.player_name(steam_id)
 
 			labels[0].text = str(rank)
 			labels[1].text = player_name
 			labels[2].text = str(score)
 			
-			print("✏️ Entry %d: %s - %s - %d" % [i, labels[0].text, labels[1].text, score])
-
 			# Eigenen Eintrag highlighten
 			var row_color = Color(1.0, 0.8, 0.2) if steam_id == GodotSteam.steam_id else Color(0.8, 0.75, 0.6)
 			for label in labels:
@@ -329,15 +254,9 @@ func _update_entries(container: VBoxContainer, entries: Array):
 			for label in labels:
 				label.add_theme_color_override("font_color", Color(0.8, 0.75, 0.6))
 
-	print("✅ Leaderboard aktualisiert mit", entries.size(), "Einträgen")
+func refresh_leaderboards() -> void:
+	_load_leaderboards(true)
 
-func refresh_leaderboards():
-	"""Manueller Refresh - kann von außen aufgerufen werden"""
-	if GodotSteam.initialization_complete:
-		_load_leaderboards()
-	else:
-		print("⚠️ Steam noch nicht bereit für Refresh")
-		
 func open_full_ui() -> void:
 	if _full_ui_node and not _full_ui_node.visible:
 		_full_ui_node.open()

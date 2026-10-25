@@ -7,7 +7,6 @@ signal closed
 enum FilterMode { GLOBAL, FRIENDS }
 
 var current_filter := FilterMode.GLOBAL
-var cached_data := {}  # "leaderboard_name:mode" -> Array of entries
 var current_leaderboard := "fish_total"
 var current_request_mode := -1
 var tab_container: TabContainer
@@ -29,8 +28,9 @@ func _ready() -> void:
 	visible = false
 	_build_ui()
 	
-	if Engine.has_singleton("Steam") and not Steam.leaderboard_scores_downloaded.is_connected(_on_downloaded):
-		Steam.leaderboard_scores_downloaded.connect(_on_downloaded)
+	Leaderboards.entries_updated.connect(_on_entries_updated)
+	Leaderboards.state_changed.connect(_on_state_changed)
+	Leaderboards.player_names_updated.connect(_refresh_names)
 
 func _input(event: InputEvent) -> void:
 	if not visible:
@@ -144,7 +144,7 @@ func _build_ui() -> void:
 		var mode := current_request_mode
 		if mode == -1:
 			mode = Steam.LEADERBOARD_DATA_REQUEST_GLOBAL
-		_request_current(mode)
+		_request_current(mode, true)
 	)
 	filter_row.add_child(refresh_btn)
 
@@ -223,7 +223,7 @@ func close() -> void:
 # -------------------------
 # Steam requests
 # -------------------------
-func _request_current(mode: int) -> void:
+func _request_current(mode: int, force := false) -> void:
 	var tab = tab_container.get_current_tab_control()
 	if not tab:
 		return
@@ -231,72 +231,34 @@ func _request_current(mode: int) -> void:
 	current_leaderboard = lb_name
 	current_request_mode = mode
 
-	var cache_key := _cache_key(lb_name, mode)
-	if cached_data.has(cache_key):
-		_populate(lb_name, cached_data[cache_key])
-
-	_request(lb_name, mode)
-
-func _request(lb_name: String, mode: int) -> void:
-	if not Engine.has_singleton("Steam"):
-		_show_message(lb_name, tr("LEADERBOARD_STEAM_UNAVAILABLE"))
-		return
-	if not GodotSteam.initialization_complete or not GodotSteam.steam_ready:
-		_show_message(lb_name, tr("LEADERBOARD_WAITING_STEAM"))
-		if not GodotSteam.leaderboards_loaded.is_connected(_on_steam_ready):
-			GodotSteam.leaderboards_loaded.connect(_on_steam_ready)
-		return
-	if not GodotSteam.leaderboards.has(lb_name):
-		_show_message(lb_name, tr("LEADERBOARD_UNAVAILABLE"))
-		return
-	var handle = GodotSteam.leaderboards[lb_name]
-	_show_message(lb_name, tr("LEADERBOARD_LOADING"))
-	Steam.downloadLeaderboardEntries(0, 9, mode, handle)
+	_render_current()
+	Leaderboards.request_board(lb_name, mode, force)
 
 func _on_tab_changed(_idx: int) -> void:
-	var mode := current_request_mode
-	if mode == -1:
-		mode = Steam.LEADERBOARD_DATA_REQUEST_GLOBAL
-	_request_current(mode)
-
-func _on_steam_ready() -> void:
 	if visible:
-		var mode := current_request_mode
-		if mode == -1:
-			mode = Steam.LEADERBOARD_DATA_REQUEST_GLOBAL
-		_request_current(mode)
+		_request_current(current_request_mode if current_request_mode != -1 else Steam.LEADERBOARD_DATA_REQUEST_GLOBAL)
 
-# -------------------------
-# Steam callback
-# -------------------------
-func _on_downloaded(a, b = null, c = null) -> void:
-	if not visible:
-		return
+func _on_entries_updated(board: String, mode: int, _entries: Array) -> void:
+	if visible and board == current_leaderboard and mode == current_request_mode:
+		_render_current()
 
-	var handle := -1
-	var results: Array = []
+func _on_state_changed(board: String, mode: int, _message_key: String) -> void:
+	if visible and board == current_leaderboard and mode == current_request_mode:
+		_render_current()
 
-	for v in [a, b, c]:
-		if v is int and handle == -1:
-			handle = v
-		elif v is Array:
-			results = v
-		elif v is Dictionary:
-			if v.has("leaderboard"): handle = int(v["leaderboard"])
-			if v.has("results"):    results = v["results"]
+func _refresh_names() -> void:
+	if visible:
+		_render_current()
 
-	if handle <= 0:
-		return
-
-	var lb_name := Steam.getLeaderboardName(handle)
-	cached_data[_cache_key(lb_name, current_request_mode)] = results
-	if results.is_empty():
-		_show_message(lb_name, tr("LEADERBOARD_NO_ENTRIES"))
-		return
-	_populate(lb_name, results)
-
-func _cache_key(lb_name: String, mode: int) -> String:
-	return "%s:%d" % [lb_name, mode]
+func _render_current() -> void:
+	if Leaderboards.has_cached(current_leaderboard, current_request_mode):
+		var entries := Leaderboards.get_entries(current_leaderboard, current_request_mode)
+		if entries.is_empty():
+			_show_message(current_leaderboard, tr("LEADERBOARD_NO_ENTRIES"))
+		else:
+			_populate(current_leaderboard, entries)
+	else:
+		_show_message(current_leaderboard, tr(Leaderboards.get_state(current_leaderboard, current_request_mode)))
 
 func _select_filter(active_button: Button) -> void:
 	for button in [global_btn, friends_btn, around_btn]:
@@ -334,7 +296,7 @@ func _populate(lb_name: String, entries: Array) -> void:
 		if i < entries.size():
 			var d = entries[i]
 			var sid = d.get("steam_id", 0)
-			var pname = Steam.getFriendPersonaName(sid) if sid != 0 else tr("LEADERBOARD_UNKNOWN_PLAYER")
+			var pname = Leaderboards.player_name(sid)
 			labels[0].text = str(d.get("global_rank", i + 1))
 			labels[1].text = pname
 			labels[2].text = str(d.get("score", 0))

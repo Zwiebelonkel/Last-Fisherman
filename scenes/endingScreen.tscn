@@ -1,6 +1,6 @@
 [gd_scene load_steps=10 format=3 uid="uid://de43b6r65xqkx"]
 
-[ext_resource type="Script" path="res://scripts/ending_screen.gd" id="1_cas3l"]
+[ext_resource type="Script" uid="uid://d05iwv0epvytf" path="res://scripts/ending_screen.gd" id="1_cas3l"]
 [ext_resource type="Texture2D" uid="uid://b4vpo3k0sv7oo" path="res://assets/echos/ending.png" id="2_nrc21"]
 [ext_resource type="Shader" uid="uid://c140kjbm2bot5" path="res://shader/buckshot.gdshader" id="4_304tg"]
 [ext_resource type="AudioStream" uid="uid://dryinm5g7b2u0" path="res://sounds/hope.mp3" id="4_amowu"]
