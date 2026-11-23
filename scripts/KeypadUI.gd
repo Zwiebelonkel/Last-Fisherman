@@ -7,19 +7,19 @@ signal submitted
 signal close_requested
 
 const TEXT := {
-	"title": {"de": "ZUGANGSCODE", "en": "ACCESS CODE"},
-	"subtitle": {"de": "Gib den Code am Tastenfeld ein.", "en": "Enter the code on the keypad."},
-	"ready": {"de": "Bereit zur Eingabe", "en": "Ready for input"},
-	"incomplete": {"de": "Bitte alle %d Ziffern eingeben.", "en": "Please enter all %d digits."},
-	"incorrect": {"de": "Falscher Code. Versuche es erneut.", "en": "Incorrect code. Try again."},
-	"correct": {"de": "Code akzeptiert. Zugang wird geöffnet...", "en": "Code accepted. Opening access..."},
-	"secret": {"de": "Geheimcode akzeptiert...", "en": "Secret code accepted..."},
-	"confirm": {"de": "BESTÄTIGEN  [ENTER]", "en": "CONFIRM  [ENTER]"},
-	"clear": {"de": "LEEREN", "en": "CLEAR"},
-	"erase": {"de": "LÖSCHEN", "en": "DELETE"},
-	"close": {"de": "SCHLIESSEN  [ESC]", "en": "CLOSE  [ESC]"},
-	"hint": {"de": "0–9  Eingabe   /   Rücktaste  Löschen", "en": "0–9  Type   /   Backspace  Delete"},
-	"prompt": {"de": "E  Tastenfeld benutzen", "en": "E  Use keypad"},
+	"title": {"de": "ZUGANGSCODE", "en": "ACCESS CODE", "ru": "КОД ДОСТУПА", "tr": "ERİŞİM KODU", "es": "CÓDIGO DE ACCESO", "fr": "CODE D'ACCÈS", "pl": "KOD DOSTĘPU"},
+	"subtitle": {"de": "Gib den Code am Tastenfeld ein.", "en": "Enter the code on the keypad.", "ru": "Введи код на клавиатуре.", "tr": "Tuş takımından kodu gir.", "es": "Introduce el código en el teclado.", "fr": "Saisis le code sur le clavier.", "pl": "Wpisz kod na klawiaturze."},
+	"ready": {"de": "Bereit zur Eingabe", "en": "Ready for input", "ru": "Готово к вводу", "tr": "Girişe hazır", "es": "Listo para introducir", "fr": "Prêt pour la saisie", "pl": "Gotowe do wpisania kodu"},
+	"incomplete": {"de": "Bitte alle %d Ziffern eingeben.", "en": "Please enter all %d digits.", "ru": "Введи все %d цифр.", "tr": "Lütfen %d rakamın tamamını gir.", "es": "Introduce los %d dígitos.", "fr": "Saisis les %d chiffres.", "pl": "Wpisz wszystkie cyfry (%d)."},
+	"incorrect": {"de": "Falscher Code. Versuche es erneut.", "en": "Incorrect code. Try again.", "ru": "Неверный код. Попробуй ещё раз.", "tr": "Yanlış kod. Tekrar dene.", "es": "Código incorrecto. Inténtalo de nuevo.", "fr": "Code incorrect. Réessaie.", "pl": "Nieprawidłowy kod. Spróbuj ponownie."},
+	"correct": {"de": "Code akzeptiert. Zugang wird geöffnet...", "en": "Code accepted. Opening access...", "ru": "Код принят. Доступ открывается...", "tr": "Kod kabul edildi. Erişim açılıyor...", "es": "Código aceptado. Abriendo acceso...", "fr": "Code accepté. Ouverture de l'accès…", "pl": "Kod przyjęty. Otwieranie dostępu…"},
+	"secret": {"de": "Geheimcode akzeptiert...", "en": "Secret code accepted...", "ru": "Секретный код принят...", "tr": "Gizli kod kabul edildi...", "es": "Código secreto aceptado...", "fr": "Code secret accepté…", "pl": "Tajny kod przyjęty…"},
+	"confirm": {"de": "BESTÄTIGEN  [ENTER]", "en": "CONFIRM  [ENTER]", "ru": "ПОДТВЕРДИТЬ  [ENTER]", "tr": "ONAYLA  [ENTER]", "es": "CONFIRMAR  [ENTER]", "fr": "CONFIRMER  [ENTRÉE]", "pl": "POTWIERDŹ  [ENTER]"},
+	"clear": {"de": "LEEREN", "en": "CLEAR", "ru": "ОЧИСТИТЬ", "tr": "TEMİZLE", "es": "VACIAR", "fr": "EFFACER", "pl": "WYCZYŚĆ"},
+	"erase": {"de": "LÖSCHEN", "en": "DELETE", "ru": "СТЕРЕТЬ", "tr": "SİL", "es": "BORRAR", "fr": "SUPPRIMER", "pl": "USUŃ"},
+	"close": {"de": "SCHLIESSEN  [ESC]", "en": "CLOSE  [ESC]", "ru": "ЗАКРЫТЬ  [ESC]", "tr": "KAPAT  [ESC]", "es": "CERRAR  [ESC]", "fr": "FERMER  [ÉCHAP]", "pl": "ZAMKNIJ  [ESC]"},
+	"hint": {"de": "0–9  Eingabe   /   Rücktaste  Löschen", "en": "0–9  Type   /   Backspace  Delete", "ru": "0–9  Ввод   /   Backspace  Стереть", "tr": "0–9  Giriş   /   Geri Silme  Sil", "es": "0–9  Introducir   /   Retroceso  Borrar", "fr": "0–9  Saisir   /   Retour arrière  Supprimer", "pl": "0–9  Wpisz   /   Backspace  Usuń"},
+	"prompt": {"de": "E  Tastenfeld benutzen", "en": "E  Use keypad", "ru": "E  Использовать клавиатуру", "tr": "E  Tuş takımını kullan", "es": "E  Usar teclado", "fr": "E  Utiliser le clavier", "pl": "E  Użyj klawiatury"},
 }
 
 @onready var title_label: Label = %Title

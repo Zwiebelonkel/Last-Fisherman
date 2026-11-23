@@ -97,11 +97,8 @@ func setup_buttons() -> void:
 		print("✅ Options Close Button verbunden")
 
 func _input(event: InputEvent) -> void:
-	# ESC/Pause behandeln - IMMER als erstes prüfen
-	if event.is_action_released("pause"):
-		handle_pause_input()
+	if FieldTablet.is_busy():
 		return
-	
 	# Während Pause keine anderen Inputs verarbeiten
 	if paused:
 		return
@@ -126,7 +123,17 @@ func _input(event: InputEvent) -> void:
 			head.rotate_x(-event.relative.y * mouse_sensitivity)
 			head.rotation.x = clamp(head.rotation.x, deg_to_rad(-89), deg_to_rad(89))
 
+func _unhandled_input(event: InputEvent) -> void:
+	# Modal UI consumes its closing key before gameplay may open the pause menu.
+	if FieldTablet.is_busy():
+		return
+	if event.is_action_released("pause"):
+		get_viewport().set_input_as_handled()
+		handle_pause_input()
+
 func _physics_process(delta):
+	if FieldTablet.is_busy():
+		return
 	# Keine Bewegung während Pause oder wenn Menüs offen sind
 	if paused or (fishbook_ui and fishbook_ui.visible) or (inventory_ui and inventory_ui.visible):
 		return

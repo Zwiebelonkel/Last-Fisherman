@@ -1,5 +1,7 @@
 extends Node
 
+const NumberFormat = preload("res://scripts/NumberFormat.gd")
+
 # ===========================
 #  FREECAM CHEAT - F3 Toggle
 #  DEBUG MODE   - F2 Toggle
@@ -156,10 +158,10 @@ func _update_debug_label() -> void:
 		"Cam Pos:    x=%.2f  y=%.2f  z=%.2f\n" % [cam_pos.x, cam_pos.y, cam_pos.z] +
 		"Cam Rot:    x=%.1f°  y=%.1f°  z=%.1f°\n" % [cam_rot_deg.x, cam_rot_deg.y, cam_rot_deg.z] +
 		"Cam Fwd:    x=%.2f  y=%.2f  z=%.2f\n" % [cam_fwd.x, cam_fwd.y, cam_fwd.z] +
-		"Nodes:      %d\n" % node_count +
+		"Nodes:      %s\n" % NumberFormat.compact(node_count) +
 		"FreeCam:    %s%s\n" % [("AN" if active else "AUS"), freecam_line] +
 		"Fish State: %s\n" % fish_state +
-		"Money:      %d\n" % Player.get_money() +
+		"Money:      %s\n" % NumberFormat.compact(Player.get_money()) +
 		"Time Scale: %.2f" % Engine.time_scale
 	)
 

@@ -1,4 +1,6 @@
 extends Control
+
+const NumberFormat = preload("res://scripts/NumberFormat.gd")
 # LeaderboardFullUI.gd
 # CanvasLayer mit layer = 10 o.ä., standardmäßig visible = false
 
@@ -14,6 +16,7 @@ var entries_boxes := {}  # leaderboard_name -> VBoxContainer
 var global_btn: Button
 var friends_btn: Button
 var around_btn: Button
+var _closing_key: int = KEY_NONE
 
 func _ready() -> void:
 	# Die Szene hatte den Leaderboard-Root nur als 40x40-Control in der Mitte
@@ -33,13 +36,22 @@ func _ready() -> void:
 	Leaderboards.player_names_updated.connect(_refresh_names)
 
 func _input(event: InputEvent) -> void:
+	var key := event as InputEventKey
+	if key != null:
+		var code: int = key.physical_keycode if key.physical_keycode != KEY_NONE else key.keycode
+		if _closing_key != KEY_NONE and code == _closing_key:
+			get_viewport().set_input_as_handled()
+			if not key.pressed:
+				_closing_key = KEY_NONE
+			return
 	if not visible:
 		return
 	if not _is_close_shortcut(event):
 		return
 
-	close()
+	_closing_key = key.physical_keycode if key.physical_keycode != KEY_NONE else key.keycode
 	get_viewport().set_input_as_handled()
+	close()
 
 func _is_close_shortcut(event: InputEvent) -> bool:
 	var key_event := event as InputEventKey
@@ -48,8 +60,11 @@ func _is_close_shortcut(event: InputEvent) -> bool:
 
 	return (
 		key_event.keycode == KEY_ESCAPE
+		or key_event.physical_keycode == KEY_ESCAPE
 		or key_event.keycode == KEY_TAB
+		or key_event.physical_keycode == KEY_TAB
 		or event.is_action_pressed("ui_cancel")
+		or event.is_action_pressed("pause")
 	)
 
 # -------------------------
@@ -297,9 +312,9 @@ func _populate(lb_name: String, entries: Array) -> void:
 			var d = entries[i]
 			var sid = d.get("steam_id", 0)
 			var pname = Leaderboards.player_name(sid)
-			labels[0].text = str(d.get("global_rank", i + 1))
+			labels[0].text = NumberFormat.compact(d.get("global_rank", i + 1))
 			labels[1].text = pname
-			labels[2].text = str(d.get("score", 0))
+			labels[2].text = NumberFormat.compact(d.get("score", 0))
 
 			var is_me = sid == GodotSteam.steam_id
 			var col = Color(1.0, 0.8, 0.2) if is_me else Color(0.85, 0.82, 0.75)

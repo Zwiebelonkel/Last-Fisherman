@@ -463,6 +463,7 @@ func handle_spacebar_interaction() -> void:
 	
 	if sushi_minigame and sushi_minigame.has_method("is_active") and sushi_minigame.call("is_active"):
 		sushi_minigame.call("external_click")
+		get_viewport().set_input_as_handled()
 		return
 	
 	if fryer_minigame and fryer_minigame.has_method("is_active") and fryer_minigame.call("is_active"):

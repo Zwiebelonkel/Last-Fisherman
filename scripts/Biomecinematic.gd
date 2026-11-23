@@ -34,6 +34,10 @@ var _blending: bool = false
 var _blend_elapsed: float = 0.0
 const BLEND_DURATION: float = 0.6  # Sekunden für den Übergang
 var _blend_start_transform: Transform3D
+var _fishing: Node
+var _processing_before: Dictionary = {}
+var _disabled_before: Dictionary = {}
+var _camera_processing_before: bool = true
 
 
 func _ready() -> void:
@@ -76,23 +80,32 @@ func _start() -> void:
 	if not _look_target:
 		push_warning("BiomeCinematic: PlayerCamera nicht gefunden, Camera schaut in Fahrtrichtung.")
 
-	_original_cam = get_viewport().get_camera_3d()
+	# Always return to this location's camera, even after an interrupted intro.
+	_original_cam = _look_target as Camera3D
+	if _original_cam == null:
+		return
+	_fishing = _original_cam.get_node_or_null("FishingRod")
 
 	# Cinematic Camera erstellen
 	_cinematic_cam = Camera3D.new()
-	get_tree().root.add_child(_cinematic_cam)
+	_cinematic_cam.top_level = true
+	_cinematic_cam.fov = _original_cam.fov
+	_cinematic_cam.near = _original_cam.near
+	_cinematic_cam.far = _original_cam.far
+	add_child(_cinematic_cam)
 	_cinematic_cam.global_transform = _path_follow.global_transform
 	_cinematic_cam.make_current()
 
 	# Schwarzblende Overlay erstellen
 	_overlay = CanvasLayer.new()
 	_overlay.layer = 200  # Über allem
-	get_tree().root.add_child(_overlay)
+	add_child(_overlay)
 
 	_fade_rect = ColorRect.new()
 	_fade_rect.anchors_preset = Control.PRESET_FULL_RECT
 	_fade_rect.color = Color(0, 0, 0, 1.0)  # Start: schwarz
-	_fade_rect.mouse_filter = Control.MOUSE_FILTER_STOP  # Blockiert Klicks
+	# Gameplay buttons are disabled below; settings remain usable during the intro.
+	_fade_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_overlay.add_child(_fade_rect)
 
 	_path_follow.progress_ratio = 0.0
@@ -106,9 +119,16 @@ func _start() -> void:
 	var tween = create_tween()
 	tween.tween_property(_fade_rect, "color:a", 0.0, fade_duration)
 
+func _input(event: InputEvent) -> void:
+	if not _active or not event.is_action_released("pause"):
+		return
+	if is_instance_valid(_fishing):
+		_fishing.handle_pause_input()
+		get_viewport().set_input_as_handled()
+
 
 func _process(delta: float) -> void:
-	if not _active or _done:
+	if not _active or _done or Engine.time_scale <= 0.0:
 		return
 
 	_elapsed += delta
@@ -179,22 +199,46 @@ func _finish() -> void:
 
 
 func _set_input_blocked(blocked: bool) -> void:
-	# FishingRod pausieren/fortsetzen
-	var scene = get_tree().current_scene
-	if not scene:
+	if blocked:
+		if is_instance_valid(_fishing):
+			_processing_before = {
+				"process": _fishing.is_processing(),
+				"physics": _fishing.is_physics_processing(),
+				"input": _fishing.is_processing_input(),
+				"unhandled": _fishing.is_processing_unhandled_input(),
+			}
+			_fishing.set_process(false)
+			_fishing.set_physics_process(false)
+			_fishing.set_process_input(false)
+			_fishing.set_process_unhandled_input(false)
+			for property in ["journal_button", "inventory_button", "map_button", "left_button", "right_button", "interact_button"]:
+				var button := _fishing.get(property) as BaseButton
+				if button != null:
+					_disabled_before[button] = button.disabled
+					button.disabled = true
+		if is_instance_valid(_original_cam):
+			_camera_processing_before = _original_cam.is_processing()
+			_original_cam.set_process(false)
+	else:
+		if is_instance_valid(_fishing) and not _processing_before.is_empty():
+			_fishing.set_process(_processing_before.process)
+			_fishing.set_physics_process(_processing_before.physics)
+			_fishing.set_process_input(_processing_before.input)
+			_fishing.set_process_unhandled_input(_processing_before.unhandled)
+		for button in _disabled_before:
+			if is_instance_valid(button):
+				button.disabled = _disabled_before[button]
+		if is_instance_valid(_original_cam):
+			_original_cam.set_process(_camera_processing_before)
+		_processing_before.clear()
+		_disabled_before.clear()
+
+
+func _exit_tree() -> void:
+	if not _active:
 		return
-
-	var player_cam = scene.get_node_or_null("PlayerCamera")
-	if not player_cam:
-		return
-
-	var fishing = player_cam.get_node_or_null("FishingRod")
-	if fishing:
-		fishing.set_process(not blocked)
-		fishing.set_physics_process(not blocked)
-		fishing.set_process_input(not blocked)
-		fishing.set_process_unhandled_input(not blocked)
-
-	# camera_sway pausieren
-	if player_cam.get_script() != null:
-		player_cam.set_process(not blocked)
+	_active = false
+	_set_input_blocked(false)
+	if is_instance_valid(_original_cam) and _original_cam.is_inside_tree():
+		_original_cam.make_current()
+	# Camera and overlay are children of this intro and leave with the location.

@@ -1,5 +1,7 @@
 extends PanelContainer
 
+const NumberFormat = preload("res://scripts/NumberFormat.gd")
+
 @onready var click: AudioStreamPlayer = $Audio/click
 
 var icon: TextureRect
@@ -22,19 +24,39 @@ var fishbook_ui: Control = null
 var localized_texts := {
 	"unknown": {
 		"de": "Unbekannt",
-		"en": "Unknown"
+		"en": "Unknown",
+		"ru": "Неизвестно",
+		"tr": "Bilinmiyor",
+		"es": "Desconocido",
+		"fr": "Inconnu",
+		"pl": "Nieznane"
 	},
 	"record": {
-		"de": "⚖️ Rekord: %.2f kg",
-		"en": "⚖️ Record: %.2f kg"
+		"de": "⚖️ Rekord: %s kg",
+		"en": "⚖️ Record: %s kg",
+		"ru": "⚖️ Рекорд: %s кг",
+		"tr": "⚖️ Rekor: %s kg",
+		"es": "⚖️ Récord: %s kg",
+		"fr": "⚖️ Record : %s kg",
+		"pl": "⚖️ Rekord: %s kg"
 	},
 	"no_description": {
 		"de": "Keine Beschreibung verfügbar.",
-		"en": "No description available."
+		"en": "No description available.",
+		"ru": "Нет описания.",
+		"tr": "Açıklama yok.",
+		"es": "No hay descripción disponible.",
+		"fr": "Aucune description disponible.",
+		"pl": "Brak opisu."
 	},
 	"lore_item": {  # 🆕 Für Zettel
 		"de": "Fragment",
-		"en": "Fragment"
+		"en": "Fragment",
+		"ru": "Фрагмент",
+		"tr": "Parça",
+		"es": "Fragmento",
+		"fr": "Fragment",
+		"pl": "Fragment"
 	}
 }
 
@@ -144,7 +166,7 @@ func update_display():
 		separator.modulate = rarity_color
 		rarity_label.add_theme_font_size_override("font_size", 12)
 		
-		value_label.text = "💰 %d" % fish_data["base_value"]
+		value_label.text = "💰 %s" % NumberFormat.compact(fish_data["base_value"])
 		value_label.add_theme_font_size_override("font_size", 12)
 		value_label.show()
 		
@@ -383,7 +405,7 @@ func create_tooltip():
 	var canvas_layer = CanvasLayer.new()
 	canvas_layer.layer = 100
 	canvas_layer.add_child(tooltip_panel)
-	get_tree().root.add_child(canvas_layer)
+	get_viewport().add_child(canvas_layer)
 
 func _process(_delta):
 	if is_hovering and tooltip_panel and tooltip_panel.visible:
@@ -454,11 +476,11 @@ func _on_mouse_entered():
 	var tooltip_text := ""
 	tooltip_text += "[b][font_size=16]%s[/font_size][/b]\n" % fish_name
 	tooltip_text += "[color=%s]%s[/color]" % [rarity_color.to_html(), rarity_text]
-	tooltip_text += " • 💰 %d\n" % FishDB.get_fish_value(full_fish)
+	tooltip_text += " • 💰 %s\n" % NumberFormat.compact(FishDB.get_fish_value(full_fish))
 
 	var max_weight := Player.get_max_caught_weight(fish_id)
 	if max_weight > 0:
-		var record_text := get_text("record") % max_weight
+		var record_text := get_text("record") % NumberFormat.compact(max_weight, 2)
 		tooltip_text += "\n[color=#FFD700]%s[/color]\n" % record_text
 
 	if description != "":

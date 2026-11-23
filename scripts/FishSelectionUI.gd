@@ -84,7 +84,7 @@ func _rebuild_list(filter_text: String) -> void:
 func _create_fish_entry(fish: Dictionary) -> Control:
 	# ✅ FIX: Hole ID und Display-Namen
 	var fish_id: String = fish.get("id", "")
-	var fish_name: String = FishDB.get_fish_name(fish)
+	var fish_name: String = FishDB.get_fish_display_name(fish)
 	var icon_path: String = fish.get("icon", "")
 	var rarity: int = fish.get("rarity", FishDB.RARITY.NORMAL)
 	
@@ -103,6 +103,7 @@ func _create_fish_entry(fish: Dictionary) -> Control:
 		icon.texture = load(icon_path)
 		icon.custom_minimum_size = Vector2(32, 32)
 		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		FishDB.apply_shiny_icon(icon, fish)
 		hbox.add_child(icon)
 	
 	# ✅ FIX: Name - verwende display name

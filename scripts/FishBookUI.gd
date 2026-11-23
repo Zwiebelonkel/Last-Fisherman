@@ -21,54 +21,114 @@ var detail_popup: Control
 var localized_texts := {
 	"caught_text": {
 		"de": "Gefangen: %d / %d (%d%%)",
-		"en": "Caught: %d / %d (%d%%)"
+		"en": "Caught: %d / %d (%d%%)",
+		"ru": "Поймано: %d / %d (%d%%)",
+		"tr": "Yakalanan: %d / %d (%%%d)",
+		"es": "Capturados: %d / %d (%d%%)",
+		"fr": "Capturés : %d / %d (%d%%)",
+		"pl": "Złowiono: %d / %d (%d%%)"
 	},
 	"collected_text": {  # 🆕 Für Zettel
 		"de": "Gesammelt: %d / %d (%d%%)",
-		"en": "Collected: %d / %d (%d%%)"
+		"en": "Collected: %d / %d (%d%%)",
+		"ru": "Собрано: %d / %d (%d%%)",
+		"tr": "Toplanan: %d / %d (%%%d)",
+		"es": "Recogidos: %d / %d (%d%%)",
+		"fr": "Collectés : %d / %d (%d%%)",
+		"pl": "Zebrano: %d / %d (%d%%)"
 	},
 	"fishbook_title": {
 		"de": "📖 Fischbuch - %s",
-		"en": "📖 Fishbook - %s"
+		"en": "📖 Fishbook - %s",
+		"ru": "📖 Книга рыб — %s",
+		"tr": "📖 Balık Kitabı - %s",
+		"es": "📖 Libro de peces - %s",
+		"fr": "📖 Guide des poissons - %s",
+		"pl": "📖 Atlas ryb - %s"
 	},
 	"location_lake": {
 		"de": "🌊 Strand",
-		"en": "🌊 Beach"
+		"en": "🌊 Beach",
+		"ru": "🌊 Пляж",
+		"tr": "🌊 Sahil",
+		"es": "🌊 Playa",
+		"fr": "🌊 Plage",
+		"pl": "🌊 Plaża"
 	},
 	"location_city": {
 		"de": "🏢 Stadt",
-		"en": "🏢 City"
+		"en": "🏢 City",
+		"ru": "🏢 Город",
+		"tr": "🏢 Şehir",
+		"es": "🏢 Ciudad",
+		"fr": "🏢 Ville",
+		"pl": "🏢 Miasto"
 	},
 	"location_sewer": {
 		"de": "🐀 U-Bahn",
-		"en": "🐀 Subway"
+		"en": "🐀 Subway",
+		"ru": "🐀 Метро",
+		"tr": "🐀 Metro",
+		"es": "🐀 Metro",
+		"fr": "🐀 Métro",
+		"pl": "🐀 Metro"
 	},
 	"location_forest": {
 		"de": "🌲 Wald",
-		"en": "🌲 Forest"
+		"en": "🌲 Forest",
+		"ru": "🌲 Лес",
+		"tr": "🌲 Orman",
+		"es": "🌲 Bosque",
+		"fr": "🌲 Forêt",
+		"pl": "🌲 Las"
 	},
 	"location_desert": {
 		"de": "🌵 Wüste",
-		"en": "🌵 Desert"
+		"en": "🌵 Desert",
+		"ru": "🌵 Пустыня",
+		"tr": "🌵 Çöl",
+		"es": "🌵 Desierto",
+		"fr": "🌵 Désert",
+		"pl": "🌵 Pustynia"
 	},
 	"location_iceland": {
 		"de": "❄️ Eisland",
-		"en": "❄️ Iceland"
+		"en": "❄️ Iceland",
+		"ru": "❄️ Ледяной край",
+		"tr": "❄️ Buz Diyarı",
+		"es": "❄️ Tierra helada",
+		"fr": "❄️ Terre de glace",
+		"pl": "❄️ Kraina lodu"
 	},
 	"location_ocean": {
 		"de": "🌊 Ozean",
-		"en": "🌊 Ocean"
+		"en": "🌊 Ocean",
+		"ru": "🌊 Океан",
+		"tr": "🌊 Okyanus",
+		"es": "🌊 Océano",
+		"fr": "🌊 Océan",
+		"pl": "🌊 Ocean"
 	},
 	"location_lore": {  # 🆕 Lore-Kategorie
 		"de": "❓ ???",
-		"en": "❓ ???"
+		"en": "❓ ???",
+		"ru": "❓ ???",
+		"tr": "❓ ???",
+		"es": "❓ ???",
+		"fr": "❓ ???",
+		"pl": "❓ ???"
 	},
 	"location_all": {
 		"de": "🌍 Alle",
-		"en": "🌍 All"
+		"en": "🌍 All",
+		"ru": "🌍 Все",
+		"tr": "🌍 Tümü",
+		"es": "🌍 Todos",
+		"fr": "🌍 Tous",
+		"pl": "🌍 Wszystkie"
 	},
-	"tag_all": {"de": "Tag: Alle", "en": "Tag: All"},
-	"tag_special": {"de": "Tag: Special", "en": "Tag: Special"}
+	"tag_all": {"de": "Tag: Alle", "en": "Tag: All", "ru": "Метка: все", "tr": "Etiket: Tümü", "es": "Etiqueta: todos", "fr": "Catégorie : toutes", "pl": "Kategoria: wszystkie"},
+	"tag_special": {"de": "Tag: Special", "en": "Tag: Special", "ru": "Метка: особые", "tr": "Etiket: Özel", "es": "Etiqueta: especial", "fr": "Catégorie : spéciale", "pl": "Kategoria: specjalna"}
 }
 
 func _ready():
@@ -143,6 +203,7 @@ func _ready():
 	LoreManager.note_added.connect(_on_note_added)
 	
 	print("✅ FishBook UI erfolgreich geladen!")
+	FieldTablet.register_view.call_deferred(get_instance_id(), "fishbook")
 
 # ===========================
 #  🆕 LORE SIGNAL HANDLER
@@ -215,6 +276,13 @@ func show_fish_detail_popup(fish_data: Dictionary):
 # ===========================
 
 func _on_visibility_changed() -> void:
+	if not visible:
+		if is_instance_valid(detail_popup):
+			detail_popup.hide()
+		if is_instance_valid(grid_container):
+			for entry in grid_container.get_children():
+				if entry.has_method("_on_mouse_exited"):
+					entry._on_mouse_exited()
 	if visible:
 		print("📖 FishBook wurde geöffnet - Lade aktuellen Ort...")
 		
@@ -427,6 +495,8 @@ func _on_location_changed(index: int):
 # ===========================
 
 func _input(event):
+	if not visible or get_meta("tablet_screen", false):
+		return
 	if event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE:
 		if get_parent().has_method("toggle_bestiary"):
 			get_parent().toggle_bestiary()

@@ -22,6 +22,8 @@ shadow_offset = Vector2(0, 3)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_iqtxn"]
 shader = ExtResource("2_l54rb")
+shader_parameter/shiny_enabled = false
+shader_parameter/motion_strength = 1.0
 shader_parameter/shadow_offset = Vector2(0, -5)
 shader_parameter/shadow_color = Vector4(0, 0, 0, 0.5)
 shader_parameter/bobbing_amplitude = 1.135

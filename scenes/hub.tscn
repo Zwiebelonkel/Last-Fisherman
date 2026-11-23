@@ -552,7 +552,10 @@ transform = Transform3D(0.00275756, 0.673487, 0.739194, 7.36642e-09, 0.739196, -
 [node name="RodMesh" parent="FishingRod" index="0"]
 transform = Transform3D(1, 0, 0, 0, 0.966823, 0.255446, 0, -0.255446, 0.966823, 0, 0, -0.0166266)
 
-[node name="right_hand" parent="FishingRod/RodMesh" index="4"]
+[node name="MeshInstance3D2" parent="FishingRod/RodMesh" index="3"]
+transform = Transform3D(-0.00739133, 0.955586, 0.294619, -0.999901, -0.0105864, 0.00925144, 0.0119595, -0.294522, 0.95557, -0.0301109, -0.5249, -0.00996324)
+
+[node name="right_hand" parent="FishingRod/RodMesh" index="5"]
 visible = false
 
 [node name="Keypad" parent="." instance=ExtResource("21_rtbv5")]

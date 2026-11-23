@@ -1,5 +1,7 @@
 extends Control
 
+const NumberFormat = preload("res://scripts/NumberFormat.gd")
+
 # ─── Original button refs (unverändert) ───────────────────────────────────────
 @onready var lake_btn    : Button = $layout/Locations/BeachButton
 @onready var city_btn    : Button = $layout/Locations/CityButton
@@ -11,7 +13,6 @@ extends Control
 @onready var van_btn     : Button = $layout/Locations/RestaurantButton
 @onready var back_btn    : Button = $layout/BackButton
 @onready var interact    : AudioStreamPlayer = $Audio/interact
-@onready var password_field : TextEdit = $password
 
 # ─── Neue Sidebar refs ────────────────────────────────────────────────────────
 @onready var sidebar          : Panel         = $Sidebar
@@ -33,25 +34,25 @@ var selected_spot := ""
 
 # ─── Location display names ───────────────────────────────────────────────────
 var location_names := {
-	"lake":    { "de": "Strand",  "en": "Beach"   },
-	"city":    { "de": "Stadt",   "en": "City"     },
-	"sewer":   { "de": "U-Bahn",  "en": "Subway"   },
-	"forest":  { "de": "Wald",    "en": "Forest"   },
-	"desert":  { "de": "Wüste",   "en": "Desert"   },
-	"iceland": { "de": "Eisland", "en": "Iceland"  },
-	"home":    { "de": "Zuhause", "en": "Home"     },
-	"van":     { "de": "Imbiss",  "en": "Van"      },
+	"lake":    { "de": "Strand",  "en": "Beach", "ru": "Пляж", "tr": "Sahil", "es": "Playa", "fr": "Plage", "pl": "Plaża"   },
+	"city":    { "de": "Stadt",   "en": "City", "ru": "Город", "tr": "Şehir", "es": "Ciudad", "fr": "Ville", "pl": "Miasto"     },
+	"sewer":   { "de": "U-Bahn",  "en": "Subway", "ru": "Метро", "tr": "Metro", "es": "Metro", "fr": "Métro", "pl": "Metro"   },
+	"forest":  { "de": "Wald",    "en": "Forest", "ru": "Лес", "tr": "Orman", "es": "Bosque", "fr": "Forêt", "pl": "Las"   },
+	"desert":  { "de": "Wüste",   "en": "Desert", "ru": "Пустыня", "tr": "Çöl", "es": "Desierto", "fr": "Désert", "pl": "Pustynia"   },
+	"iceland": { "de": "Eisland", "en": "Iceland", "ru": "Ледяной край", "tr": "Buz Diyarı", "es": "Tierra helada", "fr": "Terre de glace", "pl": "Kraina lodu"  },
+	"home":    { "de": "Zuhause", "en": "Home", "ru": "Дом", "tr": "Ev", "es": "Casa", "fr": "Maison", "pl": "Dom"     },
+	"van":     { "de": "Imbiss",  "en": "Van", "ru": "Фургон", "tr": "Minibüs", "es": "Furgoneta", "fr": "Camion", "pl": "Furgonetka"      },
 }
 
 var location_descs := {
-	"lake":    { "de": "Küstenabschnitt. Hohe Fischdichte.",           "en": "Coastline. High fish density."          },
-	"city":    { "de": "Städtisches Gebiet. Regnet seid Tagen.", "en": "Urban zone. Raining fro days."       },
-	"sewer":   { "de": "Unterirdisches Netz. Unbekannte Entitäten.",   "en": "Underground network. Unknown entities." },
-	"forest":  { "de": "Dichtes Blätterdach. Anomale Signale.",        "en": "Dense canopy. Strange signals."         },
-	"desert":  { "de": "Ödland. Extreme UV. Strahlentaschen.",         "en": "Wasteland. Extreme UV. Radiation."      },
-	"iceland": { "de": "Gletschergelände. Friert unter -30 °C.",       "en": "Glacial terrain. Freezes at -30°C."     },
-	"home":    { "de": "Sicherheitszone. Ausruhen und aufwerten.",     "en": "Safe zone. Rest and upgrade."           },
-	"van":     { "de": "Vendor-Einheit. Teile sammeln.",               "en": "Vendor unit. Collect all parts."        },
+	"lake":    { "de": "Küstenabschnitt. Hohe Fischdichte.",           "en": "Coastline. High fish density.", "ru": "Побережье. Много рыбы.", "tr": "Kıyı şeridi. Yoğun balık nüfusu.", "es": "Costa. Alta densidad de peces.", "fr": "Littoral. Forte densité de poissons.", "pl": "Wybrzeże. Duże zagęszczenie ryb."          },
+	"city":    { "de": "Städtisches Gebiet. Regnet seid Tagen.", "en": "Urban zone. Raining fro days.", "ru": "Городская зона. Дождь идёт уже несколько дней.", "tr": "Kentsel bölge. Günlerdir yağmur yağıyor.", "es": "Zona urbana. Lleva días lloviendo.", "fr": "Zone urbaine. Il pleut depuis des jours.", "pl": "Strefa miejska. Pada od wielu dni."       },
+	"sewer":   { "de": "Unterirdisches Netz. Unbekannte Entitäten.",   "en": "Underground network. Unknown entities.", "ru": "Подземная сеть. Неизвестные сущности.", "tr": "Yer altı ağı. Bilinmeyen varlıklar.", "es": "Red subterránea. Entidades desconocidas.", "fr": "Réseau souterrain. Entités inconnues.", "pl": "Podziemna sieć. Nieznane istoty." },
+	"forest":  { "de": "Dichtes Blätterdach. Anomale Signale.",        "en": "Dense canopy. Strange signals.", "ru": "Густой полог леса. Странные сигналы.", "tr": "Sık ağaç örtüsü. Garip sinyaller.", "es": "Copas densas. Señales extrañas.", "fr": "Canopée dense. Signaux étranges.", "pl": "Gęste korony drzew. Dziwne sygnały."         },
+	"desert":  { "de": "Ödland. Extreme UV. Strahlentaschen.",         "en": "Wasteland. Extreme UV. Radiation.", "ru": "Пустошь. Сильный ультрафиолет. Радиация.", "tr": "Issız topraklar. Aşırı UV. Radyasyon.", "es": "Páramo. Radiación UV extrema. Radiactividad.", "fr": "Terre désolée. UV extrêmes. Radiations.", "pl": "Pustkowie. Skrajne UV. Promieniowanie."      },
+	"iceland": { "de": "Gletschergelände. Friert unter -30 °C.",       "en": "Glacial terrain. Freezes at -30°C.", "ru": "Ледниковая местность. Мороз ниже −30 °C.", "tr": "Buzul arazisi. -30°C'de donar.", "es": "Terreno glaciar. Se congela a -30 °C.", "fr": "Terrain glaciaire. Gèle à -30 °C.", "pl": "Teren lodowcowy. Zamarza przy -30°C."     },
+	"home":    { "de": "Sicherheitszone. Ausruhen und aufwerten.",     "en": "Safe zone. Rest and upgrade.", "ru": "Безопасная зона. Отдых и улучшения.", "tr": "Güvenli bölge. Dinlen ve yükselt.", "es": "Zona segura. Descansa y mejora.", "fr": "Zone sûre. Repos et améliorations.", "pl": "Bezpieczna strefa. Odpoczynek i ulepszenia."           },
+	"van":     { "de": "Vendor-Einheit. Teile sammeln.",               "en": "Vendor unit. Collect all parts.", "ru": "Торговая точка. Собери все детали.", "tr": "Satıcı birimi. Tüm parçaları topla.", "es": "Puesto de venta. Reúne todas las piezas.", "fr": "Commerce ambulant. Récupère toutes les pièces.", "pl": "Punkt handlowy. Zbierz wszystkie części."        },
 }
 
 var location_icons := {
@@ -60,21 +61,21 @@ var location_icons := {
 }
 
 var localized_texts := {
-	"unlocked":      { "de": "◉ Freigeschaltet",                      "en": "◉ Unlocked"                        },
-	"price":         { "de": "Preis: %d $",                           "en": "Price: %d $"                       },
-	"buy_button":    { "de": "  KAUFEN (%d $)",                      "en": "  BUY (%d $)"                    },
-	"no_money":      { "de": "✗  KEIN GELD",                          "en": "✗  INSUFFICIENT FUNDS"             },
-	"vendor_locked": { "de": "Sammle alle Teile",                     "en": "Collect all parts"                 },
-	"vendor_parts":  { "de": "TEILE: %d/%d",                         "en": "PARTS: %d/%d"                      },
-	"unlocked_n":    { "de": "%d/8 freigeschaltet",                   "en": "%d/8 unlocked"                     },
-	"vendor_items":  { "de": "Fehlende Teile:\n%s",                   "en": "Missing parts:\n%s"                },
+	"unlocked":      { "de": "◉ Freigeschaltet",                      "en": "◉ Unlocked", "ru": "◉ Открыто", "tr": "◉ Açıldı", "es": "◉ Desbloqueado", "fr": "◉ Débloqué", "pl": "◉ Odblokowano"                        },
+	"price":         { "de": "Preis: %s $",                           "en": "Price: %s $", "ru": "Цена: %s $", "tr": "Fiyat: %s $", "es": "Precio: %s $", "fr": "Prix : %s $", "pl": "Cena: %s $"                       },
+	"buy_button":    { "de": "  KAUFEN (%s $)",                      "en": "  BUY (%s $)", "ru": "  КУПИТЬ (%s $)", "tr": "  SATIN AL (%s $)", "es": "  COMPRAR (%s $)", "fr": "  ACHETER (%s $)", "pl": "  KUP (%s $)"                    },
+	"no_money":      { "de": "✗  KEIN GELD",                          "en": "✗  INSUFFICIENT FUNDS", "ru": "✗  НЕ ХВАТАЕТ ДЕНЕГ", "tr": "✗  YETERSİZ PARA", "es": "✗  FONDOS INSUFICIENTES", "fr": "✗  FONDS INSUFFISANTS", "pl": "✗  ZA MAŁO PIENIĘDZY"             },
+	"vendor_locked": { "de": "Sammle alle Teile",                     "en": "Collect all parts", "ru": "Собери все детали", "tr": "Tüm parçaları topla", "es": "Reúne todas las piezas", "fr": "Récupère toutes les pièces", "pl": "Zbierz wszystkie części"                 },
+	"vendor_parts":  { "de": "TEILE: %d/%d",                         "en": "PARTS: %d/%d", "ru": "ДЕТАЛИ: %d/%d", "tr": "PARÇALAR: %d/%d", "es": "PIEZAS: %d/%d", "fr": "PIÈCES : %d/%d", "pl": "CZĘŚCI: %d/%d"                      },
+	"unlocked_n":    { "de": "%d/8 freigeschaltet",                   "en": "%d/8 unlocked", "ru": "Открыто: %d/8", "tr": "%d/8 açıldı", "es": "%d/8 desbloqueados", "fr": "%d/8 débloqués", "pl": "Odblokowano: %d/8"                     },
+	"vendor_items":  { "de": "Fehlende Teile:\n%s",                   "en": "Missing parts:\n%s", "ru": "Недостающие детали:\n%s", "tr": "Eksik parçalar:\n%s", "es": "Piezas que faltan:\n%s", "fr": "Pièces manquantes :\n%s", "pl": "Brakujące części:\n%s"                },
 }
 
 var item_names := {
-	"van":         { "de": "Food Truck Karosserie (Strand)", "en": "Food Truck Body (Beach)"  },
-	"opensign":    { "de": "Geöffnet-Schild (Stadt)",        "en": "Open Sign (City)"         },
-	"friteuse":    { "de": "Fritteuse (U-Bahn)",             "en": "Deep Fryer (Subway)"      },
-	"sushimesser": { "de": "Sushi-Messer (Wald)",            "en": "Sushi Knife (Forest)"     },
+	"van":         { "de": "Food Truck Karosserie (Strand)", "en": "Food Truck Body (Beach)", "ru": "Кузов фургона (пляж)", "tr": "Yemek Kamyonu Gövdesi (Sahil)", "es": "Carrocería del puesto de comida (playa)", "fr": "Carrosserie du food truck (plage)", "pl": "Karoseria food trucka (plaża)"  },
+	"opensign":    { "de": "Geöffnet-Schild (Stadt)",        "en": "Open Sign (City)", "ru": "Вывеска «Открыто» (город)", "tr": "Açık Tabelası (Şehir)", "es": "Cartel de abierto (ciudad)", "fr": "Enseigne « Ouvert » (ville)", "pl": "Szyld „Otwarte” (miasto)"         },
+	"friteuse":    { "de": "Fritteuse (U-Bahn)",             "en": "Deep Fryer (Subway)", "ru": "Фритюрница (метро)", "tr": "Fritöz (Metro)", "es": "Freidora (metro)", "fr": "Friteuse (métro)", "pl": "Frytownica (metro)"      },
+	"sushimesser": { "de": "Sushi-Messer (Wald)",            "en": "Sushi Knife (Forest)", "ru": "Нож для суши (лес)", "tr": "Suşi Bıçağı (Orman)", "es": "Cuchillo de sushi (bosque)", "fr": "Couteau à sushi (forêt)", "pl": "Nóż do sushi (las)"     },
 }
 
 # ─── Ready ────────────────────────────────────────────────────────────────────
@@ -98,6 +99,7 @@ func _ready() -> void:
 		Player.vendor_unlocked.connect(_on_vendor_unlocked)
 
 	_refresh_status()
+	$DebugMenu.values_changed.connect(_on_debug_values_changed)
 
 # ─── Vendor unlocked signal ───────────────────────────────────────────────────
 func _on_vendor_unlocked() -> void:
@@ -212,12 +214,12 @@ func show_spot_sidebar(spot_name: String) -> void:
 		btn_go.visible  = true
 		btn_buy.visible = false
 	else:
-		detail_price.text = get_text("price") % price
+		detail_price.text = get_text("price") % NumberFormat.compact(price)
 		detail_price.add_theme_color_override("font_color", Color(0.961, 0.620, 0.043, 1))
 		btn_go.visible  = false
 		btn_buy.visible = true
 		if Player.money >= price:
-			btn_buy.text     = get_text("buy_button") % price
+			btn_buy.text     = get_text("buy_button") % NumberFormat.compact(price)
 			btn_buy.disabled = false
 		else:
 			btn_buy.text     = get_text("no_money")
@@ -273,24 +275,11 @@ func go_to_spot(spot_name: String) -> void:
 	Player.update_last_scene(target)
 	Transition.change_scene(target, 0.8)
 
-# ─── Cheat console (unverändert) ─────────────────────────────────────────────
-func _on_submit_pressed() -> void:
-	var password : String = password_field.text
-	password_field.clear()
-	match password:
-		"money": Player.add_money(1000000000000000)
-		"fish":  Player._add_all_fish()
-		"grip":  Player.upgrade_grip = 500
-		"bait":  Player.upgrade_bait = 500
-		"line":  Player.upgrade_line = 500
-		"*":     Player.set_money(Player.money * 100)
-		"vendor":
-			for item_id in Player.REQUIRED_STORY_ITEMS:
-				if not Player.used_story_items.has(item_id):
-					Player.used_story_items.append(item_id)
-			Player.check_vendor_unlock()
-			assign_button(van_btn, "van")
-		_: return
+# Refresh the selected location after changing money in the debug menu.
+func _on_debug_values_changed() -> void:
+	_refresh_status()
+	if sidebar.visible and not selected_spot.is_empty():
+		show_spot_sidebar(selected_spot)
 
 # ─── Util ─────────────────────────────────────────────────────────────────────
 func _disconnect_all(btn: Button) -> void:

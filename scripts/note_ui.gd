@@ -6,6 +6,8 @@ var title_label: Label
 var text_label: RichTextLabel
 var close_button: Button
 var is_showing: bool = false
+var _active_note: Note
+var _closing_key: int = KEY_NONE
 
 func _ready() -> void:
 	set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -49,13 +51,26 @@ func _on_node_added(node: Node) -> void:
 		_connect_note(node)
 
 func _connect_note(node: Node) -> void:
-	if not node.note_opened.is_connected(show_note):
-		node.note_opened.connect(show_note)
-	if not node.note_closed.is_connected(hide_note):
-		node.note_closed.connect(hide_note)
+	var opened := _on_note_opened.bind(node)
+	var closed := _on_note_closed.bind(node)
+	if not node.note_opened.is_connected(opened):
+		node.note_opened.connect(opened)
+	if not node.note_closed.is_connected(closed):
+		node.note_closed.connect(closed)
 	print("🔗 Note verbunden: ", node.name)
 
+func _on_note_opened(title: String, text: String, note: Note) -> void:
+	if is_instance_valid(_active_note) and _active_note != note:
+		_active_note.close_note()
+	_active_note = note
+	show_note(title, text)
+
+func _on_note_closed(note: Note) -> void:
+	if _active_note == note:
+		hide_note()
+
 func show_note(title: String, text: String) -> void:
+	Player.set_story_crt_active(self, true)
 	print("🎨 ZEIGE NOTE UI: ", title)
 	if title_label:
 		title_label.text = title
@@ -67,15 +82,36 @@ func show_note(title: String, text: String) -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
 func hide_note() -> void:
+	Player.set_story_crt_active(self, false)
 	print("🎨 VERSTECKE NOTE UI")
 	is_showing = false
 	hide()
-	set_process_input(false)
+	set_process_input(_closing_key != KEY_NONE)
+	var note := _active_note
+	_active_note = null
+	if is_instance_valid(note) and note.note_is_open:
+		note.last_interaction_frame = Engine.get_process_frames()
+		note.close_note()
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 func _input(event: InputEvent) -> void:
+	var key := event as InputEventKey
+	if key == null:
+		if is_showing and event.is_action_pressed("ui_cancel"):
+			get_viewport().set_input_as_handled()
+			hide_note()
+		return
+	var code: int = key.physical_keycode if key.physical_keycode != KEY_NONE else key.keycode
+	# Keep swallowing this shortcut after hiding, including repeat and key-up.
+	if code == _closing_key and _closing_key != KEY_NONE:
+		get_viewport().set_input_as_handled()
+		if not key.pressed:
+			_closing_key = KEY_NONE
+			set_process_input(is_showing)
+		return
 	if not is_showing:
 		return
-	if event.is_action_pressed("ui_cancel"):
-		print("ESC → Note schließen")
+	if key.pressed and not key.echo and (code == KEY_E or code == KEY_ESCAPE or event.is_action_pressed("ui_cancel") or event.is_action_pressed("pause")):
+		_closing_key = code
+		get_viewport().set_input_as_handled()
 		hide_note()

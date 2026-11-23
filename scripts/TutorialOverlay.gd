@@ -14,97 +14,327 @@ const VCR_FONT := preload("res://fonts/VCR_OSD_MONO_1.001.ttf")
 var current_page: int = 0
 var total_pages: int = 3
 
-# 🌍 Tutorial-Texte (DE/EN)
+# Tutorial-Texte (DE/EN)
 var tutorial_pages = {
 	"de": [
 		{
-			"title": "🎣 Angeln - Die Basics",
+			"title": "Angeln - Die Basics",
 			"controls": [
-				"🖱️ LINKSKLICK / Leertaste HALTEN = Angel aufladen",
-				"🖱️ LOSLASSEN = Auswerfen!",
+				"LINKSKLICK / Leertaste HALTEN = Angel aufladen",
+				"LOSLASSEN = Auswerfen!",
 				"",
-				"⏳ Warte bis ein Fisch anbeißt...",
-				"💡 Der Indikator blinkt wenn ein Fisch da ist!",
+				"Warte bis ein Fisch anbeißt...",
+				"Der Indikator blinkt wenn ein Fisch da ist!",
 				"",
-				"🖱️ LINKSKLICK / Leertaste bei Biss = Einholen starten",
-				"🖱️ IM MINIGAME HALTEN = Fortschritt",
-				"🎯 Marker muss im farbigen Bereich sein!",
-				"❌ Außerhalb = Fortschritt geht verloren"
+				"LINKSKLICK / Leertaste bei Biss = Einholen starten",
+				"LINKSKLICK / Leertaste HALTEN = Marker bremsen",
+				"Marker muss im farbigen Bereich sein!",
+				"Außerhalb = Fortschritt geht verloren"
 			]
 		},
 		{
-			"title": "🎮 Kamera & Menüs",
+			"title": "Kamera & Menüs",
 			"controls": [
-				"◀️ LINKS / A = Kamera nach links drehen",
-				"▶️ RECHTS / D = Kamera nach rechts drehen",
-				"🖱️ LINKSKLICK / Leertaste beim Shop = Betreten",
+				"LINKS / A = Kamera nach links drehen",
+				"RECHTS / D = Kamera nach rechts drehen",
+				"LINKSKLICK / Leertaste beim Shop = Betreten",
 				"",
-				"📋 Menüs:",
-				"🗺️ M = Weltkarte öffnen",
-				"📖 J = Fischlexikon öffnen",
-				"🎒 I = Inventar öffnen",
-				"⚙️ ESC = Einstellungen/Pause"
+				"Menüs:",
+				"M = Weltkarte öffnen",
+				"J = Fischlexikon öffnen",
+				"I = Inventar öffnen",
+				"ESC = Einstellungen/Pause"
 			]
 		},
 		{
-			"title": "💡 Tipps & Geheimnisse",
+			"title": "Tipps & Geheimnisse",
 			"controls": [
-				"🎯 Je länger du hältst, desto weiter wirfst du!",
-				"🐟 Bessere Köder = seltenere Fische",
-				"💪 Shop-Upgrades verbessern:",
+				"Je länger du hältst, desto weiter wirfst du!",
+				"Bessere Köder = seltenere Fische",
+				"Shop-Upgrades verbessern:",
 				"   • Grip = Einfacher zu fangen",
 				"   • Köder = Bessere Fische spawnen",
 				"   • Leine = Schnellere Bisse",
 				"",
-				"🏆 GEHEIMNIS: Finde 4 leuchtende Teile!",
-				"💛 100 $ für jeden neuen Fisch",
-				"🚐 Schaltet den Imbiss frei!"
+				"GEHEIMNIS: Finde 4 leuchtende Teile!",
+				"100 $ für jeden neuen Fisch",
+				"Schaltet den Imbiss frei!"
 			]
 		}
 	],
 	"en": [
 		{
-			"title": "🎣 Fishing - The Basics",
+			"title": "Fishing - The Basics",
 			"controls": [
-				"🖱️ HOLD LEFT CLICK / Space = Charge cast",
-				"🖱️ RELEASE = Cast!",
+				"HOLD LEFT CLICK / Space = Charge cast",
+				"RELEASE = Cast!",
 				"",
-				"⏳ Wait for a fish to bite...",
-				"💡 Indicator blinks when fish bites!",
+				"Wait for a fish to bite...",
+				"Indicator blinks when fish bites!",
 				"",
-				"🖱️ LEFT CLICK / Space on bite = Start reeling",
-				"🖱️ HOLD IN MINIGAME = Progress",
-				"🎯 Marker must be in marked area!",
-				"❌ Outside = Progress lost"
+				"LEFT CLICK / Space on bite = Start reeling",
+				"HOLD LEFT CLICK / Space = Slow the marker",
+				"Marker must be in marked area!",
+				"Outside = Progress lost"
 			]
 		},
 		{
-			"title": "🎮 Camera & Menus",
+			"title": "Camera & Menus",
 			"controls": [
-				"◀️ LEFT / A = Rotate camera left",
-				"▶️ RIGHT / D = Rotate camera right",
-				"🖱️ LEFT CLICK / Space at shop = Enter",
+				"LEFT / A = Rotate camera left",
+				"RIGHT / D = Rotate camera right",
+				"LEFT CLICK / Space at shop = Enter",
 				"",
-				"📋 Menus:",
-				"🗺️ M = Open world map",
-				"📖 J = Open fish journal",
-				"🎒 I = Open inventory",
-				"⚙️ ESC = Settings/Pause"
+				"Menus:",
+				"M = Open world map",
+				"J = Open fish journal",
+				"I = Open inventory",
+				"ESC = Settings/Pause"
 			]
 		},
 		{
-			"title": "💡 Tips & Secrets",
+			"title": "Tips & Secrets",
 			"controls": [
-				"🎯 Longer charge = farther cast!",
-				"🐟 Better bait = rarer fish",
-				"💪 Shop upgrades improve:",
+				"Longer charge = farther cast!",
+				"Better bait = rarer fish",
+				"Shop upgrades improve:",
 				"   • Grip = Easier to catch",
 				"   • Bait = Better fish spawn",
 				"   • Line = Faster bites",
 				"",
-				"🏆 SECRET: Find 4 glowing parts!",
-				"💛 100 $ for every new fish",
-				"🚐 Unlocks the food truck!"
+				"SECRET: Find 4 glowing parts!",
+				"100 $ for every new fish",
+				"Unlocks the food truck!"
+			]
+		}
+	],
+	"ru": [
+		{
+			"title": "Основы рыбалки",
+			"controls": [
+				"УДЕРЖИВАЙ ЛКМ / пробел = зарядить заброс",
+				"ОТПУСТИ = заброс!",
+				"",
+				"Дождись, когда рыба клюнет...",
+				"При поклёвке индикатор мигает!",
+				"",
+				"ЛКМ / пробел при поклёвке = начать вываживание",
+				"УДЕРЖИВАЙ ЛКМ / пробел = замедлить маркер",
+				"Держи маркер в отмеченной зоне!",
+				"Вне зоны = потеря прогресса"
+			]
+		},
+		{
+			"title": "Камера и меню",
+			"controls": [
+				"ВЛЕВО / A = повернуть камеру влево",
+				"ВПРАВО / D = повернуть камеру вправо",
+				"ЛКМ / пробел у магазина = войти",
+				"",
+				"Меню:",
+				"M = открыть карту мира",
+				"J = открыть книгу рыб",
+				"I = открыть инвентарь",
+				"ESC = настройки/пауза"
+			]
+		},
+		{
+			"title": "Советы и секреты",
+			"controls": [
+				"Дольше заряжаешь — дальше забрасываешь!",
+				"Лучше наживка — более редкая рыба",
+				"Улучшения в магазине:",
+				"   • Рукоять = легче ловить",
+				"   • Наживка = лучше рыбы",
+				"   • Леска = быстрее клюёт",
+				"",
+				"СЕКРЕТ: найди 4 светящиеся детали!",
+				"100 $ за каждую новую рыбу",
+				"Откроет фургон с едой!"
+			]
+		}
+	],
+	"tr": [
+		{
+			"title": "Balık Tutmanın Temelleri",
+			"controls": [
+				"SOL TIK / Boşluk BASILI TUT = Atışı şarj et",
+				"BIRAK = Oltayı at!",
+				"",
+				"Bir balığın yemi ısırmasını bekle...",
+				"Balık ısırınca gösterge yanıp söner!",
+				"",
+				"Isırınca SOL TIK / Boşluk = Sarmaya başla",
+				"SOL TIK / Boşluk BASILI TUT = İşaretçiyi yavaşlat",
+				"İşaretçi işaretli bölgede olmalı!",
+				"Dışarıda = İlerleme kaybı"
+			]
+		},
+		{
+			"title": "Kamera ve Menüler",
+			"controls": [
+				"SOL / A = Kamerayı sola döndür",
+				"SAĞ / D = Kamerayı sağa döndür",
+				"Dükkânda SOL TIK / Boşluk = Gir",
+				"",
+				"Menüler:",
+				"M = Dünya haritasını aç",
+				"J = Balık günlüğünü aç",
+				"I = Envanteri aç",
+				"ESC = Ayarlar/Duraklat"
+			]
+		},
+		{
+			"title": "İpuçları ve Sırlar",
+			"controls": [
+				"Daha uzun şarj = Daha uzak atış!",
+				"Daha iyi yem = Daha nadir balık",
+				"Dükkân yükseltmeleri:",
+				"   • Sap = Daha kolay yakalama",
+				"   • Yem = Daha iyi balıklar çıkar",
+				"   • Misina = Daha hızlı ısırık",
+				"",
+				"SIR: 4 parlayan parça bul!",
+				"Her yeni balık için 100 $",
+				"Yemek kamyonunun kilidini açar!"
+			]
+		}
+	],
+	"es": [
+		{
+			"title": "Pesca: lo básico",
+			"controls": [
+				"MANTÉN CLIC IZQUIERDO / Espacio = Cargar lance",
+				"SUELTA = ¡Lanzar!",
+				"",
+				"Espera a que pique un pez...",
+				"¡El indicador parpadea cuando pica un pez!",
+				"",
+				"CLIC IZQUIERDO / Espacio al picar = Recoger",
+				"MANTÉN CLIC IZQUIERDO / Espacio = Frenar marcador",
+				"¡El marcador debe estar en la zona marcada!",
+				"Fuera = Pérdida de progreso"
+			]
+		},
+		{
+			"title": "Cámara y menús",
+			"controls": [
+				"IZQUIERDA / A = Girar cámara a la izquierda",
+				"DERECHA / D = Girar cámara a la derecha",
+				"CLIC IZQUIERDO / Espacio en la tienda = Entrar",
+				"",
+				"Menús:",
+				"M = Abrir mapa del mundo",
+				"J = Abrir diario de peces",
+				"I = Abrir inventario",
+				"ESC = Ajustes/Pausa"
+			]
+		},
+		{
+			"title": "Consejos y secretos",
+			"controls": [
+				"¡Más carga = Lance más lejano!",
+				"Mejor cebo = Peces más raros",
+				"Las mejoras de la tienda:",
+				"   • Empuñadura = Capturas más fáciles",
+				"   • Cebo = Aparecen mejores peces",
+				"   • Sedal = Picadas más rápidas",
+				"",
+				"SECRETO: ¡Encuentra 4 piezas brillantes!",
+				"100 $ por cada pez nuevo",
+				"¡Desbloquea el puesto de comida!"
+			]
+		}
+	],
+	"fr": [
+		{
+			"title": "Les bases de la pêche",
+			"controls": [
+				"MAINTENIR CLIC GAUCHE / Espace = Charger le lancer",
+				"RELÂCHER = Lancer !",
+				"",
+				"Attends qu'un poisson morde…",
+				"L'indicateur clignote quand ça mord !",
+				"",
+				"CLIC GAUCHE / Espace à la touche = Ferrer",
+				"MAINTENIR CLIC GAUCHE / Espace = Freiner le marqueur",
+				"Garde le marqueur dans la zone colorée !",
+				"En dehors = Perte de progression"
+			]
+		},
+		{
+			"title": "Caméra et menus",
+			"controls": [
+				"GAUCHE / A = Tourner la caméra à gauche",
+				"DROITE / D = Tourner la caméra à droite",
+				"CLIC GAUCHE / Espace à la boutique = Entrer",
+				"",
+				"Menus :",
+				"M = Ouvrir la carte du monde",
+				"J = Ouvrir le guide des poissons",
+				"I = Ouvrir l'inventaire",
+				"ÉCHAP = Paramètres/Pause"
+			]
+		},
+		{
+			"title": "Conseils et secrets",
+			"controls": [
+				"Charge plus longtemps pour lancer plus loin !",
+				"Meilleurs appâts = Poissons plus rares",
+				"Les améliorations de la boutique :",
+				"   • Poignée = Captures plus faciles",
+				"   • Appât = Apparition de meilleurs poissons",
+				"   • Ligne = Touches plus rapides",
+				"",
+				"SECRET : Trouve 4 pièces lumineuses !",
+				"100 $ pour chaque nouveau poisson",
+				"Débloque le food truck !"
+			]
+		}
+	],
+	"pl": [
+		{
+			"title": "Podstawy wędkowania",
+			"controls": [
+				"PRZYTRZYMAJ LPM / Spację = Przygotuj rzut",
+				"PUŚĆ = Zarzuć!",
+				"",
+				"Poczekaj, aż ryba weźmie…",
+				"Wskaźnik miga, gdy ryba bierze!",
+				"",
+				"LPM / Spacja przy braniu = Zacznij holować",
+				"PRZYTRZYMAJ LPM / Spację = Spowolnij znacznik",
+				"Znacznik musi być w zaznaczonej strefie!",
+				"Poza strefą = Utrata postępu"
+			]
+		},
+		{
+			"title": "Kamera i menu",
+			"controls": [
+				"LEWO / A = Obróć kamerę w lewo",
+				"PRAWO / D = Obróć kamerę w prawo",
+				"LPM / Spacja przy sklepie = Wejdź",
+				"",
+				"Menu:",
+				"M = Otwórz mapę świata",
+				"J = Otwórz atlas ryb",
+				"I = Otwórz ekwipunek",
+				"ESC = Ustawienia/Pauza"
+			]
+		},
+		{
+			"title": "Porady i sekrety",
+			"controls": [
+				"Dłuższe przytrzymanie = Dalszy rzut!",
+				"Lepsza przynęta = Rzadsze ryby",
+				"Ulepszenia w sklepie:",
+				"   • Uchwyt = Łatwiejsze łowienie",
+				"   • Przynęta = Lepsze ryby",
+				"   • Żyłka = Szybsze brania",
+				"",
+				"SEKRET: Znajdź 4 świecące części!",
+				"100 $ za każdą nową rybę",
+				"Odblokowuje food trucka!"
 			]
 		}
 	]
@@ -179,8 +409,7 @@ func _setup_ui() -> void:
 	page_indicator.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	
 	# Close Button Setup
-	var lang = Player.current_language
-	close_button.text = "Weiter →" if lang == "de" else "Next →"
+	close_button.text = tr("TUTORIAL_NEXT")
 	close_button.custom_minimum_size = Vector2(0, 60)
 	
 	# Button Style
@@ -231,7 +460,7 @@ func _show_page(page: int) -> void:
 	print("🔍 DEBUG: Titel =", title.text)
 	
 	# Update page indicator
-	page_indicator.text = "Seite %d / %d" % [page + 1, total_pages] if lang == "de" else "Page %d / %d" % [page + 1, total_pages]
+	page_indicator.text = tr("TUTORIAL_PAGE") % [page + 1, total_pages]
 	
 	# Add controls
 	var control_count = 0
@@ -244,9 +473,7 @@ func _show_page(page: int) -> void:
 			continue
 		
 		var label = Label.new()
-		var label_font := FontFile.new()
-		label_font.font_data = VCR_FONT
-		label.add_theme_font_override("font", label_font)
+		label.add_theme_font_override("font", VCR_FONT)
 		label.text = control_text
 		
 		# Größere Schrift für Hauptpunkte, kleinere für Sub-Items
@@ -266,9 +493,9 @@ func _show_page(page: int) -> void:
 	
 	# Update button text
 	if current_page >= total_pages - 1:
-		close_button.text = "Los geht's! 🎣" if lang == "de" else "Let's go! 🎣"
+		close_button.text = tr("TUTORIAL_START")
 	else:
-		close_button.text = "Weiter →" if lang == "de" else "Next →"
+		close_button.text = tr("TUTORIAL_NEXT")
 	
 	print("✅ _show_page() abgeschlossen")
 

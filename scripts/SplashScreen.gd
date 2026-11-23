@@ -90,27 +90,57 @@ var fish_textures := [
 var loading_messages := {
 	"prepare": {
 		"de": "🎣 Bereite Angelruten vor... %d%%",
-		"en": "🎣 Preparing fishing rods... %d%%"
+		"en": "🎣 Preparing fishing rods... %d%%",
+		"ru": "🎣 Готовим удочки... %d%%",
+		"tr": "🎣 Oltalar hazırlanıyor... %%%d",
+		"es": "🎣 Preparando cañas... %d%%",
+		"fr": "🎣 Préparation des cannes… %d%%",
+		"pl": "🎣 Przygotowywanie wędek… %d%%"
 	},
 	"fill": {
 		"de": "🐟 Fülle Seen mit Fischen... %d%%",
-		"en": "🐟 Filling lakes with fish... %d%%"
+		"en": "🐟 Filling lakes with fish... %d%%",
+		"ru": "🐟 Заполняем озёра рыбой... %d%%",
+		"tr": "🐟 Göller balıkla dolduruluyor... %%%d",
+		"es": "🐟 Llenando lagos de peces... %d%%",
+		"fr": "🐟 Remplissage des lacs de poissons… %d%%",
+		"pl": "🐟 Zarybianie jezior… %d%%"
 	},
 	"physics": {
 		"de": "🌊 Erstelle Wasser-Physik... %d%%",
-		"en": "🌊 Creating water physics... %d%%"
+		"en": "🌊 Creating water physics... %d%%",
+		"ru": "🌊 Создаём физику воды... %d%%",
+		"tr": "🌊 Su fiziği oluşturuluyor... %%%d",
+		"es": "🌊 Creando la física del agua... %d%%",
+		"fr": "🌊 Création de la physique de l'eau… %d%%",
+		"pl": "🌊 Tworzenie fizyki wody… %d%%"
 	},
 	"biomes": {
 		"de": "🏔️ Richte Biome ein... %d%%",
-		"en": "🏔️ Setting up biomes... %d%%"
+		"en": "🏔️ Setting up biomes... %d%%",
+		"ru": "🏔️ Создаём биомы... %d%%",
+		"tr": "🏔️ Biyomlar hazırlanıyor... %%%d",
+		"es": "🏔️ Preparando biomas... %d%%",
+		"fr": "🏔️ Installation des biomes… %d%%",
+		"pl": "🏔️ Przygotowywanie biomów… %d%%"
 	},
 	"polish": {
 		"de": "✨ Poliere Haken... %d%%",
-		"en": "✨ Polishing hooks... %d%%"
+		"en": "✨ Polishing hooks... %d%%",
+		"ru": "✨ Полируем крючки... %d%%",
+		"tr": "✨ İğneler parlatılıyor... %%%d",
+		"es": "✨ Puliendo anzuelos... %d%%",
+		"fr": "✨ Polissage des hameçons… %d%%",
+		"pl": "✨ Polerowanie haczyków… %d%%"
 	},
 	"ready": {
 		"de": "🎮 Bereit zum Angeln! %d%%",
-		"en": "🎮 Ready to fish! %d%%"
+		"en": "🎮 Ready to fish! %d%%",
+		"ru": "🎮 К рыбалке готовы! %d%%",
+		"tr": "🎮 Balık tutmaya hazır! %%%d",
+		"es": "🎮 ¡Todo listo para pescar! %d%%",
+		"fr": "🎮 Prêt à pêcher ! %d%%",
+		"pl": "🎮 Gotowi na ryby! %d%%"
 	}
 }
 

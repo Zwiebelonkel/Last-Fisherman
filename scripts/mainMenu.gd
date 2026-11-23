@@ -93,8 +93,7 @@ func _on_button_pressed() -> void:
 	animate_button_click(start_button)
 	await get_tree().create_timer(0.2).timeout
 	
-	Player.update_last_scene("res://scenes/MainScene.tscn")
-	Transition.change_scene("res://scenes/MainScene.tscn", 0.8)
+	Transition.change_scene(Player.last_scene, 0.8)
 
 func _on_reset_button_pressed() -> void:
 	click.play()
@@ -156,9 +155,7 @@ func showSettings() -> void:
 	optionsActive = true
 
 func hideSettings() -> void:
-	if options.graphics_window.visible:
-		options.graphics_window.hide()
-		click.play()
+	if options.close_graphics_window():
 		return
 	click.play()
 	var tween = create_tween()

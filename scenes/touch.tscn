@@ -1,10 +1,13 @@
-[gd_scene load_steps=8 format=3 uid="uid://xt7f7m4i2iwi"]
+[gd_scene load_steps=9 format=3 uid="uid://xt7f7m4i2iwi"]
 
 [ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="1_iac43"]
 [ext_resource type="Texture2D" uid="uid://cqxq0fn4tw8iq" path="res://assets/icons/Tools_Crafting_Books_Manual_Codex_Instructions_Tutorial_Documentation.png" id="2_ja7e8"]
 [ext_resource type="Texture2D" uid="uid://bdoekxiqql26f" path="res://assets/icons/Travel_Backpack_Bag_Bedroll.png" id="3_dyx1v"]
 [ext_resource type="Texture2D" uid="uid://d7xshfvspqbi" path="res://assets/icons/Map_Markers_Treasure_Map_Paper_Parchment.png" id="4_vydqa"]
 [ext_resource type="Texture2D" uid="uid://6kwdmgloipy" path="res://assets/icons/Software_Options_Settings_Cogwheel_Gear_Mechanics.png" id="5_3dfsu"]
+
+[sub_resource type="Theme" id="Theme_icon_tooltips"]
+TooltipLabel/fonts/font = ExtResource("1_iac43")
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_620u5"]
 
@@ -19,15 +22,17 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+theme = SubResource("Theme_icon_tooltips")
 
 [node name="TopLeftPanel" type="PanelContainer" parent="."]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -108.5
-offset_right = 108.5
-offset_bottom = 55.0
+offset_left = -175.0
+offset_top = 6.0
+offset_right = 175.0
+offset_bottom = 66.0
 grow_horizontal = 2
 mouse_filter = 1
 theme_override_styles/panel = SubResource("StyleBoxEmpty_620u5")

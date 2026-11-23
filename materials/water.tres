@@ -8,6 +8,7 @@
 [resource]
 render_priority = -128
 shader = ExtResource("1_7nphg")
+shader_parameter/surface_time = -1.0
 shader_parameter/wave_height = 0.614
 shader_parameter/wave_speed = 1.451
 shader_parameter/refraction_strength = 0.186
@@ -54,6 +55,7 @@ shader_parameter/uv_sampler_scale = 0.3
 shader_parameter/blend_factor = 0.795
 shader_parameter/perturbation_strength = 0.37
 shader_parameter/perturbation_time = 0.3
+shader_parameter/seamless_tiling = false
 shader_parameter/normalmap_a = ExtResource("1_4lgl7")
 shader_parameter/normalmap_b = ExtResource("2_6tan1")
 shader_parameter/caustics_intensity = 14.48

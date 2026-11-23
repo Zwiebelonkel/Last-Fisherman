@@ -1,4 +1,5 @@
 shader_type canvas_item;
+uniform float handoff_opacity : hint_range(0, 1) = 1.0;
 
 // ==============================
 // PANEL-GRÖSSE (vom Script setzen!)
@@ -92,5 +93,5 @@ void fragment() {
     float alpha = border * intensity * pulse * flicker;
     alpha = clamp(alpha, 0.0, 1.0);
 
-    COLOR = vec4(glow_color.rgb, alpha);
+    COLOR = vec4(glow_color.rgb, alpha * handoff_opacity);
 }

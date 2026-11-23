@@ -27,6 +27,7 @@ var original_material: StandardMaterial3D
 var cooking_material: StandardMaterial3D
 
 var _cooking_time_override: float = -1.0  # Gesetzt nach Minigame
+var _current_fish_data: Dictionary = {}
 
 # ===============================
 #  READY / PROCESS
@@ -68,7 +69,7 @@ func setup_materials() -> void:
 	cooking_material.albedo_color = Color(0.4, 0.8, 0.4)
 	cooking_material.emission_enabled = true
 	cooking_material.emission = Color(0.4, 0.8, 0.4)
-	cooking_material.emission_energy = 1.5
+	cooking_material.emission_energy_multiplier = 1.5
 
 # ===============================
 #  SETTERS
@@ -154,6 +155,7 @@ func _on_fish_selected(fish_name: String) -> void:
 		return
 
 	current_fish_type = fish_name
+	_current_fish_data = controller.get_fish_data(fish_name).duplicate(true)
 
 	# Minigame starten falls vorhanden
 	if minigame:
@@ -207,7 +209,7 @@ func collect_item() -> void:
 	if not tray:
 		return
 
-	if tray.add_item(current_fish_type, "Sushi"):
+	if tray.add_item(current_fish_type, "Sushi", _current_fish_data):
 		current_state = State.IDLE
 		current_fish_type = ""
 		update_prompt()

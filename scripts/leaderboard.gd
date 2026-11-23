@@ -1,4 +1,6 @@
 extends Node3D
+
+const NumberFormat = preload("res://scripts/NumberFormat.gd")
 # LeaderboardDisplay.gd
 # Hänge dieses Script an einen Node3D in deiner Hub-Szene
 
@@ -239,9 +241,9 @@ func _update_entries(container: VBoxContainer, entries: Array):
 			var steam_id = data.get("steam_id", 0)
 			var player_name = Leaderboards.player_name(steam_id)
 
-			labels[0].text = str(rank)
+			labels[0].text = NumberFormat.compact(rank)
 			labels[1].text = player_name
-			labels[2].text = str(score)
+			labels[2].text = NumberFormat.compact(score)
 			
 			# Eigenen Eintrag highlighten
 			var row_color = Color(1.0, 0.8, 0.2) if steam_id == GodotSteam.steam_id else Color(0.8, 0.75, 0.6)

@@ -1,5 +1,8 @@
 extends Node
 
+const QualityEffects := preload("res://scripts/GraphicsQuality.gd")
+var quality_effects := QualityEffects.new()
+
 signal biome_completed(biome_name: String, reward: int)
 signal fish_caught(fish_id: String)
 signal money_gained(amount: int)
@@ -22,6 +25,7 @@ var used_story_items: Array = []
 var tutorial_seen: bool = false  # 🆕 Tutorial wurde angesehen
 var fish_detail_hint_seen: bool = false
 var visited_biomes: Dictionary = {}
+var location_times: Dictionary = {}
 
 # 🆕 Story Items für Vendor Unlock
 const REQUIRED_STORY_ITEMS = ["van", "opensign", "friteuse", "sushimesser"]
@@ -38,6 +42,13 @@ var crt_enabled: bool = true
 var godray_enabled: bool = true
 var glow_enabled: bool = true
 var fog_quality: int = 3
+var shadow_quality: int = 3
+var texture_quality: int = 0
+var water_quality: int = 2
+var particle_quality: int = 2
+var view_distance: int = 2
+var tablet_blur_enabled: bool = true
+var fishing_line_segments: int = 96
 
 # Gewichtsrekorde pro Fischart (✅ fish_id als Key)
 var fish_weight_records: Dictionary = {}
@@ -149,6 +160,9 @@ func get_active_bait_rarity() -> String:
 	return active_bait
 
 func _ready():
+	# Fall back for characters outside the retro font, including Polish letters.
+	var interface_font := preload("res://fonts/VCR_OSD_MONO_1.001.ttf")
+	interface_font.fallbacks = [ThemeDB.fallback_font]
 	load_game()
 	load_settings()
 	TranslationServer.set_locale(current_language)
@@ -232,7 +246,14 @@ func save_settings() -> void:
 		"crt_enabled": crt_enabled,
 		"godray_enabled": godray_enabled,
 		"glow_enabled": glow_enabled,
-		"fog_quality": fog_quality
+		"fog_quality": fog_quality,
+		"shadow_quality": shadow_quality,
+		"texture_quality": texture_quality,
+		"water_quality": water_quality,
+		"particle_quality": particle_quality,
+		"view_distance": view_distance,
+		"tablet_blur_enabled": tablet_blur_enabled,
+		"fishing_line_segments": fishing_line_segments
 	}
 	var file = FileAccess.open("user://settings.dat", FileAccess.WRITE)
 	file.store_var(settings_data)
@@ -251,13 +272,25 @@ func load_settings() -> void:
 		crt_enabled = settings_data.get("crt_enabled", true)
 		godray_enabled = settings_data.get("godray_enabled", true)
 		glow_enabled = settings_data.get("glow_enabled", true)
-		fog_quality = settings_data.get("fog_quality", 3)
+		fog_quality = _quality_index(settings_data.get("fog_quality", 3), 3, 3)
+		shadow_quality = _quality_index(settings_data.get("shadow_quality", 3), 3, 3)
+		texture_quality = _quality_index(settings_data.get("texture_quality", 0), 0, 2)
+		water_quality = _quality_index(settings_data.get("water_quality", 2), 2, 2)
+		particle_quality = _quality_index(settings_data.get("particle_quality", 2), 2, 2)
+		view_distance = _quality_index(settings_data.get("view_distance", 2), 2, 2)
+		var blur: Variant = settings_data.get("tablet_blur_enabled", true)
+		tablet_blur_enabled = blur if blur is bool else true
+		var line_segments: Variant = settings_data.get("fishing_line_segments", 96)
+		fishing_line_segments = clampi(line_segments, 24, 192) if line_segments is int else 96
 		
 		apply_settings()
 		TranslationServer.set_locale(current_language)
 	else:
 		current_language = "de"
 		TranslationServer.set_locale("de")
+
+static func _quality_index(value: Variant, fallback: int, maximum: int) -> int:
+	return clampi(value, 0, maximum) if value is int else fallback
 
 func apply_settings() -> void:
 	var master_bus = AudioServer.get_bus_index("Master")
@@ -283,20 +316,40 @@ func apply_settings() -> void:
 	apply_graphics_settings()
 
 func apply_graphics_settings() -> void:
+	quality_effects.apply_global(get_tree().root, self)
+	_set_crt_visible(get_tree().root, crt_enabled)
 	_apply_graphics_settings_to_node(get_tree().root)
 
 func _on_node_added(node: Node) -> void:
-	_apply_graphics_settings_to_node(node)
+	# Scene files default to visible; apply CRT before the new scene is drawn.
+	if node is CanvasItem and node.name == &"CRT":
+		node.visible = _crt_visible_for(node, crt_enabled)
+	# Apply after _ready has assigned dynamic materials; avoid repeatedly walking
+	# each newly added subtree while a large location is still being instantiated.
+	_apply_added_graphics.call_deferred(node.get_instance_id())
+
+func _apply_added_graphics(instance_id: int) -> void:
+	var node := instance_from_id(instance_id) as Node
+	if is_instance_valid(node) and node.is_inside_tree():
+		_apply_graphics_node(node)
 
 func _apply_graphics_settings_to_node(node: Node) -> void:
-	if str(node.name).to_lower().contains("godray") and ( node is Node3D):
-		node.visible = godray_enabled
-
-	if node is WorldEnvironment and node.environment:
-		_apply_environment_graphics_settings(node.environment)
-
+	_apply_graphics_node(node)
 	for child in node.get_children():
 		_apply_graphics_settings_to_node(child)
+
+func _apply_graphics_node(node: Node) -> void:
+	if node.has_method("set_bait_glow_enabled"):
+		node.set_bait_glow_enabled(glow_enabled)
+	if node.has_method("set_fishing_line_segments"):
+		node.set_fishing_line_segments(fishing_line_segments)
+	if node is CanvasItem and node.name == &"CRT":
+		node.visible = _crt_visible_for(node, crt_enabled)
+	if str(node.name).to_lower().contains("godray") and node is Node3D:
+		node.visible = godray_enabled
+	if node is WorldEnvironment and node.environment:
+		_apply_environment_graphics_settings(node.environment)
+	quality_effects.apply_node(node, self)
 
 func _apply_environment_graphics_settings(environment: Environment) -> void:
 	if not environment.has_meta("default_glow_enabled"):
@@ -313,15 +366,45 @@ func _apply_environment_graphics_settings(environment: Environment) -> void:
 		return
 
 	environment.fog_enabled = bool(environment.get_meta("default_fog_enabled"))
-	environment.volumetric_fog_enabled = bool(environment.get_meta("default_volumetric_fog_enabled"))
+	# Low uses ordinary fog; volumetric fog is only supported by Forward+.
+	environment.volumetric_fog_enabled = bool(environment.get_meta("default_volumetric_fog_enabled")) and fog_quality >= 2 and RenderingServer.get_current_rendering_method() == "forward_plus"
 	var quality_index: int = min(max(fog_quality, 0), 3)
 	var density_multiplier : float = [0.0, 0.45, 0.75, 1.0][quality_index]
 	environment.volumetric_fog_density = float(environment.get_meta("default_volumetric_fog_density")) * density_multiplier
 
+func _crt_visible_for(node: Node, enabled: bool) -> bool:
+	if not get_tree().get_nodes_in_group("active_story_crt").is_empty():
+		return true
+	# Story presentations can be scene roots or overlays above gameplay.
+	# Keep their authored look without changing the player's saved preference.
+	var ancestor := node
+	while ancestor != null:
+		if bool(ancestor.get_meta(&"force_crt", false)):
+			return true
+		ancestor = ancestor.get_parent()
+	return enabled
+
+
+func set_story_crt_active(view: Node, active: bool) -> void:
+	if active:
+		view.add_to_group("active_story_crt")
+		var cleanup := _release_story_crt.bind(view)
+		if not view.tree_exiting.is_connected(cleanup):
+			view.tree_exiting.connect(cleanup, CONNECT_ONE_SHOT)
+	else:
+		view.remove_from_group("active_story_crt")
+	_set_crt_visible(get_tree().root, crt_enabled)
+
+
+func _release_story_crt(view: Node) -> void:
+	view.remove_from_group("active_story_crt")
+	apply_graphics_settings.call_deferred()
+
+
 func _set_crt_visible(node: Node, enabled: bool) -> void:
 	for child in node.get_children():
-		if child.name == "CRT":
-			child.visible = enabled
+		if child is CanvasItem and child.name == &"CRT":
+			child.visible = _crt_visible_for(child, enabled)
 		_set_crt_visible(child, enabled)
 
 func set_touch_buttons_visible(visible: bool) -> void:
@@ -495,6 +578,8 @@ func get_inventory_value() -> int:
 	return Inventory.get_total_value()
 
 func save_game() -> void:
+	# Capture the active place without advancing clocks in unloaded scenes.
+	get_tree().call_group("location_clocks", "capture_time")
 	var save_data = {
 		"money": money,
 		"level": level,
@@ -514,6 +599,7 @@ func save_game() -> void:
 		"tutorial_seen": tutorial_seen,
 		"fish_detail_hint_seen": fish_detail_hint_seen,
 		"visited_biomes": visited_biomes,
+		"location_times": location_times,
 	}
 	
 	var file = FileAccess.open("user://savegame.dat", FileAccess.WRITE)
@@ -544,6 +630,14 @@ func load_game() -> void:
 		tutorial_seen = save_data.get("tutorial_seen", false)  # 🆕 Tutorial-Status laden
 		fish_detail_hint_seen = save_data.get("fish_detail_hint_seen", false)
 		visited_biomes = save_data.get("visited_biomes", {})
+		location_times = {}
+		var saved_times: Variant = save_data.get("location_times", {})
+		if saved_times is Dictionary:
+			for place: Variant in saved_times:
+				var position: Variant = saved_times[place]
+				if place is String and (position is float or position is int):
+					if is_finite(float(position)) and float(position) >= 0.0:
+						location_times[place] = float(position)
 
 func reset() -> void:
 	money = 0
@@ -575,6 +669,8 @@ func reset() -> void:
 	tutorial_seen = false
 	fish_detail_hint_seen = false
 	visited_biomes.clear()
+	location_times.clear()
+	get_tree().call_group("location_clocks", "reset_time")
 	
 	# 🆕 Reset Lore
 	LoreManager.reset()

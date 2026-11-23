@@ -1,12 +1,50 @@
-[gd_scene load_steps=6 format=3 uid="uid://dxxrhs12x2m2c"]
+[gd_scene load_steps=12 format=3 uid="uid://dxxrhs12x2m2c"]
 
 [ext_resource type="Script" uid="uid://d3iohn7q1clid" path="res://scripts/InventoryUI.gd" id="1_wqexf"]
 [ext_resource type="StyleBox" uid="uid://c8rkdsvu78m67" path="res://materials/PanelCustom.tres" id="2_ju2k0"]
 [ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="3_l5txx"]
 [ext_resource type="AudioStream" uid="uid://yibilks5nghc" path="res://sounds/click.mp3" id="4_rp0l5"]
+[ext_resource type="Shader" uid="uid://cbrtr0nkitngx" path="res://shader/Overlay.gdshader" id="5_67gaj"]
+[ext_resource type="Shader" uid="uid://g28bk5sqw4k0" path="res://shader/Lens.gdshader" id="6_141ln"]
+[ext_resource type="Texture2D" uid="uid://f52bcd1167jv" path="res://assets/scratches2.png" id="7_tbtli"]
+[ext_resource type="Texture2D" uid="uid://pu10lpxwhnyp" path="res://assets/scratches.png" id="8_hfc6r"]
 
 [sub_resource type="Theme" id="Theme_l5txx"]
 default_font = ExtResource("3_l5txx")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rhf62"]
+shader = ExtResource("5_67gaj")
+shader_parameter/grain_intensity = 0.354
+shader_parameter/min_lum = 0.869
+shader_parameter/max_lum = 0.889
+shader_parameter/time_scale = 0.033
+shader_parameter/vignette_darkness = 0.0
+shader_parameter/vignette_outer_radius = 0.7
+shader_parameter/vignette_inner_radius = 0.2
+shader_parameter/scanline_intensity = 0.312
+shader_parameter/barrel_distortion = 0.0
+shader_parameter/chromatic_aberration = 0.0
+shader_parameter/crt_vignette_power = 0.0
+shader_parameter/pixel_resolution_x = 1080
+shader_parameter/pixel_resolution_y = 900
+shader_parameter/enable_color_quantization = true
+shader_parameter/color_quant_steps = 32.0
+shader_parameter/warble_amount = 0.0
+shader_parameter/warble_speed = 0.555
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_d0rvq"]
+shader = ExtResource("6_141ln")
+shader_parameter/dirt_texture = ExtResource("7_tbtli")
+shader_parameter/scratches_texture = ExtResource("8_hfc6r")
+shader_parameter/dirt_strength = 0.812
+shader_parameter/scratch_strength = 0.81
+shader_parameter/vignette_strength = 0.0
+shader_parameter/distortion_strength = 0.0
+shader_parameter/blur_strength = 0.124
+shader_parameter/scratch_scroll_speed = 4.75e-08
+shader_parameter/flicker_strength = 0.111
+shader_parameter/dirt_color = Color(0, 0, 0, 1)
+shader_parameter/scratch_color = Color(0.194319, 0.176163, 0.116394, 1)
 
 [node name="InventoryUI" type="Control"]
 z_index = 2
@@ -149,5 +187,29 @@ text = "X"
 [node name="click" type="AudioStreamPlayer" parent="Audio"]
 stream = ExtResource("4_rp0l5")
 bus = &"SFX"
+
+[node name="Overlay" type="ColorRect" parent="."]
+z_index = 4096
+material = SubResource("ShaderMaterial_rhf62")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 28.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Overlay2" type="ColorRect" parent="."]
+z_index = 4096
+material = SubResource("ShaderMaterial_d0rvq")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 28.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
 
 [connection signal="pressed" from="close" to="." method="_on_close_pressed"]

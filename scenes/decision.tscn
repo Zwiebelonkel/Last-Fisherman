@@ -298,6 +298,7 @@ animations = [{
 size = Vector2(116, 513)
 
 [node name="Player" type="Node2D"]
+metadata/force_crt = true
 
 [node name="Filter" type="CanvasLayer" parent="."]
 

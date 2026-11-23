@@ -1,5 +1,7 @@
 extends Node3D
 
+const NumberFormat = preload("res://scripts/NumberFormat.gd")
+
 # Node-Referenzen
 @onready var money_label: Label = $UI/ShopContainer/MainPanel/VBoxContainer/TopBar/MoneyLabel
 
@@ -47,19 +49,39 @@ var base_line_cost := 100
 var localized_texts := {
 	"bait_suffix": {
 		"de": "-Köder",
-		"en": " Bait"
+		"en": " Bait",
+		"ru": " Наживка",
+		"tr": " Yem",
+		"es": " Cebo",
+		"fr": " Appât",
+		"pl": " Przynęta"
 	},
 	"stock": {
-		"de": "Vorrat: %d",
-		"en": "Stock: %d"
+		"de": "Vorrat: %s",
+		"en": "Stock: %s",
+		"ru": "Запас: %s",
+		"tr": "Stok: %s",
+		"es": "Existencias: %s",
+		"fr": "Stock : %s",
+		"pl": "Zapas: %s"
 	},
 	"guarantees": {
 		"de": "Garantiert %s\nFisch!",
-		"en": "Guarantees %s\nFish!"
+		"en": "Guarantees %s\nFish!",
+		"ru": "Гарантирует рыбу:\n%s!",
+		"tr": "%s balık\ngarantisi!",
+		"es": "¡Garantiza peces\n%s!",
+		"fr": "Poisson garanti :\n%s !",
+		"pl": "Gwarantowana ryba:\n%s!"
 	},
 	"upgrades_button": {
-		"de": "⚙️ Upgrades",
-		"en": "⚙️ Upgrades"
+		"de": "Upgrades",
+		"en": "Upgrades",
+		"ru": "Улучшения",
+		"tr": "Yükseltmeler",
+		"es": "Mejoras",
+		"fr": "Améliorations",
+		"pl": "Ulepszenia"
 	}
 }
 
@@ -158,32 +180,36 @@ func buy_bait(rarity: String):
 # ============================================
 
 func calculate_cost(base_cost: int, level: int) -> int:
-	return int(base_cost * pow(1.3, level - 1))
+	# Debug levels can exceed the range representable by a normal shop price.
+	var cost := float(base_cost) * pow(1.3, maxi(level - 1, 0))
+	if not is_finite(cost) or cost >= float(9223372036854775807):
+		return 9223372036854775807
+	return int(cost)
 
 
 func update_ui():
 	# Geld
-	money_label.text = "💰 %d $" % Player.money
+	money_label.text = "%s $" % NumberFormat.compact(Player.money)
 	
 	# Grip
 	var grip_cost = calculate_cost(base_grip_cost, Player.upgrade_grip)
-	grip_level_label.text = "Level %d" % Player.upgrade_grip
-	grip_desc_label.text = ("+%d%% " + tr("GRIP_DESC")) % (Player.upgrade_grip * 15)
-	grip_price_label.text = "%d $" % grip_cost
+	grip_level_label.text = "Level %s" % NumberFormat.compact(Player.upgrade_grip)
+	grip_desc_label.text = ("+%s%% " + tr("GRIP_DESC")) % NumberFormat.compact(Player.upgrade_grip * 15)
+	grip_price_label.text = "%s $" % NumberFormat.compact(grip_cost)
 	grip_button.disabled = (Player.money < grip_cost)
 	
 	# Bait
 	var bait_cost = calculate_cost(base_bait_cost, Player.upgrade_bait)
-	bait_level_label.text = "Level %d" % Player.upgrade_bait
-	bait_desc_label.text = ("+%d%% " + tr("BAIT_DESC")) % (Player.upgrade_bait * 10)
-	bait_price_label.text = "%d $" % bait_cost
+	bait_level_label.text = "Level %s" % NumberFormat.compact(Player.upgrade_bait)
+	bait_desc_label.text = ("+%s%% " + tr("BAIT_DESC")) % NumberFormat.compact(Player.upgrade_bait * 10)
+	bait_price_label.text = "%s $" % NumberFormat.compact(bait_cost)
 	bait_button.disabled = (Player.money < bait_cost)
 	
 	# Line
 	var line_cost = calculate_cost(base_line_cost, Player.upgrade_line)
-	line_level_label.text = "Level %d" % Player.upgrade_line
-	line_desc_label.text = ("-%d%% " + tr("LINE_DESC")) % (Player.upgrade_line * 8)
-	line_price_label.text = "%d $" % line_cost
+	line_level_label.text = "Level %s" % NumberFormat.compact(Player.upgrade_line)
+	line_desc_label.text = ("-%s%% " + tr("LINE_DESC")) % NumberFormat.compact(Player.upgrade_line * 8)
+	line_price_label.text = "%s $" % NumberFormat.compact(line_cost)
 	line_button.disabled = (Player.money < line_cost)
 	
 	update_bait_ui()
@@ -216,13 +242,13 @@ func update_bait_card(card: PanelContainer, rarity: String, color: Color):
 	title_label.modulate = color
 	
 	var stock = Player.bait_inventory.get(rarity, 0)
-	stock_label.text = get_text("stock") % stock
+	stock_label.text = get_text("stock") % NumberFormat.compact(stock)
 	
 	# 🌍 Beschreibung
 	desc_label.text = get_text("guarantees") % rarity_translated
 	
 	var price = Player.BAIT_PRICES[rarity]
-	price_label.text = "%d $" % price
+	price_label.text = "%s $" % NumberFormat.compact(price)
 	
 	buy_button.disabled = (Player.money < price)
 

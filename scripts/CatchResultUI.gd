@@ -1,5 +1,7 @@
 extends Control
 
+const NumberFormat = preload("res://scripts/NumberFormat.gd")
+
 @onready var panel: Panel = $"Panel"
 @onready var fish_icon: TextureRect = $VBoxContainer/MarginContainer/PanelContainer/MarginContainer/FishIcon
 @onready var fish_name: Label = $VBoxContainer/MarginContainer2/FishName
@@ -23,6 +25,15 @@ var detail_popup: Control
 var fish_detail_popup_scene
 var current_fish: Dictionary
 var _is_exiting: bool = false
+var _is_entering: bool = false
+var _presentation_id: int = 0
+var _presentation_tween: Tween
+var _entry_offset: float = 0.0
+var _flight_handoff_pending: bool = false
+var _handoff_alphas: Dictionary = {}
+
+const RarityVignette := preload("res://scripts/RarityVignette.gd")
+var _rarity_vignette: RarityVignette
 
 const CENTER_OFFSETS := Rect2(-120.0, -150.0, 240.0, 262.0)
 
@@ -49,10 +60,15 @@ var   _tilt_enabled  := false
 func _ready() -> void:
 	visible = false
 	_reset_center_layout()
+	$VBoxContainer.minimum_size_changed.connect(_fit_card_to_content)
+	_fit_card_to_content.call_deferred()
 	continue_button.pressed.connect(_on_continue_pressed)
 	_create_lightning_node()
 	_create_sparkle_node()
 	_ensure_splash_configured()
+	_rarity_vignette = RarityVignette.new()
+	add_child(_rarity_vignette)
+	visibility_changed.connect(_on_catch_visibility_changed)
 	
 	# 🎴 Maus-Events für Tilt-Reset
 	mouse_entered.connect(_on_card_mouse_entered)
@@ -71,11 +87,13 @@ func _ready() -> void:
 		detail_popup.visible = false
 
 func _on_card_mouse_entered() -> void:
-	_tilt_enabled = true
+	_tilt_enabled = not _flight_handoff_pending and not _is_entering and not _is_exiting
 
 func _on_card_mouse_exited() -> void:
 	# Sanft zurück auf 0 tweenen statt hard reset
 	_tilt_enabled = false
+	if _flight_handoff_pending or _is_entering or _is_exiting:
+		return
 	var tween = create_tween()
 	tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 	tween.tween_method(_apply_tilt, _tilt_current, Vector2.ZERO, 0.3)
@@ -159,7 +177,7 @@ func _setup_sparkle_for_rarity(rarity: int, color: Color) -> void:
 	print("✨ Sparkle aktiv, visible: ", sparkle_node.visible, " color: ", color)
 # 🎴 Cursor-Tilt per _process
 func _process(delta: float) -> void:
-	if not _tilt_enabled or not visible:
+	if not _tilt_enabled or not visible or _flight_handoff_pending or _is_entering or _is_exiting:
 		return
 
 	var mouse_pos  : Vector2 = get_global_mouse_position()
@@ -172,6 +190,8 @@ func _process(delta: float) -> void:
 	_apply_tilt(_tilt_current)
 	
 func _apply_tilt(tilt: Vector2) -> void:
+	if _flight_handoff_pending or _is_entering or _is_exiting:
+		return
 	pivot_offset = size * 0.5
 	var depth_scale: float = 1.0 + (abs(tilt.y) + abs(tilt.x)) * 0.003
 	scale = Vector2(depth_scale, depth_scale)
@@ -247,7 +267,7 @@ func _create_lightning_node() -> void:
 	lightning_node.visible = false
 
 func _unhandled_input(event: InputEvent) -> void:
-	if not visible or _is_exiting:
+	if not visible or _is_exiting or _flight_handoff_pending:
 		return
 
 	if event.is_action_pressed("cast"):
@@ -257,19 +277,33 @@ func _unhandled_input(event: InputEvent) -> void:
 # ---------------------------------------------------------
 # HAUPTFUNKTION – FISCH ANZEIGEN
 # ---------------------------------------------------------
-func show_fish(fish: Dictionary) -> void:
+func show_fish(fish: Dictionary, from_flight: bool = false) -> void:
+	_presentation_id += 1
+	var presentation_id: int = _presentation_id
+	_stop_presentation()
+	_flight_handoff_pending = from_flight
+	_is_exiting = false
+	_entry_offset = 0.0
+	_reset_tilt()
+	modulate = Color.WHITE
+	if from_flight:
+		modulate.a = 0.0
+	fish_icon.scale = Vector2.ONE
+	anim.stop()
+	$VBoxContainer.scale = Vector2.ONE
 	var rarity: int = FishDB.get_rarity_safe(fish)
 	current_fish = prepare_fish_data(fish)
 	_reset_center_layout()
 	visible = true
-	_tilt_enabled = true   # 🎴 Tilt aktivieren
+	_tilt_enabled = false
 
 	var is_new_catch: bool  = fish.get("is_new_catch", false)
 	var is_story_item: bool = fish.get("is_story_item", false)
 
 	var ani_label: AnimationPlayer = $NewLabel/AnimationPlayer if has_node("NewLabel/AnimationPlayer") else null
 	var rarity_color: Color = FishDB.get_rarity_color(fish)
-	confetti.play_confetti(rarity, rarity_color)
+	if not from_flight:
+		confetti.play_confetti(rarity, rarity_color)
 
 	# Button / Story
 	if is_story_item and rarity == FishDB.RARITY.ANTIK:
@@ -297,7 +331,7 @@ func show_fish(fish: Dictionary) -> void:
 
 	# Icon & Texte
 	fish_icon.texture = FishDB.get_fish_icon(fish)
-	fish_name.text    = FishDB.get_fish_name(fish)
+	fish_name.text    = FishDB.get_fish_display_name(fish)
 	fish_rarity.modulate = rarity_color
 	fish_rarity.text  = tr(FishDB.get_rarity_name_key(fish))
 
@@ -306,13 +340,19 @@ func show_fish(fish: Dictionary) -> void:
 		display_value_text = tr("FISH_VALUE_PRICELESS")
 		fish_value.modulate = rarity_color
 	else:
-		display_value_text = str(FishDB.get_fish_value(fish)) + " $"
+		display_value_text = NumberFormat.compact(FishDB.get_fish_value(fish)) + " $"
+		if fish.get("is_shiny", false):
+			display_value_text += " (x3)"
 	fish_value.text = display_value_text
 
 	if fish_weight and fish.has("weight"):
-		fish_weight.text = tr("FISH_WEIGHT") + ": %.2f kg" % fish["weight"]
+		fish_weight.text = tr("FISH_WEIGHT") + ": %s kg" % NumberFormat.compact(fish["weight"], 2)
+
+	_fit_card_to_content.call_deferred()
 
 	# Effekte
+	if not from_flight:
+		_rarity_vignette.play(fish)
 	_setup_lightning_for_rarity(rarity, rarity_color)
 	_setup_sparkle_for_rarity(rarity, rarity_color)   # ✨ NEU
 	_setup_sparkle_for_rarity(rarity, rarity_color)
@@ -356,15 +396,21 @@ func show_fish(fish: Dictionary) -> void:
 			FishDB.RARITY.ANTIK:
 				splash.amount = 100; splash_mat.initial_velocity_min = 250.0; splash_mat.initial_velocity_max = 350.0; splash_mat.scale_min = 2.5; splash_mat.scale_max = 3.5
 
+	_fit_card_to_content()
+	_configure_icon_shader(fish, rarity)
+	if from_flight:
+		# Let containers settle during the flight, without moving the landing target.
+		return
+	_play_entrance_animation()
 	splash.emitting = false
 	await get_tree().process_frame
+	if presentation_id != _presentation_id or not visible or _is_exiting:
+		return
 	splash.restart()
 	splash.emitting = true
 
-	if anim.has_animation("pop"):
-		anim.play("pop")
 
-	# Icon Shader
+func _configure_icon_shader(fish: Dictionary, rarity: int) -> void:
 	var shadow_mat = ShaderMaterial.new()
 	shadow_mat.shader = preload("res://shader/icon.gdshader")
 	shadow_mat.set_shader_parameter("shadow_offset", Vector2(0, -4.5))
@@ -372,6 +418,8 @@ func show_fish(fish: Dictionary) -> void:
 	shadow_mat.set_shader_parameter("enable_bobbing",      true)
 	shadow_mat.set_shader_parameter("bobbing_amplitude",   1.5)
 	shadow_mat.set_shader_parameter("bobbing_speed",       2.0)
+	shadow_mat.set_shader_parameter("shiny_enabled", fish.get("is_shiny", false))
+	shadow_mat.set_shader_parameter("motion_strength", 0.0 if _flight_handoff_pending else 1.0)
 	if rarity >= FishDB.RARITY.SELTEN:
 		shadow_mat.set_shader_parameter("enable_sway",    true)
 		shadow_mat.set_shader_parameter("sway_amplitude", 1.1)
@@ -381,6 +429,93 @@ func show_fish(fish: Dictionary) -> void:
 		shadow_mat.set_shader_parameter("pulse_amount",  0.15)
 		shadow_mat.set_shader_parameter("pulse_speed",   2.5)
 	fish_icon.material = shadow_mat
+
+
+func get_flight_icon_rect(texture_region: Rect2) -> Rect2:
+	# FishIcon currently stretches the full texture to its control rectangle.
+	# Match only the opaque portion, just as the shared 3D silhouette does.
+	var local_rect := Rect2(texture_region.position * fish_icon.size, texture_region.size * fish_icon.size)
+	return fish_icon.get_global_transform_with_canvas() * local_rect
+
+
+func finish_flight_reveal() -> void:
+	if not _flight_handoff_pending:
+		return
+	_flight_handoff_pending = false
+	_is_entering = true
+	_remember_handoff_items(self)
+	_set_handoff_alpha(0.0)
+	modulate = Color.WHITE
+	# The aligned fish stays visible while the rest of its card appears around it.
+	var rarity := FishDB.get_rarity_safe(current_fish)
+	confetti.play_confetti(rarity, FishDB.get_rarity_color(current_fish))
+	_rarity_vignette.play(current_fish)
+	splash.restart()
+	splash.emitting = true
+	_presentation_tween = create_tween().set_parallel(true)
+	_presentation_tween.tween_method(_set_handoff_alpha, 0.0, 1.0, 0.2)
+	_presentation_tween.tween_method(_set_icon_motion_strength, 0.0, 1.0, 0.35)
+	_presentation_tween.chain().tween_callback(func():
+		_restore_handoff_items()
+		_is_entering = false
+		_tilt_enabled = true
+	)
+
+
+func _remember_handoff_items(node: Node) -> void:
+	for child in node.get_children():
+		if child == fish_icon or child == detail_popup or child == _rarity_vignette:
+			continue
+		if child is CanvasItem:
+			_handoff_alphas[child] = child.self_modulate.a
+		_remember_handoff_items(child)
+
+
+func _set_handoff_alpha(amount: float) -> void:
+	for item in _handoff_alphas:
+		if is_instance_valid(item):
+			item.self_modulate.a = float(_handoff_alphas[item]) * amount
+	# These procedural shaders write their own color and need an explicit fade.
+	for effect in [panel, lightning_node, sparkle_node]:
+		if is_instance_valid(effect) and effect.material is ShaderMaterial:
+			effect.material.set_shader_parameter("handoff_opacity", amount)
+
+
+func _restore_handoff_items() -> void:
+	_set_handoff_alpha(1.0)
+	_handoff_alphas.clear()
+
+
+func _set_icon_motion_strength(amount: float) -> void:
+	if fish_icon.material is ShaderMaterial:
+		fish_icon.material.set_shader_parameter("motion_strength", amount)
+
+func _fit_card_to_content() -> void:
+	# Size the background from the translated content instead of a fixed height.
+	var content: VBoxContainer = $VBoxContainer
+	content.position = Vector2(12.0, 12.0)
+	content.size.x = 216.0
+	var content_height := content.get_combined_minimum_size().y
+	content.size = Vector2(216.0, content_height)
+	var card_height := maxf(290.0, content_height + 24.0)
+	panel.size = Vector2(240.0, card_height)
+	panel.position = Vector2.ZERO
+	$Panel2.size = panel.size
+	$Panel2.position = Vector2.ZERO
+	var button_height := maxf(36.0, continue_button.get_combined_minimum_size().y)
+	continue_button.position = Vector2(0.0, card_height + 8.0)
+	continue_button.size = Vector2(240.0, button_height)
+	var total_height := card_height + 8.0 + button_height
+	offset_top = -total_height * 0.5 + _entry_offset
+	offset_bottom = total_height * 0.5 + _entry_offset
+	pivot_offset = size * 0.5
+	for effect: ColorRect in [lightning_node, sparkle_node]:
+		if is_instance_valid(effect):
+			effect.size = panel.size
+			if effect.material is ShaderMaterial:
+				effect.material.set_shader_parameter("panel_size_px", panel.size)
+	if panel.material is ShaderMaterial:
+		panel.material.set_shader_parameter("panel_size_px", panel.size)
 
 func _reset_center_layout() -> void:
 	set_anchors_preset(Control.PRESET_CENTER, false)
@@ -401,6 +536,44 @@ func _reset_center_layout() -> void:
 	scale = Vector2.ONE
 	rotation = 0.0
 	pivot_offset = size * 0.5
+
+
+func _stop_presentation() -> void:
+	if _presentation_tween and _presentation_tween.is_valid():
+		_presentation_tween.kill()
+	_restore_handoff_items()
+	_is_entering = false
+
+
+func _set_entry_offset(value: float) -> void:
+	_entry_offset = value
+	var height: float = size.y
+	offset_top = -height * 0.5 + value
+	offset_bottom = height * 0.5 + value
+
+
+func _play_entrance_animation() -> void:
+	_is_entering = true
+	_tilt_enabled = false
+	var presentation_id: int = _presentation_id
+	var from_below: float = maxf(180.0, get_viewport_rect().size.y * 0.5 + size.y * 0.5 - 40.0)
+	_set_entry_offset(from_below)
+	scale = Vector2(0.94, 0.94)
+	rotation = deg_to_rad(-4.0)
+	_presentation_tween = create_tween().set_parallel(true)
+	_presentation_tween.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	_presentation_tween.tween_method(_set_entry_offset, from_below, -10.0, 0.12)
+	_presentation_tween.tween_property(self, "scale", Vector2(1.025, 1.025), 0.12)
+	_presentation_tween.tween_property(self, "rotation", deg_to_rad(0.8), 0.12)
+	_presentation_tween.chain().tween_method(_set_entry_offset, -10.0, 0.0, 0.05).set_trans(Tween.TRANS_SINE)
+	_presentation_tween.tween_property(self, "scale", Vector2.ONE, 0.05).set_trans(Tween.TRANS_SINE)
+	_presentation_tween.tween_property(self, "rotation", 0.0, 0.05).set_trans(Tween.TRANS_SINE)
+	_presentation_tween.chain().tween_callback(func():
+		if presentation_id == _presentation_id and visible and not _is_exiting:
+			_set_entry_offset(0.0)
+			_is_entering = false
+			_tilt_enabled = true
+	)
 
 # ⚡ Lightning Setup
 func _setup_lightning_for_rarity(rarity: int, color: Color) -> void:
@@ -446,10 +619,13 @@ func _setup_lightning_for_rarity(rarity: int, color: Color) -> void:
 # Continue/Use Button Handler
 # ---------------------------------------------------------
 func _on_continue_pressed() -> void:
-	if _is_exiting:
+	if _is_exiting or _flight_handoff_pending:
 		return
 
+	_presentation_id += 1
+	var presentation_id: int = _presentation_id
 	_is_exiting = true
+	_rarity_vignette.stop(0.18)
 
 	var is_story_item: bool = current_fish.get("is_story_item", false)
 	var biome: String = current_fish.get("biome", current_fish.get("location", ""))
@@ -459,26 +635,39 @@ func _on_continue_pressed() -> void:
 		story_item_used.emit(biome)
 
 	await _play_exit_animation()
+	if presentation_id != _presentation_id:
+		return
 
 	if sparkle_node:
 		sparkle_node.visible = false
 
 	_reset_tilt()
 	visible = false
+	_entry_offset = 0.0
 	modulate = Color.WHITE
 	scale = Vector2.ONE
 	_is_exiting = false
+
+func _on_catch_visibility_changed() -> void:
+	if not is_visible_in_tree():
+		_flight_handoff_pending = false
+		_stop_presentation()
+		if is_instance_valid(_rarity_vignette):
+			_rarity_vignette.stop()
+
 # ---------------------------------------------------------
 # Icon Click / Hover
 # ---------------------------------------------------------
 func _on_fish_icon_clicked(event: InputEvent) -> void:
+	if _flight_handoff_pending:
+		return
 	if event is InputEventMouseButton:
 		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 			if not current_fish.is_empty():
 				show_fish_detail_popup(current_fish)
 
 func _on_fish_icon_hover(is_hovering: bool) -> void:
-	if not fish_icon:
+	if not fish_icon or _flight_handoff_pending or _is_entering:
 		return
 	var tween = create_tween()
 	tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
@@ -490,13 +679,16 @@ func _on_fish_icon_hover(is_hovering: bool) -> void:
 		tween.tween_property(fish_icon, "scale", Vector2(1.0, 1.0), 0.15)
 
 func _play_exit_animation() -> void:
+	_stop_presentation()
 	var tween := create_tween()
+	_presentation_tween = tween
 	tween.set_parallel(true)
 	tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
 	tween.tween_property(self, "modulate:a", 0.0, 0.18)
 	tween.tween_property(self, "scale", Vector2(0.96, 0.96), 0.18)
-	tween.tween_property(self, "position:y", position.y + 10.0, 0.18)
-	await tween.finished
+	tween.tween_method(_set_entry_offset, _entry_offset, _entry_offset + 10.0, 0.18)
+	while tween.is_valid() and tween.is_running():
+		await get_tree().process_frame
 
 # ---------------------------------------------------------
 # Datenaufbereitung

@@ -35,6 +35,7 @@ Transition="*res://scripts/transition.gd"
 LoreManager="*res://scripts/LoreManager.gd"
 FlowManager="*res://scripts/FlowManager.gd"
 Freecam="*res://scripts/Freecam.gd"
+FieldTablet="*res://scripts/FieldTablet.gd"
 
 [display]
 
@@ -172,7 +173,7 @@ keypad_9={
 
 [internationalization]
 
-locale/translations=PackedStringArray("res://assets/translation.de.translation", "res://assets/translation.en.translation")
+locale/translations=PackedStringArray("res://assets/translation.de.translation", "res://assets/translation.en.translation", "res://assets/translation.ru.translation", "res://assets/translation.tr.translation", "res://assets/translation.es.translation", "res://assets/translation.fr.translation", "res://assets/translation.pl.translation")
 
 [rendering]
 

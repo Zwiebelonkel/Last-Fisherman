@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://dshxvgjjo0fx5"]
+[gd_scene load_steps=4 format=3 uid="uid://dshxvgjjo0fx5"]
 
 [ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="1_oydjg"]
+[ext_resource type="PackedScene" path="res://scenes/CatchProgressIndicator.tscn" id="99_progress_indicator"]
 
 [sub_resource type="Theme" id="Theme_j5y52"]
 default_font = ExtResource("1_oydjg")
@@ -64,3 +65,9 @@ offset_right = 300.0
 offset_bottom = 306.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="CatchProgressIndicator" parent="CatchProgress" instance=ExtResource("99_progress_indicator")]
+anchors_preset = 7
+offset_top = -3.0
+offset_bottom = 0.0
+grow_vertical = 0

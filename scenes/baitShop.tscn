@@ -1,4 +1,6 @@
-[gd_scene format=3 uid="uid://db2gj65xdl2b5"]
+[gd_scene load_steps=2 format=3 uid="uid://db2gj65xdl2b5"]
+
+[ext_resource type="PackedScene" path="res://scenes/BaitPreview.tscn" id="1_preview"]
 
 [node name="BaitShop" type="VBoxContainer"]
 anchors_preset = 15
@@ -17,14 +19,17 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
 
-[node name="Cards" type="VBoxContainer" parent="Scroll"]
+[node name="Cards" type="GridContainer" parent="Scroll"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/separation = 20
+theme_override_constants/h_separation = 20
+theme_override_constants/v_separation = 20
+columns = 3
 
 [node name="NormalCard" type="PanelContainer" parent="Scroll/Cards"]
 custom_minimum_size = Vector2(220, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="CardContent" type="VBoxContainer" parent="Scroll/Cards/NormalCard"]
 layout_mode = 2
@@ -34,6 +39,9 @@ alignment = 1
 [node name="Spacer" type="MarginContainer" parent="Scroll/Cards/NormalCard/CardContent"]
 layout_mode = 2
 theme_override_constants/margin_top = 0
+
+[node name="BaitPreview" parent="Scroll/Cards/NormalCard/CardContent" instance=ExtResource("1_preview")]
+layout_mode = 2
 
 [node name="TitleLabel" type="Label" parent="Scroll/Cards/NormalCard/CardContent"]
 layout_mode = 2
@@ -65,6 +73,7 @@ text = "BUY"
 [node name="UngewöhnlichCard" type="PanelContainer" parent="Scroll/Cards"]
 custom_minimum_size = Vector2(220, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="CardContent" type="VBoxContainer" parent="Scroll/Cards/UngewöhnlichCard"]
 layout_mode = 2
@@ -74,6 +83,10 @@ alignment = 1
 [node name="Spacer" type="MarginContainer" parent="Scroll/Cards/UngewöhnlichCard/CardContent"]
 layout_mode = 2
 theme_override_constants/margin_top = 0
+
+[node name="BaitPreview" parent="Scroll/Cards/UngewöhnlichCard/CardContent" instance=ExtResource("1_preview")]
+layout_mode = 2
+bait_type = "Uncommon"
 
 [node name="TitleLabel" type="Label" parent="Scroll/Cards/UngewöhnlichCard/CardContent"]
 layout_mode = 2
@@ -105,6 +118,7 @@ text = "BUY"
 [node name="SeltenCard" type="PanelContainer" parent="Scroll/Cards"]
 custom_minimum_size = Vector2(220, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="CardContent" type="VBoxContainer" parent="Scroll/Cards/SeltenCard"]
 layout_mode = 2
@@ -114,6 +128,10 @@ alignment = 1
 [node name="Spacer" type="MarginContainer" parent="Scroll/Cards/SeltenCard/CardContent"]
 layout_mode = 2
 theme_override_constants/margin_top = 0
+
+[node name="BaitPreview" parent="Scroll/Cards/SeltenCard/CardContent" instance=ExtResource("1_preview")]
+layout_mode = 2
+bait_type = "Rare"
 
 [node name="TitleLabel" type="Label" parent="Scroll/Cards/SeltenCard/CardContent"]
 layout_mode = 2
@@ -145,6 +163,7 @@ text = "BUY"
 [node name="EpischCard" type="PanelContainer" parent="Scroll/Cards"]
 custom_minimum_size = Vector2(220, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="CardContent" type="VBoxContainer" parent="Scroll/Cards/EpischCard"]
 layout_mode = 2
@@ -154,6 +173,10 @@ alignment = 1
 [node name="Spacer" type="MarginContainer" parent="Scroll/Cards/EpischCard/CardContent"]
 layout_mode = 2
 theme_override_constants/margin_top = 0
+
+[node name="BaitPreview" parent="Scroll/Cards/EpischCard/CardContent" instance=ExtResource("1_preview")]
+layout_mode = 2
+bait_type = "Epic"
 
 [node name="TitleLabel" type="Label" parent="Scroll/Cards/EpischCard/CardContent"]
 layout_mode = 2
@@ -185,6 +208,7 @@ text = "BUY"
 [node name="LegendärCard" type="PanelContainer" parent="Scroll/Cards"]
 custom_minimum_size = Vector2(220, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="CardContent" type="VBoxContainer" parent="Scroll/Cards/LegendärCard"]
 layout_mode = 2
@@ -194,6 +218,10 @@ alignment = 1
 [node name="Spacer" type="MarginContainer" parent="Scroll/Cards/LegendärCard/CardContent"]
 layout_mode = 2
 theme_override_constants/margin_top = 0
+
+[node name="BaitPreview" parent="Scroll/Cards/LegendärCard/CardContent" instance=ExtResource("1_preview")]
+layout_mode = 2
+bait_type = "Legendary"
 
 [node name="TitleLabel" type="Label" parent="Scroll/Cards/LegendärCard/CardContent"]
 layout_mode = 2
@@ -225,6 +253,7 @@ text = "BUY"
 [node name="ExotischCard" type="PanelContainer" parent="Scroll/Cards"]
 custom_minimum_size = Vector2(220, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="CardContent" type="VBoxContainer" parent="Scroll/Cards/ExotischCard"]
 layout_mode = 2
@@ -234,6 +263,10 @@ alignment = 1
 [node name="Spacer" type="MarginContainer" parent="Scroll/Cards/ExotischCard/CardContent"]
 layout_mode = 2
 theme_override_constants/margin_top = 0
+
+[node name="BaitPreview" parent="Scroll/Cards/ExotischCard/CardContent" instance=ExtResource("1_preview")]
+layout_mode = 2
+bait_type = "Exotic"
 
 [node name="TitleLabel" type="Label" parent="Scroll/Cards/ExotischCard/CardContent"]
 layout_mode = 2

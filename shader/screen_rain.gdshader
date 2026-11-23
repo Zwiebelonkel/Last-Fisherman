@@ -8,6 +8,13 @@ render_mode unshaded;
 uniform sampler2D iChannel0 : hint_screen_texture, filter_linear_mipmap;
 uniform float frequency : hint_range(-10.0, 4.0, 0.1) = 0.0;
 uniform float size : hint_range(0.001, 0.05, 0.001) = 0.015;
+// Defaults retain the continuous weather effect in Ocean.
+uniform float effect_amount : hint_range(0.0, 1.0) = 1.0;
+uniform bool splash_mode = false;
+uniform float splash_age = 0.0;
+uniform float splash_seed = 0.0;
+uniform float splash_growth : hint_range(0.0, 1.0) = 1.0;
+uniform float splash_density : hint_range(0.0, 1.0) = 1.0;
 
 // Author: Élie Michel
 // License: CC BY 3.0
@@ -33,7 +40,7 @@ void fragment()
 {
 	vec2 u = UV,
          v = UV * 0.1,
-         n = noise(v*200.); // Displacement
+         n = noise(v*200. + vec2(splash_seed)); // Displacement
     
     fragColor = texture(iChannel0, u);
     
@@ -50,10 +57,15 @@ void fragment()
         vec4 d = vec4(noise(v*200.), noise(v));
         
         // Drop shape and fading
-        float t = (s.x+s.y) * max(0., 1. - fract(iTime * (d.b + .1) + d.g) * 2.);;
+        float phase = splash_mode ? .06 + splash_age * (d.b + .1) * .12 : fract(iTime * (d.b + .1) + d.g);
+        float t = (s.x+s.y) * max(0., 1. - phase * 2.);
         
         // d.r -> only x% of drops are kept on, with x depending on the size of drops
-        if (d.r < (5.-r)*.08 && t > .5) {
+        // Raise the shape threshold at onset: each drop grows around its
+        // own fixed center instead of scaling the whole screen's pattern.
+        float cutoff = splash_mode ? mix(1.8, .5, splash_growth) : .5;
+        float density = splash_mode ? splash_density : 1.0;
+        if (d.r < (5.-r)*.08 * density && t > cutoff) {
             // Drop normal
             vec3 v = normalize(-vec3(cos(p), mix(.2, 2., t-.5)));
              //fragColor = vec4(v * 0.5 + 0.5, 1.0);  // show normals
@@ -63,6 +75,7 @@ void fragment()
         }
     }
     
+    fragColor = mix(texture(iChannel0, u), fragColor, effect_amount);
     // Debug noise function
     //f = vec4(n, 0.0, 1.0);
 }

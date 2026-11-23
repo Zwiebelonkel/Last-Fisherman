@@ -242,7 +242,7 @@ theme_override_constants/separation = 15
 [node name="TitleLabel" type="Label" parent="UI/ShopContainer/MainPanel/VBoxContainer/TopBar"]
 layout_mode = 2
 theme = SubResource("Theme_pmnnn")
-text = "⚡ UPGRADE SHOP"
+text = "UPGRADE SHOP"
 horizontal_alignment = 1
 
 [node name="Spacer" type="Control" parent="UI/ShopContainer/MainPanel/VBoxContainer/TopBar"]
@@ -252,7 +252,7 @@ size_flags_horizontal = 3
 [node name="MoneyLabel" type="Label" parent="UI/ShopContainer/MainPanel/VBoxContainer/TopBar"]
 layout_mode = 2
 theme = SubResource("Theme_pmnnn")
-text = "💰 0 €"
+text = "0 €"
 
 [node name="ShopToggleButton" type="Button" parent="UI/ShopContainer/MainPanel/VBoxContainer/TopBar"]
 layout_mode = 2
@@ -272,21 +272,6 @@ layout_mode = 2
 size_flags_horizontal = 1
 size_flags_vertical = 3
 
-[node name="UngewöhnlichCard" parent="UI/ShopContainer/MainPanel/VBoxContainer/BaitShop/Scroll/Cards" index="1"]
-size_flags_horizontal = 4
-
-[node name="SeltenCard" parent="UI/ShopContainer/MainPanel/VBoxContainer/BaitShop/Scroll/Cards" index="2"]
-size_flags_horizontal = 4
-
-[node name="EpischCard" parent="UI/ShopContainer/MainPanel/VBoxContainer/BaitShop/Scroll/Cards" index="3"]
-size_flags_horizontal = 4
-
-[node name="LegendärCard" parent="UI/ShopContainer/MainPanel/VBoxContainer/BaitShop/Scroll/Cards" index="4"]
-size_flags_horizontal = 4
-
-[node name="ExotischCard" parent="UI/ShopContainer/MainPanel/VBoxContainer/BaitShop/Scroll/Cards" index="5"]
-size_flags_horizontal = 4
-
 [node name="UpgradeCards" type="HBoxContainer" parent="UI/ShopContainer/MainPanel/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
@@ -301,14 +286,6 @@ layout_mode = 2
 layout_mode = 2
 theme_override_constants/separation = 8
 alignment = 1
-
-[node name="IconLabel" type="Label" parent="UI/ShopContainer/MainPanel/VBoxContainer/UpgradeCards/GripCard/CardContent"]
-custom_minimum_size = Vector2(0, 60)
-layout_mode = 2
-theme = SubResource("Theme_pmnnn")
-text = "🎣"
-horizontal_alignment = 1
-vertical_alignment = 1
 
 [node name="TitleLabel" type="Label" parent="UI/ShopContainer/MainPanel/VBoxContainer/UpgradeCards/GripCard/CardContent"]
 layout_mode = 2
@@ -355,14 +332,6 @@ layout_mode = 2
 theme_override_constants/separation = 8
 alignment = 1
 
-[node name="IconLabel" type="Label" parent="UI/ShopContainer/MainPanel/VBoxContainer/UpgradeCards/BaitCard/CardContent"]
-custom_minimum_size = Vector2(0, 60)
-layout_mode = 2
-theme = SubResource("Theme_pmnnn")
-text = "🪱"
-horizontal_alignment = 1
-vertical_alignment = 1
-
 [node name="TitleLabel" type="Label" parent="UI/ShopContainer/MainPanel/VBoxContainer/UpgradeCards/BaitCard/CardContent"]
 layout_mode = 2
 theme = SubResource("Theme_pmnnn")
@@ -407,14 +376,6 @@ layout_mode = 2
 layout_mode = 2
 theme_override_constants/separation = 8
 alignment = 1
-
-[node name="IconLabel" type="Label" parent="UI/ShopContainer/MainPanel/VBoxContainer/UpgradeCards/LineCard/CardContent"]
-custom_minimum_size = Vector2(0, 60)
-layout_mode = 2
-theme = SubResource("Theme_pmnnn")
-text = "🧵"
-horizontal_alignment = 1
-vertical_alignment = 1
 
 [node name="TitleLabel" type="Label" parent="UI/ShopContainer/MainPanel/VBoxContainer/UpgradeCards/LineCard/CardContent"]
 layout_mode = 2

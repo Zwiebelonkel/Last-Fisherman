@@ -147,7 +147,7 @@ func _update_plan() -> void:
 		"res://scenes/SplashScreen.tscn":
 			_wanted.assign([MENU])
 		MENU:
-			_wanted.assign([BEACH, MAP, "res://scenes/credits.tscn"])
+			_wanted.assign([Player.last_scene, MAP, "res://scenes/credits.tscn"])
 		MAP:
 			if not _destination.is_empty():
 				_wanted.append(_destination)

@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=3 uid="uid://b5ew1rfc8ow8g"]
+[gd_scene load_steps=29 format=3 uid="uid://b5ew1rfc8ow8g"]
 
 [ext_resource type="Material" uid="uid://cj86wv7c01tef" path="res://materials/outlineWhite.tres" id="2_wjujl"]
 [ext_resource type="Texture2D" uid="uid://bivw7msnvabta" path="res://assets/woodNromal.png" id="3_6deuo"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://hdtv2nks26p4" path="res://assets/hand/scene.gltf" id="3_byvj7"]
 [ext_resource type="Texture2D" uid="uid://dblechu7phlme" path="res://assets/hand/textures/Hand_baseColor.png" id="4_6deuo"]
 [ext_resource type="Texture2D" uid="uid://bupe0f3gc4orn" path="res://assets/ironNromal.png" id="5_dtr8f"]
+[ext_resource type="Script" uid="uid://c2858wnnj1gk" path="res://scripts/TipLineLoop.gd" id="7_tip_loop"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_jch1l"]
 render_priority = 50
@@ -157,6 +158,30 @@ tracks/4/keys = {
 "update": 0,
 "values": [Vector3(-0.113471, -0.850528, 0.246808)]
 }
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("RodMesh/MeshInstance3D2:quaternion")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Quaternion(-0.109116, 0.101532, -0.702415, 0.695987)]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("RodMesh/MeshInstance3D3:position")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(-0.0891956, -0.540106, 0.0475879)]
+}
 
 [sub_resource type="Animation" id="Animation_8r45t"]
 resource_name = "cast"
@@ -208,6 +233,30 @@ tracks/3/keys = {
 "transitions": PackedFloat32Array(1),
 "update": 1,
 "values": [false]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("RodMesh/MeshInstance3D2:quaternion")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Quaternion(-0.109116, 0.101532, -0.702415, 0.695987)]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("RodMesh/MeshInstance3D3:position")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(-0.0891956, -0.540106, 0.0475879)]
 }
 
 [sub_resource type="Animation" id="Animation_6deuo"]
@@ -269,10 +318,34 @@ tracks/4/path = NodePath("RodMesh/left_hand:position")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
-"times": PackedFloat32Array(),
-"transitions": PackedFloat32Array(),
+"times": PackedFloat32Array(0, 0.0625, 0.125, 0.1875, 0.25, 0.3125, 0.375, 0.4375, 0.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": []
+"values": [Vector3(-0.113471, -0.850528, 0.246808), Vector3(-0.120265, -0.87243, 0.225553), Vector3(-0.12947, -0.87214, 0.195674), Vector3(-0.135696, -0.849829, 0.174673), Vector3(-0.135294, -0.818565, 0.174853), Vector3(-0.128501, -0.796663, 0.196107), Vector3(-0.119295, -0.796953, 0.225987), Vector3(-0.113069, -0.819265, 0.246987), Vector3(-0.113471, -0.850528, 0.246808)]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("RodMesh/MeshInstance3D2:quaternion")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0, 0.0625, 0.125, 0.1875, 0.25, 0.3125, 0.375, 0.4375, 0.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [Quaternion(-0.109116, 0.101532, -0.702415, 0.695987), Quaternion(0.167993, 0.360146, -0.690704, 0.604154), Quaternion(0.419526, 0.563931, -0.573839, 0.420343), Quaternion(0.60719, 0.681863, -0.369612, 0.17254), Quaternion(0.702415, 0.695987, -0.109116, -0.101532), Quaternion(0.690704, 0.604154, 0.167993, -0.360146), Quaternion(0.573839, 0.420343, 0.419526, -0.563931), Quaternion(0.369612, 0.17254, 0.60719, -0.681863), Quaternion(0.109116, -0.101532, 0.702415, -0.695987)]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("RodMesh/MeshInstance3D3:position")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0, 0.0625, 0.125, 0.1875, 0.25, 0.3125, 0.375, 0.4375, 0.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(-0.0891956, -0.540106, 0.0475879), Vector3(-0.0959891, -0.562008, 0.0263333), Vector3(-0.105195, -0.561718, -0.00354581), Vector3(-0.11142, -0.539407, -0.0245467), Vector3(-0.111019, -0.508143, -0.0243673), Vector3(-0.104225, -0.486241, -0.00311269), Vector3(-0.0950195, -0.486531, 0.0267664), Vector3(-0.088794, -0.508843, 0.0477673), Vector3(-0.0891956, -0.540106, 0.0475879)]
 }
 
 [sub_resource type="Animation" id="Animation_stpr7"]
@@ -327,6 +400,30 @@ tracks/3/keys = {
 "update": 1,
 "values": [false]
 }
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("RodMesh/MeshInstance3D2:quaternion")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Quaternion(-0.109116, 0.101532, -0.702415, 0.695987)]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("RodMesh/MeshInstance3D3:position")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(-0.0891956, -0.540106, 0.0475879)]
+}
 
 [sub_resource type="Animation" id="Animation_dtr8f"]
 resource_name = "power"
@@ -379,6 +476,30 @@ tracks/3/keys = {
 "transitions": PackedFloat32Array(1),
 "update": 1,
 "values": [false]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("RodMesh/MeshInstance3D2:quaternion")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Quaternion(-0.109116, 0.101532, -0.702415, 0.695987)]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("RodMesh/MeshInstance3D3:position")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(-0.0891956, -0.540106, 0.0475879)]
 }
 
 [sub_resource type="Animation" id="Animation_byvj7"]
@@ -444,6 +565,30 @@ tracks/4/keys = {
 "update": 1,
 "values": [true, false]
 }
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("RodMesh/MeshInstance3D2:quaternion")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Quaternion(-0.109116, 0.101532, -0.702415, 0.695987)]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("RodMesh/MeshInstance3D3:position")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(-0.0891956, -0.540106, 0.0475879)]
+}
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_6deuo"]
 _data = {
@@ -468,8 +613,11 @@ mesh = SubResource("CylinderMesh_stpr7")
 [node name="RodTip" type="Marker3D" parent="RodMesh"]
 transform = Transform3D(1, 0, 0, 0, 0.999497, 0.0317245, 0, -0.0317245, 0.999497, 0, 0.99204, 0.00167762)
 
+[node name="TipLineLoop" type="MeshInstance3D" parent="RodMesh"]
+script = ExtResource("7_tip_loop")
+
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="RodMesh"]
-transform = Transform3D(-0.00739106, -0.999901, 0.0119594, 0.955586, -0.0105862, -0.294521, 0.294619, 0.00925145, 0.95557, -0.0301109, -0.5249, -0.00996324)
+transform = Transform3D(-0.00739133, 0.955586, 0.294619, -0.999901, -0.0105864, 0.00925144, 0.0119595, -0.294522, 0.95557, -0.0301109, -0.5249, -0.00996324)
 mesh = SubResource("CylinderMesh_dtr8f")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="RodMesh/MeshInstance3D2"]

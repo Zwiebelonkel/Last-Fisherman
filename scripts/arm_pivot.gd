@@ -39,7 +39,12 @@ var localized_texts := {
 "And in the end… you won.\nBut there was never anything to defeat.\n\n" +
 "In the moment you pulled the trigger…\nyou shot yourself.\n\n" +
 "No sound. No resistance.\n\nOnly silence.\n\n" +
-"And for the first time…\nyou are truly alone."
+"And for the first time…\nyou are truly alone.",
+		"ru": "Там никогда никого не было.\nНи врага. Ни незнакомца. Ни выхода.\n\nТолько ты.\nС самого начала.\n\nТы боролся…\nс тем, что никогда тебя не покидало.\n\nТвоё отражение.\nТвои мысли.\nТвоя собственная тень.\n\nИ в конце… ты победил.\nНо побеждать было нечего.\n\nВ тот миг, когда ты нажал на спуск…\nты выстрелил в себя.\n\nНи звука. Ни сопротивления.\n\nТолько тишина.\n\nИ впервые…\nты по-настоящему один.",
+		"tr": "Orada hiç kimse olmadı.\nNe düşman. Ne yabancı. Ne kaçış.\n\nYalnızca sen.\nEn başından beri.\n\nSavaştın…\nseni hiç terk etmeyen bir şeyle.\n\nYansımanla.\nDüşüncelerinle.\nKendi gölgenle.\n\nVe sonunda… kazandın.\nAma yenecek hiçbir şey yoktu.\n\nTetiği çektiğin anda…\nkendini vurdun.\n\nNe ses. Ne direniş.\n\nYalnızca sessizlik.\n\nVe ilk kez…\ngerçekten yalnızsın.",
+		"es": "Nunca hubo nadie allí.\nNi enemigo. Ni extraño. Ni escapatoria.\n\nSolo tú.\nDesde el principio.\n\nLuchaste…\ncontra algo que nunca te abandonó.\n\nTu reflejo.\nTus pensamientos.\nTu propia sombra.\n\nY al final… ganaste.\nPero nunca hubo nada que vencer.\n\nEn el momento en que apretaste el gatillo…\nte disparaste a ti mismo.\n\nNi sonido. Ni resistencia.\n\nSolo silencio.\n\nY por primera vez…\nestás completamente solo.",
+		"fr": "Il n'y a jamais eu personne.\nNi ennemi. Ni étranger. Ni échappatoire.\n\nSeulement toi.\nDepuis le tout début.\n\nTu as lutté…\ncontre quelque chose qui ne t'a jamais quitté.\n\nTon reflet.\nTes pensées.\nTa propre ombre.\n\nEt à la fin… tu as gagné.\nMais il n'y avait rien à vaincre.\n\nAu moment où tu as appuyé sur la détente…\nc'est sur toi que tu as tiré.\n\nPas un bruit. Aucune résistance.\n\nSeulement le silence.\n\nEt pour la première fois…\ntu es vraiment seul.",
+		"pl": "Nigdy nikogo tam nie było.\nŻadnego wroga. Żadnego obcego. Żadnej ucieczki.\n\nTylko ty.\nOd samego początku.\n\nWalczyłeś…\nz czymś, co nigdy cię nie opuściło.\n\nZ własnym odbiciem.\nZe swoimi myślami.\nZ własnym cieniem.\n\nI w końcu… wygrałeś.\nAle nigdy nie było czego pokonać.\n\nW chwili, gdy nacisnąłeś spust…\nstrzeliłeś do siebie.\n\nŻadnego dźwięku. Żadnego oporu.\n\nTylko cisza.\n\nI po raz pierwszy…\njesteś naprawdę sam."
 	},
 
 	"good_text": {
@@ -63,7 +68,12 @@ var localized_texts := {
 "You found yourself.\n\n…\n\n" +
 "But the world hasn’t changed.\nIt is still empty. Cold. Abandoned.\n\n" +
 "No one is waiting for you.\nNo one is coming back.\n\n" +
-"But this time… you are no longer lost.\n\nYou keep walking.\n\nAlone."
+"But this time… you are no longer lost.\n\nYou keep walking.\n\nAlone.",
+		"ru": "Ты всё ещё их слышишь. Голоса.\nТихие… но они есть.\n\nНо теперь… они больше не управляют тобой.\n\nТы понял,\nчто они никогда не приходили извне.\n\nОни были тобой.\n\nИ впервые…\nты больше не бежишь.\n\nТы стоишь. Смотришь.\nПринимаешь.\n\nТы нашёл себя.\n\n…\n\nНо мир не изменился.\nОн всё так же пуст. Холоден. Заброшен.\n\nНикто тебя не ждёт.\nНикто не вернётся.\n\nНо теперь… ты больше не потерян.\n\nТы идёшь дальше.\n\nОдин.",
+		"tr": "Onları hâlâ duyabiliyorsun. Sesleri.\nSessiz… ama oradalar.\n\nAma bu kez… artık seni kontrol etmiyorlar.\n\nAnladın ki\nonlar hiçbir zaman dışarıdan gelmedi.\n\nOnlar sendin.\n\nVe ilk kez…\nkaçmayı bırakıyorsun.\n\nDuruyorsun. Bakıyorsun.\nKabul ediyorsun.\n\nKendini buldun.\n\n…\n\nAma dünya değişmedi.\nHâlâ boş. Soğuk. Terk edilmiş.\n\nKimse seni beklemiyor.\nKimse geri dönmüyor.\n\nAma bu kez… artık kayıp değilsin.\n\nYürümeye devam ediyorsun.\n\nYalnız.",
+		"es": "Todavía puedes oírlas. Las voces.\nTenues… pero ahí están.\n\nPero esta vez… ya no te controlan.\n\nComprendiste\nque nunca venían de fuera.\n\nEran tú.\n\nY por primera vez…\ndejas de huir.\n\nTe detienes. Miras.\nAceptas.\n\nTe has encontrado a ti mismo.\n\n…\n\nPero el mundo no ha cambiado.\nSigue vacío. Frío. Abandonado.\n\nNadie te espera.\nNadie va a volver.\n\nPero esta vez… ya no estás perdido.\n\nSigues caminando.\n\nSolo.",
+		"fr": "Tu les entends encore. Les voix.\nFaibles… mais présentes.\n\nMais cette fois… elles ne te contrôlent plus.\n\nTu as compris\nqu'elles ne venaient jamais de l'extérieur.\n\nElles étaient toi.\n\nEt pour la première fois…\ntu cesses de fuir.\n\nTu t'arrêtes. Tu regardes.\nTu acceptes.\n\nTu t'es trouvé.\n\n…\n\nMais le monde n'a pas changé.\nIl est toujours vide. Froid. Abandonné.\n\nPersonne ne t'attend.\nPersonne ne reviendra.\n\nMais cette fois… tu n'es plus perdu.\n\nTu continues d'avancer.\n\nSeul.",
+		"pl": "Wciąż je słyszysz. Głosy.\nCiche… ale obecne.\n\nJednak tym razem… już tobą nie władają.\n\nZrozumiałeś,\nże nigdy nie dochodziły z zewnątrz.\n\nByły tobą.\n\nI po raz pierwszy…\nprzestajesz uciekać.\n\nStoisz. Patrzysz.\nAkceptujesz.\n\nOdnalazłeś siebie.\n\n…\n\nAle świat się nie zmienił.\nNadal jest pusty. Zimny. Opuszczony.\n\nNikt na ciebie nie czeka.\nNikt nie wróci.\n\nAle tym razem… nie jesteś już zagubiony.\n\nIdziesz dalej.\n\nSam."
 	}
 }
 

@@ -55,6 +55,7 @@ grow_vertical = 2
 script = ExtResource("1_cas3l")
 ending_texture = ExtResource("2_nrc21")
 ending_music_stream = ExtResource("4_amowu")
+metadata/force_crt = true
 
 [node name="Background" type="ColorRect" parent="."]
 layout_mode = 0

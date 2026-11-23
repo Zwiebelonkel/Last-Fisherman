@@ -5,6 +5,9 @@
 
 shader_type spatial;
 
+// Shared clock for rendered waves and floating gameplay objects.
+uniform float surface_time = -1.0;
+
 // Set render modes: always draw depth and disable backface culling
 render_mode depth_draw_always, cull_disabled;
 
@@ -67,14 +70,14 @@ uniform float edge_texture_speed = 0.1;
 uniform float edge_foam_intensity = 2.0;
 uniform float edge_fade_start = -3.0;
 uniform float edge_fade_end = 6.6;
-uniform sampler2D edge_foam_texture;
+uniform sampler2D edge_foam_texture : repeat_enable, filter_linear_mipmap;
 
 // Group uniforms for wave peak effects
 group_uniforms WavePeakEffect;
 uniform float peak_height_threshold = 1.0;
 uniform vec3 peak_color = vec3(1.0, 1.0, 1.0);
 uniform float peak_intensity = 1.0;
-uniform sampler2D foam_texture;
+uniform sampler2D foam_texture : repeat_enable, filter_linear_mipmap;
 uniform float foam_intensity = 1.0;
 uniform float foam_scale = 1.0;
 
@@ -91,8 +94,10 @@ uniform float uv_sampler_scale = 0.3;
 uniform float blend_factor = 0.28;
 uniform float perturbation_strength = 1.0;
 uniform float perturbation_time = 0.3;
-uniform sampler2D normalmap_a;
-uniform sampler2D normalmap_b;
+// Enable on materials whose source maps have mismatched tile borders.
+uniform bool seamless_tiling = true;
+uniform sampler2D normalmap_a : repeat_enable, filter_linear_mipmap;
+uniform sampler2D normalmap_b : repeat_enable, filter_linear_mipmap;
 uniform sampler2D uv_sampler;
 uniform sampler2DArray caustic_sampler : hint_default_black;
 uniform float caustics_intensity = 15.0;
@@ -117,30 +122,7 @@ float dynamic_amplitude(vec2 pos, float time) {
 }
 
 // Hash & noise
-float hash(vec2 p) {
-    return fract(sin(dot(p * 17.17, vec2(14.91, 67.31))) * 4791.9511);
-}
-
-float noise(vec2 x) {
-    vec2 p = floor(x);
-    vec2 f = fract(x);
-    f = f * f * (3.0 - 2.0 * f);
-    vec2 a = vec2(1.0, 0.0);
-    return mix(mix(hash(p + a.yy), hash(p + a.xy), f.x),
-               mix(hash(p + a.yx), hash(p + a.xx), f.x), f.y);
-}
-
-float fbm(vec2 x) {
-    float height = 0.0;
-    float amplitude = 0.5;
-    float frequency = 3.0;
-    for (int i = 0; i < 6; i++) {
-        height += noise(x * frequency) * amplitude;
-        amplitude *= 0.5;
-        frequency *= 2.0;
-    }
-    return height;
-}
+#include "res://shader/water_height_noise.gdshaderinc"
 
 // Wave result struct
 struct WaveResult {
@@ -241,9 +223,9 @@ varying mat4 inv_mvp;
 
 // ── VERTEX ────────────────────────────────────────────────────────────────
 void vertex() {
-    // wave_speed scales TIME → faster/slower waves
+    // wave_speed scales (surface_time >= 0.0 ? surface_time : TIME) → faster/slower waves
     // wave_height is passed as amplitude multiplier
-    float time = (TIME * wave_speed) / time_factor;
+    float time = ((surface_time >= 0.0 ? surface_time : TIME) * wave_speed) / time_factor;
 
     WaveResult waveResult = wave(VERTEX.xz, time, wave_height);
 
@@ -292,10 +274,27 @@ vec2 perturb_uv(vec2 uv, vec2 world_pos, float time, float strength) {
     return uv + noise_offset * strength;
 }
 
+// Blend each source border into an offset copy; neither copy's own seam
+// contributes where it wraps. Keep unwrapped UV derivatives for stable mipmaps.
+vec4 sample_water_tile(sampler2D source_map, vec2 uv) {
+    if (!seamless_tiling) {
+        return texture(source_map, uv);
+    }
+    vec2 border_blend = smoothstep(vec2(0.30), vec2(0.48), abs(fract(uv) - 0.5));
+    vec2 dx = dFdx(uv);
+    vec2 dy = dFdy(uv);
+    vec4 original = textureGrad(source_map, uv, dx, dy);
+    vec4 offset_x = textureGrad(source_map, uv + vec2(0.5, 0.0), dx, dy);
+    vec4 offset_y = textureGrad(source_map, uv + vec2(0.0, 0.5), dx, dy);
+    vec4 offset_xy = textureGrad(source_map, uv + vec2(0.5), dx, dy);
+    return mix(mix(original, offset_x, border_blend.x),
+               mix(offset_y, offset_xy, border_blend.x), border_blend.y);
+}
+
 // ── FRAGMENT ──────────────────────────────────────────────────────────────
 void fragment() {
     // Use the same speed-scaled time so UV animation matches wave motion
-    float time_scaled = TIME * wave_speed;
+    float time_scaled = (surface_time >= 0.0 ? surface_time : TIME) * wave_speed;
 
     vec2 uv = world_position.xz;
 
@@ -307,8 +306,8 @@ void fragment() {
     vec2 animated_uv_a = perturb_uv(base_uv_a, world_position.xz, time_scaled, perturbation_strength);
     vec2 animated_uv_b = perturb_uv(base_uv_b, world_position.xz, time_scaled, perturbation_time);
 
-    vec3 normal_sample_a = texture(normalmap_a, animated_uv_a).rgb;
-    vec3 normal_sample_b = texture(normalmap_b, animated_uv_b).rgb;
+    vec3 normal_sample_a = sample_water_tile(normalmap_a, animated_uv_a).rgb;
+    vec3 normal_sample_b = sample_water_tile(normalmap_b, animated_uv_b).rgb;
 
     normal_sample_a = normalize(normal_sample_a * 2.0 - 1.0);
     normal_sample_b = normalize(normal_sample_b * 2.0 - 1.0);
@@ -373,7 +372,7 @@ void fragment() {
     // Edge foam
     vec2 edge_uv      = world_position.xz * edge_texture_scale + edge_texture_offset + time_scaled * edge_texture_speed;
     float edge_fade   = smoothstep(edge_fade_start, edge_fade_end, z_dif);
-    vec3 depth_color_adj = mix(texture(edge_foam_texture, edge_uv).rgb * edge_foam_intensity, color, edge_fade);
+    vec3 depth_color_adj = mix(sample_water_tile(edge_foam_texture, edge_uv).rgb * edge_foam_intensity, color, edge_fade);
 
     // Peak / crest foam — peak_height_threshold also implicitly scales with wave_height
     float peak_factor  = smoothstep(peak_height_threshold, peak_height_threshold + 0.2, height);
@@ -383,7 +382,7 @@ void fragment() {
     vec3 final_color = mix(surface_color, peak_color * peak_intensity, peak_factor);
 
     vec2  foam_uv          = world_position.xz * foam_scale + time_scaled * 0.1;
-    float foam_sample      = texture(foam_texture, foam_uv).r;
+    float foam_sample      = sample_water_tile(foam_texture, foam_uv).r;
     float foam_blend_factor = smoothstep(0.0, 1.0, peak_factor) * foam_sample * foam_intensity;
     final_color = mix(final_color, vec3(1.0), foam_blend_factor);
 

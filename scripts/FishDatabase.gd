@@ -1,5 +1,78 @@
 extends Node
 
+# Session-only overrides. Release builds never use debug distributions.
+static var debug_rarity_weights: Dictionary = {}
+
+static func set_debug_rarity_weights(weights: Dictionary) -> bool:
+	if not OS.is_debug_build():
+		return false
+	var validated := {}
+	var total := 0.0
+	for rarity: int in RARITY_DATA:
+		var raw: Variant = weights.get(rarity, 0.0)
+		if not (raw is int or raw is float):
+			return false
+		var weight := float(raw)
+		if not is_finite(weight) or weight < 0.0:
+			return false
+		validated[rarity] = weight
+		total += weight
+	if not is_finite(total) or total <= 0.0:
+		return false
+	debug_rarity_weights = validated
+	return true
+
+static func clear_debug_rarity_weights() -> void:
+	debug_rarity_weights.clear()
+
+static func _pick_weighted_rarity(weights: Dictionary) -> int:
+	var total := _sum_weights(weights)
+	if total <= 0.0:
+		return -1
+	var roll := randf() * total
+	var last_positive := -1
+	for rarity: int in weights:
+		var weight: float = weights[rarity]
+		if weight <= 0.0:
+			continue
+		last_positive = rarity
+		roll -= weight
+		if roll < 0.0:
+			return rarity
+	return last_positive
+
+const SHINY_CHANCE := 0.01
+const SHINY_VALUE_MULTIPLIER := 3
+
+static func roll_shiny_variant(fish: Dictionary) -> void:
+	# Roll once per generated catch; existing fish and loaded saves keep their variant.
+	if not fish.has("is_shiny"):
+		fish["is_shiny"] = not fish.get("is_story_item", false) and fish.get("rarity", RARITY.NORMAL) != RARITY.ANTIK and randf() < SHINY_CHANCE
+
+static func get_variant_multiplier(fish: Dictionary) -> int:
+	return SHINY_VALUE_MULTIPLIER if fish.get("is_shiny", false) else 1
+
+static func apply_shiny_icon(icon: TextureRect, fish: Dictionary) -> void:
+	# Duplicate scene materials so a shiny catch cannot tint other copies of a species.
+	var material := icon.material.duplicate() as ShaderMaterial if icon.material is ShaderMaterial else null
+	if material == null and fish.get("is_shiny", false):
+		material = ShaderMaterial.new()
+		material.shader = preload("res://shader/icon.gdshader")
+		material.set_shader_parameter("enable_bobbing", false)
+		material.set_shader_parameter("shadow_color", Color.TRANSPARENT)
+	if material != null:
+		material.set_shader_parameter("shiny_enabled", fish.get("is_shiny", false))
+	icon.material = material
+
+static func apply_shiny_sprite(sprite: Sprite3D, fish: Dictionary) -> void:
+	if not fish.get("is_shiny", false):
+		return
+	var material := ShaderMaterial.new()
+	material.shader = preload("res://shader/shiny_sprite.gdshader")
+	material.set_shader_parameter("fish_texture", sprite.texture)
+	sprite.modulate = Color.WHITE
+	sprite.material_override = material
+
 func _ready() -> void:
 	apply_manual_water_tags_to_all_fish()
 
@@ -1676,20 +1749,18 @@ static func get_random_from_list(list: Array, bait_level := 1) -> Dictionary:
 	for rarity in rarity_weights.keys():
 		var base_spawn: float = RARITY_DATA[rarity]["spawn_chance"]
 		var boosted_spawn: float = _calculate_rarity_boost(base_spawn, rarity, bait_level)
+		if OS.is_debug_build() and not debug_rarity_weights.is_empty():
+			boosted_spawn = float(debug_rarity_weights.get(rarity, 0.0))
 		rarity_weights[rarity] = boosted_spawn
 	
-	# 3. Erstelle gewichtetes Array für Rarity-Auswahl
-	var weighted_rarities: Array = []
-	for rarity in rarity_weights.keys():
-		var weight: int = int(rarity_weights[rarity])
-		for i in range(weight):
-			weighted_rarities.append(rarity)
-	
-	if weighted_rarities.is_empty():
+	# Keep fractional chances (including 0.5 and 0.4) instead of rounding to ints.
+	# A forced rarity unavailable at this location falls back to normal chances.
+	if _sum_weights(rarity_weights) <= 0.0:
+		for rarity: int in rarity_weights:
+			rarity_weights[rarity] = _calculate_rarity_boost(float(RARITY_DATA[rarity]["spawn_chance"]), rarity, bait_level)
+	var selected_rarity := _pick_weighted_rarity(rarity_weights)
+	if selected_rarity < 0:
 		return _fallback_fish()
-	
-	# 4. Wähle zufällige Rarity
-	var selected_rarity: int = weighted_rarities.pick_random()
 	
 	# 5. Wähle zufälligen Fisch dieser Rarity
 	var fish_of_rarity: Array = []
@@ -1719,6 +1790,7 @@ static func get_random_from_list(list: Array, bait_level := 1) -> Dictionary:
 		selected["weight"] = 1.0
 	
 	selected["is_new_catch"] = not Player.caught_fish_species.has(selected["id"]) 
+	roll_shiny_variant(selected)
 	
 	return selected
 
@@ -1881,6 +1953,8 @@ static func _fallback_fish() -> Dictionary:
 #  RANDOM FISH (TARGET RARITY)
 # ===========================
 static func get_random_fish_by_rarity(list: Array, rarity_string: String) -> Dictionary:
+	if OS.is_debug_build() and not debug_rarity_weights.is_empty():
+		return get_random_from_list(list, Player.upgrade_bait)
 	var rarity_enum := rarity_string_to_enum(rarity_string)
 
 	if rarity_enum == -1:
@@ -1908,6 +1982,7 @@ static func get_random_fish_by_rarity(list: Array, rarity_string: String) -> Dic
 		selected["weight"] = 1.0
 
 	selected["is_new_catch"] = not Player.caught_fish_species.has(selected["id"])
+	roll_shiny_variant(selected)
 	return selected
 
 # ===========================
@@ -2005,10 +2080,22 @@ static func get_rarity_value(fish: Dictionary) -> float:
 	return get_rarity_data_safe(fish)["value"]
 
 static func get_fish_value(fish: Dictionary) -> int:
-	"""Berechnet Verkaufswert des Fisches"""
-	var base_value = fish.get("base_value", 1)
-	var rarity_multiplier = get_rarity_value(fish)
-	return int(base_value * rarity_multiplier)
+	return _get_regular_fish_value(fish) * get_variant_multiplier(fish)
+
+static func _get_regular_fish_value(fish: Dictionary) -> int:
+	# The existing rarity-adjusted price is the standard at the species' median weight.
+	var standard_value := int(float(fish.get("base_value", 1)) * get_rarity_value(fish))
+	if standard_value <= 0 or not fish.has("weight"):
+		return standard_value
+	var minimum := float(fish.get("weight_min", 0.0))
+	var maximum := float(fish.get("weight_max", 0.0))
+	var weight := float(fish["weight"])
+	var median_weight := (minimum + maximum) * 0.5
+	if not is_finite(weight) or not is_finite(median_weight) or weight < 0.0:
+		return standard_value
+	if minimum < 0.0 or maximum <= minimum or median_weight <= 0.0:
+		return standard_value
+	return maxi(1, roundi(standard_value * weight / median_weight))
 
 func get_fish_name(fish: Dictionary) -> String:
 	# 🆕 Prüfe ob Steam-Name vorhanden
@@ -2019,6 +2106,10 @@ func get_fish_name(fish: Dictionary) -> String:
 	if key == "":
 		return tr("UNKNOWN")
 	return tr(key)
+
+func get_fish_display_name(fish: Dictionary) -> String:
+	var fish_name := get_fish_name(fish)
+	return "✦ %s %s" % [tr("FISH_VARIANT_SHINY"), fish_name] if fish.get("is_shiny", false) else fish_name
 
 func get_fish_description(fish: Dictionary) -> String:
 	var key: String = fish.get("description_key", "")

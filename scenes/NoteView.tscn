@@ -132,6 +132,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = SubResource("GDScript_noteview")
+metadata/force_crt = true
 
 [node name="Filter" type="CanvasLayer" parent="."]
 layer = 0

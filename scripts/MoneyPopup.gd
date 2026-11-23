@@ -1,11 +1,13 @@
 extends Control
 class_name MoneyPopup
 
+const NumberFormat = preload("res://scripts/NumberFormat.gd")
+
 @onready var label: Label = $Label
 
 func show_amount(amount: int) -> void:
 	label.show()
-	label.text = "+%d $" % amount
+	label.text = "+%s $" % NumberFormat.compact(amount)
 	modulate.a = 1.0
 	scale = Vector2.ONE
 

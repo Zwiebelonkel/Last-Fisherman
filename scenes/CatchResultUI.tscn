@@ -13,6 +13,8 @@ default_font = ExtResource("1_nuupr")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ksy5q"]
 shader = ExtResource("4_e4ghr")
+shader_parameter/shiny_enabled = false
+shader_parameter/motion_strength = 1.0
 shader_parameter/shadow_offset = Vector2(0, -4)
 shader_parameter/shadow_color = Vector4(0, 0, 0, 0.5)
 shader_parameter/bobbing_amplitude = 0.44
@@ -233,25 +235,30 @@ libraries = {
 [node name="MarginContainer2" type="MarginContainer" parent="VBoxContainer"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
+theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 0
 
 [node name="FishName" type="Label" parent="VBoxContainer/MarginContainer2"]
 layout_mode = 2
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "Name"
+autowrap_mode = 2
 
 [node name="MarginContainer3" type="MarginContainer" parent="VBoxContainer"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
+theme_override_constants/margin_right = 10
 
 [node name="FishRarity" type="Label" parent="VBoxContainer/MarginContainer3"]
 layout_mode = 2
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "Rarity"
+autowrap_mode = 2
 
 [node name="MarginContainer4" type="MarginContainer" parent="VBoxContainer"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
+theme_override_constants/margin_right = 10
 
 [node name="FishValue" type="Label" parent="VBoxContainer/MarginContainer4"]
 layout_mode = 2
@@ -261,15 +268,18 @@ text = "Value"
 [node name="MarginContainer5" type="MarginContainer" parent="VBoxContainer"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
+theme_override_constants/margin_right = 10
 
 [node name="FishWeight" type="Label" parent="VBoxContainer/MarginContainer5"]
 layout_mode = 2
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "Gewicht: 0 kg"
+autowrap_mode = 2
 
 [node name="MarginContainer6" type="MarginContainer" parent="VBoxContainer"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
+theme_override_constants/margin_right = 10
 
 [node name="StoryLabel" type="Label" parent="VBoxContainer/MarginContainer6"]
 visible = false

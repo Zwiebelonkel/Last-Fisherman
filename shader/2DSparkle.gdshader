@@ -1,4 +1,5 @@
 shader_type canvas_item;
+uniform float handoff_opacity : hint_range(0, 1) = 1.0;
 render_mode blend_add, unshaded;
 
 uniform vec2 panel_size_px = vec2(240.0, 290.0);
@@ -113,5 +114,5 @@ vec4 result = chrome_col + sparkle_out;
 	result.rgb = clamp(result.rgb * 1.5, vec3(0.0), vec3(1.0));
 	result.rgb *= mask;
 	result.a = 1.0;
-	COLOR = result;
+	COLOR = result * handoff_opacity;
 }

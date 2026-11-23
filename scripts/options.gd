@@ -1,19 +1,44 @@
 extends Control
 
+const GraphicsPanel := preload("res://scripts/GraphicsSettingsPanel.gd")
+
 @onready var click: AudioStreamPlayer = $Audio/click
-@onready var graphics_window: Panel = $GraphicsWindow
-@onready var godray_control: CheckButton = $GraphicsWindow/VBoxContainer/GodrayControl
-@onready var glow_control: CheckButton = $GraphicsWindow/VBoxContainer/GlowControl
-@onready var fog_quality_control: OptionButton = $GraphicsWindow/VBoxContainer/FogRow/FogQualityControl
+@onready var graphics_window: GraphicsPanel = $GraphicsWindow
+@onready var stats_ui: Control = $StatsUI
 
 func _ready() -> void:
-	$Panel/VBoxContainer/CRTControl.button_pressed = Player.crt_enabled
+	process_mode = Node.PROCESS_MODE_ALWAYS
+	$Panel/VBoxContainer/CRTControl.set_pressed_no_signal(Player.crt_enabled)
 	_sync_graphics_controls()
+	graphics_window.back_requested.connect(_on_graphics_back_pressed)
+	visibility_changed.connect(_on_visibility_changed)
+	_on_visibility_changed()
+
+func _input(event: InputEvent) -> void:
+	# The intro disables the fishing controller's input, so the menu must own
+	# its Escape path even while that controller is suspended.
+	if not is_visible_in_tree() or not event.is_action_released("pause"):
+		return
+	get_viewport().set_input_as_handled()
+	if close_graphics_window():
+		return
+	hide()
+	var scene := get_tree().current_scene
+	var fishing := scene.get_node_or_null("PlayerCamera/FishingRod") if scene != null else null
+	if fishing != null:
+		fishing.set("paused", false)
+	get_tree().paused = false
+	Engine.time_scale = 1.0
+
+func _on_visibility_changed() -> void:
+	if not is_visible_in_tree():
+		stats_ui.hide()
+		graphics_window.hide()
+		$Panel.show()
 
 func _sync_graphics_controls() -> void:
-	godray_control.set_pressed_no_signal(Player.godray_enabled)
-	glow_control.set_pressed_no_signal(Player.glow_enabled)
-	fog_quality_control.select(min(max(Player.fog_quality, 0), fog_quality_control.item_count - 1))
+	$Panel/VBoxContainer/CRTControl.set_pressed_no_signal(Player.crt_enabled)
+	graphics_window.refresh_controls()
 
 func _on_menu_pressed() -> void:
 	get_tree().paused = false
@@ -23,17 +48,19 @@ func _on_menu_pressed() -> void:
 	Transition.back_to_main()
 	
 func _on_stats_pressed() -> void:
-	var stats = $StatsUI
-	stats.show()
+	stats_ui.show()
 	click.play()
 
 func _on_graphics_pressed() -> void:
+	$Panel.hide()
 	_sync_graphics_controls()
 	graphics_window.show()
 	click.play()
 
 func _on_graphics_back_pressed() -> void:
 	graphics_window.hide()
+	_sync_graphics_controls()
+	$Panel.show()
 	click.play()
 	
 func _on_crt_toggled(enabled: bool) -> void:
@@ -57,15 +84,18 @@ func _on_fog_quality_selected(index: int) -> void:
 	Player.apply_graphics_settings()
 
 func _set_crt_visible(node: Node, enabled: bool) -> void:
-	for child in node.get_children():
-		if child.name == "CRT":
-			child.visible = enabled
-		_set_crt_visible(child, enabled)
+	Player._set_crt_visible(node, enabled)
 		
 func close_graphics_window() -> bool:
-	if graphics_window.visible:
-		graphics_window.hide()
+	# Existing pause controllers call this hook before resuming gameplay.
+	# Close the topmost submenu first and leave the pause menu itself open.
+	if stats_ui.visible:
+		stats_ui.hide()
+		$Panel.show()
 		click.play()
+		return true
+	if graphics_window.visible:
+		_on_graphics_back_pressed()
 		return true
 	
 	return false

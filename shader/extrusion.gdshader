@@ -1,5 +1,7 @@
 shader_type spatial;
 render_mode unshaded;
+#include "res://shader/shiny_rainbow.gdshaderinc"
+uniform bool shiny_enabled = false;
 uniform float extruded_alpha_cull : hint_range(0.0, 1.0) = 1.0;
 uniform float extrude_scale : hint_range(0.0, 1.0) = 0.1;
 uniform bool opaque_extrude = true;
@@ -331,4 +333,7 @@ void fragment() {
 	}
 
 	if (ALPHA <= 0.01) discard;
+	if (shiny_enabled) {
+		ALBEDO = shiny_rainbow(ALBEDO, UV, TIME);
+	}
 }

@@ -29,6 +29,8 @@ var cooking_material: StandardMaterial3D
 
 # Kochzeit-Multiplikator basierend auf Minigame-Ergebnis
 var _quality_multiplier: float = 1.0  # perfect=0.5, good=0.75, burned=1.5
+var _current_quality: String = "good"
+var _current_fish_data: Dictionary = {}
 
 func _ready() -> void:
 	setup_materials()
@@ -79,7 +81,7 @@ func setup_materials() -> void:
 	cooking_material.albedo_color = Color.ORANGE
 	cooking_material.emission_enabled = true
 	cooking_material.emission = Color.ORANGE_RED
-	cooking_material.emission_energy = 2.0
+	cooking_material.emission_energy_multiplier = 2.0
 
 # ===============================
 #  SETTERS
@@ -166,6 +168,8 @@ func _on_fish_selected(fish_name: String) -> void:
 		return
 
 	current_fish_type = fish_name
+	_current_fish_data = controller.get_fish_data(fish_name).duplicate(true)
+	_current_quality = "good"
 
 	# Timing-Minigame starten
 	if minigame:
@@ -177,6 +181,7 @@ func _on_fish_selected(fish_name: String) -> void:
 		start_cooking(fish_name)
 
 func _on_minigame_finished(quality: String) -> void:
+	_current_quality = quality
 	match quality:
 		"perfect":
 			_quality_multiplier = 0.5   # Halbierte Kochzeit
@@ -226,7 +231,7 @@ func collect_item() -> void:
 	if not tray:
 		return
 
-	if tray.add_item(current_fish_type, "Backfisch"):
+	if tray.add_item(current_fish_type, "Backfisch", _current_fish_data, _current_quality):
 		current_state = State.IDLE
 		current_fish_type = ""
 		update_prompt()

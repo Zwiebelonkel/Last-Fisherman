@@ -1,6 +1,6 @@
-[gd_scene load_steps=70 format=3 uid="uid://b6exh44q6u50p"]
+[gd_scene load_steps=72 format=3 uid="uid://b6exh44q6u50p"]
 
-[ext_resource type="Shader" path="res://shader/screen_rain.gdshader" id="1_edxmc"]
+[ext_resource type="Shader" uid="uid://cn35ulb5u6yxj" path="res://shader/screen_rain.gdshader" id="1_edxmc"]
 [ext_resource type="Shader" uid="uid://c140kjbm2bot5" path="res://shader/buckshot.gdshader" id="1_mbbil"]
 [ext_resource type="Texture2D" uid="uid://rcd1rh51yxos" path="res://assets/biteIndicator.png" id="2_hpe61"]
 [ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="3_5fodb"]
@@ -41,12 +41,20 @@
 [ext_resource type="AudioStream" uid="uid://c0e0t3u3yvvhg" path="res://sounds/rarity/legendary.mp3" id="31_djqsd"]
 [ext_resource type="AudioStream" uid="uid://qeh48myqvc8p" path="res://sounds/rarity/exotic.mp3" id="32_wwpln"]
 [ext_resource type="AudioStream" uid="uid://6a3ro0nq1u4" path="res://sounds/rarity/antique.mp3" id="33_ao3ch"]
-[ext_resource type="Script" path="res://scripts/Biomecinematic.gd" id="42_ao3ch"]
+[ext_resource type="Script" uid="uid://dk2ge7v8wh41k" path="res://scripts/Biomecinematic.gd" id="42_ao3ch"]
+[ext_resource type="Script" uid="uid://cep3g0xtn2br2" path="res://scripts/HookSurfaceFollow.gd" id="hook_surface_script"]
+[ext_resource type="Script" uid="uid://dcho4ju8j173p" path="res://scripts/WaterSurface.gd" id="water_surface_script"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ytxmq"]
 shader = ExtResource("1_edxmc")
 shader_parameter/frequency = 0.0
 shader_parameter/size = 0.015
+shader_parameter/effect_amount = 1.0
+shader_parameter/splash_mode = false
+shader_parameter/splash_age = 0.0
+shader_parameter/splash_seed = 0.0
+shader_parameter/splash_growth = 1.0
+shader_parameter/splash_density = 1.0
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1wiy7"]
 shader = ExtResource("1_mbbil")
@@ -261,6 +269,9 @@ var cast_power_ui: Control = null
 
 @export var inventory_ui: Node
 signal line_visible(visible: bool)
+signal line_broken
+@onready var fishing_line = get_node(\"../../Line\")
+var _line_sequence: int = 0
 
 # STATE MACHINE
 enum {
@@ -269,11 +280,15 @@ enum {
 	STATE_CASTED,
 	STATE_BITE,
 	STATE_MINIGAME,
-	STATE_ROTATING
+	STATE_ROTATING,
+	STATE_CASTING,
+	STATE_REELING
 }
 
 var state: int = STATE_IDLE
 var paused: bool = false
+var _catch_reveal_pending: bool = false
+const CatchFlight := preload(\"res://scripts/FishCatchFlight.gd\")
 var fish_caught: bool = false  # 🆕 Blockiert Input während CatchResult angezeigt wird
 
 # Cast Power Variables
@@ -289,6 +304,8 @@ var marker_pos: float = 0.0
 var marker_speed: float = 350.0
 var marker_slow_factor: float = 0.3
 var input_active: bool = false
+const MINIGAME_INPUT = preload(\"res://scripts/FishingMinigameInput.gd\")
+var minigame_input := MINIGAME_INPUT.new()
 var current_fish: Dictionary = {}
 var sweet_pos: float = 0.0
 var sweet_speed: float = 120.0
@@ -418,6 +435,8 @@ func setup_buttons() -> void:
 
 
 func _on_interact_button_down() -> void:
+	if _catch_reveal_pending:
+		return
 	# 🆕 Blockiere während CatchResult
 	if fish_caught:
 		return
@@ -428,6 +447,8 @@ func _on_interact_button_down() -> void:
 			start_charging_cast()
 		STATE_CHARGING:
 			pass  # Halten zum Laden
+		STATE_CASTING:
+			reset_line()
 		STATE_CASTED, STATE_BITE:
 			reel_pressed()
 		STATE_MINIGAME:
@@ -435,6 +456,8 @@ func _on_interact_button_down() -> void:
 
 
 func _on_interact_button_up() -> void:
+	if _catch_reveal_pending:
+		return
 	# 🆕 Blockiere während CatchResult
 	if fish_caught:
 		return
@@ -480,7 +503,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	if fish_caught:
 		return
 	
-	if paused:
+	if paused or _catch_reveal_pending:
 		return
 	
 	if event.is_action_pressed(\"left\"):
@@ -517,6 +540,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		match state:
 			STATE_IDLE:
 				start_charging_cast()
+			STATE_CASTING:
+				reset_line()
 			STATE_CASTED, STATE_BITE:
 				reel_pressed()
 			STATE_MINIGAME:
@@ -547,6 +572,8 @@ func handle_pause_input() -> void:
 
 
 func toggle_fishbook() -> void:
+	if _catch_reveal_pending:
+		return
 	if state == STATE_MINIGAME or state == STATE_BITE:
 		return
 	
@@ -557,6 +584,8 @@ func toggle_fishbook() -> void:
 
 
 func toggle_inventory() -> void:
+	if _catch_reveal_pending:
+		return
 	if inventory_ui.visible:
 		close_inventory()
 	else:
@@ -613,6 +642,8 @@ func close_options() -> void:
 # KAMERA ROTATION (Einfach - nur 360° drehen)
 # ---------------------------------------------------------
 func rotate_camera_left() -> void:
+	if _catch_reveal_pending:
+		return
 	if is_rotating:
 		return
 	
@@ -626,6 +657,8 @@ func rotate_camera_left() -> void:
 
 
 func rotate_camera_right() -> void:
+	if _catch_reveal_pending:
+		return
 	if is_rotating:
 		return
 	
@@ -686,6 +719,8 @@ func update_rotation(delta: float) -> void:
 
 
 func open_map() -> void:
+	if _catch_reveal_pending:
+		return
 	Player.update_last_scene(\"res://scenes/ending.tscn\")
 	Transition.change_scene(\"res://scenes/MapScene.tscn\")
 
@@ -694,6 +729,8 @@ func open_map() -> void:
 # CAST CHARGING
 # ---------------------------------------------------------
 func start_charging_cast() -> void:
+	if fishing_line.is_finishing():
+		return
 	print(\"CHARGING CAST\")
 	state = STATE_CHARGING
 	cast_power = 0.0
@@ -719,6 +756,8 @@ func update_cast_power(delta: float) -> void:
 
 
 func release_cast() -> void:
+	if state != STATE_CHARGING:
+		return
 	if cast_power_ui and cast_power_ui.has_method(\"hide_power\"):
 		cast_power_ui.hide_power()
 	
@@ -733,38 +772,39 @@ func release_cast() -> void:
 # CAST
 # ---------------------------------------------------------
 func cast_line(power: float = 1.0) -> void:
-	print(\"CAST with power: \", power)
+	if fishing_line.is_finishing():
+		return
+	_line_sequence += 1
+	var sequence: int = _line_sequence
 	cast_sound.play()
-	state = STATE_CASTED
+	state = STATE_CASTING
 	ui_bite_indicator.visible = false
 
 	anim.play(\"cast\")
 	camera.start_screenshake(0.01, 0.3)
-	await anim.animation_finished
+	# Release on the forward flick rather than after the rod has returned.
+	await get_tree().create_timer(0.18).timeout
+	if sequence != _line_sequence or state != STATE_CASTING:
+		return
 
-	var x = randf_range(-2.0, 2.0)
-	var distance = lerp(min_distance, max_distance, power)
-	
-	var water_height = 0.05
-	if waterplane:
-		water_height = waterplane.global_position.y
-	
-	var cast_forward = -camera.global_transform.basis.z
-	cast_forward.y = 0
+	var distance: float = lerpf(min_distance, max_distance, power)
+	var water_height: float = waterplane.global_position.y if waterplane else 0.05
+	var cast_forward: Vector3 = -camera.global_transform.basis.z
+	cast_forward.y = 0.0
 	cast_forward = cast_forward.normalized()
-	
-	var cast_right = camera.global_transform.basis.x
-	cast_right.y = 0
+	var cast_right: Vector3 = camera.global_transform.basis.x
+	cast_right.y = 0.0
 	cast_right = cast_right.normalized()
-	
-	hook.global_position = rod_tip.global_position + cast_right * x + cast_forward * distance
-	hook.global_position.y = water_height
-	hook.visible = true
+	var landing_position: Vector3 = rod_tip.global_position + cast_right * randf_range(-2.0, 2.0) + cast_forward * distance
+	landing_position.y = water_height
+
+	var landed: bool = await fishing_line.cast_to(landing_position, power)
+	if not landed or sequence != _line_sequence or state != STATE_CASTING:
+		return
 	hook_start_position = hook.global_position
-	
-	var cast_direction = (hook.global_position - rod_tip.global_position).normalized()
-	cast_direction.y = 0
-	
+	var cast_direction: Vector3 = landing_position - rod_tip.global_position
+	cast_direction.y = 0.0
+	cast_direction = cast_direction.normalized()
 	hook_end_position = rod_tip.global_position + cast_direction * min_distance
 	hook_end_position.y = water_height
 
@@ -772,12 +812,11 @@ func cast_line(power: float = 1.0) -> void:
 	splash.visible = true
 	splash.emitting = true
 	splash.restart()
-
+	hook.get_node(\"Ripple\").show()
 	ripple_anim.play(\"ripple\")
 	anim.play(\"idle\")
-
+	state = STATE_CASTED
 	start_bite_timer()
-	emit_signal(\"line_visible\", true)
 
 
 # ---------------------------------------------------------
@@ -795,30 +834,53 @@ func reel_pressed() -> void:
 			start_catch_minigame()
 
 
-func reset_line() -> void:
-	state = STATE_IDLE
+func reset_line(return_bait: bool = true) -> void:
+	# A parked bait stays attached while looking around.
+	if state in [STATE_IDLE, STATE_ROTATING] and not fishing_line.visible:
+		return
+	# Turning again during recovery must not restart or erase the animation.
+	if fishing_line.is_finishing():
+		return
+	_line_sequence += 1
+	var sequence: int = _line_sequence
+	if cast_power_ui and cast_power_ui.has_method(\"hide_power\"):
+		cast_power_ui.hide_power()
+	cast_power = 0.0
+	cast_power_speed = absf(cast_power_speed)
+	input_active = false
+	reel_sound.stop()
+	splash.emitting = false
+	splash.one_shot = true
+	splash.explosiveness = 1.0
+	catch_ui.hide()
+	ui_bite_indicator.visible = false
+	state = STATE_REELING
 	anim.play(\"reel\")
-	await anim.animation_finished
+	await fishing_line.finish_line(return_bait)
+	if sequence != _line_sequence:
+		return
+
 	hook.visible = false
 	splash.visible = false
 	splash.emitting = false
-	ui_bite_indicator.visible = false
 	anim.play(\"idle\")
 	emit_signal(\"line_visible\", false)
-	catch_ui.hide()
+	if state == STATE_REELING:
+		state = STATE_IDLE
 
 
 # ---------------------------------------------------------
 # BITE TIMER
 # ---------------------------------------------------------
 func start_bite_timer() -> void:
+	var sequence: int = _line_sequence
 	var wait_time := randf_range(5, 20)
 	var modifier := 1.0 + (Player.upgrade_line - 1) * 0.35
 	wait_time /= modifier
 	print(\"Bite Timer gestartet: \", wait_time, \"s\")
 	await get_tree().create_timer(wait_time).timeout
 
-	if state != STATE_CASTED:
+	if state != STATE_CASTED or sequence != _line_sequence:
 		print(\"Bite Timer abgebrochen: state = \", state)
 		return
 
@@ -866,8 +928,13 @@ func start_catch_minigame() -> void:
 	catch_ui.visible = true
 	anim.play(\"fight\")
 	camera.start_screenshake(0.1, 1.0)
+	splash.global_position = hook.global_position
+	splash.one_shot = false
+	splash.explosiveness = 0.0
+	splash.local_coords = false
 	splash.visible = true
-	splash.emitting = true
+	splash.restart()
+	splash.emitting = false
 
 	# -------------------------------------------------
 	# 🎣 OCEAN = IMMER STEAM PLAYER FISH
@@ -960,8 +1027,13 @@ func start_catch_minigame() -> void:
 	sweet_direction = -1 if randi() % 2 == 0 else 1
 	catch_progress.value = 50.0
 	input_active = false
+	minigame_input.reset(bar_background)
 	
 func update_catch_minigame(delta: float) -> void:
+	if paused or not catch_ui.is_visible_in_tree() or delta <= 0.0:
+		minigame_input.clear_motion(bar_background.get_local_mouse_position())
+		return
+	var mouse_position: Vector2 = bar_background.get_local_mouse_position()
 	# SweetSpot Bewegung
 	sweet_pos += sweet_speed * delta * sweet_direction
 
@@ -977,15 +1049,14 @@ func update_catch_minigame(delta: float) -> void:
 	sweet_spot.position.x = sweet_pos
 
 	# Marker & Hook Bewegung
-	var current_speed = marker_speed
+	var current_speed: float = marker_speed
+	if input_active:
+		current_speed *= marker_slow_factor
 	
 	var t := catch_progress.value / 100.0
 	var new_pos := hook_start_position.lerp(hook_end_position, t)
-	new_pos.y = waterplane.global_position.y - 7.0
+	new_pos = fishing_line.get_water_position(new_pos)
 	hook.global_position = new_pos
-
-	if input_active:
-		current_speed *= marker_slow_factor
 
 	marker_pos += current_speed * delta
 
@@ -1004,38 +1075,43 @@ func update_catch_minigame(delta: float) -> void:
 	var in_spot := marker.position.x >= sweet_spot.position.x \\
 		and marker.position.x <= sweet_spot.position.x + sweet_spot.size.x
 
+	if splash:
+		splash.global_position = hook.global_position
+		splash.visible = true
+		splash.emitting = in_spot
+
+	var wiggle_boost: float = minigame_input.get_wiggle_progress(
+		mouse_position, bar_background.size.x, in_spot, delta
+	)
+
 	if in_spot:
 		var grip_multiplier := 1.0 + (Player.upgrade_grip - 1) * 0.05
-		catch_progress.value += 40.0 * grip_multiplier * delta
-		
-		if splash:
-			splash.global_position = hook.global_position
-			if not splash.emitting:
-				splash.emitting = true
-		
+		catch_progress.value += 40.0 * grip_multiplier * delta + wiggle_boost
+
 		camera.start_screenshake(0.03, 0.2)
+		if wiggle_boost > 0.0:
+			catch_progress.get_node(\"CatchProgressIndicator\").flash_progress()
 	else:
 		catch_progress.value = max(0.0, catch_progress.value - 25.0 * delta)
-		
-		if splash and splash.emitting:
-			splash.emitting = false
 
 	if catch_progress.value >= 100.0:
 		end_catch_minigame(true)
 	elif catch_progress.value <= 0.0:
 		end_catch_minigame(false)
 
-		
 func end_catch_minigame(success: bool) -> void:
+	var caught_fish: Dictionary = current_fish
+	if splash:
+		splash.emitting = false
 	reel_sound.stop()
 	camera.start_screenshake(0.4, 0.3)
 	if success:
 		var fish = current_fish
-		_launch_fish_sprite(fish)
 		Player.add_fish(fish, fishing_location)
 		Player.caught_fish_species[fish[\"id\"]] = true
 		# 🎵 Spiele Rarität-spezifischen Sound
 		play_rarity_sound(fish.get(\"rarity\", FishDB.RARITY.NORMAL))
+
 		SteamAchievements.on_fish_caught(fish[\"id\"])
 		SteamAchievements.check_total_fish_caught()
 		SteamAchievements.check_species_discovered()
@@ -1046,8 +1122,7 @@ func end_catch_minigame(success: bool) -> void:
 		# 🆕 Blockiere Input bis CatchResult geschlossen wird
 		fish_caught = true
 
-		if catch_result_ui:
-			catch_result_ui.show_fish(fish)
+
 
 		Player.save_game()
 	else:
@@ -1056,7 +1131,16 @@ func end_catch_minigame(success: bool) -> void:
 		print(\"⚠️ Köder bleibt aktiv!\")
 
 	catch_ui.visible = false
-	await reset_line()
+	if success:
+		_catch_reveal_pending = true
+		var flight := _launch_fish_3d(caught_fish)
+		reset_line(success)
+		await flight.finished
+		_catch_reveal_pending = false
+		if catch_result_ui:
+			catch_result_ui.finish_flight_reveal()
+	else:
+		await reset_line(success)
 
 func play_rarity_sound(rarity: int) -> void:
 	match rarity:
@@ -1090,69 +1174,27 @@ func play_rarity_sound(rarity: int) -> void:
 func trigger_splash_burst() -> void:
 	if not splash:
 		return
-	
-	splash.emitting = true
-	await get_tree().create_timer(0.15).timeout
-	
-	if splash and state == STATE_MINIGAME:
-		splash.emitting = false
-		
-func _launch_fish_sprite(fish_data: Dictionary) -> void:
-	var sprite := Sprite3D.new()
-	sprite.billboard = BaseMaterial3D.BILLBOARD_ENABLED
-	sprite.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
-	sprite.pixel_size = 0.01
-	sprite.shaded = false
-	sprite.texture = FishDB.get_fish_icon(fish_data)
-	
-	var rarity_color := FishDB.get_rarity_color(fish_data)
-	sprite.modulate = rarity_color
-	
-	var rarity: int = fish_data.get(\"rarity\", FishDB.RARITY.NORMAL)
-	var size_map := {
-		FishDB.RARITY.NORMAL: 0.7, FishDB.RARITY.UNGEWOEHNLICH: 0.85,
-		FishDB.RARITY.SELTEN: 1.0, FishDB.RARITY.EPISCH: 1.2,
-		FishDB.RARITY.LEGENDAER: 1.5, FishDB.RARITY.EXOTISCH: 1.8,
-		FishDB.RARITY.ANTIK: 2.0
-	}
-	sprite.scale = Vector3.ONE * size_map.get(rarity, 1.0)
-	
-	# ✅ ERST add_child, DANN global_position setzen
-	get_tree().current_scene.add_child(sprite)
-	sprite.global_position = hook.global_position
-	
-	if rarity >= FishDB.RARITY.LEGENDAER:
-		var light := OmniLight3D.new()
-		light.light_color = rarity_color
-		light.light_energy = 2.0
-		light.omni_range = 1.5
-		sprite.add_child(light)
-	
-	var start_pos := hook.global_position
-	# ✅ Weniger hoch (1.2 statt 3.5)
-	var to_cam := (camera.global_position - hook.global_position).normalized()
-	var target_pos := start_pos + to_cam * 1.5 + Vector3(0, 0.8, 0)
-	
-	# ✅ Tween nach add_child erstellen
-	var tween := sprite.create_tween()
-	tween.set_parallel(true)
-	tween.tween_property(sprite, \"global_position\", target_pos, 0.7)\\
-		.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
-	tween.tween_property(sprite, \"rotation_degrees:y\", 360.0, 0.7)\\
-		.set_ease(Tween.EASE_OUT)
-	
-	await get_tree().create_timer(0.45).timeout
-	
-	var fade := sprite.create_tween()
-	fade.tween_property(sprite, \"modulate:a\", 0.0, 0.35)
-	await fade.finished
-	
-	sprite.queue_free()
+	if state == STATE_MINIGAME:
+		splash.global_position = hook.global_position
+		splash.emitting = marker.position.x >= sweet_spot.position.x and marker.position.x <= sweet_spot.position.x + sweet_spot.size.x
+		return
+	splash.restart()
+
+func _launch_fish_3d(fish_data: Dictionary) -> CatchFlight:
+	var flight := CatchFlight.new()
+	get_tree().current_scene.add_child(flight)
+	if catch_result_ui:
+		catch_result_ui.show_fish(fish_data, true)
+	flight.play(fish_data, hook.global_position, camera, catch_result_ui)
+	return flight
+
 "
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_edxmc"]
+resource_local_to_scene = true
 render_priority = -128
 shader = ExtResource("16_5lvs8")
+shader_parameter/surface_time = -1.0
 shader_parameter/wave_height = 2.194
 shader_parameter/wave_speed = 1.645
 shader_parameter/refraction_strength = 0.086
@@ -1198,6 +1240,7 @@ shader_parameter/uv_sampler_scale = 0.3
 shader_parameter/blend_factor = 0.795
 shader_parameter/perturbation_strength = 0.37
 shader_parameter/perturbation_time = 0.3
+shader_parameter/seamless_tiling = false
 shader_parameter/normalmap_a = ExtResource("16_rnvy1")
 shader_parameter/normalmap_b = ExtResource("17_4slvv")
 shader_parameter/caustics_intensity = 14.48
@@ -1227,50 +1270,37 @@ emission = Color(0.483338, 0.649368, 1, 1)
 
 [sub_resource type="QuadMesh" id="QuadMesh_611at"]
 material = SubResource("StandardMaterial3D_a7pbh")
+size = Vector2(1.6, 1.6)
 
 [sub_resource type="Animation" id="Animation_ygjfp"]
 length = 0.001
-tracks/0/type = "scale_3d"
+tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Ripple")
+tracks/0/path = NodePath("Ripple:mesh:material:shader_parameter/progress")
 tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = PackedFloat32Array(0, 1, 0.5, 0.5, 0.5)
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Ripple:mesh:material:albedo_color")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
+tracks/0/loop_wrap = false
+tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Color(1, 1, 1, 0.227451)]
+"values": [1.0]
 }
 
 [sub_resource type="Animation" id="Animation_k24pf"]
 resource_name = "ripple"
-length = 0.8
-tracks/0/type = "scale_3d"
+length = 2.0
+tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Ripple")
-tracks/0/interp = 2
-tracks/0/loop_wrap = true
-tracks/0/keys = PackedFloat32Array(0, 1, 0.5, 0.5, 0.5, 0.6, 1, 2, 2, 2)
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Ripple:mesh:material:albedo_color")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.8),
+tracks/0/path = NodePath("Ripple:mesh:material:shader_parameter/progress")
+tracks/0/interp = 1
+tracks/0/loop_wrap = false
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 2),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+"values": [0.0, 1.0]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_1wiy7"]
@@ -1530,18 +1560,24 @@ inventory_ui = NodePath("../../UI/InventoryUI")
 [node name="RodMesh" parent="PlayerCamera/FishingRod" index="0"]
 transform = Transform3D(1, 0, 0, 0, 0.966823, 0.255446, 0, -0.255446, 0.966823, 0, 0, -0.0166266)
 
-[node name="left_hand" parent="PlayerCamera/FishingRod/RodMesh" index="5"]
+[node name="MeshInstance3D2" parent="PlayerCamera/FishingRod/RodMesh" index="3"]
+transform = Transform3D(-0.00739133, 0.955586, 0.294619, -0.999901, -0.0105864, 0.00925144, 0.0119595, -0.294522, 0.95557, -0.0301109, -0.5249, -0.00996324)
+
+[node name="left_hand" parent="PlayerCamera/FishingRod/RodMesh" index="6"]
 transform = Transform3D(-0.211648, -0.0377439, 0.254183, -0.17704, 0.278759, -0.0940854, -0.207091, -0.199734, -0.179344, -0.113471, -0.850528, 0.246808)
 
 [node name="WaterPlane" type="MeshInstance3D" parent="."]
-transform = Transform3D(-0.0489544, 4.27973e-09, -0.998801, -8.74228e-08, -1, 0, -0.998801, 8.7318e-08, 0.0489544, -19.3102, 0.176267, 16.1898)
+transform = Transform3D(0.0488498, 0, -0.998806, 0, 1, 0, 0.998806, 0, 0.0488498, -19.3102, -0.160857, 16.1898)
 mesh = SubResource("PlaneMesh_eank5")
+script = ExtResource("water_surface_script")
 
 [node name="Hook" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0925, 7.19147)
+script = ExtResource("hook_surface_script")
 
 [node name="Ripple" type="MeshInstance3D" parent="Hook"]
-transform = Transform3D(0.5, 0, 0, 0, -2.18557e-08, 0.5, 0, -0.5, -2.18557e-08, 0, -0.233042, -0.0694332)
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0.025, 0)
+cast_shadow = 0
 mesh = SubResource("QuadMesh_611at")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Hook"]

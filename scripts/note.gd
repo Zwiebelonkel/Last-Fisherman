@@ -9,6 +9,7 @@ var player_in_range: bool = false
 var player: Node3D = null
 var note_is_open: bool = false
 var last_interaction_frame: int = -1
+var interaction_managed: bool = false
 
 signal note_opened(title: String, text: String)
 signal note_closed()
@@ -42,7 +43,7 @@ func _process(_delta: float) -> void:
 		return
 	
 	# E-Taste Toggle
-	if Input.is_action_just_pressed("interact") and last_interaction_frame != Engine.get_process_frames():
+	if not interaction_managed and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED and Input.is_action_just_pressed("interact") and last_interaction_frame != Engine.get_process_frames():
 		interact()
 
 func _on_body_entered(body: Node3D) -> void:

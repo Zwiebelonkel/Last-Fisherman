@@ -22,6 +22,10 @@ var current_url := ""
 var current_note: Node = null
 
 func _ready() -> void:
+	# The aimed-at note owns E interaction here; do not also poll E on every note.
+	for node: Node in get_tree().get_nodes_in_group("notes"):
+		if node is Note and get_parent().is_ancestor_of(node):
+			node.interaction_managed = true
 	if prompt_label:
 		prompt_label.hide()
 

@@ -1,5 +1,7 @@
 extends Control
 
+const NumberFormat = preload("res://scripts/NumberFormat.gd")
+
 # UI Elements
 @onready var close_button: Button = $Panel/CloseButton
 @onready var stats_container: VBoxContainer = $Panel/ScrollContainer/StatsContainer
@@ -34,7 +36,7 @@ func update_stats() -> void:
 		child.queue_free()
 	
 	var bait_level := Player.upgrade_bait
-	bait_level_label.text = tr("STATS_BAIT_LEVEL").format({"level": str(bait_level)})
+	bait_level_label.text = tr("STATS_BAIT_LEVEL").format({"level": NumberFormat.compact(bait_level)})
 	
 	var spawn_chances := _calculate_spawn_chances(bait_level)
 	var catch_stats := _get_catch_statistics()
@@ -56,7 +58,7 @@ func update_stats() -> void:
 	if total_caught == 0:
 		total_label.text = tr("STATS_NO_FISH_YET")
 	else:
-		total_label.text = tr("STATS_TOTAL_CAUGHT").format({"count": str(total_caught)})
+		total_label.text = tr("STATS_TOTAL_CAUGHT").format({"count": NumberFormat.compact(total_caught)})
 	
 	_create_spacer()
 	_create_section_header(tr("STATS_HEADER_BIOME_PROGRESS"))
@@ -103,8 +105,8 @@ func _create_biome_completion_stats() -> void:
 		
 		var progress_text := tr("STATS_BIOME_PROGRESS").format({
 			"biome": biome_display,
-			"caught": str(caught_fish),
-			"total": str(total_fish)
+			"caught": NumberFormat.compact(caught_fish),
+			"total": NumberFormat.compact(total_fish)
 		})
 		var status_icon := "✅" if is_complete else "⏳"
 		var color := Color.GREEN if is_complete else Color.GRAY
@@ -135,7 +137,7 @@ func _create_weight_records() -> void:
 		var text := tr("STATS_WEIGHT_ENTRY").format({
 			"rank": str(count + 1),
 			"name": record["name"],
-			"weight": "%.2f" % record["weight"]
+			"weight": NumberFormat.compact(record["weight"], 2)
 		})
 		_create_simple_entry(text, Color(1, 0.8, 0.1))
 		count += 1
@@ -178,7 +180,7 @@ func _create_most_caught_fish() -> void:
 		var text := tr("STATS_CAUGHT_ENTRY").format({
 			"rank": str(rank + 1),
 			"name": fish_data["name"],
-			"count": str(fish_data["count"])
+			"count": NumberFormat.compact(fish_data["count"])
 		})
 
 		_create_simple_entry(text, Color(0.3, 1.0, 0.3))
@@ -201,7 +203,7 @@ func _create_bait_inventory() -> void:
 			var rarity_text := tr(rarity_key)
 			var text := tr("STATS_BAIT_AMOUNT").format({
 				"rarity": rarity_text,
-				"amount": str(amount)
+				"amount": NumberFormat.compact(amount)
 			})
 			var color := _get_rarity_color_by_name(rarity)
 			_create_simple_entry(text, color)
@@ -226,7 +228,7 @@ func _create_upgrade_status() -> void:
 		var upgrade_name := tr(upgrade_key)
 		var text := tr("STATS_UPGRADE_LEVEL").format({
 			"name": upgrade_name,
-			"level": str(level)
+			"level": NumberFormat.compact(level)
 		})
 		_create_simple_entry(text, Color(0.7, 0.9, 1.0))
 
@@ -361,7 +363,7 @@ func _create_stat_entry(rarity_name: String, rarity_color: Color, caught: int, c
 	entry.add_child(name_label)
 	
 	var caught_label := Label.new()
-	caught_label.text = tr("STATS_CAUGHT").format({"count": str(caught)})
+	caught_label.text = tr("STATS_CAUGHT").format({"count": NumberFormat.compact(caught)})
 	caught_label.custom_minimum_size = Vector2(180, 0)
 	caught_label.add_theme_font_size_override("font_size", 20)
 	caught_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER

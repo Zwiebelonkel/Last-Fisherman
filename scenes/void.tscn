@@ -237,6 +237,7 @@ _data = {
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_gaxoj"]
 render_priority = -128
 shader = ExtResource("8_kw1ov")
+shader_parameter/surface_time = -1.0
 shader_parameter/wave_height = 3.71
 shader_parameter/wave_speed = 2.063
 shader_parameter/refraction_strength = 0.5
@@ -283,6 +284,7 @@ shader_parameter/uv_sampler_scale = 1.465
 shader_parameter/blend_factor = 0.795
 shader_parameter/perturbation_strength = 0.37
 shader_parameter/perturbation_time = 1.355
+shader_parameter/seamless_tiling = false
 shader_parameter/normalmap_a = ExtResource("10_e40oc")
 shader_parameter/normalmap_b = ExtResource("11_0e1u2")
 shader_parameter/caustics_intensity = 19.805
@@ -337,6 +339,9 @@ script = SubResource("GDScript_8wjpf")
 
 [node name="RodMesh" parent="PlayerCamera/FishingRod" index="0"]
 transform = Transform3D(1, 0, 0, 0, 0.966823, 0.255446, 0, -0.255446, 0.966823, 0, 0, -0.0166266)
+
+[node name="MeshInstance3D2" parent="PlayerCamera/FishingRod/RodMesh" index="3"]
+transform = Transform3D(-0.00739133, 0.955586, 0.294619, -0.999901, -0.0105864, 0.00925144, 0.0119595, -0.294522, 0.95557, -0.0301109, -0.5249, -0.00996324)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.99211, -0.0720874, 0.10257, 4.89571e-09, 0.818149, 0.575006, -0.125368, -0.570469, 0.811694, 0, 7.52864, 2.88234)

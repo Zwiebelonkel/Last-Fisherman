@@ -146,6 +146,8 @@ func _migrate_v1_to_v2() -> void:
 		
 		# Erstelle neuen Fisch mit ID
 		var new_fish := complete_fish.duplicate(true)
+		if old_fish.has("is_shiny"):
+			new_fish["is_shiny"] = old_fish["is_shiny"]
 		
 		# Behalte individuelles Gewicht falls vorhanden
 		if old_fish.has("weight"):
@@ -226,7 +228,7 @@ func _emergency_fix_all_fish() -> void:
 			continue
 		
 		# Fix 1: Fehlende Keys ergänzen
-		var required_keys := ["name_key", "description_key", "science_key", "rarity", "base_value", "icon"]
+		var required_keys := ["name_key", "description_key", "science_key", "rarity", "base_value", "icon", "weight_min", "weight_max"]
 		for key in required_keys:
 			if not fish.has(key) and complete_fish.has(key):
 				fish[key] = complete_fish[key]

@@ -203,6 +203,7 @@ shader_parameter/warble_speed = 3.104
 layer = 127
 script = ExtResource("1_mhljt")
 ending_music = SubResource("AudioStreamMP3_v5q72")
+metadata/force_crt = true
 
 [node name="ColorRect" type="ColorRect" parent="."]
 anchors_preset = 15

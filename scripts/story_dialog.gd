@@ -32,12 +32,32 @@ const BOB_SPEED: float  = 1.2
 const FALLBACK_DATA = {
 	"speaker": {
 		"de": "Fremder",
-		"en": "Stranger"
+		"en": "Stranger",
+		"ru": "Незнакомец",
+		"tr": "Yabancı",
+		"es": "Desconocido",
+		"fr": "Étranger",
+		"pl": "Nieznajomy"
 	},
 	"sprite": "",
 	"lines": {
 		"de": ["Ein Fremder beobachtet dich aus der Ferne..."],
-		"en": ["A stranger watches you from afar..."]
+		"en": ["A stranger watches you from afar..."],
+		"ru": [
+			"Незнакомец наблюдает за тобой издалека..."
+		],
+		"tr": [
+			"Bir yabancı seni uzaktan izliyor..."
+		],
+		"es": [
+			"Un desconocido te observa desde lejos..."
+		],
+		"fr": [
+			"Un étranger t'observe au loin…"
+		],
+		"pl": [
+			"Nieznajomy obserwuje cię z oddali…"
+		]
 	}
 }
 

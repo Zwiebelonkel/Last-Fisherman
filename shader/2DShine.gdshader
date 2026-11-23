@@ -21,6 +21,7 @@ uniform float Position : hint_range(0, 1) = 0;
 uniform float Position_Min = 0.25;
 uniform float Position_Max = 0.5;
 uniform float Alpha : hint_range(0, 1) = 1.0;
+uniform float handoff_opacity : hint_range(0, 1) = 1.0;
 
 uniform vec4 ShineColor : source_color = vec4(1.0, 1.0, 1.0, 1.0);
 
@@ -104,5 +105,5 @@ void fragment() {
 	// FINAL (EXAKT MASKIERT)
 	// ==========================
 	vec4 col = ShineColor * remapped * card_mask;
-	COLOR = col;
+	COLOR = col * handoff_opacity;
 }

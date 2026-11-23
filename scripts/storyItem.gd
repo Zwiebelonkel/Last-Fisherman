@@ -26,19 +26,39 @@ var area: Area3D = null
 const ITEM_NAMES = {
 	"van": {
 		"de": "Food Truck Karosserie",
-		"en": "Food Truck Body"
+		"en": "Food Truck Body",
+		"ru": "Кузов фургона",
+		"tr": "Yemek Kamyonu Gövdesi",
+		"es": "Carrocería del puesto de comida",
+		"fr": "Carrosserie du food truck",
+		"pl": "Karoseria food trucka"
 	},
 	"opensign": {
 		"de": "Geöffnet-Schild",
-		"en": "Open Sign"
+		"en": "Open Sign",
+		"ru": "Вывеска «Открыто»",
+		"tr": "Açık Tabelası",
+		"es": "Cartel de abierto",
+		"fr": "Enseigne « Ouvert »",
+		"pl": "Szyld „Otwarte”"
 	},
 	"friteuse": {
 		"de": "Fritteuse",
-		"en": "Deep Fryer"
+		"en": "Deep Fryer",
+		"ru": "Фритюрница",
+		"tr": "Fritöz",
+		"es": "Freidora",
+		"fr": "Friteuse",
+		"pl": "Frytownica"
 	},
 	"sushimesser": {
 		"de": "Sushi-Messer",
-		"en": "Sushi Knife"
+		"en": "Sushi Knife",
+		"ru": "Нож для суши",
+		"tr": "Suşi Bıçağı",
+		"es": "Cuchillo de sushi",
+		"fr": "Couteau à sushi",
+		"pl": "Nóż do sushi"
 	}
 }
 

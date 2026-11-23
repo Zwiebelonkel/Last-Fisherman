@@ -1,5 +1,7 @@
 extends Control
 
+const NumberFormat = preload("res://scripts/NumberFormat.gd")
+
 @onready var fish_grid: GridContainer = $PanelContainer/VBoxContainer/ScrollContainer/MarginContainer/FishGrid
 @onready var sell_button: Button = $PanelContainer/VBoxContainer/Button
 @onready var title_label: Label = $PanelContainer/VBoxContainer/Label
@@ -25,6 +27,7 @@ func _ready() -> void:
 		fish_grid.columns = 3
 	_build_context_menu()  # 🆕
 	refresh()
+	FieldTablet.register_view.call_deferred(get_instance_id(), "inventory")
 	
 func _build_context_menu() -> void:
 	# CanvasLayer damit es über allem liegt
@@ -134,7 +137,7 @@ func _update_context_menu_header(fish: Dictionary) -> void:
 	if not header:
 		return
 
-	var fish_name := FishDB.get_fish_name(fish)
+	var fish_name := FishDB.get_fish_display_name(fish)
 	# Namen kürzen wenn zu lang
 	if fish_name.length() > 16:
 		fish_name = fish_name.substr(0, 14) + ".."
@@ -146,11 +149,11 @@ func _update_context_menu_header(fish: Dictionary) -> void:
 	var value := FishDB.get_fish_value(fish)
 
 	# Alles in einer Zeile
-	header.text = "[b]%s[/b]  [color=%s]%s[/color]  💰%d" % [
+	header.text = "[b]%s[/b]  [color=%s]%s[/color]  💰%s" % [
 		fish_name,
 		rarity_color.to_html(),
 		rarity_text,
-		value
+		NumberFormat.compact(value)
 	]
 func _on_item_clicked(event: InputEvent, index: int) -> void:
 	if event is InputEventMouseButton and event.pressed:
@@ -302,8 +305,9 @@ func refresh() -> void:
 		else:
 			icon.texture = load("res://assets/fish/unknown.png")
 
-		# ✅ FIX: Name über FishDB.get_fish_name() oder steam_name
-		var fish_name := FishDB.get_fish_name(f)
+		FishDB.apply_shiny_icon(icon, f)
+		# Display the individual variant alongside the species name.
+		var fish_name := FishDB.get_fish_display_name(f)
 		item.get_node("VBoxContainer/InfoContainer/MarginContainer/Name").text = fish_name
 
 		# ✅ FIX: Rarity über get_rarity_name_key()
@@ -315,13 +319,13 @@ func refresh() -> void:
 		# Gewicht
 		var weight_label: Label = item.get_node("VBoxContainer/InfoContainer/StatsContainer/MarginContainer3/Weight")
 		if f.has("weight"):
-			weight_label.text = "⚖️ %.2f kg" % f["weight"]
+			weight_label.text = "⚖️ %s kg" % NumberFormat.compact(f["weight"], 2)
 		else:
 			weight_label.text = "⚖️ ??? kg"
 
 		# Wert
 		var value := FishDB.get_fish_value(f)
-		item.get_node("VBoxContainer/InfoContainer/StatsContainer/MarginContainer4/Value").text = "💰 %d $" % value
+		item.get_node("VBoxContainer/InfoContainer/StatsContainer/MarginContainer4/Value").text = "💰 %s $" % NumberFormat.compact(value)
 		total_value += value
 
 		# Rechtsklick verkaufen
@@ -405,7 +409,7 @@ func refresh() -> void:
 		bait_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 
 		var amount_label := Label.new()
-		amount_label.text = "x%d" % amount
+		amount_label.text = "x%s" % NumberFormat.compact(amount)
 		amount_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 
 		# ✅ FIX: Buttons über Translation Keys
@@ -436,11 +440,11 @@ func refresh() -> void:
 	# ----------------------------
 	# 📊 UI UPDATE
 	# ----------------------------
-	title_label.text = tr("INVENTORY_TITLE") + " (%d)" % fish_count
-	total_value_label.text = tr("INVENTORY_TOTAL_VALUE") + ": %d $" % total_value
+	title_label.text = tr("INVENTORY_TITLE") + " (%s)" % NumberFormat.compact(fish_count)
+	total_value_label.text = tr("INVENTORY_TOTAL_VALUE") + ": %s $" % NumberFormat.compact(total_value)
 
 	if fish_count > 0:
-		sell_button.text = tr("INVENTORY_SELL_ALL") + " (%d $)" % total_value
+		sell_button.text = tr("INVENTORY_SELL_ALL") + " (%s $)" % NumberFormat.compact(total_value)
 		sell_button.disabled = false
 	else:
 		sell_button.text = tr("INVENTORY_NO_FISH")

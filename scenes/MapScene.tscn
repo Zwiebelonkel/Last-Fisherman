@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=3 uid="uid://c65603pesggni"]
+[gd_scene load_steps=29 format=3 uid="uid://c65603pesggni"]
 
 [ext_resource type="Script" uid="uid://2ilivy1i0ehi" path="res://scripts/MapScene.gd" id="1_y2hrc"]
 [ext_resource type="FontFile" uid="uid://bpr71paph0c0t" path="res://fonts/VCR_OSD_MONO_1.001.ttf" id="2_wikxs"]
@@ -11,6 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://vb3jqd3mfkt0" path="res://assets/clouds.png" id="8_titcf"]
 [ext_resource type="Shader" uid="uid://c140kjbm2bot5" path="res://shader/buckshot.gdshader" id="10_w8wlc"]
 [ext_resource type="PackedScene" uid="uid://cdb3sodlv6np7" path="res://scenes/MoneyHUD.tscn" id="11_rv0pg"]
+[ext_resource type="PackedScene" path="res://scenes/DebugMenu.tscn" id="12_debug"]
 
 [sub_resource type="Theme" id="Theme_j1nvq"]
 
@@ -549,36 +550,6 @@ bus = &"Music"
 stream = ExtResource("5_bnqbi")
 bus = &"SFX"
 
-[node name="Button" type="Button" parent="."]
-visible = false
-layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -70.0
-offset_top = -47.0
-offset_bottom = -1.0
-grow_horizontal = 0
-grow_vertical = 0
-text = "SUBMIT"
-
-[node name="password" type="TextEdit" parent="."]
-visible = false
-layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -191.0
-offset_top = -47.0
-offset_right = -74.0
-grow_horizontal = 0
-grow_vertical = 0
-placeholder_text = "PASSWORD"
-
 [node name="Clouds" type="TextureRect" parent="."]
 material = SubResource("ShaderMaterial_titcf")
 layout_mode = 0
@@ -637,4 +608,4 @@ offset_top = 8.0
 offset_right = 74.0
 offset_bottom = 43.0
 
-[connection signal="pressed" from="Button" to="." method="_on_submit_pressed"]
+[node name="DebugMenu" parent="." instance=ExtResource("12_debug")]

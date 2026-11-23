@@ -1,7 +1,10 @@
 extends Control
 
+const NumberFormat = preload("res://scripts/NumberFormat.gd")
+
 @onready var popup_panel: PanelContainer = $CenterContainer/PopupPanel
 @onready var fish_viewport: SubViewport = $CenterContainer/PopupPanel/MarginContainer/VBoxContainer/Header/IconContainer/SubViewportContainer/SubViewport
+@onready var fish_preview: Node3D = fish_viewport.get_node("FishPreview")
 @onready var fish_name_label: Label = $CenterContainer/PopupPanel/MarginContainer/VBoxContainer/Header/InfoContainer/FishName
 @onready var rarity_label: Label = $CenterContainer/PopupPanel/MarginContainer/VBoxContainer/Header/InfoContainer/Rarity
 @onready var value_label: Label = $CenterContainer/PopupPanel/MarginContainer/VBoxContainer/Header/InfoContainer/StatsGrid/Value
@@ -14,83 +17,120 @@ extends Control
 @onready var click: AudioStreamPlayer = $Audio/click
 
 var fish_data: Dictionary = {}
+var _transition: Tween
 var water_tag_localization := {
-	"Pacific Ocean": {"de": "Pazifik", "en": "Pacific Ocean"},
-	"Atlantic Ocean": {"de": "Atlantik", "en": "Atlantic Ocean"},
-	"Indian Ocean": {"de": "Indischer Ozean", "en": "Indian Ocean"},
-	"Arctic Ocean": {"de": "Arktischer Ozean", "en": "Arctic Ocean"},
-	"Southern Ocean": {"de": "Südlicher Ozean", "en": "Southern Ocean"},
-	"Mediterranean Sea": {"de": "Mittelmeer", "en": "Mediterranean Sea"},
-	"Special": {"de": "Special", "en": "Special"},
+	"Pacific Ocean": {"de": "Pazifik", "en": "Pacific Ocean", "ru": "Тихий океан", "tr": "Pasifik Okyanusu", "es": "Océano Pacífico", "fr": "Océan Pacifique", "pl": "Ocean Spokojny"},
+	"Atlantic Ocean": {"de": "Atlantik", "en": "Atlantic Ocean", "ru": "Атлантический океан", "tr": "Atlas Okyanusu", "es": "Océano Atlántico", "fr": "Océan Atlantique", "pl": "Ocean Atlantycki"},
+	"Indian Ocean": {"de": "Indischer Ozean", "en": "Indian Ocean", "ru": "Индийский океан", "tr": "Hint Okyanusu", "es": "Océano Índico", "fr": "Océan Indien", "pl": "Ocean Indyjski"},
+	"Arctic Ocean": {"de": "Arktischer Ozean", "en": "Arctic Ocean", "ru": "Северный Ледовитый океан", "tr": "Arktik Okyanusu", "es": "Océano Ártico", "fr": "Océan Arctique", "pl": "Ocean Arktyczny"},
+	"Southern Ocean": {"de": "Südlicher Ozean", "en": "Southern Ocean", "ru": "Южный океан", "tr": "Güney Okyanusu", "es": "Océano Austral", "fr": "Océan Austral", "pl": "Ocean Południowy"},
+	"Mediterranean Sea": {"de": "Mittelmeer", "en": "Mediterranean Sea", "ru": "Средиземное море", "tr": "Akdeniz", "es": "Mar Mediterráneo", "fr": "Mer Méditerranée", "pl": "Morze Śródziemne"},
+	"Special": {"de": "Special", "en": "Special", "ru": "Особый", "tr": "Özel", "es": "Especial", "fr": "Spécial", "pl": "Specjalne"},
 	# Rückwärtskompatibilität für alte gespeicherte/harte Werte:
-	"Pazifik": {"de": "Pazifik", "en": "Pacific Ocean"},
-	"Atlantik": {"de": "Atlantik", "en": "Atlantic Ocean"},
-	"Indischer Ozean": {"de": "Indischer Ozean", "en": "Indian Ocean"},
-	"Arktischer Ozean": {"de": "Arktischer Ozean", "en": "Arctic Ocean"},
-	"Südlicher Ozean": {"de": "Südlicher Ozean", "en": "Southern Ocean"},
-	"Mittelmeer": {"de": "Mittelmeer", "en": "Mediterranean Sea"}
+	"Pazifik": {"de": "Pazifik", "en": "Pacific Ocean", "ru": "Тихий океан", "tr": "Pasifik Okyanusu", "es": "Océano Pacífico", "fr": "Océan Pacifique", "pl": "Ocean Spokojny"},
+	"Atlantik": {"de": "Atlantik", "en": "Atlantic Ocean", "ru": "Атлантический океан", "tr": "Atlas Okyanusu", "es": "Océano Atlántico", "fr": "Océan Atlantique", "pl": "Ocean Atlantycki"},
+	"Indischer Ozean": {"de": "Indischer Ozean", "en": "Indian Ocean", "ru": "Индийский океан", "tr": "Hint Okyanusu", "es": "Océano Índico", "fr": "Océan Indien", "pl": "Ocean Indyjski"},
+	"Arktischer Ozean": {"de": "Arktischer Ozean", "en": "Arctic Ocean", "ru": "Северный Ледовитый океан", "tr": "Arktik Okyanusu", "es": "Océano Ártico", "fr": "Océan Arctique", "pl": "Ocean Arktyczny"},
+	"Südlicher Ozean": {"de": "Südlicher Ozean", "en": "Southern Ocean", "ru": "Южный океан", "tr": "Güney Okyanusu", "es": "Océano Austral", "fr": "Océan Austral", "pl": "Ocean Południowy"},
+	"Mittelmeer": {"de": "Mittelmeer", "en": "Mediterranean Sea", "ru": "Средиземное море", "tr": "Akdeniz", "es": "Mar Mediterráneo", "fr": "Mer Méditerranée", "pl": "Morze Śródziemne"}
 }
 
 # 🌍 Localized Texts
 var localized_texts := {
 	"not_caught_yet": {
 		"de": "⚖️ Noch nicht gefangen",
-		"en": "⚖️ Not caught yet"
+		"en": "⚖️ Not caught yet",
+		"ru": "⚖️ Ещё не поймано",
+		"tr": "⚖️ Henüz yakalanmadı",
+		"es": "⚖️ Aún sin capturar",
+		"fr": "⚖️ Pas encore capturé",
+		"pl": "⚖️ Jeszcze nie złowiono"
 	},
 	"unknown": {
 		"de": "Unbekannt",
-		"en": "Unknown"
+		"en": "Unknown",
+		"ru": "Неизвестно",
+		"tr": "Bilinmiyor",
+		"es": "Desconocido",
+		"fr": "Inconnu",
+		"pl": "Nieznane"
 	},
 	"caught_times": {
-		"de": "🎣 %dx gefangen",
-		"en": "🎣 Caught %dx"
+		"de": "🎣 %sx gefangen",
+		"en": "🎣 Caught %sx",
+		"ru": "🎣 Поймано %s раз",
+		"tr": "🎣 %s kez yakalandı",
+		"es": "🎣 Capturado %s veces",
+		"fr": "🎣 Capturé %sx",
+		"pl": "🎣 Złowiono %sx"
 	},
 	"no_description": {
 		"de": "Keine Beschreibung verfügbar.",
-		"en": "No description available."
+		"en": "No description available.",
+		"ru": "Нет описания.",
+		"tr": "Açıklama yok.",
+		"es": "No hay descripción disponible.",
+		"fr": "Aucune description disponible.",
+		"pl": "Brak opisu."
 	},
 	"lore_weight": {
 		"de": "⚖️ Gewicht unbekannt",
-		"en": "⚖️ Weight unknown"
+		"en": "⚖️ Weight unknown",
+		"ru": "⚖️ Вес неизвестен",
+		"tr": "⚖️ Ağırlık bilinmiyor",
+		"es": "⚖️ Peso desconocido",
+		"fr": "⚖️ Poids inconnu",
+		"pl": "⚖️ Waga nieznana"
 	},
 	"lore_value": {
 		"de": "💰 Kein Wert",
-		"en": "💰 No value"
+		"en": "💰 No value",
+		"ru": "💰 Нет стоимости",
+		"tr": "💰 Değeri yok",
+		"es": "💰 Sin valor",
+		"fr": "💰 Aucune valeur",
+		"pl": "💰 Brak wartości"
 	},
 	"lore_caught": {
 		"de": "📜 Fragment gefunden",
-		"en": "📜 Fragment found"
+		"en": "📜 Fragment found",
+		"ru": "📜 Фрагмент найден",
+		"tr": "📜 Parça bulundu",
+		"es": "📜 Fragmento encontrado",
+		"fr": "📜 Fragment trouvé",
+		"pl": "📜 Znaleziono fragment"
 	},
 	"lore_digit": {
 		"de": "🔢 Ziffer: %d",
-		"en": "🔢 Digit: %d"
+		"en": "🔢 Digit: %d",
+		"ru": "🔢 Цифра: %d",
+		"tr": "🔢 Rakam: %d",
+		"es": "🔢 Dígito: %d",
+		"fr": "🔢 Chiffre : %d",
+		"pl": "🔢 Cyfra: %d"
 	},
 	"water_tag": {
 		"de": "🌊 Herkunft: %s",
-		"en": "🌊 Origin: %s"
+		"en": "🌊 Origin: %s",
+		"ru": "🌊 Происхождение: %s",
+		"tr": "🌊 Köken: %s",
+		"es": "🌊 Origen: %s",
+		"fr": "🌊 Origine : %s",
+		"pl": "🌊 Pochodzenie: %s"
 	}
 }
 
 func _ready():
 	visible = false
+	visibility_changed.connect(func():
+		Player.set_story_crt_active(self, is_visible_in_tree() and _is_lore_fragment(fish_data))
+	)
 	close_button.pressed.connect(_on_close_pressed)
 	overlay.gui_input.connect(_on_overlay_clicked)
 	
-func set_3d_fish(texture: Texture2D):
-	# alten Fisch löschen
-	for child in fish_viewport.get_children():
-		child.queue_free()
-
-	var fish_scene = preload("res://test.tscn").instantiate()
-	fish_viewport.add_child(fish_scene)
-
-	var mesh := fish_scene.get_node("MeshInstance3D") as MeshInstance3D
-	var mat := mesh.material_override as ShaderMaterial
-	
-	if texture == null:
-		texture = load("res://assets/fish/unknown.png")
-
-	mat.set_shader_parameter("Texture", texture)
+func set_3d_fish(texture: Texture2D, is_shiny: bool = false):
+	# Keep one world/camera and swap only its fish mesh and instance material.
+	fish_preview.set_texture(texture, is_shiny)
 
 # ============================================
 # 🌍 LOCALIZATION HELPER
@@ -124,6 +164,7 @@ func localize_water_tag(raw_tag: String) -> String:
 # ============================================
 
 func show_fish_details(fish: Dictionary):
+	Player.set_story_crt_active(self, _is_lore_fragment(fish))
 	fish_data = fish
 	visible = true
 
@@ -152,18 +193,20 @@ func show_fish_details(fish: Dictionary):
 		print("❌ Fisch nicht in FishDB gefunden:", fish.get("id", "UNKNOWN"))
 		visible = false
 		return
+	# Species lookups supply defaults; retain the caught fish's individual properties.
+	full_fish_data = full_fish_data.duplicate(true)
+	for key in ["weight", "is_shiny"]:
+		if fish.has(key):
+			full_fish_data[key] = fish[key]
 
 	# ICON
 	if is_steam and full_fish_data.has("steam_avatar") and full_fish_data["steam_avatar"] is Texture2D:
-		set_3d_fish(full_fish_data["steam_avatar"])
+		set_3d_fish(full_fish_data["steam_avatar"], full_fish_data.get("is_shiny", false))
 	else:
-		set_3d_fish(FishDB.get_fish_icon(full_fish_data))
+		set_3d_fish(FishDB.get_fish_icon(full_fish_data), full_fish_data.get("is_shiny", false))
 
 	# NAME
-	if is_steam:
-		fish_name_label.text = str(fish_data.get("name", "Unknown Player"))
-	else:
-		fish_name_label.text = FishDB.get_fish_name(full_fish_data)
+	fish_name_label.text = FishDB.get_fish_display_name(full_fish_data)
 
 	# RARITY
 	var rarity: int = FishDB.get_rarity_safe(full_fish_data)
@@ -175,28 +218,37 @@ func show_fish_details(fish: Dictionary):
 	update_border_color(rarity_color)
 
 	# VALUE
-	var base_value: int = int(full_fish_data.get("base_value", 0))
-	var total_value: int = int(base_value * float(rarity_data.get("value", 1.0)))
-	value_label.text = "💰 %d $  (x%.1f)" % [total_value, float(rarity_data.get("value", 1.0))]
+	var valued_fish := full_fish_data.duplicate()
+	if fish.has("weight"):
+		valued_fish["weight"] = fish["weight"]
+	var total_value: int = FishDB.get_fish_value(valued_fish)
+	value_label.text = "💰 %s $  (x%s)" % [NumberFormat.compact(total_value), NumberFormat.compact(float(rarity_data.get("value", 1.0)), 1)]
+	if full_fish_data.get("is_shiny", false):
+		value_label.text += " · %s x3" % tr("FISH_VARIANT_SHINY")
 
 	# WEIGHT / CAUGHT COUNT
 	var fish_id: String = str(fish.get("id", ""))
 	if fish_id != "":
 		var max_weight = Player.get_max_caught_weight(fish_id)
-		if max_weight > 0:
-			weight_label.text = "⚖️ %.2f kg 🏆" % max_weight
+		if fish.has("weight"):
+			var caught_weight := float(fish["weight"])
+			weight_label.text = "⚖️ %s kg" % NumberFormat.compact(caught_weight, 2)
+			if max_weight > 0.0 and caught_weight >= max_weight:
+				weight_label.text += " 🏆"
+		elif max_weight > 0:
+			weight_label.text = "⚖️ %s kg 🏆" % NumberFormat.compact(max_weight, 2)
 		else:
 			weight_label.text = get_text("not_caught_yet")
 
 		var caught_count = Player.get_catch_count(fish_id)
-		caught_count_label.text = get_text("caught_times") % caught_count
+		caught_count_label.text = get_text("caught_times") % NumberFormat.compact(caught_count)
 	else:
 		weight_label.text = get_text("unknown")
 		caught_count_label.text = get_text("unknown")
 
 	# WEIGHT RANGE
 	if full_fish_data.has("weight_min") and full_fish_data.has("weight_max"):
-		weight_range_label.text = "%.2f - %.2f kg" % [full_fish_data["weight_min"], full_fish_data["weight_max"]]
+		weight_range_label.text = "%s - %s kg" % [NumberFormat.compact(full_fish_data["weight_min"], 2), NumberFormat.compact(full_fish_data["weight_max"], 2)]
 	else:
 		weight_range_label.text = get_text("unknown")
 
@@ -317,9 +369,12 @@ func update_border_color(color: Color):
 # ============================================
 
 func _play_open_animation():
+	if _transition and _transition.is_valid():
+		_transition.kill()
 	popup_panel.modulate.a = 0
 	popup_panel.scale = Vector2(0.8, 0.8)
-	var tween = create_tween()
+	_transition = create_tween()
+	var tween := _transition
 	tween.set_parallel(true)
 	tween.tween_property(popup_panel, "modulate:a", 1.0, 0.3)
 	tween.tween_property(popup_panel, "scale", Vector2(1.0, 1.0), 0.3).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
@@ -338,12 +393,14 @@ func _on_overlay_clicked(event: InputEvent):
 		hide_popup()
 
 func hide_popup():
-	var tween = create_tween()
+	if _transition and _transition.is_valid():
+		_transition.kill()
+	_transition = create_tween()
+	var tween := _transition
 	tween.set_parallel(true)
 	tween.tween_property(popup_panel, "modulate:a", 0.0, 0.2)
 	tween.tween_property(popup_panel, "scale", Vector2(0.8, 0.8), 0.2)
-	await tween.finished
-	visible = false
+	tween.chain().tween_callback(hide)
 
 func _input(event):
 	if visible and event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE:

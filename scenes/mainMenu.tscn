@@ -200,6 +200,7 @@ volumetric_fog_ambient_inject = 0.2
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_k24pf"]
 render_priority = -128
 shader = ExtResource("10_tlicg")
+shader_parameter/surface_time = -1.0
 shader_parameter/wave_height = 1.484
 shader_parameter/wave_speed = 2.774
 shader_parameter/refraction_strength = 0.5
@@ -245,6 +246,7 @@ shader_parameter/uv_sampler_scale = 0.3
 shader_parameter/blend_factor = 0.795
 shader_parameter/perturbation_strength = 0.37
 shader_parameter/perturbation_time = 0.3
+shader_parameter/seamless_tiling = false
 shader_parameter/normalmap_a = ExtResource("11_808lr")
 shader_parameter/normalmap_b = ExtResource("12_uwljm")
 shader_parameter/caustics_intensity = 17.2
@@ -532,7 +534,10 @@ transform = Transform3D(-0.925417, 0.163176, 0.34202, 0.173648, 0.984808, 0, -0.
 [node name="RodMesh" parent="FishingRod" index="0"]
 transform = Transform3D(1, 0, 0, 0, 0.966823, 0.255446, 0, -0.255446, 0.966823, 0, 0, -0.0166266)
 
-[node name="left_hand" parent="FishingRod/RodMesh" index="5"]
+[node name="MeshInstance3D2" parent="FishingRod/RodMesh" index="3"]
+transform = Transform3D(-0.00739133, 0.955586, 0.294619, -0.999901, -0.0105864, 0.00925144, 0.0119595, -0.294522, 0.95557, -0.0301109, -0.5249, -0.00996324)
+
+[node name="left_hand" parent="FishingRod/RodMesh" index="6"]
 transform = Transform3D(-0.211648, -0.0377439, 0.254183, -0.17704, 0.278759, -0.0940853, -0.207091, -0.199734, -0.179344, -0.113471, -0.850528, 0.246808)
 
 [node name="Music" type="AudioStreamPlayer" parent="."]

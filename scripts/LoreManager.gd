@@ -17,29 +17,69 @@ const NOTES: Dictionary = {
 		"digit": 1,
 		"name_de": "Fragment I",
 		"name_en": "Fragment I",
+		"name_ru": "Фрагмент I",
+		"name_tr": "Parça I",
+		"name_es": "Fragmento I",
+		"name_fr": "Fragment I",
+		"name_pl": "Fragment I",
 		"text_de": "Wir sind nicht geflohen. Das Meer hat uns nicht genommen. Wir haben aufgehört, gesehen zu werden.",
-		"text_en": "We did not flee. The sea did not take us. We stopped being seen."
+		"text_en": "We did not flee. The sea did not take us. We stopped being seen.",
+		"text_ru": "Мы не бежали. Море не забрало нас. Нас просто перестали видеть.",
+		"text_tr": "Kaçmadık. Deniz bizi almadı. Görülmez olduk.",
+		"text_es": "No huimos. El mar no nos llevó. Dejaron de vernos.",
+		"text_fr": "Nous n'avons pas fui. La mer ne nous a pas emportés. On a cessé de nous voir.",
+		"text_pl": "Nie uciekliśmy. Morze nas nie zabrało. Przestano nas widzieć."
 	},
 	"fragment_02": {
 		"digit": 9,
 		"name_de": "Fragment II",
 		"name_en": "Fragment II",
+		"name_ru": "Фрагмент II",
+		"name_tr": "Parça II",
+		"name_es": "Fragmento II",
+		"name_fr": "Fragment II",
+		"name_pl": "Fragment II",
 		"text_de": "Die Fische kamen erst, als niemand mehr hinsah. Sie waren immer da. Wir waren das Problem.",
-		"text_en": "The fish only came when no one was looking anymore. They were always there. We were the problem."
+		"text_en": "The fish only came when no one was looking anymore. They were always there. We were the problem.",
+		"text_ru": "Рыбы пришли, лишь когда никто больше не смотрел. Они всегда были здесь. Проблема была в нас.",
+		"text_tr": "Balıklar ancak kimse bakmaz olunca geldi. Hep oradaydılar. Sorun bizdik.",
+		"text_es": "Los peces solo llegaron cuando ya nadie miraba. Siempre estuvieron allí. Nosotros éramos el problema.",
+		"text_fr": "Les poissons ne sont venus que lorsque plus personne ne regardait. Ils avaient toujours été là. Le problème, c'était nous.",
+		"text_pl": "Ryby przypłynęły dopiero, gdy nikt już nie patrzył. Zawsze tu były. To my byliśmy problemem."
 	},
 	"fragment_03": {
 		"digit": 0,
 		"name_de": "Fragment III",
 		"name_en": "Fragment III",
+		"name_ru": "Фрагмент III",
+		"name_tr": "Parça III",
+		"name_es": "Fragmento III",
+		"name_fr": "Fragment III",
+		"name_pl": "Fragment III",
 		"text_de": "Wir nannten es Forschung. Archivierung. Kontrolle. Aber das Wasser merkt sich alles.",
-		"text_en": "We called it research. Archival. Control. But the water remembers everything."
+		"text_en": "We called it research. Archival. Control. But the water remembers everything.",
+		"text_ru": "Мы называли это исследованием. Архивацией. Контролем. Но вода помнит всё.",
+		"text_tr": "Buna araştırma dedik. Arşivleme. Kontrol. Ama su her şeyi hatırlar.",
+		"text_es": "Lo llamamos investigación. Archivo. Control. Pero el agua lo recuerda todo.",
+		"text_fr": "Nous appelions cela recherche. Archivage. Contrôle. Mais l'eau se souvient de tout.",
+		"text_pl": "Nazywaliśmy to badaniami. Archiwizacją. Kontrolą. Ale woda pamięta wszystko."
 	},
 	"fragment_04": {
 		"digit": 6,
 		"name_de": "Fragment IV",
 		"name_en": "Fragment IV",
+		"name_ru": "Фрагмент IV",
+		"name_tr": "Parça IV",
+		"name_es": "Fragmento IV",
+		"name_fr": "Fragment IV",
+		"name_pl": "Fragment IV",
 		"text_de": "Einer muss bleiben. Nicht um zu retten. Sondern um zu erinnern. Wenn du das liest, bist du es jetzt.",
-		"text_en": "Someone must remain. Not to save. But to remember. If you're reading this, it's you now."
+		"text_en": "Someone must remain. Not to save. But to remember. If you're reading this, it's you now.",
+		"text_ru": "Кто-то должен остаться. Не чтобы спасти. Чтобы помнить. Если ты это читаешь — теперь это ты.",
+		"text_tr": "Biri kalmalı. Kurtarmak için değil. Hatırlamak için. Bunu okuyorsan, artık o kişi sensin.",
+		"text_es": "Alguien debe quedarse. No para salvar. Para recordar. Si estás leyendo esto, ahora eres tú.",
+		"text_fr": "Quelqu'un doit rester. Pas pour sauver. Pour se souvenir. Si tu lis ceci, c'est désormais toi.",
+		"text_pl": "Ktoś musi zostać. Nie po to, by ratować. Lecz by pamiętać. Jeśli to czytasz, teraz to ty."
 	}
 }
 
@@ -57,31 +97,66 @@ func _t(key: String) -> String:
 	const TRANSLATIONS = {
 		"notes_loaded": {
 			"de": "📚 LoreManager: %d Zettel geladen",
-			"en": "📚 LoreManager: %d notes loaded"
+			"en": "📚 LoreManager: %d notes loaded",
+			"ru": "📚 LoreManager: загружено записок: %d",
+			"tr": "📚 LoreManager: %d not yüklendi",
+			"es": "📚 LoreManager: %d notas cargadas",
+			"fr": "📚 LoreManager : %d notes chargées",
+			"pl": "📚 LoreManager: wczytano %d notatek"
 		},
 		"note_already_collected": {
 			"de": "⚠️ LoreManager: Note bereits gesammelt - %s",
-			"en": "⚠️ LoreManager: Note already collected - %s"
+			"en": "⚠️ LoreManager: Note already collected - %s",
+			"ru": "⚠️ LoreManager: записка уже собрана — %s",
+			"tr": "⚠️ LoreManager: Not zaten toplandı - %s",
+			"es": "⚠️ LoreManager: nota ya recogida - %s",
+			"fr": "⚠️ LoreManager : note déjà collectée - %s",
+			"pl": "⚠️ LoreManager: notatka już zebrana - %s"
 		},
 		"note_added": {
 			"de": "✅ LoreManager: Note hinzugefügt - %s (Ziffer: %d)",
-			"en": "✅ LoreManager: Note added - %s (Digit: %d)"
+			"en": "✅ LoreManager: Note added - %s (Digit: %d)",
+			"ru": "✅ LoreManager: записка добавлена — %s (цифра: %d)",
+			"tr": "✅ LoreManager: Not eklendi - %s (Rakam: %d)",
+			"es": "✅ LoreManager: nota añadida - %s (dígito: %d)",
+			"fr": "✅ LoreManager : note ajoutée - %s (chiffre : %d)",
+			"pl": "✅ LoreManager: dodano notatkę - %s (cyfra: %d)"
 		},
 		"all_notes_collected": {
 			"de": "🎉 LoreManager: Alle Zettel gesammelt! Code: %s",
-			"en": "🎉 LoreManager: All notes collected! Code: %s"
+			"en": "🎉 LoreManager: All notes collected! Code: %s",
+			"ru": "🎉 LoreManager: все записки собраны! Код: %s",
+			"tr": "🎉 LoreManager: Tüm notlar toplandı! Kod: %s",
+			"es": "🎉 LoreManager: ¡Todas las notas recogidas! Código: %s",
+			"fr": "🎉 LoreManager : toutes les notes collectées ! Code : %s",
+			"pl": "🎉 LoreManager: zebrano wszystkie notatki! Kod: %s"
 		},
 		"lore_reset": {
 			"de": "🔄 LoreManager: Reset",
-			"en": "🔄 LoreManager: Reset"
+			"en": "🔄 LoreManager: Reset",
+			"ru": "🔄 LoreManager: сброс",
+			"tr": "🔄 LoreManager: Sıfırla",
+			"es": "🔄 LoreManager: reinicio",
+			"fr": "🔄 LoreManager : réinitialisation",
+			"pl": "🔄 LoreManager: reset"
 		},
 		"fragment": {
 			"de": "Fragment",
-			"en": "Fragment"
+			"en": "Fragment",
+			"ru": "Фрагмент",
+			"tr": "Parça",
+			"es": "Fragmento",
+			"fr": "Fragment",
+			"pl": "Fragment"
 		},
 		"mysterious_note": {
 			"de": "Ein mysteriöser Zettel",
-			"en": "A mysterious note"
+			"en": "A mysterious note",
+			"ru": "Таинственная записка",
+			"tr": "Gizemli bir not",
+			"es": "Una nota misteriosa",
+			"fr": "Une note mystérieuse",
+			"pl": "Tajemnicza notatka"
 		}
 	}
 	
