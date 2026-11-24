@@ -991,6 +991,7 @@ func start_bite_window() -> void:
 
 
 func show_bite_indicator() -> void:
+	hook.fight.bite(camera)
 	splash.restart()
 	bite_sound.play()
 	ui_bite_indicator.visible = true
@@ -1127,6 +1128,7 @@ func start_catch_minigame() -> void:
 	catch_progress.value = 50.0
 	input_active = false
 	minigame_input.reset(bar_background)
+	hook.fight.start(float(current_fish.get(\"weight\", 1.0)), hook.global_position)
 	
 func update_catch_minigame(delta: float) -> void:
 	if paused or not catch_ui.is_visible_in_tree() or delta <= 0.0:
@@ -1206,6 +1208,7 @@ func update_catch_minigame(delta: float) -> void:
 		end_catch_minigame(false)
 		
 func end_catch_minigame(success: bool) -> void:
+	hook.finish_fight(success)
 	var caught_fish: Dictionary = current_fish
 	if splash:
 		splash.emitting = false
@@ -1464,6 +1467,7 @@ float dynamic_amplitude(vec2 pos, float time) {
 
 // Hash function for noise generation
 #include \"res://shader/water_height_noise.gdshaderinc\"
+#include \"res://shader/fish_fight.gdshaderinc\"
 
 // Structure to hold wave results: displacement, tangent, binormal, and normal
 struct WaveResult {
@@ -1720,6 +1724,7 @@ void fragment() {
     METALLIC = metallic;
     ROUGHNESS = roughness;
     NORMAL = perturbed_normal;
+    EMISSION = fight_surface(world_position, INV_VIEW_MATRIX[3].xyz, ALBEDO, ROUGHNESS, METALLIC, SPECULAR);
 }"
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_k24pf"]
@@ -1774,6 +1779,10 @@ shader_parameter/normalmap_b = ExtResource("14_2n20e")
 shader_parameter/caustics_intensity = 36.915
 shader_parameter/num_caustic_layers = 16.0
 shader_parameter/caustic_distortion_strength = 0.406
+shader_parameter/fight_shadow = Vector4(0, 0, 0, 0)
+shader_parameter/fight_wake = Vector4(0, 0, 0, 0)
+shader_parameter/fight_axes = Vector4(1, 0, 1, 0)
+shader_parameter/fight_depth = 0.0
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_66o8q"]
 lightmap_size_hint = Vector2i(251, 1001)

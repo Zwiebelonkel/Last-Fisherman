@@ -252,6 +252,10 @@ shader_parameter/normalmap_b = ExtResource("12_uwljm")
 shader_parameter/caustics_intensity = 17.2
 shader_parameter/num_caustic_layers = 16.0
 shader_parameter/caustic_distortion_strength = 0.001
+shader_parameter/fight_shadow = Vector4(0, 0, 0, 0)
+shader_parameter/fight_wake = Vector4(0, 0, 0, 0)
+shader_parameter/fight_axes = Vector4(1, 0, 1, 0)
+shader_parameter/fight_depth = 0.0
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_qg23i"]
 material = SubResource("ShaderMaterial_k24pf")

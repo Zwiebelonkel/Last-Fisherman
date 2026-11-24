@@ -123,6 +123,7 @@ float dynamic_amplitude(vec2 pos, float time) {
 
 // Hash & noise
 #include "res://shader/water_height_noise.gdshaderinc"
+#include "res://shader/fish_fight.gdshaderinc"
 
 // Wave result struct
 struct WaveResult {
@@ -390,4 +391,5 @@ void fragment() {
     METALLIC  = metallic;
     ROUGHNESS = roughness;
     NORMAL    = perturbed_normal;
+    EMISSION = fight_surface(world_position, INV_VIEW_MATRIX[3].xyz, ALBEDO, ROUGHNESS, METALLIC, SPECULAR);
 }

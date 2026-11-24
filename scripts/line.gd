@@ -182,6 +182,8 @@ func get_water_position(point: Vector3) -> Vector3:
 
 func finish_line(return_bait: bool = true) -> void:
 	if not is_finishing():
+		if return_bait:
+			hook.finish_fight(true)
 		cancel_cast()
 		if not visible:
 			_take_windup_line()

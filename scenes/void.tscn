@@ -290,6 +290,10 @@ shader_parameter/normalmap_b = ExtResource("11_0e1u2")
 shader_parameter/caustics_intensity = 19.805
 shader_parameter/num_caustic_layers = 16.0
 shader_parameter/caustic_distortion_strength = 0.236
+shader_parameter/fight_shadow = Vector4(0, 0, 0, 0)
+shader_parameter/fight_wake = Vector4(0, 0, 0, 0)
+shader_parameter/fight_axes = Vector4(1, 0, 1, 0)
+shader_parameter/fight_depth = 0.0
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_njjy5"]
 lightmap_size_hint = Vector2i(251, 1001)
